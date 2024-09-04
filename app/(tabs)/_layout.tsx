@@ -5,7 +5,10 @@ export default function TabLayout() {
     <Tabs>
       <Tabs.Screen 
         name="(home)" 
-        options={{ title: 'Home' }}
+        options={{ 
+            title: 'Explore',
+            headerTitleAlign: 'left'
+        }}
       />
       <Tabs.Screen 
         name="settings" 
