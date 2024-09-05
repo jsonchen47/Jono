@@ -2,9 +2,12 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Link } from 'expo-router';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, ScrollView, Animated } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card, Text } from '@ui-kitten/components';
+
+// const av = new Animated.Value(0);
+// av.addListener(() => {return});
 
 const sampleProjects = [
   {
@@ -26,6 +29,10 @@ function ProjectsScreen() {
     <View style={styles.container}>
       {/* <Text>Projects!</Text> */}
       {/* <Ionicons name="checkmark-circle" size={32} /> */}
+      <ScrollView horizontal={true}>
+        <Ionicons name="checkmark-circle" size={32} />
+        <Ionicons name="checkmark-circle" size={32} />
+      </ScrollView>
 
       {sampleProjects.map((project) => (
         <View key={project.id} >
@@ -61,10 +68,12 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function ExploreScreen() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Projects" component={ProjectsScreen} />
-      <Tab.Screen name="People" component={PeopleScreen} />
-    </Tab.Navigator>
+    <View style={styles.container}>
+      <ScrollView horizontal={true}>
+        <Ionicons name="checkmark-circle" size={32} />
+        <Ionicons name="checkmark-circle" size={32} />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -75,4 +84,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     padding: 20,
   },
+  horizontalRow: {
+    flexDirection: 'row', 
+  }
 });
