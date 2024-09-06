@@ -125,8 +125,16 @@ type ItemProps = {
 
 const Item = ({title, image}: ItemProps) => (
   <View style={styles.browseProjectsView}>
-    <Text>{title}</Text>
     <Image style={styles.browseProjectImages} source={image} />
+    <View style={styles.linearGradientView}>
+      <LinearGradient 
+        style={styles.linearGradientBrowse}
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
+      </LinearGradient>
+    </View>
+    <View style={styles.overImageTextViewBrowse}>
+      <Text style={styles.browseProjectsText}>{title}</Text>  
+    </View>
   </View>
 );
 
@@ -158,20 +166,15 @@ export default function ExploreScreen() {
               source={project.image} 
               />
               {/* Background gradient */}
-             
-              {/* Text */}
-
               <View style={styles.linearGradientView}>
                 <LinearGradient 
                   style={styles.linearGradient}
                   colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
                 </LinearGradient>
+                 {/* Text */}
                 <View style={styles.overImageTextView}>
                   <Text style={styles.projectDescriptionText}>{project.title}</Text>
                 </View>
-              <View>
-                  
-              </View>
               </View>
               
               
@@ -268,8 +271,6 @@ const styles = StyleSheet.create({
     width: windowWidth/1.5, 
     height: windowHeight/3/1.5,
     borderRadius: 5, 
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   linearGradientView: {
     top: 0,  // Set to top of the image
@@ -279,6 +280,26 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'flex-end',
     alignItems: 'center',
+  }, 
+  browseProjectsText: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'white',
+    justifyContent: 'flex-end',
+  }, 
+  overImageTextViewBrowse: {
+    top: 15,  // Set to top of the image
+    left: 15, // Set to the left side
+    right: 15, // Set to the right side
+    bottom: 15, // Set to the bottom side, so it covers the image
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+  },
+  linearGradientBrowse: {
+    width: windowWidth/2.2, 
+    height: windowHeight/5/1.5,
+    borderRadius: 5, 
   }
 });
 
