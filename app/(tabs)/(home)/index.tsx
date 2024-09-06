@@ -7,6 +7,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card, Text } from '@ui-kitten/components';
 import { tSImportEqualsDeclaration } from '@babel/types';
 import { FlatGrid } from 'react-native-super-grid';
+import LinearGradient from 'react-native-linear-gradient';
+
 
 
 // const av = new Animated.Value(0);
@@ -156,10 +158,23 @@ export default function ExploreScreen() {
               source={project.image} 
               />
               {/* Background gradient */}
+             
               {/* Text */}
-              <View style={styles.overImageTextView} >
-                <Text style={styles.projectDescriptionText}>{project.title}</Text>
+
+              <View style={styles.linearGradientView}>
+                <LinearGradient 
+                  style={styles.linearGradient}
+                  colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
+                </LinearGradient>
+                <View style={styles.overImageTextView}>
+                  <Text style={styles.projectDescriptionText}>{project.title}</Text>
+                </View>
+              <View>
+                  
               </View>
+              </View>
+              
+              
             </View>
           ))}
         </ScrollView>
@@ -238,7 +253,7 @@ const styles = StyleSheet.create({
     top: 30,  // Set to top of the image
     left: 30, // Set to the left side
     right: 30, // Set to the right side
-    bottom: 30, // Set to the bottom side, so it covers the image
+    bottom: 15, // Set to the bottom side, so it covers the image
     position: 'absolute',
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
@@ -247,6 +262,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     color: 'white',
+    justifyContent: 'flex-end',
+  },
+  linearGradient: {
+    width: windowWidth/1.5, 
+    height: windowHeight/3/1.5,
+    borderRadius: 5, 
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  linearGradientView: {
+    top: 0,  // Set to top of the image
+    left: 0, // Set to the left side
+    right: 0, // Set to the right side
+    bottom: 0, // Set to the bottom side, so it covers the image
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   }
 });
 
