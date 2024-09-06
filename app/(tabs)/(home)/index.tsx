@@ -2,10 +2,12 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Link } from 'expo-router';
-import { View, StyleSheet, Image, ScrollView, Animated, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, ScrollView, Animated, Dimensions, FlatList } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card, Text } from '@ui-kitten/components';
 import { tSImportEqualsDeclaration } from '@babel/types';
+import { FlatGrid } from 'react-native-super-grid';
+
 
 // const av = new Animated.Value(0);
 // av.addListener(() => {return});
@@ -82,54 +84,116 @@ const sampleProjects = [
     image: require('../../../assets/images/chair.png'),
     author: 'Engineer',
   },
+  {
+    id: 3,
+    title: 'John Doe',
+    image: require('../../../assets/images/chair.png'),
+    author: 'Engineer',
+  },
+  {
+    id: 4,
+    title: 'John Doe',
+    image: require('../../../assets/images/chair.png'),
+    author: 'Engineer',
+  },
+  {
+    id: 5,
+    title: 'John Doe',
+    image: require('../../../assets/images/chair.png'),
+    author: 'Engineer',
+  },
+  {
+    id: 6,
+    title: 'John Doe',
+    image: require('../../../assets/images/chair.png'),
+    author: 'Engineer',
+  },
+  {
+    id: 7,
+    title: 'John Doe',
+    image: require('../../../assets/images/chair.png'),
+    author: 'Engineer',
+  },
 ];
 
-function ProjectsScreen() {
-  return (
-    <View style={styles.container}>
-      {/* <Text>Projects!</Text> */}
-      {/* <Ionicons name="checkmark-circle" size={32} /> */}
-      <ScrollView horizontal={true}>
-        <Ionicons name="checkmark-circle" size={32} />
-        <Ionicons name="checkmark-circle" size={32} />
-      </ScrollView>
+type ItemProps = {
+  title: string
+  image: any
+};
 
-      {sampleProjects.map((project) => (
-        <View key={project.id} >
-          {/* Image */}
-          <Image 
-            style={{width: 50, height: 50}}
-            source={project.image} 
-          />
-          {/* Text */}
-          <Text>{project.title}</Text>
-        </View>
-      ))}
-        {/* <Card>
-          <Text>
-            The Maldives, officially the Republic of Maldives, is a small country in South Asia,
-            located in the Arabian Sea of the Indian Ocean.
-            It lies southwest of Sri Lanka and India, about 1,000 kilometres (620 mi) from the Asian continent
-          </Text>
-        </Card> */}
-    </View>
-  );
-}
+const Item = ({title, image}: ItemProps) => (
+  <View style={styles.browseProjectsView}>
+    <Text>{title}</Text>
+    <Image style={styles.browseProjectImages} source={image} />
+  </View>
+);
 
-function PeopleScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>People!</Text>
-    </View>
-  );
-}
+// // To test the flatlist
+// export default function ExploreScreen() {
+//   return (
+//     <View style={styles.container}>
+        
+//       <FlatList
+      
+//         columnWrapperStyle={styles.columnWrapper} 
+//         horizontal={false}
+//         numColumns={2}
+//         data={sampleProjects}
+//         renderItem={({item}) => (
+//           <View>
+//             <Item title={item.title} image={item.image}/>
+//           </View>
+//         )}
+//         keyExtractor={item => item.id.toString()}
+//         // contentContainerStyle={styles.flatListContent} 
+//         ListHeaderComponentStyle={styles.headerStyle}
+//         ListHeaderComponent={
+//           <View style={styles.headerStyle}>
+//             <ScrollView horizontal={true}>
+//               {/* <Ionicons name="checkmark-circle" size={32} />
+//               <Ionicons name="checkmark-circle" size={32} /> */}
+//               {sampleCategories.map((category) => (
+//               <View style={styles.categories} key={category.id} >
+//                 {/* Image */}
+//                 <Ionicons name={category.icon} size={32} style={styles.icon} />
+//                 {/* Text */}
+//                 <Text style={styles.categoryLabel}>{category.name}</Text>
+//                 </View>
+//               ))}
+//             </ScrollView>
+//             {/* Newly added projects */}
+//             <Text style={styles.headerText}>Newly Added</Text>
+//             <ScrollView horizontal>
+//               {sampleProjects.map((project) => (
+//                 <View key={project.id} style={styles.largeProjectsView} >
+//                   {/* Image */}
+//                   <Image 
+//                   style={styles.largeProjectsImages}
+//                   source={project.image} 
+//                   />
+//                   {/* Text */}
+//                   <Text>{project.title}</Text>
+//                 </View>
+//               ))}
+//             </ScrollView>
+//             {/* Browse */}
+//             <Text style={styles.headerText}>Browse</Text>
+//           </View>
+//         }
+//       />
+      
+//     </View>
+//   );
+// }
 
-const Tab = createMaterialTopTabNavigator();
 
+// To test the simplegrid
+
+// To test the flatlist
 export default function ExploreScreen() {
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.headerStyle}>
         <ScrollView horizontal={true}>
           {/* <Ionicons name="checkmark-circle" size={32} />
           <Ionicons name="checkmark-circle" size={32} /> */}
@@ -137,38 +201,50 @@ export default function ExploreScreen() {
           <View style={styles.categories} key={category.id} >
             {/* Image */}
             <Ionicons name={category.icon} size={32} style={styles.icon} />
-            
             {/* Text */}
             <Text style={styles.categoryLabel}>{category.name}</Text>
-          </View>
+            </View>
           ))}
         </ScrollView>
         {/* Newly added projects */}
         <Text style={styles.headerText}>Newly Added</Text>
         <ScrollView horizontal>
-        {sampleProjects.map((project) => (
-        <View key={project.id} style={styles.largeProjectsView} >
-          {/* Image */}
-          <Image 
-            style={styles.largeProjectsImages}
-            source={project.image} 
-          />
-          {/* Text */}
-          <Text>{project.title}</Text>
-        </View>
-        ))}
+          {sampleProjects.map((project) => (
+            <View key={project.id} style={styles.largeProjectsView} >
+              {/* Image */}
+              <Image 
+              style={styles.largeProjectsImages}
+              source={project.image} 
+              />
+              {/* Text */}
+              <Text>{project.title}</Text>
+            </View>
+          ))}
         </ScrollView>
+        {/* Browse */}
+        <Text style={styles.headerText}>Browse</Text>
+        <FlatGrid
+          itemDimension={windowWidth/2.5}
+          data={sampleProjects}
+            renderItem={({item}) => (
+            <View>
+              <Item title={item.title} image={item.image}/>
+            </View>
+          )}
+        />
       </ScrollView>
-      
     </View>
   );
 }
 
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   categories: {
     padding: 15,
@@ -191,8 +267,33 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   largeProjectsImages: {
-    width: windowWidth/2, 
-    height: windowHeight/5,
+    width: windowWidth/1.5, 
+    height: windowHeight/3,
     paddingBottom: 15,
+    borderRadius: 5, 
+  },
+  browseProjectsView: {
+    // width: windowWidth/2, 
+    paddingBottom: 10,
+    paddingTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  browseProjectImages: {
+    width: windowWidth/2.5, 
+    height: windowHeight/7,
+    borderRadius: 5, 
+  },
+  columnWrapper: {
+    justifyContent: 'space-between', // Ensure equal spacing between columns
+  },
+  flatListContent: {
+    paddingHorizontal: (windowWidth-2*(windowWidth/2.5))/3, // Padding on the left and right
+  },
+  headerStyle: {
+    paddingHorizontal: 0,
   }
 });
+
+
+
