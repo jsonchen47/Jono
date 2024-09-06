@@ -74,7 +74,7 @@ const sampleCategories: Category[] = [
 const sampleProjects = [
   {
     id: 1,
-    title: 'John Doe',
+    title: 'App that automatically translates to pinyin',
     image: require('../../../assets/images/chair.png'),
     author: 'Engineer',
   },
@@ -128,68 +128,7 @@ const Item = ({title, image}: ItemProps) => (
   </View>
 );
 
-// // To test the flatlist
-// export default function ExploreScreen() {
-//   return (
-//     <View style={styles.container}>
-        
-//       <FlatList
-      
-//         columnWrapperStyle={styles.columnWrapper} 
-//         horizontal={false}
-//         numColumns={2}
-//         data={sampleProjects}
-//         renderItem={({item}) => (
-//           <View>
-//             <Item title={item.title} image={item.image}/>
-//           </View>
-//         )}
-//         keyExtractor={item => item.id.toString()}
-//         // contentContainerStyle={styles.flatListContent} 
-//         ListHeaderComponentStyle={styles.headerStyle}
-//         ListHeaderComponent={
-//           <View style={styles.headerStyle}>
-//             <ScrollView horizontal={true}>
-//               {/* <Ionicons name="checkmark-circle" size={32} />
-//               <Ionicons name="checkmark-circle" size={32} /> */}
-//               {sampleCategories.map((category) => (
-//               <View style={styles.categories} key={category.id} >
-//                 {/* Image */}
-//                 <Ionicons name={category.icon} size={32} style={styles.icon} />
-//                 {/* Text */}
-//                 <Text style={styles.categoryLabel}>{category.name}</Text>
-//                 </View>
-//               ))}
-//             </ScrollView>
-//             {/* Newly added projects */}
-//             <Text style={styles.headerText}>Newly Added</Text>
-//             <ScrollView horizontal>
-//               {sampleProjects.map((project) => (
-//                 <View key={project.id} style={styles.largeProjectsView} >
-//                   {/* Image */}
-//                   <Image 
-//                   style={styles.largeProjectsImages}
-//                   source={project.image} 
-//                   />
-//                   {/* Text */}
-//                   <Text>{project.title}</Text>
-//                 </View>
-//               ))}
-//             </ScrollView>
-//             {/* Browse */}
-//             <Text style={styles.headerText}>Browse</Text>
-//           </View>
-//         }
-//       />
-      
-//     </View>
-//   );
-// }
-
-
-// To test the simplegrid
-
-// To test the flatlist
+// To test the FlatGrid
 export default function ExploreScreen() {
   return (
     <View style={styles.container}>
@@ -216,15 +155,18 @@ export default function ExploreScreen() {
               style={styles.largeProjectsImages}
               source={project.image} 
               />
+              {/* Background gradient */}
               {/* Text */}
-              <Text>{project.title}</Text>
+              <View style={styles.overImageTextView} >
+                <Text style={styles.projectDescriptionText}>{project.title}</Text>
+              </View>
             </View>
           ))}
         </ScrollView>
         {/* Browse */}
         <Text style={styles.headerText}>Browse</Text>
         <FlatGrid
-          itemDimension={windowWidth/2.5}
+          itemDimension={windowWidth/2.2}
           data={sampleProjects}
             renderItem={({item}) => (
             <View>
@@ -271,17 +213,16 @@ const styles = StyleSheet.create({
     height: windowHeight/3,
     paddingBottom: 15,
     borderRadius: 5, 
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   browseProjectsView: {
-    // width: windowWidth/2, 
-    paddingBottom: 10,
-    paddingTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   browseProjectImages: {
-    width: windowWidth/2.5, 
-    height: windowHeight/7,
+    width: windowWidth/2.2, 
+    height: windowHeight/5,
     borderRadius: 5, 
   },
   columnWrapper: {
@@ -292,6 +233,20 @@ const styles = StyleSheet.create({
   },
   headerStyle: {
     paddingHorizontal: 0,
+  },
+  overImageTextView: {
+    top: 30,  // Set to top of the image
+    left: 30, // Set to the left side
+    right: 30, // Set to the right side
+    bottom: 30, // Set to the bottom side, so it covers the image
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+  },
+  projectDescriptionText: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    color: 'white',
   }
 });
 
