@@ -5,19 +5,19 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function ProjectDetails() {
-  const { id, title, author, description, image } = useLocalSearchParams();
+  const { id, title, author, description, image, skills, resources } = useLocalSearchParams();
   
-  
-
   return (
     <View style={styles.container}>
       <Image source={image as any} style={styles.image} />
       <View style={styles.textView}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.author}>{author}</Text>
+        <Text style={styles.author}>
+          {skills?.[0] || 'No skills listed'}
+        </Text>
         <Text style={styles.description}>{description}</Text>
       </View>
-      
     </View>
   );
 }

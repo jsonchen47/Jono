@@ -79,7 +79,9 @@ const sampleProjects = [
     title: 'Renewable energy powered robot to clean oceans',
     image: require('../../../assets/images/solar.png'),
     author: 'Barack Obama',
-    description: "",
+    description: 'This robot will be powered by solar power as well as the mechanical movement of the waves. I am looking for some engineers who are interested in working with me on the project.',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
   },
   {
     id: 2,
@@ -87,6 +89,8 @@ const sampleProjects = [
     image: require('../../../assets/images/cleanocean.jpg'),
     author: 'Jennifer Lawrence',
     description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
   },
   {
     id: 3,
@@ -94,6 +98,8 @@ const sampleProjects = [
     image: require('../../../assets/images/chinese.png'),
     author: 'Steve Carrel',
     description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
   },
   {
     id: 4,
@@ -101,6 +107,8 @@ const sampleProjects = [
     image: require('../../../assets/images/homeless.png'),
     author: 'Ryan Reynolds',
     description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
   },
   {
     id: 5,
@@ -108,6 +116,8 @@ const sampleProjects = [
     image: require('../../../assets/images/camel.png'),
     author: 'Pablo Picasso',
     description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
   },
   {
     id: 6,
@@ -115,6 +125,8 @@ const sampleProjects = [
     image: require('../../../assets/images/chair.png'),
     author: 'Engineer',
     description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
   },
   {
     id: 7,
@@ -122,6 +134,8 @@ const sampleProjects = [
     image: require('../../../assets/images/chair.png'),
     author: 'Engineer',
     description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
   },
 ];
 
@@ -171,7 +185,6 @@ export default function ExploreScreen() {
           {sampleProjects.map((project) => (
             <View key={project.id}>
 
-            
              {/* <Link href="/details"> */}
               <Link href={{
                 pathname: `/project/[id]`,
@@ -180,7 +193,9 @@ export default function ExploreScreen() {
                   title: project.title, 
                   author: project.author, 
                   description: project.description,
-                  image: project.image 
+                  image: project.image,
+                  skills: project.skills,
+                  resources: project.resources,
                 }
               }}>
                 <View style={styles.largeProjectsView} >
@@ -234,7 +249,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categories: {
-    padding: 15,
+    paddingLeft: 30,
+    padding: 10,
     flex: 1,
     alignItems: 'center',
   },
@@ -242,7 +258,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   categoryLabel: {
-    fontSize: 12,
+    fontSize: 10,
   },
   headerText: {
     fontSize: 20,
