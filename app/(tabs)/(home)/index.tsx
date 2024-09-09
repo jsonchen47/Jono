@@ -169,39 +169,43 @@ export default function ExploreScreen() {
         <Text style={styles.headerText}>Newly Added</Text>
         <ScrollView horizontal>
           {sampleProjects.map((project) => (
-            // <Link href="/details">
-            <Link href={{
-              pathname: `/project/[id]`,
-              params: { 
-                title: project.title, 
-                author: project.author, 
-                description: project.description,
-                image: project.image 
-              }
-            }}>
-              <View key={project.id} style={styles.largeProjectsView} >
-                {/* Image */}
-                <Image 
-                style={styles.largeProjectsImages}
-                source={project.image} 
-                />
-                {/* Background gradient */}
-                <View style={styles.linearGradientView}>
-                  <LinearGradient 
-                    style={styles.linearGradient}
-                    colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
-                  </LinearGradient>
-                  {/* Text */}
-                  <View style={styles.overImageTextView}>
-                    <Text style={styles.projectDescriptionText}>{project.title}</Text>
-                    <Text style={styles.newlyAddedAuthorText}>
-                      {project.author}
-                    </Text>
+            <View key={project.id}>
+
+            
+             {/* <Link href="/details"> */}
+              <Link href={{
+                pathname: `/project/[id]`,
+                params: { 
+                  id: project.id,
+                  title: project.title, 
+                  author: project.author, 
+                  description: project.description,
+                  image: project.image 
+                }
+              }}>
+                <View style={styles.largeProjectsView} >
+                  {/* Image */}
+                  <Image 
+                  style={styles.largeProjectsImages}
+                  source={project.image} 
+                  />
+                  {/* Background gradient */}
+                  <View style={styles.linearGradientView}>
+                    <LinearGradient 
+                      style={styles.linearGradient}
+                      colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
+                    </LinearGradient>
+                    {/* Text */}
+                    <View style={styles.overImageTextView}>
+                      <Text style={styles.projectDescriptionText}>{project.title}</Text>
+                      <Text style={styles.newlyAddedAuthorText}>
+                        {project.author}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </Link>
-             
+              </Link>
+             </View>
           ))}
         </ScrollView>
         {/* Browse */}

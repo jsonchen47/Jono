@@ -16,10 +16,29 @@ export default function HomeLayout() {
         name="index" 
         options={{
           // Hide the header for this route
-          headerShown: false,
+          title: 'Explore',
+          // headerShown: false,
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTintColor: 'black',
         }}
       />
-      <Stack.Screen name="details" />
+      <Stack.Screen 
+        name="project/[id]" 
+        options={{
+          // Hide the header for this route
+          // headerShown: false,
+          title: 'Project',
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTintColor: 'black',
+          // tabBarVisible: false // Hide tab bar for Project page
+
+        }}
+        
+      />
     </Stack>
   );
 }
