@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Link } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
 import { View, StyleSheet, Image, ScrollView, Animated, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card, Text } from '@ui-kitten/components';
@@ -79,42 +79,49 @@ const sampleProjects = [
     title: 'Renewable energy powered robot to clean oceans',
     image: require('../../../assets/images/solar.png'),
     author: 'Barack Obama',
+    description: "",
   },
   {
     id: 2,
     title: 'Wave-powered method to desalinate water',
     image: require('../../../assets/images/cleanocean.jpg'),
     author: 'Jennifer Lawrence',
+    description: '',
   },
   {
     id: 3,
     title: 'App that automatically translates to pinyin',
     image: require('../../../assets/images/chinese.png'),
     author: 'Steve Carrel',
+    description: '',
   },
   {
     id: 4,
     title: 'Advertising to help the homeless',
     image: require('../../../assets/images/homeless.png'),
     author: 'Ryan Reynolds',
+    description: '',
   },
   {
     id: 5,
     title: 'Genetically modified camel',
     image: require('../../../assets/images/camel.png'),
     author: 'Pablo Picasso',
+    description: '',
   },
   {
     id: 6,
     title: 'John Doe',
     image: require('../../../assets/images/chair.png'),
     author: 'Engineer',
+    description: '',
   },
   {
     id: 7,
     title: 'John Doe',
     image: require('../../../assets/images/chair.png'),
     author: 'Engineer',
+    description: '',
   },
 ];
 
@@ -124,7 +131,7 @@ type ItemProps = {
   author: string
 };
 
-const Item = ({title, image, author}: ItemProps) => (
+const Item = ({title, image, author, }: ItemProps) => (
   <View style={styles.browseProjectsView}>
     <Image style={styles.browseProjectImages} source={image} />
     <View style={styles.linearGradientView}>
@@ -162,8 +169,16 @@ export default function ExploreScreen() {
         <Text style={styles.headerText}>Newly Added</Text>
         <ScrollView horizontal>
           {sampleProjects.map((project) => (
-            <Link href="/details">
-          
+            // <Link href="/details">
+            <Link href={{
+              pathname: `/project/[id]`,
+              params: { 
+                title: project.title, 
+                author: project.author, 
+                description: project.description,
+                image: project.image 
+              }
+            }}>
               <View key={project.id} style={styles.largeProjectsView} >
                 {/* Image */}
                 <Image 
