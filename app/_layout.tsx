@@ -2,6 +2,8 @@ import { Stack } from 'expo-router';
 import { PaperProvider } from 'react-native-paper';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
+import {NavigationContainer} from '@react-navigation/native';
+
 
 export default function RootLayout() {
   return (
