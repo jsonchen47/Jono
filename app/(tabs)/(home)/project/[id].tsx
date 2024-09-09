@@ -1,15 +1,23 @@
 import { useLocalSearchParams } from 'expo-router';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default function ProjectDetails() {
   const { id, title, author, description, image } = useLocalSearchParams();
   
+  
+
   return (
     <View style={styles.container}>
       <Image source={image as any} style={styles.image} />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.author}>{author}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <View style={styles.textView}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.author}>{author}</Text>
+        <Text style={styles.description}>{description}</Text>
+      </View>
+      
     </View>
   );
 }
@@ -17,12 +25,12 @@ export default function ProjectDetails() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: windowWidth,
+    height: windowHeight/3,
   },
   title: {
     fontSize: 24,
@@ -36,4 +44,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
   },
+  textView: {
+    padding: windowWidth/20
+  }
 });
