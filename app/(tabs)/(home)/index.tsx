@@ -80,7 +80,7 @@ const sampleProjects = [
     image: require('../../../assets/images/solar.png'),
     author: 'Barack Obama',
     description: 'This robot will be powered by solar power as well as the mechanical movement of the waves. I am looking for some engineers who are interested in working with me on the project.',
-    skills: ['Engineering', 'Environmental Science'],
+    skills: ['Engineering', 'Coding', 'Environmental Science'],
     resources: ['Solar Panels', 'Fabrication Facility'],
   },
   {
@@ -194,8 +194,8 @@ export default function ExploreScreen() {
                   author: project.author, 
                   description: project.description,
                   image: project.image,
-                  skills: project.skills,
-                  resources: project.resources,
+                  skills: JSON.stringify(project.skills),
+                  resources: JSON.stringify(project.resources),
                 }
               }}>
                 <View style={styles.largeProjectsView} >
