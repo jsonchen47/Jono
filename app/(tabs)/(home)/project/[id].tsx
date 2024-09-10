@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
-import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Chip } from 'react-native-paper';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -19,6 +20,9 @@ export default function ProjectDetails() {
   
   return (
     <View style={styles.container}>
+
+   
+    <ScrollView >
       {/* Image */}
       <Image source={image as any} style={styles.image} />
       <View style={styles.textView}>
@@ -26,36 +30,40 @@ export default function ProjectDetails() {
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.author}>{author}</Text>
         {/* Skills */}
-        <Text style={styles.subTitle}>Skills </Text>
-        {skillsArr.map((skill: string, index: number) => (
-          <View style={{
-            margin: 5,
-            flexWrap: 'wrap',
-            }}>
-            <Chip 
-              key={index}
-              textStyle={{ color:'white',fontSize: 15 }}
-              style={{ backgroundColor: randomColor() }} >
-                {skill}</Chip>
-          </View>
-        ))}
+        <View style={styles.subtitleContainer}>
+          <Ionicons name={'extension-puzzle-outline'} size={32} style={styles.icon} />
+          <Text style={styles.subTitle}>Skills </Text>
+        </View>
+        <View style={styles.allChipsContainer}>
+          {skillsArr.map((skill: string, index: number) => (
+            <View style={styles.singleChipContainer}>
+              <Chip 
+                key={index}
+                textStyle={{ color:'white',fontSize: 15 }}
+                style={{ backgroundColor: randomColor() }} >
+                  {skill}
+              </Chip>
+            </View>
+          ))}
+        </View>
         {/* Resources */}
         <Text style={styles.subTitle}>Resources </Text>
-        {resourcesArr.map((resource: string, index: number) => (
-          <View style={{
-            margin: 5,
-            flexWrap: 'wrap',
-            }}>
-            <Chip 
-              key={index}
-              textStyle={{ color:'white',fontSize: 15 }}
-              style={{ backgroundColor: randomColor() }} >
-                {resource}</Chip>
-          </View>
-        ))}
+        <View style={styles.allChipsContainer}>
+          {resourcesArr.map((resource: string, index: number) => (
+            <View style={styles.singleChipContainer}>
+              <Chip 
+                key={index}
+                textStyle={{ color:'white',fontSize: 15 }}
+                style={{ backgroundColor: randomColor() }} >
+                  {resource}
+              </Chip>
+            </View>
+          ))}
+        </View>
         {/* Description */}
         <Text style={styles.description}>{description}</Text>
       </View>
+    </ScrollView>
     </View>
   );
 }
@@ -89,5 +97,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     paddingTop: 15,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  allChipsContainer: {
+    margin: 5,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+  },
+  singleChipContainer: {
+    padding: 5,
+  },
+  icon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  subtitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   }
 });
