@@ -173,7 +173,7 @@ export default function ExploreScreen() {
           {sampleCategories.map((category) => (
           <View style={styles.categories} key={category.id} >
             {/* Image */}
-            <Ionicons name={category.icon} size={32} style={styles.icon} />
+            <Ionicons name={category.icon} size={25} style={styles.icon} />
             {/* Text */}
             <Text style={styles.categoryLabel}>{category.name}</Text>
             </View>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categories: {
-    paddingLeft: 30,
+    paddingLeft: 20,
     padding: 10,
     flex: 1,
     alignItems: 'center',
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   categoryLabel: {
-    fontSize: 10,
+    fontSize: 12,
   },
   headerText: {
     fontSize: 20,
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     width: windowWidth/1.5, 
     height: windowHeight/3,
     paddingBottom: 15,
-    borderRadius: 5, 
+    borderRadius: 15, 
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   browseProjectImages: {
     width: windowWidth/2.2, 
     height: windowHeight/5,
-    borderRadius: 5, 
+    borderRadius: 15, 
   },
   columnWrapper: {
     justifyContent: 'space-between', // Ensure equal spacing between columns
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
   },
   projectDescriptionText: {
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 20,
     color: 'white',
     justifyContent: 'flex-end',
   },
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
   linearGradient: {
     width: windowWidth/1.5, 
     height: windowHeight/3/1.5,
-    borderRadius: 5, 
+    borderRadius: 15, 
   },
   linearGradientView: {
     top: 0,  // Set to top of the image
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
   linearGradientBrowse: {
     width: windowWidth/2.2, 
     height: windowHeight/5/1.5,
-    borderRadius: 5, 
+    borderRadius: 15, 
   },
   browseAuthorText: {
     fontSize: 10,
