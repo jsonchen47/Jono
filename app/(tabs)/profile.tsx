@@ -14,31 +14,43 @@ export default function ProfileScreen() {
   bio: 'I’m a painter, musician, and part-time president',
   image: require('../../assets/images/obama.jpeg'),
   email: "john.doe@example.com",
-  projects: 47,
-  teams: 47, 
-  connections: 322,
+  numProjects: 47,
+  numTeams: 47, 
+  numConnections: 322,
   skills: ["React", "JavaScript", "Node.js"],
   resources: ["Laptop", "Online Tutorials"]
 };
 
   return (
     <View style={styles.container}>
+      {/* Top content */}
       <View style={styles.topContent}>
         <View>
           <Text style={styles.name}>{user.name}</Text>
           <Text style={{fontWeight: '500'}}>{user.username}</Text>
           {/* Stats */}
           <View style={styles.allStatsContainer}>
-            <View style={styles.stat}>
-              <Text>{user.projects}</Text>
+            <View style={styles.statContainer}>
+              <Text style={styles.statNumber}>{user.numProjects}</Text>
+              <Text style={styles.statLabel}>Projects</Text>
+            </View>
+            <View style={styles.statContainer}>
+              <Text style={styles.statNumber}>{user.numTeams}</Text>
+              <Text style={styles.statLabel}>Teams</Text>
+            </View>
+            <View style={styles.statContainer}>
+              <Text style={styles.statNumber}>{user.numConnections}</Text>
+              <Text style={styles.statLabel}>Connections</Text>
             </View>
           </View>
         </View>
+        {/* Profile picture */}
         <View style={styles.imageContainer}>
           <Image style={styles.image} source={user.image}/>
         </View>
       </View>
-      
+      {/* Bio */}
+      <Text>{user.bio}</Text>
     </View>
   );
 }
@@ -46,7 +58,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   image: {
@@ -72,8 +84,19 @@ const styles = StyleSheet.create({
   },
   allStatsContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: 10
   },
-  stat: {
-    padding: 30,
+  statContainer: {
+    paddingRight: 10,
+    justifyContent: 'center',
+  },
+  statNumber: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    
+  }, 
+  statLabel: {
+
   }
 });
