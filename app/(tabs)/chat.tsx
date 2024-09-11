@@ -1,16 +1,13 @@
 import { Link } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import ChatListItem from '../../components/ChatListItem';
 
 
-export default function SettingsScreen() {
+export default function ChatScreen() {
   return (
     <View style={styles.container}>
-      <Text>Settings</Text>
-      <ScrollView horizontal={true}>
-        <Ionicons name="checkmark-circle" size={32} />
-        <Ionicons name="checkmark-circle" size={32} />
-      </ScrollView>
+      <ChatListItem></ChatListItem>
     </View>
   );
 }
