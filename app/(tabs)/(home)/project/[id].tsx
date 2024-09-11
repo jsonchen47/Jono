@@ -41,7 +41,7 @@ export default function ProjectDetails() {
             <View style={styles.singleChipContainer}>
               <Chip 
                 key={index}
-                textStyle={{ color:'white',fontSize: 15 }}
+                textStyle={{ color:'white',fontSize: 14 }}
                 style={{ backgroundColor: randomColor() }} >
                   {skill}
               </Chip>
@@ -58,7 +58,7 @@ export default function ProjectDetails() {
             <View style={styles.singleChipContainer}>
               <Chip 
                 key={index}
-                textStyle={{ color:'white',fontSize: 15 }}
+                textStyle={{ color:'white',fontSize: 14 }}
                 style={{ backgroundColor: randomColor() }} >
                   {resource}
               </Chip>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     flex: 1,
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: '500',
     justifyContent: 'center',
     alignItems: 'center',
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     display:"flex",
-    fontSize: 20,
+    fontSize: 17,
   },
   subtitleContainer: {
     paddingTop: 15,
