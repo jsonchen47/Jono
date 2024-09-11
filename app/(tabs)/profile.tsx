@@ -130,6 +130,7 @@ const user =
 
 const Header = () => {
   return (
+    <SafeAreaView pointerEvents='box-none'>
     <View pointerEvents='box-none' style={styles.container}>
         {/* Top content */}
         <View pointerEvents='box-none' style={styles.topContent}>
@@ -166,6 +167,7 @@ const Header = () => {
               Edit
             </Button>
           </View>
+          <View style={{padding: 5}}></View>
           <View style={styles.buttonContainer}>
             <Button mode="contained" onPress={() => console.log('Pressed')}>
               Share
@@ -183,7 +185,7 @@ const Header = () => {
               <View style={styles.singleChipContainer}>
                 <Chip 
                   key={index}
-                  textStyle={{ color:'white',fontSize: 14 }}
+                  textStyle={styles.chip}
                   style={{ backgroundColor: randomColor() }} >
                     {skill}
                 </Chip>
@@ -200,7 +202,7 @@ const Header = () => {
               <View style={styles.singleChipContainer}>
                 <Chip 
                   key={index}
-                  textStyle={{ color:'white',fontSize: 14 }}
+                  textStyle={styles.chip}
                   style={{ backgroundColor: randomColor() }} >
                     {resource}
                 </Chip>
@@ -208,9 +210,9 @@ const Header = () => {
             ))}
           </View>
           <View>
-            <Text style={styles.subTitle}>Projects</Text>
           </View>
       </View>
+      </SafeAreaView>
   );
 }
 
@@ -228,7 +230,6 @@ export default function ProfileScreen() {
     return (
       <View >
         <FlatGrid
-        // scrollEnabled = {false}
             itemDimension={windowWidth/2.2}
             data={sampleProjects}
               renderItem={({item}) => (
@@ -237,45 +238,27 @@ export default function ProfileScreen() {
               </View>
             )}
           />
-         {/* <View style={styles.gridContainer}>
-        {sampleProjects.map((item) => (
-          <View key={item.id} style={styles.gridItem}>
-            <Text>{item.title}</Text>
-          </View>
-        ))}
-      </View> */}
+         
       </View>
     );
   }
 
 
   return (
-
+    
     <Tabs.Container renderHeader={Header}>
-      <Tabs.Tab name="Owned">
+      <Tabs.Tab name="My Projects">
       <Tabs.ScrollView>
         <OwnedScreen/>
         </Tabs.ScrollView>
-        {/* <View>
-          <View style={[styles.box, styles.boxA]} />
-          <View style={[styles.box, styles.boxB]} />
-        </View> */}
+        
       </Tabs.Tab>
-      <Tabs.Tab name="Joined">
+      <Tabs.Tab name="Teams">
 
       </Tabs.Tab>
     </Tabs.Container>
+    
 
-    // <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{flex: 1}} >
-    //   <View style={{flex: 1}}>
-    //   </View>
-    //   <View >
-    //   <Tab.Navigator style={{height: (Math.ceil(user.numProjects)/2)*(windowWidth/2.2)+500}} >
-    //       <Tab.Screen name="Owned" component={OwnedScreen} />
-    //       <Tab.Screen name="Joined" component={JoinedScreen} />
-    //     </Tab.Navigator>
-    //     </View>
-    // </ScrollView>
     
 
   );
@@ -286,12 +269,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    padding: 30,
+    paddingLeft: 25,
+    paddingRight: 25, 
+    paddingTop: 25,
+    paddingBottom: 5,
   },
   image: {
-    height: 100,
-    width: 100,
-    borderRadius: 50,
+    height: 80,
+    width: 80,
+    borderRadius: 40,
   },
   imageContainer: {
     // padding: 30,
@@ -314,7 +300,7 @@ const styles = StyleSheet.create({
   allStatsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingTop: 20
+    paddingTop: 10
   },
   statContainer: {
     paddingRight: 10,
@@ -329,24 +315,25 @@ const styles = StyleSheet.create({
 
   },
   bio: {
-    paddingTop: 20,
+    paddingTop: 10,
   },
   allButtonsContainer: {
+    flex: 1,
     flexDirection: 'row',
     paddingTop: 20,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   buttonContainer: {
-    // flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
+    flex: 1,
+    // paddingLeft: 5,
+    // paddingRight: 5,
     // alignSelf: 'stretch',
     // width: '50%'
   },
   button: {
-    // alignSelf: 'stretch',
-    // width: '100%'
+    alignSelf: 'stretch',
+    width: '100%'
   }, 
   subTitle: {
     flex: 1,
@@ -361,10 +348,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
     paddingTop: 10,
-    paddingBottom: 10,
   },
   singleChipContainer: {
     paddingRight: 10,
+  },
+  chip: {
+    color:'white',
+    fontSize: 12,
   },
   icon: {
     justifyContent: 'center',
@@ -449,4 +439,9 @@ const styles = StyleSheet.create({
   boxB: {
     backgroundColor: '#D8D8D8',
   },
+  projectsHeader: {
+    paddingTop: 40, 
+    fontSize: 20,
+    fontWeight: 'bold'
+  }
 });
