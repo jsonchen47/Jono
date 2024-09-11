@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -7,6 +7,102 @@ import { Button, Chip } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+import { FlatGrid } from 'react-native-super-grid';
+import { Tabs } from 'react-native-collapsible-tab-view'
+
+
+
+
+const sampleProjects = [
+  {
+    id: 1,
+    title: 'Renewable energy powered robot to clean oceans',
+    image: require('../../assets/images/solar.png'),
+    author: 'Barack Obama',
+    description: 'This robot will be powered by solar power as well as the mechanical movement of the waves. I am looking for some engineers who are interested in working with me on the project.',
+    skills: ['Engineering', 'Coding', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
+  },
+  {
+    id: 2,
+    title: 'Wave-powered method to desalinate water',
+    image: require('../../assets/images/cleanocean.jpg'),
+    author: 'Jennifer Lawrence',
+    description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
+  },
+  {
+    id: 3,
+    title: 'App that automatically translates to pinyin',
+    image: require('../../assets/images/chinese.png'),
+    author: 'Steve Carrel',
+    description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
+  },
+  {
+    id: 4,
+    title: 'Advertising to help the homeless',
+    image: require('../../assets/images/homeless.png'),
+    author: 'Ryan Reynolds',
+    description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
+  },
+  {
+    id: 5,
+    title: 'Genetically modified camel',
+    image: require('../../assets/images/camel.png'),
+    author: 'Pablo Picasso',
+    description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
+  },
+  {
+    id: 6,
+    title: 'John Doe',
+    image: require('../../assets/images/chair.png'),
+    author: 'Engineer',
+    description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
+  },
+  {
+    id: 7,
+    title: 'John Doe',
+    image: require('../../assets/images/chair.png'),
+    author: 'Engineer',
+    description: '',
+    skills: ['Engineering', 'Environmental Science'],
+    resources: ['Solar Panels', 'Fabrication Facility'],
+  },
+];
+
+type ItemProps = {
+  title: string
+  image: any
+  author: string
+};
+
+const Item = ({title, image, author, }: ItemProps) => (
+  <View style={styles.browseProjectsView}>
+    <Image style={styles.browseProjectImages} source={image} />
+    <View style={styles.linearGradientView}>
+      <LinearGradient 
+        style={styles.browseLinearGradient}
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
+      </LinearGradient>
+    </View>
+    <View style={styles.browseOverImageTextView}>
+      <Text style={styles.browseProjectsText}>{title}</Text>  
+      <Text style={styles.browseAuthorText}>
+          {author}
+      </Text>
+    </View>
+  </View>
+);
 
 const color = ['red', '#66CCFF', '#FFCC00', '#1C9379', '#8A7BA7'];
 
@@ -17,24 +113,7 @@ const randomColor = () => {
 
 const Tab = createMaterialTopTabNavigator();
 
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-export default function ProfileScreen() {
-  const user = 
+const user = 
 {
   id: 1,
   name: "Barack Obama",
@@ -42,19 +121,18 @@ export default function ProfileScreen() {
   bio: 'I’m a painter, musician, and part-time president',
   image: require('../../assets/images/obama.jpeg'),
   email: "john.doe@example.com",
-  numProjects: 47,
-  numTeams: 47, 
+  numProjects: 7,
+  numTeams: 7, 
   numConnections: 322,
   skills: ["React", "JavaScript", "Node.js"],
   resources: ["Laptop", "Online Tutorials"]
 };
 
+const Header = () => {
   return (
-    // <SafeAreaView>
-    <ScrollView>
-      <View style={styles.container}>
+    <View pointerEvents='box-none' style={styles.container}>
         {/* Top content */}
-        <View style={styles.topContent}>
+        <View pointerEvents='box-none' style={styles.topContent}>
           <View>
             <Text style={styles.name}>{user.name}</Text>
             <Text style={{fontWeight: '500'}}>{user.username}</Text>
@@ -133,13 +211,73 @@ export default function ProfileScreen() {
             <Text style={styles.subTitle}>Projects</Text>
           </View>
       </View>
-        <Tab.Navigator>
-          <Tab.Screen name="Owned" component={HomeScreen} />
-          <Tab.Screen name="Joined" component={SettingsScreen} />
-        </Tab.Navigator>
-    </ScrollView>
+  );
+}
+
+function JoinedScreen() {
+  return (
+    <View >
+      <Text>Join!</Text>
+    </View>
+  );
+}
+
+export default function ProfileScreen() {
+
+  function OwnedScreen() {
+    return (
+      <View >
+        <FlatGrid
+        // scrollEnabled = {false}
+            itemDimension={windowWidth/2.2}
+            data={sampleProjects}
+              renderItem={({item}) => (
+              <View>
+                <Item title={item.title} image={item.image} author={item.author}/>
+              </View>
+            )}
+          />
+         {/* <View style={styles.gridContainer}>
+        {sampleProjects.map((item) => (
+          <View key={item.id} style={styles.gridItem}>
+            <Text>{item.title}</Text>
+          </View>
+        ))}
+      </View> */}
+      </View>
+    );
+  }
+
+
+  return (
+
+    <Tabs.Container renderHeader={Header}>
+      <Tabs.Tab name="Owned">
+      <Tabs.ScrollView>
+        <OwnedScreen/>
+        </Tabs.ScrollView>
+        {/* <View>
+          <View style={[styles.box, styles.boxA]} />
+          <View style={[styles.box, styles.boxB]} />
+        </View> */}
+      </Tabs.Tab>
+      <Tabs.Tab name="Joined">
+
+      </Tabs.Tab>
+    </Tabs.Container>
+
+    // <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{flex: 1}} >
+    //   <View style={{flex: 1}}>
+    //   </View>
+    //   <View >
+    //   <Tab.Navigator style={{height: (Math.ceil(user.numProjects)/2)*(windowWidth/2.2)+500}} >
+    //       <Tab.Screen name="Owned" component={OwnedScreen} />
+    //       <Tab.Screen name="Joined" component={JoinedScreen} />
+    //     </Tab.Navigator>
+    //     </View>
+    // </ScrollView>
     
-    // </SafeAreaView>
+
   );
 }
 
@@ -239,5 +377,76 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     flexDirection: 'row',
     alignItems: 'center',
-  }
+  },
+  // Browse styles
+  linearGradientView: {
+    top: 0,  // Set to top of the image
+    left: 0, // Set to the left side
+    right: 0, // Set to the right side
+    bottom: 0, // Set to the bottom side, so it covers the image
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  }, 
+  flatListContent: {
+    paddingHorizontal: (windowWidth-2*(windowWidth/2.5))/3, // Padding on the left and right
+  },
+  browseProjectsView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  browseProjectImages: {
+    width: windowWidth/2.2, 
+    height: windowHeight/5,
+    borderRadius: 15, 
+  },
+  browseProjectsText: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'white',
+    justifyContent: 'flex-end',
+  }, 
+  browseOverImageTextView: {
+    top: 15,  // Set to top of the image
+    left: 15, // Set to the left side
+    right: 15, // Set to the right side
+    bottom: 15, // Set to the bottom side, so it covers the image
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+  },
+  browseLinearGradient: {
+    width: windowWidth/2.2, 
+    height: windowHeight/5/1.5,
+    borderRadius: 15, 
+  },
+  browseAuthorText: {
+    fontSize: 10,
+    color: 'white',
+    justifyContent: 'flex-end',
+    paddingTop: 5,
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  gridItem: {
+    width: windowWidth / 2.2, // Control the size of each grid item
+    height: 150, // Fixed height for each grid item
+    backgroundColor: '#dcdcdc',
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  box: {
+    height: 250,
+    width: '100%',
+  },
+  boxA: {
+    backgroundColor: 'white',
+  },
+  boxB: {
+    backgroundColor: '#D8D8D8',
+  },
 });
