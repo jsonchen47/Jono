@@ -2,6 +2,8 @@ import { useLocalSearchParams } from 'expo-router';
 import { View, Image, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Chip } from 'react-native-paper';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,7 +23,6 @@ export default function ProjectDetails() {
   return (
     <View style={styles.container}>
 
-   
     <ScrollView >
       {/* Image */}
       <Image source={image as any} style={styles.image} />
@@ -31,7 +32,8 @@ export default function ProjectDetails() {
         <Text style={styles.author}>{author}</Text>
         {/* Skills */}
         <View style={styles.subtitleContainer}>
-          <Ionicons name={'extension-puzzle-outline'} size={32} style={styles.icon} />
+          {/* <Ionicons name={'extension-puzzle-outline'} size={32} style={styles.icon} /> */}
+          <Icon name='atom' style={styles.icon}></Icon>
           <Text style={styles.subTitle}>Skills </Text>
         </View>
         <View style={styles.allChipsContainer}>
@@ -47,7 +49,10 @@ export default function ProjectDetails() {
           ))}
         </View>
         {/* Resources */}
-        <Text style={styles.subTitle}>Resources </Text>
+        <View style={styles.subtitleContainer}>
+          <Icon name='suitcase' style={styles.icon}></Icon>
+          <Text style={styles.subTitle}>Resources </Text>
+        </View>
         <View style={styles.allChipsContainer}>
           {resourcesArr.map((resource: string, index: number) => (
             <View style={styles.singleChipContainer}>
@@ -94,11 +99,12 @@ const styles = StyleSheet.create({
     padding: windowWidth/20
   },
   subTitle: {
+    flex: 1,
     fontSize: 20,
     fontWeight: '500',
-    paddingTop: 15,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 15,
   },
   allChipsContainer: {
     margin: 5,
@@ -111,10 +117,12 @@ const styles = StyleSheet.create({
   icon: {
     justifyContent: 'center',
     alignItems: 'center',
+    display:"flex",
+    fontSize: 20,
   },
   subtitleContainer: {
+    paddingTop: 15,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   }
 });

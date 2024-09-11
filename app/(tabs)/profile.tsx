@@ -1,8 +1,12 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+import { Button } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
+
 
 
 export default function ProfileScreen() {
@@ -22,6 +26,7 @@ export default function ProfileScreen() {
 };
 
   return (
+    // <SafeAreaView>
     <View style={styles.container}>
       {/* Top content */}
       <View style={styles.topContent}>
@@ -50,16 +55,33 @@ export default function ProfileScreen() {
         </View>
       </View>
       {/* Bio */}
-      <Text>{user.bio}</Text>
+      <Text style={styles.bio}>{user.bio}</Text>
+      {/* Buttons */}
+      <View style={styles.allButtonsContainer}>
+        <View style={styles.buttonContainer}>
+          <Button style={styles.button} mode="contained" onPress={() => console.log('Pressed')}>
+            Press me
+          </Button>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button mode="contained" onPress={() => console.log('Pressed')}>
+            Press me
+          </Button>
+        </View>
+      </View>
+      <Icon name="rocket"></Icon>
+  <Text>hello</Text>
     </View>
+    // </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'flex-start',
+    // alignItems: 'flex-start',
+    padding: 30,
   },
   image: {
     height: 100,
@@ -69,13 +91,15 @@ const styles = StyleSheet.create({
   imageContainer: {
     // padding: 30,
     // justifyContent: 'flex-end',
+    // flexShrink: 1,  
   },
   topContent: {
-    flex: 1,
     flexDirection: 'row',
-    padding: 30,
+    // padding: 30,
     justifyContent: 'space-between',
-    width: windowWidth,
+    width: '100%',
+    // width: windowWidth,
+    // flexBasis: 'auto',
   },
   name: {
     fontSize: 24,
@@ -85,7 +109,7 @@ const styles = StyleSheet.create({
   allStatsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingTop: 10
+    paddingTop: 20
   },
   statContainer: {
     paddingRight: 10,
@@ -93,10 +117,30 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontSize: 17,
-    fontWeight: 'bold',
+    fontWeight: '700',
     
   }, 
   statLabel: {
 
+  },
+  bio: {
+    paddingTop: 20,
+  },
+  allButtonsContainer: {
+    flexDirection: 'row',
+    paddingTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    // flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    // alignSelf: 'stretch',
+    // width: '50%'
+  },
+  button: {
+    // alignSelf: 'stretch',
+    // width: '100%'
   }
 });
