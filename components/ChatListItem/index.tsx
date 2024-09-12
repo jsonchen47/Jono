@@ -1,20 +1,22 @@
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 
 
-const ChatListItem = () => {
+const ChatListItem = ({chat}: any) => {
     return (
     // <Text>ChatListItem</Text>
 
     <View style={styles.container}>
-      <Image source={{ uri: 'https://m.media-amazon.com/images/M/MV5BMTUxMzU2MTk1OF5BMl5BanBnXkFtZTgwNzg4NjAwMzI@._V1_FMjpg_UX1000_.jpg'}}
+      <Image source={{ uri: chat.user.image}}
       style={styles.image}/>
       <View style={styles.content}>
         <View style={styles.row}>
-          <Text style={styles.name} numberOfLines={1}>Lukas</Text>
-          <Text style={styles.subTitle}>8:30</Text>
+          <Text style={styles.name} numberOfLines={1}>
+            {chat.user.name}
+        </Text>
+          <Text style={styles.subTitle}>{chat.lastMessage.createdAt}</Text>
         </View>
         <Text numberOfLines={2} style={styles.subTitle}>
-          Hello there 
+          {chat.lastMessage.text}
         </Text>
       </View>
     </View>
