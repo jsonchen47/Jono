@@ -254,7 +254,7 @@ export default function ProfileScreen() {
         
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
-
+        <View></View>
       </Tabs.Tab>
     </Tabs.Container>
     

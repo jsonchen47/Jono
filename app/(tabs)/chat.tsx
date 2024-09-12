@@ -2,7 +2,8 @@ import { Link } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ChatListItem from '../../components/ChatListItem';
-import ChatsScreen from '../(tabs)/ChatsScreen';
+import ChatsScreen from '../../screens/ChatsScreen';
+import ChatScreen from '../../screens/ChatScreen';
 
 const chat = {
   id: "1",
@@ -17,10 +18,10 @@ const chat = {
   },
 };
 
-export default function ChatScreen() {
+export default function Chat() {
   return (
     <View style={styles.container}>
-      <ChatsScreen/>
+      <ChatScreen/>
     </View>
   );
 }
