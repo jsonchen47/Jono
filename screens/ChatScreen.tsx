@@ -1,30 +1,33 @@
-import { View, Text, ImageBackground, StyleSheet, FlatList } from "react-native";
+import { View, Text, ImageBackground, StyleSheet, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
 import Message from '../components/Message';
 import messages from '../assets/data/messages.json';
-import chats from '../assets/data/chats.json'
-import ChatListItem from '../components/ChatListItem'
+import InputBox from '../components/InputBox'
+import { useHeaderHeight } from '@react-navigation/elements'
+
 
 const bg = require("../assets/images/BG.png");
 
 const ChatScreen = () => {
+  const height = useHeaderHeight()
   return (
-    <ImageBackground source={bg} style={styles.bg}>
-      <FlatList
-        data={messages}
-        renderItem={({ item }) => 
-          <Message message={item}/>
-        }
-        // style={styles.list}
-        // inverted
-      />
-      {/* <FlatList
-        data={chats}
-        renderItem={({item}) => 
-            <ChatListItem chat={item}/>
-        }
-        /> */}
-    </ImageBackground>
+    <KeyboardAvoidingView 
+      keyboardVerticalOffset={height}
+      behavior={ Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.bg}
+    >
+      <ImageBackground source={bg} style={styles.bg}>
+        <FlatList
+          data={messages}
+          renderItem={({ item }) => 
+            <Message message={item}/>
+          }
+          style={styles.list}
+          inverted
+        />
+        <InputBox/>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 };
 
