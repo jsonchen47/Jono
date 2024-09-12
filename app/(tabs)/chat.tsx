@@ -2,6 +2,7 @@ import { Link } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ChatListItem from '../../components/ChatListItem';
+import ChatsScreen from '../(tabs)/ChatsScreen';
 
 const chat = {
   id: "1",
@@ -19,7 +20,7 @@ const chat = {
 export default function ChatScreen() {
   return (
     <View style={styles.container}>
-      <ChatListItem chat={chat} bool={true} string="Hello"/>
+      <ChatsScreen/>
     </View>
   );
 }
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
+    paddingVertical: 50,
   },
 });
