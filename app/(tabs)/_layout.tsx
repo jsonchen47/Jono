@@ -32,6 +32,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbubble" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen 
