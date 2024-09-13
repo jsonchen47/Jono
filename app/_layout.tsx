@@ -6,9 +6,16 @@ import {NavigationContainer} from '@react-navigation/native';
 import Navigator from '../src/navigation'
 import ChatScreen from './ChatScreen'
 import { View, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem } from 'react-native';
+import { Amplify } from "aws-amplify"; 
+// @ts-ignore
+import {withAuthenticator} from "aws-amplify-react-native"; 
+import awsconfig from "../src/aws-exports";
 
 
-export default function RootLayout() {
+
+Amplify.configure(awsconfig);
+
+function RootLayout() {
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
       <PaperProvider>
@@ -31,3 +38,4 @@ export default function RootLayout() {
   );
 }
 
+export default withAuthenticator(RootLayout); 

@@ -10,6 +10,11 @@
       "StackName": "amplify-jono-dev-c85f4",
       "StackId": "arn:aws:cloudformation:us-west-1:054037117247:stack/amplify-jono-dev-c85f4/a7e5a3f0-7211-11ef-abd4-021a8fe05509",
       "AmplifyAppId": "d3u6pjfwz6ed9z"
+    },
+    "categories": {
+      "auth": {
+        "Jono": {}
+      }
     }
   }
 }
