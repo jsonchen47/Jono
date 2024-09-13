@@ -150,11 +150,11 @@ const Item = ({title, image, author, }: ItemProps) => (
     <Image style={styles.browseProjectImages} source={image} />
     <View style={styles.linearGradientView}>
       <LinearGradient 
-        style={styles.linearGradientBrowse}
+        style={styles.browseLinearGradient}
         colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
       </LinearGradient>
     </View>
-    <View style={styles.overImageTextViewBrowse}>
+    <View style={styles.browseOverImageTextView}>
       <Text style={styles.browseProjectsText}>{title}</Text>  
       <Text style={styles.browseAuthorText}>
           {author}
@@ -167,7 +167,7 @@ const Item = ({title, image, author, }: ItemProps) => (
 export default function ExploreScreen() {
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.headerStyle}>
+      <ScrollView style={styles.scrollView}>
         {/* Categories */}
         <ScrollView horizontal={true}>
           {sampleCategories.map((category) => (
@@ -277,22 +277,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  browseProjectsView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  browseProjectImages: {
-    width: windowWidth/2.2, 
-    height: windowHeight/5,
-    borderRadius: 15, 
-  },
-  columnWrapper: {
-    justifyContent: 'space-between', // Ensure equal spacing between columns
-  },
-  flatListContent: {
-    paddingHorizontal: (windowWidth-2*(windowWidth/2.5))/3, // Padding on the left and right
-  },
-  headerStyle: {
+  scrollView: {
     paddingHorizontal: 0,
   },
   overImageTextView: {
@@ -331,13 +316,26 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   }, 
+  // Browse styles
+  flatListContent: {
+    paddingHorizontal: (windowWidth-2*(windowWidth/2.5))/3, // Padding on the left and right
+  },
+  browseProjectsView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  browseProjectImages: {
+    width: windowWidth/2.2, 
+    height: windowHeight/5,
+    borderRadius: 15, 
+  },
   browseProjectsText: {
     fontWeight: 'bold',
     fontSize: 15,
     color: 'white',
     justifyContent: 'flex-end',
   }, 
-  overImageTextViewBrowse: {
+  browseOverImageTextView: {
     top: 15,  // Set to top of the image
     left: 15, // Set to the left side
     right: 15, // Set to the right side
@@ -346,7 +344,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
   },
-  linearGradientBrowse: {
+  browseLinearGradient: {
     width: windowWidth/2.2, 
     height: windowHeight/5/1.5,
     borderRadius: 15, 
