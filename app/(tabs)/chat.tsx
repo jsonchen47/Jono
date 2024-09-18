@@ -1,7 +1,9 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Navigator from '../../src/navigation';
+import chats from '../../assets/data/chats.json'
+import ChatListItem from '../../src/components/ChatListItem'
 
 const chat = {
   id: "1",
@@ -19,7 +21,22 @@ const chat = {
 export default function Chat() {
   return (
     <View style={styles.container}>
-      <Navigator/>
+    
+      <FlatList
+          data={chats}
+          renderItem={({item}) => 
+            <Link
+            href={{
+              pathname: '../chatScreen/[id]',
+              params: { id: item.id, name: item.user.name },
+            }}>
+            <ChatListItem chat={item}/>
+            {/* <Text>
+              hi
+            </Text> */}
+            </Link>
+      }
+      />
     </View>
   );
 }
@@ -27,7 +44,7 @@ export default function Chat() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     // alignItems: 'center',
     // paddingVertical: 50,
   },

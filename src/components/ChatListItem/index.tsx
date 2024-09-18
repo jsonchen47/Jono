@@ -11,8 +11,9 @@ const ChatListItem = ({chat}: any) => {
     return (
     // <Text>ChatListItem</Text>
 
-    <Pressable onPress={() => navigation.navigate('Chat', { id: chat.id, name: chat.user.name })} style={styles.container}>
-      <Image source={{ uri: chat.user.image}}
+    // <Pressable onPress={() => navigation.navigate('Chat', { id: chat.id, name: chat.user.name })} style={styles.container}>
+      <View style={styles.container}>
+     <Image source={{ uri: chat.user.image}}
       style={styles.image}/>
       <View style={styles.content}>
         <View style={styles.row}>
@@ -25,7 +26,8 @@ const ChatListItem = ({chat}: any) => {
           {chat.lastMessage.text}
         </Text>
       </View>
-    </Pressable>
+      </View>
+    // </Pressable>
     );
 };
 
@@ -34,13 +36,14 @@ export default ChatListItem;
 
 const styles = StyleSheet.create({
     container: {
-    //   flex: 1,
+      flex: 1,
     //   justifyContent: 'center',
     //   alignItems: 'center',
       flexDirection: 'row',
       marginHorizontal: 10, 
       marginVertical: 5,
       height: 70,
+      width: '100%',
     },
     image: {
       width: 60, 
@@ -50,7 +53,7 @@ const styles = StyleSheet.create({
     }, 
     content: {
       flex: 1,
-      
+
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomColor: 'lightgray'
   

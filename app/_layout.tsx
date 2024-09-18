@@ -10,6 +10,7 @@ import { Amplify } from "aws-amplify";
 // @ts-ignore
 import {withAuthenticator} from "aws-amplify-react-native"; 
 import awsconfig from "../src/aws-exports";
+// import {Picker} from 'react-native';
 
 
 
@@ -26,9 +27,9 @@ function RootLayout() {
                 headerShown: false,
               }}
             />
-            {/* <Stack.Screen
-            name="ChatScreen"
-            /> */}
+            <Stack.Screen
+            name="chatScreen/[id]"
+            />
           </Stack>
           {/* <View>
             <Text>hi</Text>
@@ -39,3 +40,5 @@ function RootLayout() {
 }
 
 export default withAuthenticator(RootLayout); 
+
+// export default RootLayout; 
