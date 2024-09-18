@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet, FlatList, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, Image, SafeAreaView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Navigator from '../../src/navigation';
 import chats from '../../assets/data/chats.json'
@@ -20,7 +20,8 @@ const chat = {
 
 export default function Chat() {
   return (
-    <View style={styles.container}>
+    
+    <SafeAreaView style={styles.container}>
     
       <FlatList
           data={chats}
@@ -37,7 +38,7 @@ export default function Chat() {
             </Link>
       }
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
