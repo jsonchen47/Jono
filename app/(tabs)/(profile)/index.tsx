@@ -1,15 +1,18 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, Button as Button2 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { Button, Chip } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { FlatGrid } from 'react-native-super-grid';
 import { Tabs } from 'react-native-collapsible-tab-view'
+import { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { Button as Button3 } from '@rneui/themed';
 
 
 
@@ -18,7 +21,7 @@ const sampleProjects = [
   {
     id: 1,
     title: 'Renewable energy powered robot to clean oceans',
-    image: require('../../assets/images/solar.png'),
+    image: require('../../../assets/images/solar.png'),
     author: 'Barack Obama',
     description: 'This robot will be powered by solar power as well as the mechanical movement of the waves. I am looking for some engineers who are interested in working with me on the project.',
     skills: ['Engineering', 'Coding', 'Environmental Science'],
@@ -27,7 +30,7 @@ const sampleProjects = [
   {
     id: 2,
     title: 'Wave-powered method to desalinate water',
-    image: require('../../assets/images/cleanocean.jpg'),
+    image: require('../../../assets/images/cleanocean.jpg'),
     author: 'Jennifer Lawrence',
     description: '',
     skills: ['Engineering', 'Environmental Science'],
@@ -36,7 +39,7 @@ const sampleProjects = [
   {
     id: 3,
     title: 'App that automatically translates to pinyin',
-    image: require('../../assets/images/chinese.png'),
+    image: require('../../../assets/images/chinese.png'),
     author: 'Steve Carrel',
     description: '',
     skills: ['Engineering', 'Environmental Science'],
@@ -45,7 +48,7 @@ const sampleProjects = [
   {
     id: 4,
     title: 'Advertising to help the homeless',
-    image: require('../../assets/images/homeless.png'),
+    image: require('../../../assets/images/homeless.png'),
     author: 'Ryan Reynolds',
     description: '',
     skills: ['Engineering', 'Environmental Science'],
@@ -54,7 +57,7 @@ const sampleProjects = [
   {
     id: 5,
     title: 'Genetically modified camel',
-    image: require('../../assets/images/camel.png'),
+    image: require('../../../assets/images/camel.png'),
     author: 'Pablo Picasso',
     description: '',
     skills: ['Engineering', 'Environmental Science'],
@@ -63,7 +66,7 @@ const sampleProjects = [
   {
     id: 6,
     title: 'John Doe',
-    image: require('../../assets/images/chair.png'),
+    image: require('../../../assets/images/chair.png'),
     author: 'Engineer',
     description: '',
     skills: ['Engineering', 'Environmental Science'],
@@ -72,7 +75,7 @@ const sampleProjects = [
   {
     id: 7,
     title: 'John Doe',
-    image: require('../../assets/images/chair.png'),
+    image: require('../../../assets/images/chair.png'),
     author: 'Engineer',
     description: '',
     skills: ['Engineering', 'Environmental Science'],
@@ -119,7 +122,7 @@ const user =
   name: "Barack Obama",
   username: '@obamamama',
   bio: 'I’m a painter, musician, and part-time president',
-  image: require('../../assets/images/obama.jpeg'),
+  image: require('../../../assets/images/obama.jpeg'),
   email: "john.doe@example.com",
   numProjects: 7,
   numTeams: 7, 
@@ -225,6 +228,37 @@ function JoinedScreen() {
 }
 
 export default function ProfileScreen() {
+
+  const navigation = useNavigation();
+  useEffect(() => {
+    // Set the header title to the user's name
+    navigation.setOptions({ 
+      title: '', 
+      headerRight: () => 
+      <Link
+            href={{
+              pathname: '/settings',
+            }}>
+            {/* <Text>
+              hi
+            </Text> */}
+            <Icon name='gear' style={styles.icon} ></Icon>
+            </Link>
+        // <Button3 
+        //   // title="Update count"
+        //   icon={{
+        //     name: 'gear',
+        //     type: 'font-awesome',
+        //     size: 25,
+        //     // color: 'white',
+        //   }}
+        //   buttonStyle={{
+        //     backgroundColor: 'white',
+        //     borderRadius: 3,
+        //   }}
+        // />
+    });
+  }, [navigation]);
 
   function OwnedScreen() {
     return (
