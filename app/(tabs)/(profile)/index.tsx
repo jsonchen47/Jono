@@ -227,8 +227,10 @@ export default function ProfileScreen() {
   function OwnedScreen() {
     return (
       <View >
-        <FlatGrid
-            itemDimension={windowWidth/2.2}
+        <Tabs.FlatList
+            numColumns={2}
+            style={{}}
+            // itemDimension={windowWidth/2.2}
             data={sampleProjects}
               renderItem={({item}) => (
               <View>
@@ -245,9 +247,9 @@ export default function ProfileScreen() {
     
     <Tabs.Container renderHeader={Header}>
       <Tabs.Tab name="Projects">
-        <Tabs.ScrollView>
+        {/* <Tabs.ScrollView> */}
           <OwnedScreen/>
-        </Tabs.ScrollView>
+        {/* </Tabs.ScrollView> */}
         
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
@@ -452,5 +454,8 @@ const styles = StyleSheet.create({
     paddingTop: 40, 
     fontSize: 20,
     fontWeight: 'bold'
+  },
+  flatList: {
+    justifyContent: 'space-between'
   }
 });
