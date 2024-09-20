@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet } from 'react-native'
+import { Image, View, Text, SafeAreaView, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import { TabView, TabBar, SceneRendererProps, NavigationState, Route, TabBarIndicatorProps, TabBarItemProps } from 'react-native-tab-view';
@@ -7,8 +7,11 @@ import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Searchbar } from 'react-native-paper';
 import PagerView from 'react-native-pager-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import LinearGradient from 'react-native-linear-gradient';
 
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const sampleProjects = [
   {
@@ -76,6 +79,32 @@ const sampleProjects = [
   },
 ];
 
+// Props for the FlatList 
+
+type ItemProps = {
+  title: string
+  image: any
+  author: string
+};
+
+const Item = ({title, image, author, }: ItemProps) => (
+  <View style={styles.browseProjectsView}>
+    <Image style={styles.browseProjectImages} source={image} />
+    <View style={styles.linearGradientView}>
+      <LinearGradient 
+        style={styles.browseLinearGradient}
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
+      </LinearGradient>
+    </View>
+    <View style={styles.browseOverImageTextView}>
+      <Text style={styles.browseProjectsText}>{title}</Text>  
+      <Text style={styles.browseAuthorText}>
+          {author}
+      </Text>
+    </View>
+  </View>
+);
+
 const Header = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   return (
@@ -96,7 +125,7 @@ const Header = () => {
 function ProjectsScreen() {
   return (
     <View >
-      <Text>Projects!</Text>
+      {/* <Text>Projects!</Text> */}
       {/* <PagerView style={styles.pagerView} initialPage={0}>
         <View key="1">
           <Text>First page</Text>
@@ -105,6 +134,17 @@ function ProjectsScreen() {
           <Text>Second page</Text>
         </View>
       </PagerView> */}
+      <Tabs.FlatList 
+        contentContainerStyle={styles.flatListContainer}
+        columnWrapperStyle={styles.flatListColumnWrapper}
+        numColumns={2}
+        data={sampleProjects}
+          renderItem={({item}) => (
+          <View>
+            <Item title={item.title} image={item.image} author={item.author}/>
+          </View>
+        )}
+      />
     </View>
   );
 }
@@ -141,9 +181,9 @@ const index = () => {
             </View>
           ) })}
           >
-          <Tabs.ScrollView>
-            <ProjectsScreen/>
-          </Tabs.ScrollView>
+          {/* <Tabs.ScrollView> */}
+          <ProjectsScreen/>
+          {/* </Tabs.ScrollView> */}
         </Tabs.Tab>
         <Tabs.Tab 
           name="Health"
@@ -261,7 +301,59 @@ const styles = StyleSheet.create({
   pagerView: {
     flex: 1,
   },
-  // headerContainer: {
-  //   height: 100,
-  // }
+  // Browse styles
+  linearGradientView: {
+    top: 0,  // Set to top of the image
+    left: 0, // Set to the left side
+    right: 0, // Set to the right side
+    bottom: 0, // Set to the bottom side, so it covers the image
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  }, 
+  flatListContent: {
+    paddingHorizontal: (windowWidth-2*(windowWidth/2.5))/3, // Padding on the left and right
+  },
+  browseProjectsView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+  },
+  browseProjectImages: {
+    width: windowWidth/2.1, 
+    height: windowHeight/5,
+    borderRadius: 15, 
+  },
+  browseProjectsText: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'white',
+    justifyContent: 'flex-end',
+  }, 
+  browseOverImageTextView: {
+    top: 15,  // Set to top of the image
+    left: 15, // Set to the left side
+    right: 15, // Set to the right side
+    bottom: 15, // Set to the bottom side, so it covers the image
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+  },
+  browseLinearGradient: {
+    width: windowWidth/2.2, 
+    height: windowHeight/5/1.5,
+    borderRadius: 15, 
+  },
+  browseAuthorText: {
+    fontSize: 10,
+    color: 'white',
+    justifyContent: 'flex-end',
+    paddingTop: 5,
+  },
+  flatListContainer: {
+    // paddingHorizontal: 5,
+  }, 
+  flatListColumnWrapper: {
+    justifyContent: 'space-between', // Evenly space out the columns
+  },
 })
