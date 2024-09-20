@@ -17,7 +17,7 @@ export default function HomeLayout() {
         options={{
           // Hide the header for this route
           title: 'Explore',
-          // headerShown: false,
+          headerShown: false,
           headerStyle: {
             backgroundColor: 'white',
           },

@@ -166,54 +166,18 @@ const Header = () => {
         {/* Buttons */}
         <View style={styles.allButtonsContainer}>
           <View style={styles.buttonContainer}>
-            <Button style={styles.button} mode="contained" onPress={() => console.log('Pressed')}>
-              Edit
+            <Button  compact style={styles.button} mode="outlined" onPress={() => console.log('Pressed')} textColor="black">
+              <Text style={{ fontSize: 15 }}>Edit Profile</Text>
             </Button>
           </View>
           <View style={{padding: 5}}></View>
           <View style={styles.buttonContainer}>
-            <Button mode="contained" onPress={() => console.log('Pressed')}>
-              Share
+            <Button  style={styles.button} mode="outlined" onPress={() => console.log('Pressed')} textColor="black">
+              <Text style={{ fontSize: 15 }}>Share Profile</Text>
             </Button>
           </View>
         </View>
-        {/* Skills */}
-        <View style={styles.subtitleContainer}>
-            {/* <Ionicons name={'extension-puzzle-outline'} size={32} style={styles.icon} /> */}
-            <Icon name='atom' style={styles.icon}></Icon>
-            <Text style={styles.subTitle}>Skills </Text>
-          </View>
-          <View style={styles.allChipsContainer}>
-            {user.skills.map((skill: string, index: number) => (
-              <View style={styles.singleChipContainer}>
-                <Chip 
-                  key={index}
-                  textStyle={styles.chip}
-                  style={{ backgroundColor: randomColor() }} >
-                    {skill}
-                </Chip>
-              </View>
-            ))}
-          </View>
-          {/* Resources */}
-          <View style={styles.subtitleContainer}>
-            <Icon name='suitcase' style={styles.icon}></Icon>
-            <Text style={styles.subTitle}>Resources </Text>
-          </View>
-          <View style={styles.allChipsContainer}>
-            {user.resources.map((resource: string, index: number) => (
-              <View style={styles.singleChipContainer}>
-                <Chip 
-                  key={index}
-                  textStyle={styles.chip}
-                  style={{ backgroundColor: randomColor() }} >
-                    {resource}
-                </Chip>
-              </View>
-            ))}
-          </View>
-          <View>
-          </View>
+        
       </View>
       </SafeAreaView>
   );
@@ -272,7 +236,6 @@ export default function ProfileScreen() {
               </View>
             )}
           />
-         
       </View>
     );
   }
@@ -281,15 +244,24 @@ export default function ProfileScreen() {
   return (
     
     <Tabs.Container renderHeader={Header}>
-      <Tabs.Tab name="My Projects">
-      <Tabs.ScrollView>
-        <OwnedScreen/>
+      <Tabs.Tab name="Projects">
+        <Tabs.ScrollView>
+          <OwnedScreen/>
         </Tabs.ScrollView>
         
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
         <View></View>
       </Tabs.Tab>
+      <Tabs.Tab name="Skills">
+        <View>
+        </View>
+      </Tabs.Tab>
+      {/* <Tabs.Tab name="Resources">
+        <View>
+
+        </View>
+      </Tabs.Tab> */}
     </Tabs.Container>
     
 
@@ -367,7 +339,10 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: 'stretch',
-    width: '100%'
+    width: '100%',
+    borderRadius: 10,
+    fontSize: 25,
+    height: 40,
   }, 
   subTitle: {
     flex: 1,

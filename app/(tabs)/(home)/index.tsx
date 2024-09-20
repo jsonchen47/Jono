@@ -1,77 +1,11 @@
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Link, useLocalSearchParams } from 'expo-router';
-import { View, StyleSheet, Image, ScrollView, Animated, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { Card, Text } from '@ui-kitten/components';
-import { tSImportEqualsDeclaration } from '@babel/types';
-import { FlatGrid } from 'react-native-super-grid';
-import LinearGradient from 'react-native-linear-gradient';
+import { View, Text, SafeAreaView, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet } from 'react-native'
+import React from 'react'
+import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
+import { TabView, TabBar, SceneRendererProps, NavigationState, Route, TabBarIndicatorProps, TabBarItemProps } from 'react-native-tab-view';
+import { Scene, Event } from 'react-native-tab-view/lib/typescript/src/types';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 
 
-
-// const av = new Animated.Value(0);
-// av.addListener(() => {return});
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-type IconName = 
-  | 'checkmark-circle'
-  | 'book-outline'
-  | 'leaf-outline'
-  | 'medkit-outline'
-  | 'cash-outline'
-  | 'body-outline'
-  | 'cog-outline'
-  | 'globe-outline'
-  // Add other icon names here
-  ;
-
-interface Category {
-  id: number;
-  name: string;
-  icon: IconName;
-}
-
-const sampleCategories: Category[] = [
-  {
-    id: 1, 
-    icon: "medkit-outline",
-    name: 'Health',
-  },
-  {
-    id: 2, 
-    icon: "book-outline",
-    name: 'Education',
-  }, 
-  {
-    id: 3, 
-    icon: "leaf-outline",
-    name: 'Environment',
-  },
-  {
-    id: 4, 
-    icon: "cash-outline",
-    name: 'Finance',
-  },
-  {
-    id: 5, 
-    icon: "body-outline",
-    name: 'Social Justice',
-  },
-  {
-    id: 6, 
-    icon: "cog-outline",
-    name: 'Technology',
-  },
-  {
-    id: 7, 
-    icon: "globe-outline",
-    name: 'Politics',
-  },
-]
 
 const sampleProjects = [
   {
@@ -139,223 +73,72 @@ const sampleProjects = [
   },
 ];
 
-type ItemProps = {
-  title: string
-  image: any
-  author: string
-};
-
-const Item = ({title, image, author, }: ItemProps) => (
-  <View style={styles.browseProjectsView}>
-    <Image style={styles.browseProjectImages} source={image} />
-    <View style={styles.linearGradientView}>
-      <LinearGradient 
-        style={styles.browseLinearGradient}
-        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
-      </LinearGradient>
-    </View>
-    <View style={styles.browseOverImageTextView}>
-      <Text style={styles.browseProjectsText}>{title}</Text>  
-      <Text style={styles.browseAuthorText}>
-          {author}
-      </Text>
-    </View>
-  </View>
-);
-
-// To test the FlatGrid
-export default function ExploreScreen() {
+const Header = () => {
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {/* Categories */}
-        <ScrollView horizontal={true}>
-          {sampleCategories.map((category) => (
-          <View style={styles.categories} key={category.id} >
-            {/* Image */}
-            <Ionicons name={category.icon} size={25} style={styles.icon} />
-            {/* Text */}
-            <Text style={styles.categoryLabel}>{category.name}</Text>
-            </View>
-          ))}
-        </ScrollView>
-        {/* Newly added projects */}
-        <Text style={styles.headerText}>Newly Added</Text>
-        <ScrollView horizontal>
-          {sampleProjects.map((project) => (
-            <View key={project.id}>
-
-             {/* <Link href="/details"> */}
-              <Link href={{
-                pathname: `/project/[id]`,
-                params: { 
-                  id: project.id,
-                  title: project.title, 
-                  author: project.author, 
-                  description: project.description,
-                  image: project.image,
-                  skills: JSON.stringify(project.skills),
-                  resources: JSON.stringify(project.resources),
-                }
-              }}>
-                <View style={styles.largeProjectsView} >
-                  {/* Image */}
-                  <Image 
-                  style={styles.largeProjectsImages}
-                  source={project.image} 
-                  />
-                  {/* Background gradient */}
-                  <View style={styles.linearGradientView}>
-                    <LinearGradient 
-                      style={styles.linearGradient}
-                      colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
-                    </LinearGradient>
-                    {/* Text */}
-                    <View style={styles.overImageTextView}>
-                      <Text style={styles.projectDescriptionText}>{project.title}</Text>
-                      <Text style={styles.newlyAddedAuthorText}>
-                        {project.author}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </Link>
-             </View>
-          ))}
-        </ScrollView>
-        {/* Browse */}
-        <Text style={styles.headerText}>Browse</Text>
-        <FlatGrid
-          itemDimension={windowWidth/2.2}
-          data={sampleProjects}
-            renderItem={({item}) => (
-            <View>
-              <Item title={item.title} image={item.image} author={item.author}/>
-            </View>
-          )}
-        />
-      </ScrollView>
+    <View>
+      <Text>hi</Text>
+    </View>
+  )
+}
+// Screen that can be filtered and used for all screens
+function ProjectsScreen() {
+  return (
+    <View >
+      <Text>Projects!</Text>
     </View>
   );
 }
 
+const index = () => {
+ 
 
+  return (
+    <SafeAreaView>
+      <Tabs.Container 
+        renderHeader={Header}  
+        
+        renderTabBar={props => (
+          <MaterialTabBar
+            {...props}
+            scrollEnabled={true} // Enable scrollable tabs
+            tabStyle={{ width: 120 }} // Customize the width of each tab
+            
+          />
+        )}
 
+        >
+        <Tabs.Tab 
+          name="My Projects" 
+          label={(() => { return (
+            <View style={styles.tabLabelContainer}>
+              <Icon name="atom" size={25} />
+              <Text style={{paddingTop: 5}}>philantropy</Text>
+            </View>
+          ) })}
+          >
+          <Tabs.ScrollView>
+            <ProjectsScreen/>
+          </Tabs.ScrollView>
+        </Tabs.Tab>
+        <Tabs.Tab name="Teams">
+          <View></View>
+        </Tabs.Tab>
+        <Tabs.Tab name="Teams2">
+          <View></View>
+        </Tabs.Tab>
+        <Tabs.Tab name="Teams3">
+          <View></View>
+        </Tabs.Tab>
+      </Tabs.Container>
+    </SafeAreaView>
+  )
+}
+
+export default index
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
+  tabLabelContainer: {
+    justifyContent: 'center', 
     alignItems: 'center',
-  },
-  categories: {
-    paddingLeft: 20,
-    padding: 10,
-    flex: 1,
-    alignItems: 'center',
-  },
-  icon: {
-    marginBottom: 5,
-  },
-  categoryLabel: {
-    fontSize: 12,
-  },
-  headerText: {
-    fontSize: 20,
-    paddingLeft: 20,
-    paddingTop: 10,
-    fontWeight: 'bold',
-  },
-  largeProjectsView: {
-    padding: 10,
-  },
-  largeProjectsImages: {
-    width: windowWidth/1.5, 
-    height: windowHeight/3,
-    paddingBottom: 15,
-    borderRadius: 15, 
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scrollView: {
-    paddingHorizontal: 0,
-  },
-  overImageTextView: {
-    top: 30,  // Set to top of the image
-    left: 30, // Set to the left side
-    right: 30, // Set to the right side
-    bottom: 15, // Set to the bottom side, so it covers the image
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-  },
-  projectDescriptionText: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: 'white',
-    justifyContent: 'flex-end',
-  },
-  newlyAddedAuthorText: {
-    // fontWeight: 'bold',
-    fontSize: 15,
-    color: 'white',
-    justifyContent: 'flex-end',
-    paddingTop: 5,
-  },
-  linearGradient: {
-    width: windowWidth/1.5, 
-    height: windowHeight/3/1.5,
-    borderRadius: 15, 
-  },
-  linearGradientView: {
-    top: 0,  // Set to top of the image
-    left: 0, // Set to the left side
-    right: 0, // Set to the right side
-    bottom: 0, // Set to the bottom side, so it covers the image
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  }, 
-  // Browse styles
-  flatListContent: {
-    paddingHorizontal: (windowWidth-2*(windowWidth/2.5))/3, // Padding on the left and right
-  },
-  browseProjectsView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  browseProjectImages: {
-    width: windowWidth/2.2, 
-    height: windowHeight/5,
-    borderRadius: 15, 
-  },
-  browseProjectsText: {
-    fontWeight: 'bold',
-    fontSize: 15,
-    color: 'white',
-    justifyContent: 'flex-end',
-  }, 
-  browseOverImageTextView: {
-    top: 15,  // Set to top of the image
-    left: 15, // Set to the left side
-    right: 15, // Set to the right side
-    bottom: 15, // Set to the bottom side, so it covers the image
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-  },
-  browseLinearGradient: {
-    width: windowWidth/2.2, 
-    height: windowHeight/5/1.5,
-    borderRadius: 15, 
-  },
-  browseAuthorText: {
-    fontSize: 10,
-    color: 'white',
-    justifyContent: 'flex-end',
-    paddingTop: 5,
   }
-});
-
-
-
+})
