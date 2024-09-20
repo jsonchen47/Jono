@@ -226,26 +226,31 @@ export default function ProfileScreen() {
 
   function OwnedScreen() {
     return (
-      <View >
-        <Tabs.FlatList
-            numColumns={2}
-            style={{}}
-            // itemDimension={windowWidth/2.2}
-            data={sampleProjects}
-              renderItem={({item}) => (
-              <View>
-                <Item title={item.title} image={item.image} author={item.author}/>
-              </View>
-            )}
-          />
-      </View>
+      // <View style={styles.flatListContainer} >
+        <View>
+          <Tabs.FlatList 
+              contentContainerStyle={styles.flatListContainer}
+              columnWrapperStyle={styles.flatListColumnWrapper}
+              numColumns={2}
+              // style={styles.flatListContainer}
+              // itemDimension={windowWidth/2.2}
+              data={sampleProjects}
+                renderItem={({item}) => (
+                <View>
+                  <Item title={item.title} image={item.image} author={item.author}/>
+                </View>
+              )}
+            />
+        </View>
     );
   }
 
 
   return (
-    
-    <Tabs.Container renderHeader={Header}>
+    // <View style={styles.flatListContainer}>
+    <Tabs.Container 
+      renderHeader={Header}
+    >
       <Tabs.Tab name="Projects">
         {/* <Tabs.ScrollView> */}
           <OwnedScreen/>
@@ -259,13 +264,9 @@ export default function ProfileScreen() {
         <View>
         </View>
       </Tabs.Tab>
-      {/* <Tabs.Tab name="Resources">
-        <View>
-
-        </View>
-      </Tabs.Tab> */}
+      
     </Tabs.Container>
-    
+    // </View>
 
     
 
@@ -395,9 +396,10 @@ const styles = StyleSheet.create({
   browseProjectsView: {
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 5,
   },
   browseProjectImages: {
-    width: windowWidth/2.2, 
+    width: windowWidth/2.1, 
     height: windowHeight/5,
     borderRadius: 15, 
   },
@@ -455,7 +457,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold'
   },
-  flatList: {
-    justifyContent: 'space-between'
-  }
+  flatListContainer: {
+    // paddingHorizontal: 5,
+  }, 
+  flatListColumnWrapper: {
+    justifyContent: 'space-between', // Evenly space out the columns
+  },
 });

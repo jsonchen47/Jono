@@ -6,6 +6,7 @@ import { Scene, Event } from 'react-native-tab-view/lib/typescript/src/types';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Searchbar } from 'react-native-paper';
 import PagerView from 'react-native-pager-view';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
@@ -78,6 +79,7 @@ const sampleProjects = [
 const Header = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   return (
+    <SafeAreaView>
     <View style={styles.searchBarContainer}>
       {/* <Text>hi</Text> */}
       <Searchbar
@@ -87,6 +89,7 @@ const Header = () => {
         value={searchQuery}
       />
     </View>
+    </SafeAreaView>
   )
 }
 // Screen that can be filtered and used for all screens
@@ -94,20 +97,21 @@ function ProjectsScreen() {
   return (
     <View >
       <Text>Projects!</Text>
-      <PagerView style={styles.pagerView} initialPage={0}>
+      {/* <PagerView style={styles.pagerView} initialPage={0}>
         <View key="1">
           <Text>First page</Text>
         </View>
         <View key="2">
           <Text>Second page</Text>
         </View>
-      </PagerView>
+      </PagerView> */}
     </View>
   );
 }
 
 const index = () => {
  
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
@@ -115,8 +119,10 @@ const index = () => {
 
      
       <Tabs.Container 
+        // headerContainerStyle={styles.headerContainer}
+        headerHeight={50}
+        minHeaderHeight={50}
         renderHeader={Header}  
-        
         renderTabBar={props => (
           <MaterialTabBar
             {...props}
@@ -230,7 +236,7 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
   safeAreaViewContainer: {
-    // flex: 1,
+    flex: 1,
   },
   tabLabelContainer: {
     flex: 1,
@@ -253,6 +259,9 @@ const styles = StyleSheet.create({
     height: 50,
   },
   pagerView: {
-
-  }
+    flex: 1,
+  },
+  // headerContainer: {
+  //   height: 100,
+  // }
 })
