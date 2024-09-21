@@ -121,20 +121,38 @@ const Header = () => {
     </SafeAreaView>
   )
 }
+
+// The projects in the large paging view 
+function PagerProjects() {
+  return (
+    <View style={styles.pagerViewOuterContainer}>
+      <PagerView style={styles.pagerViewContainer} initialPage={0}>
+        <View style={styles.page} key="1">
+          <Text>First page</Text>
+          <Text>Swipe ➡️</Text>
+        </View>
+        <View style={styles.page} key="2">
+          <Text>Second page</Text>
+        </View>
+        <View style={styles.page} key="3">
+          <Text>Third page</Text>
+        </View>
+      </PagerView>
+    </View>
+  );
+}
+
 // Screen that can be filtered and used for all screens
 function ProjectsScreen() {
   return (
-    <View >
-      {/* <Text>Projects!</Text> */}
-      {/* <PagerView style={styles.pagerView} initialPage={0}>
-        <View key="1">
-          <Text>First page</Text>
-        </View>
-        <View key="2">
-          <Text>Second page</Text>
-        </View>
-      </PagerView> */}
+    <View style={styles.flatListOuterContainer} >
+      
       <Tabs.FlatList 
+        nestedScrollEnabled={true}
+        ListHeaderComponentStyle={styles.flatListHeaderStyle}
+        ListHeaderComponent={
+          <PagerProjects/>
+        }
         contentContainerStyle={styles.flatListContainer}
         columnWrapperStyle={styles.flatListColumnWrapper}
         numColumns={2}
@@ -149,6 +167,19 @@ function ProjectsScreen() {
   );
 }
 
+function NewProjectsScreen() {
+  return (
+    <View style={styles.flexBoxContainer}>
+    {sampleProjects.map((item, index) => (
+      <View key={index} style={styles.flexBoxGridItem}>
+        <Image style={styles.flexBoxImage} source={item.image}/>
+        <Text style={styles.flexBoxText}>{item.title}</Text>
+      </View>
+    ))}
+  </View>
+  );
+}
+
 const index = () => {
  
   const insets = useSafeAreaInsets();
@@ -156,10 +187,10 @@ const index = () => {
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
       {/* <View style={styles.tabsContainer}> */}
-
-     
       <Tabs.Container 
+        
         // headerContainerStyle={styles.headerContainer}
+        pagerProps={{ scrollEnabled: false }}
         headerHeight={50}
         minHeaderHeight={50}
         renderHeader={Header}  
@@ -176,20 +207,21 @@ const index = () => {
           name="My Projects" 
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="star" size={25} />
+              <Icon name="star" size={22} />
               <Text style={styles.tabLabelText}>All</Text>
             </View>
           ) })}
           >
-          {/* <Tabs.ScrollView> */}
-          <ProjectsScreen/>
-          {/* </Tabs.ScrollView> */}
+          <Tabs.ScrollView>
+          {/* <ProjectsScreen/> */}
+          <NewProjectsScreen/>
+          </Tabs.ScrollView>
         </Tabs.Tab>
         <Tabs.Tab 
           name="Health"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="user-doctor" size={25} />
+              <Icon name="user-doctor" size={22} />
               <Text style={styles.tabLabelText}>Health</Text>
             </View>
           ) })}
@@ -200,7 +232,7 @@ const index = () => {
           name="Finance"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="money-check-dollar" size={25} />
+              <Icon name="money-check-dollar" size={22} />
               <Text style={styles.tabLabelText}>Finance</Text>
             </View>
           ) })}
@@ -211,7 +243,7 @@ const index = () => {
           name="Tech"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="gear" size={25} />
+              <Icon name="gear" size={22} />
               <Text style={styles.tabLabelText}>Tech</Text>
             </View>
           ) })}
@@ -222,7 +254,7 @@ const index = () => {
           name="Politics"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="globe" size={25} />
+              <Icon name="globe" size={22} />
               <Text style={styles.tabLabelText}>Politics</Text>
             </View>
           ) })}
@@ -233,7 +265,7 @@ const index = () => {
           name="Education"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="book" size={25} />
+              <Icon name="book" size={22} />
               <Text style={styles.tabLabelText}>Education</Text>
             </View>
           ) })}
@@ -244,7 +276,7 @@ const index = () => {
           name="Environment"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="leaf" size={25} />
+              <Icon name="leaf" size={22} />
               <Text style={styles.tabLabelText}>Environment</Text>
             </View>
           ) })}
@@ -255,7 +287,7 @@ const index = () => {
           name="Justice"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="scale-balanced" size={25} />
+              <Icon name="scale-balanced" size={22} />
               <Text style={styles.tabLabelText}>Social Justice</Text>
             </View>
           ) })}
@@ -282,8 +314,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
-    paddingLeft: 10, 
-    paddingRight: 10,
+    paddingLeft: 7, 
+    paddingRight: 7,
   }, 
   tabLabelText: {
     paddingTop: 5, 
@@ -351,9 +383,65 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   flatListContainer: {
+    flexGrow: 1,
     // paddingHorizontal: 5,
   }, 
   flatListColumnWrapper: {
     justifyContent: 'space-between', // Evenly space out the columns
   },
+  pagerViewContainer: {
+    // alignSelf: 'stretch',
+    // flex: 1,
+    width: '100%', 
+    height: '100%',
+  }, 
+  page: {
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%', 
+    height: '100%',
+    // alignSelf: 'stretch',
+    // flex: 1,
+  },
+  pagerViewOuterContainer: {
+    width: '90%', 
+    height: '90%', 
+  }, 
+  flatListHeaderStyle: {
+    height: '50%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }, 
+  flatListOuterContainer: {
+    flexGrow: 1, 
+  }, 
+  flexBoxContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  flexBoxGridItem: {
+    // backgroundColor: '#ddd',
+    width: '48%', // Two items per row with spacing
+    marginBottom: 10,
+    // padding: 20,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    // width: windowWidth/2.2,
+    // height: windowHeight/5, 
+  },
+  flexBoxImage: {
+    width: windowWidth/2.2, 
+    height: windowHeight/5, 
+    borderRadius: 15,
+  },
+  flexBoxText: {
+    paddingTop: 5, 
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    fontWeight: 'bold'
+    // padding: 5,
+  }
 })
