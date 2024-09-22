@@ -12,9 +12,7 @@ import {withAuthenticator} from "aws-amplify-react-native";
 import awsconfig from "../src/aws-exports";
 // import {Picker} from 'react-native';
 
-
-
-Amplify.configure(awsconfig);
+Amplify.configure({ ...awsconfig, Analytics: {disabled: true}});
 
 function RootLayout() {
   return (
