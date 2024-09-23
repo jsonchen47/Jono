@@ -26,6 +26,19 @@ export default function ProfileLayout() {
           // headerRight: () => <Button title="Update count" />,
         }}
       />
+      <Stack.Screen
+        name="connections" 
+        options={{
+          // Hide the header for this route
+          // title: 'Explore',
+          // headerShown: false,
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTintColor: 'black',
+          // headerRight: () => <Button title="Update count" />,
+        }}
+      />
       <Stack.Screen 
         name="settings" 
         options={{

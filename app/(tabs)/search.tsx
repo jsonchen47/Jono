@@ -17,10 +17,10 @@ export default function SearchScreen() {
     <View style={styles.container}>
       {/* <Text>Search</Text> */}
       <Searchbar
-      placeholder="Search hi"
-      onChangeText={setSearchQuery}
-      value={searchQuery}
-    />
+        placeholder="Search hi"
+        onChangeText={setSearchQuery}
+        value={searchQuery}
+      />
     </View>
   );
 }

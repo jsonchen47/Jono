@@ -1,8 +1,6 @@
 import { Link } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, Button as Button2 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 import { Button, Chip } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -14,7 +12,8 @@ import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Button as Button3 } from '@rneui/themed';
 
-
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 
 const sampleProjects = [
@@ -150,10 +149,17 @@ const Header = () => {
                 <Text style={styles.statNumber}>{user.numTeams}</Text>
                 <Text style={styles.statLabel}>Teams</Text>
               </View>
-              <View style={styles.statContainer}>
-                <Text style={styles.statNumber}>{user.numConnections}</Text>
-                <Text style={styles.statLabel}>Connections</Text>
-              </View>
+              {/* Connections */}
+              <Link
+                href={{
+                  pathname: '/connections',
+                }}>
+                <View style={styles.statContainer}>
+                  <Text style={styles.statNumber}>{user.numConnections}</Text>
+                  <Text style={styles.statLabel}>Connections</Text>
+                </View>
+              </Link>
+              
             </View>
           </View>
           {/* Profile picture */}
@@ -200,27 +206,12 @@ export default function ProfileScreen() {
       title: '', 
       headerRight: () => 
       <Link
-            href={{
-              pathname: '/settings',
-            }}>
-            {/* <Text>
-              hi
-            </Text> */}
-            <Icon name='gear' style={styles.icon} ></Icon>
-            </Link>
-        // <Button3 
-        //   // title="Update count"
-        //   icon={{
-        //     name: 'gear',
-        //     type: 'font-awesome',
-        //     size: 25,
-        //     // color: 'white',
-        //   }}
-        //   buttonStyle={{
-        //     backgroundColor: 'white',
-        //     borderRadius: 3,
-        //   }}
-        // />
+        href={{
+          pathname: '/settings',
+        }}>
+        <Icon name='gear' style={styles.icon} ></Icon>
+       </Link>
+        
     });
   }, [navigation]);
 
@@ -232,8 +223,6 @@ export default function ProfileScreen() {
               contentContainerStyle={styles.flatListContainer}
               columnWrapperStyle={styles.flatListColumnWrapper}
               numColumns={2}
-              // style={styles.flatListContainer}
-              // itemDimension={windowWidth/2.2}
               data={sampleProjects}
                 renderItem={({item}) => (
                 <View>
