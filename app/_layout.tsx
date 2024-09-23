@@ -13,6 +13,8 @@ import awsconfig from "../src/aws-exports";
 // import {Picker} from 'react-native';
 import { useEffect } from 'react'; 
 import {getUser} from '../src/graphql/queries'
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import {createUser} from '../src/graphql/mutations';
 
 Amplify.configure({ ...awsconfig, Analytics: {disabled: true}});
 
@@ -28,12 +30,40 @@ useEffect(() => {
     console.log(authUser);
 
     // query the database using Auth user id (sub)
-    const userData = await API.graphql(
-      graphqlOperation(getUser, {id: authUser.attributes.sub})
-      );
-      console.log(userData)
+    // const userData = await API.graphql(
+    //   graphqlOperation(getUser, {id: authUser.attributes.sub})
+    //   );
+    //   console.log(userData);
 
-    // if there are no users in db, create one 
+    // // if there are no users in db, create one 
+    // if (userData.data.getUser) {
+    //   console.log("User already exists in DB")
+    //   return;
+    // }
+
+    const result = await API.graphql(
+      graphqlOperation(getUser, { id: authUser.attributes.sub })
+    );
+
+    // Type assertion to treat result as GraphQLResult
+    const userData = result as GraphQLResult<any>;
+
+    // If userData exists and has data, then proceed
+    if (userData.data && userData.data.getUser) {
+      console.log("User already exists in DB");
+      return;
+    }
+
+    const newUser = {
+      id: authUser.attributes.sub, 
+      name: authUser.attributes.phone_number, 
+      status: 'Hey, I am using Jono',
+    }
+    console.log(newUser);
+
+    const newUserResponse = await API.graphql(
+      graphqlOperation(createUser, {input: newUser})
+    )
   };
 
   syncUser();
