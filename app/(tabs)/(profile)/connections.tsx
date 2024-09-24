@@ -18,13 +18,10 @@ const connections = () => {
     //   setUsers(result.data?.listUsers?.items)
     // });
     (async () => {
-      try {
-        const result = await API.graphql(graphqlOperation(listUsers)) as GraphQLResult<any>;
-        console.log(result);
-        setUsers(result.data?.listUsers?.items);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
+      const result = await API.graphql(graphqlOperation(listUsers)) as GraphQLResult<any>;
+      console.log(result);
+      setUsers(result.data?.listUsers?.items);
+      
     })();
   }, []);
 

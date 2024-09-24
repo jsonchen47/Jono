@@ -11,7 +11,7 @@ dayjs.extend(relativeTime);
 
 const ChatListItem = ({chat}: any) => {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   useEffect(() => {
     const fetchUser = async () => {
       const authUser = await Auth.currentAuthenticatedUser(); 

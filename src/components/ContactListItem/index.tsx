@@ -16,42 +16,44 @@ const ContactListItem = ({user}: any) => {
   const router = useRouter();
 
   const onPress = async () => {
-    console.warn("Pressed");
     // Check if we already have a chatroom with the user
     const existingChatRoom = await getCommonChatRoomWithUser(user.id);
-    if (existingChatRoom!== null) {
+    console.log(existingChatRoom)
+    if (existingChatRoom!== undefined) {
       router.push('/chatScreen/${existingChatRoom.id}')
+      return; 
     }
 
-    // // Create a new ChatRoom
-    // const newChatRoomData = await API.graphql(
-    //   graphqlOperation(createChatRoom, {input: {}})
-    // )
-    // console.log(newChatRoomData)
-    // const castedChatRoomData = newChatRoomData as GraphQLResult<any>; // Casting the chat room data 
-    // if (!castedChatRoomData.data?.createChatRoom) {
-    //   console.log("Error creating the chat error")
-    // }
-    // const newChatRoom = castedChatRoomData.data?.createChatRoom;
-    // // Add the clicked user to the ChatRoom
-    // await API.graphql(graphqlOperation(createUserChatRoom, {
-    //   input: {
-    //     chatRoomId: newChatRoom.id,
-    //     userId: user.id
-    //   }
-    // }))
+    // Otherwise, create a new ChatRoom
+    const newChatRoomData = await API.graphql(
+      graphqlOperation(createChatRoom, {input: {}})
+    )
+    console.log(newChatRoomData)
+    const castedChatRoomData = newChatRoomData as GraphQLResult<any>; // Casting the chat room data 
+    if (!castedChatRoomData.data?.createChatRoom) {
+      console.log("Error creating the chat error")
+    }
+    const newChatRoom = castedChatRoomData.data?.createChatRoom;
 
-    // // Add the Auth user to the ChatRoom
-    // const authUser = await Auth.currentAuthenticatedUser(); 
-    // await API.graphql(graphqlOperation(createUserChatRoom, {
-    //   input: {
-    //     chatRoomId: newChatRoom.id,
-    //     userId: authUser.attributes.sub
-    //   }
-    // }))
+    // Add the clicked user to the ChatRoom
+    await API.graphql(graphqlOperation(createUserChatRoom, {
+      input: {
+        chatRoomId: newChatRoom.id,
+        userId: user.id
+      }
+    }))
 
-    // // Navigate to the newly created ChatRoom
-    // router.push('/chatScreen/${newChatRoom.id}')
+    // Add the Auth user to the ChatRoom
+    const authUser = await Auth.currentAuthenticatedUser(); 
+    await API.graphql(graphqlOperation(createUserChatRoom, {
+      input: {
+        chatRoomId: newChatRoom.id,
+        userId: authUser.attributes.sub
+      }
+    }))
+
+    // Navigate to the newly created ChatRoom
+    router.push('/chatScreen/${newChatRoom.id}')
   };
 
 

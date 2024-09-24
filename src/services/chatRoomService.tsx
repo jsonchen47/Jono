@@ -13,14 +13,15 @@ const getCommonChatRoomWithUser = async (userID: any) => {
     const castedResponse = response as GraphQLResult<any>; 
     const chatRooms = castedResponse.data?.getUser?.ChatRooms?.items || [];
 
-    console.log(chatRooms)
+    // console.log(chatRooms)
     const chatRoom = chatRooms.find((chatRoomItem: any) => {
-        console.log(chatRoom);
-        return chatRoomItem.chatRoom.users.items.some((userItem: any) => userItem.user.id == userID);
-});
+        // console.log(chatRoom);
+        return chatRoomItem.chatRoom.users.items.some(
+            (userItem: any) => userItem.user.id == userID
+            );
+    });
 
-    console.log(chatRoom);
-
+    return chatRoom;
     // get all chat rooms of user 2
 
     // remove chat rooms with more than 2 chat rooms
