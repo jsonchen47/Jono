@@ -3,6 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import {Auth} from 'aws-amplify'
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useRouter } from 'expo-router';
+
 
 import getCommonChatRoomWithUser from '../../services/chatRoomService'
 import { useEffect, useState} from 'react';
@@ -10,6 +12,7 @@ import { useEffect, useState} from 'react';
 dayjs.extend(relativeTime);
 
 const ChatListItem = ({chat}: any) => {
+  const router = useRouter();
 
   const [user, setUser] = useState<any>(null);
   useEffect(() => {
@@ -27,25 +30,23 @@ const ChatListItem = ({chat}: any) => {
 
   const navigation = useNavigation<any>(); 
     return (
-    // <Text>ChatListItem</Text>
-
-    // <Pressable onPress={() => navigation.navigate('Chat', { id: chat.id, name: chat.user.name })} style={styles.container}>
+    <Pressable onPress={() => router.push({pathname: '/chatScreen/[id]', params: {id: chat.id, name: user?.name}})} style={styles.container}>
       <View style={styles.container}>
-     <Image source={{ uri: user?.image}}
-      style={styles.image}/>
-      <View style={styles.content}>
-        <View style={styles.row}>
-          <Text style={styles.name} numberOfLines={1}>
-            {user?.name}
-        </Text>
-          <Text style={styles.subTitle}>{dayjs(chat.lastMessage?.createdAt).fromNow(true)}</Text>
+        <Image source={{ uri: user?.image}}
+          style={styles.image}/>
+        <View style={styles.content}>
+          <View style={styles.row}>
+            <Text style={styles.name} numberOfLines={1}>
+              {user?.name}
+          </Text>
+            <Text style={styles.subTitle}>{dayjs(chat.lastMessage?.createdAt).fromNow(true)}</Text>
+          </View>
+          <Text numberOfLines={2} style={styles.subTitle}>
+            {chat.lastMessage?.text}
+          </Text>
         </View>
-        <Text numberOfLines={2} style={styles.subTitle}>
-          {chat.lastMessage?.text}
-        </Text>
       </View>
-      </View>
-    // </Pressable>
+    </Pressable>
     );
 };
 

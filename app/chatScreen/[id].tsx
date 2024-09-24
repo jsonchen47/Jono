@@ -4,14 +4,17 @@ import Message from '../../src/components/Message';
 import messages from '../../assets/data/messages.json';
 import InputBox from '../../src/components/InputBox'
 import { useHeaderHeight } from '@react-navigation/elements'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 const bg = require("../../assets/images/BG.png");
 
 
 export default function DetailsScreen() {
-  const { id, name } = useLocalSearchParams();
+  const [chatRoom, setChatRoom] = useState(null);
+  
+  const { chatRoomID, name } = useLocalSearchParams();
+  // console.log(name)
   const router = useRouter();
   const height = useHeaderHeight()
   const navigation = useNavigation();

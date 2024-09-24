@@ -49,7 +49,7 @@ export default function Chat() {
           renderItem={({item}) => 
             <Link
             href={{
-              pathname: '../chatScreen/[id]',
+              pathname: '../chatScreen/${item.id}',
               params: { id: item.id, name: item.user?.name },
             }}>
             <ChatListItem chat={item.chatRoom}/>
