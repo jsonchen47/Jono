@@ -31,22 +31,28 @@ const ContactListItem = ({user}: any) => {
     // Add the clicked user to the ChatRoom
     await API.graphql(graphqlOperation(createUserChatRoom, {
       input: {
-        cchatRoomID: newChatRoom.id,
-        userID: user.id
+        chatRoomId: newChatRoom.id,
+        userId: user.id
+        // id: 1,
+        // chatRoomId: 2, 
+        // path: 1,
+        // userId: 2,
       }
     }))
 
-    // Add the Auth user to the ChatRoom
-    const authUser = await Auth.currentAuthenticatedUser(); 
-    await API.graphql(graphqlOperation(createUserChatRoom, {
-      input: {
-        chatRoomID: newChatRoom.id,
-        userID: authUser.attributes.sub
-      }
-    }))
+    // // Add the Auth user to the ChatRoom
+    // const authUser = await Auth.currentAuthenticatedUser(); 
+    // await API.graphql(graphqlOperation(createUserChatRoom, {
+    //   input: {
+    //     chatRoomID: newChatRoom.id,
+    //     userID: authUser.attributes.sub
+    //   }
+    // }))
 
     // Navigate to the newly created ChatRoom
-    router.push('/chat')
+    // router.push('/chatScreen/${newChatRoom.id}')
+    // router.push('/search')
+    // navigation.navigate('chatScreen', {id: newChatRoom.id}); 
   };
 
 
@@ -59,7 +65,7 @@ const ContactListItem = ({user}: any) => {
           {user.name}
         </Text>
       </View>
-    </Pressable>
+      </Pressable>
   );
 };
 
