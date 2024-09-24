@@ -40,18 +40,18 @@ const ContactListItem = ({user}: any) => {
       }
     }))
 
-    // // Add the Auth user to the ChatRoom
-    // const authUser = await Auth.currentAuthenticatedUser(); 
-    // await API.graphql(graphqlOperation(createUserChatRoom, {
-    //   input: {
-    //     chatRoomID: newChatRoom.id,
-    //     userID: authUser.attributes.sub
-    //   }
-    // }))
+    // Add the Auth user to the ChatRoom
+    const authUser = await Auth.currentAuthenticatedUser(); 
+    await API.graphql(graphqlOperation(createUserChatRoom, {
+      input: {
+        chatRoomId: newChatRoom.id,
+        userId: authUser.attributes.sub
+      }
+    }))
 
     // Navigate to the newly created ChatRoom
-    // router.push('/chatScreen/${newChatRoom.id}')
-    // router.push('/search')
+    router.push('/chatScreen/${newChatRoom.id}')
+    // router.push('/chatScreen/id')
     // navigation.navigate('chatScreen', {id: newChatRoom.id}); 
   };
 
