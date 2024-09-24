@@ -30,17 +30,6 @@ useEffect(() => {
     console.log(authUser);
 
     // query the database using Auth user id (sub)
-    // const userData = await API.graphql(
-    //   graphqlOperation(getUser, {id: authUser.attributes.sub})
-    //   );
-    //   console.log(userData);
-
-    // // if there are no users in db, create one 
-    // if (userData.data.getUser) {
-    //   console.log("User already exists in DB")
-    //   return;
-    // }
-
     const result = await API.graphql(
       graphqlOperation(getUser, { id: authUser.attributes.sub })
     );
@@ -48,12 +37,13 @@ useEffect(() => {
     // Type assertion to treat result as GraphQLResult
     const userData = result as GraphQLResult<any>;
 
-    // If userData exists and has data, then proceed
+    // If userData exists and has data, then exit the syncUser and don't add new user
     if (userData.data && userData.data.getUser) {
       console.log("User already exists in DB");
       return;
     }
 
+    // Create a new user
     const newUser = {
       id: authUser.attributes.sub, 
       name: authUser.attributes.phone_number, 

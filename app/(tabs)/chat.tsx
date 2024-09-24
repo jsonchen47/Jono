@@ -52,7 +52,7 @@ export default function Chat() {
               pathname: '../chatScreen/[id]',
               params: { id: item.id, name: item.user?.name },
             }}>
-            <ChatListItem chat={item}/>
+            <ChatListItem chat={item.chatRoom}/>
             {/* <Text>
               hi
             </Text> */}
