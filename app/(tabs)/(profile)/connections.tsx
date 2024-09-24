@@ -30,58 +30,12 @@ const connections = () => {
 
   const router = useRouter();
 
-  const onPress = async ({user}: any) => {
-    try {
-      console.warn("Pressed");
-      console.warn("1");
-      // Check if we already have a chatroom with the user
-
-      // Create a new ChatRoom
-      const newChatRoomData = await API.graphql(
-        graphqlOperation(createChatRoom, {input: {}})
-      )
-      
-      console.log(newChatRoomData)
-      const castedChatRoomData = newChatRoomData as GraphQLResult<any>; // Casting the chat room data 
-      if (!castedChatRoomData.data?.createChatRoom) {
-        console.log("Error creating the chat error")
-      }
-      const newChatRoom = castedChatRoomData.data?.createChatRoom;
-      // Add the clicked user to the ChatRoom
-      await API.graphql(graphqlOperation(createUserChatRoom, {
-        input: {
-          chatRoomID: newChatRoom.id,
-          userID: user.id
-        }
-      }))
-
-      // Add the Auth user to the ChatRoom
-      const authUser = await Auth.currentAuthenticatedUser(); 
-      await API.graphql(graphqlOperation(createUserChatRoom, {
-        input: {
-          chatRoomID: newChatRoom.id,
-          userID: authUser.attributes.sub
-        }
-      }))
-
-      // Navigate to the newly created ChatRoom
-      // router.push('/chatScreen/${newChatRoom.id}')
-      router.push('/(profile)/settings')
-      // navigation.navigate('chatScreen', {id: newChatRoom.id}); 
-    }
-    catch (error) {
-      console.error("Error in onPress:", error);
-    }
-  };
-
   return (
     <View>
       <FlatList
         data={users}
         renderItem={({item}) => 
-            // <Pressable onPress={() => onPress(item.user)}> 
-              <ContactListItem user={item}/>
-            // </Pressable>
+            <ContactListItem user={item}/>
         }
         />
     </View>

@@ -2,10 +2,15 @@ import { Link } from 'expo-router';
 import { View, Text, StyleSheet, FlatList, ScrollView, Image, SafeAreaView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Navigator from '../../src/navigation';
-import chats from '../../assets/data/chats.json'
 import ChatListItem from '../../src/components/ChatListItem'
+import {listChatRooms} from "../../src/backend/chatQueries"
+import {useEffect, useState} from 'react'
+import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+
 
 const chat = {
+
   id: "1",
   user: {
     image: 
@@ -19,17 +24,33 @@ const chat = {
 };
 
 export default function Chat() {
+  const [chatRoom, setChatRooms] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchChatRooms = async () => {
+      const authUser = await Auth.currentAuthenticatedUser();
+
+      const response = await API.graphql(
+        graphqlOperation(listChatRooms, {id: authUser.attributes.sub})
+      );
+      const castedResponse = response as GraphQLResult<any>; // Casting the chat room data 
+
+      setChatRooms(castedResponse.data.getUser.ChatRooms.items);
+    };
+    fetchChatRooms(); 
+  }, [])
+
   return (
     
     <SafeAreaView style={styles.container}>
     
       <FlatList
-          data={chats}
+          data={chatRoom}
           renderItem={({item}) => 
             <Link
             href={{
               pathname: '../chatScreen/[id]',
-              params: { id: item.id, name: item.user.name },
+              params: { id: item.id, name: item.user?.name },
             }}>
             <ChatListItem chat={item}/>
             {/* <Text>
