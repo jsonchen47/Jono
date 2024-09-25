@@ -39,8 +39,25 @@ export default function DetailsScreen() {
       const castedResult = result as GraphQLResult<any>
       setChatRoom(castedResult.data?.getChatRoom);
     };
-
     fetchChatRoom();
+
+    const subscription = API.graphql(
+      graphqlOperation(onUpdateChatRoom, { 
+        filter: { id: { eq: chatRoomID } } 
+      })
+    ) as unknown as Observable<GraphQLResult<any>>;
+    
+    const subscriptionHandler = subscription.subscribe({
+      next: ({ value }: any) => {
+        setChatRoom((cr: any) => ({
+          ...(cr || {}),
+          ...value.data.onUpdateChatRoom,
+        }));
+      },
+      error: (err) => console.warn(err),
+    });
+    return () => subscriptionHandler.unsubscribe();
+
   }, [chatRoomID]);
 
   // Fetch messages
@@ -53,20 +70,27 @@ export default function DetailsScreen() {
     };
     fetchMessages(); 
 
+    
+
     // Subscribe to new messages
     const subscription = API.graphql(
       graphqlOperation(onCreateMessage, {
         filter: { chatroomID: { eq: chatRoomID } },
       })
-    )
-    // const castedSubscription = subscription as GraphQLResult<any>
-    const castedSubscription = subscription as unknown as Observable<GraphQLResult>
-    castedSubscription.subscribe({
+    ) as unknown as Observable<GraphQLResult<any>>;
+
+    const subscriptionHandler = subscription.subscribe({
       next: ({ value }: any) => {
         setMessages((m: any) => [value.data.onCreateMessage, ...m]);
       },
       error: (err: any) => console.warn(err),
     });
+
+    // Unsubscribe when needed
+    return () => {
+      subscriptionHandler.unsubscribe();
+    };
+
     
   }, [chatRoomID]);
 

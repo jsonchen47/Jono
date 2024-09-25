@@ -11,33 +11,36 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 
 export default function Chat() {
   const [chatRoom, setChatRooms] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchChatRooms = async () => {
+    setLoading(true);
+    const authUser = await Auth.currentAuthenticatedUser();
+    const response = await API.graphql(
+      graphqlOperation(listChatRooms, {id: authUser.attributes.sub})
+    );
+    const castedResponse = response as GraphQLResult<any>; // Casting the chat room data 
+
+    const rooms = castedResponse?.data?.getUser?.ChatRooms?.items?.filter(
+      (item: any) => !item._deleted
+    );
+    const sortedRooms = rooms.sort(
+      (r1: any, r2: any) => {
+        // new Date(r2.chatRoom.updatedAt) - new Date(r1.chatRoom.updatedAt)
+        const date1 = new Date(r1.chatRoom.updatedAt).getTime();  // Convert to milliseconds
+        const date2 = new Date(r2.chatRoom.updatedAt).getTime();
+        // Ensure that both dates are valid numbers
+        if (isNaN(date1) || isNaN(date2)) {
+          return 0;  // Keep the current order if either date is invalid
+        }
+        return date2 - date1;  // Sort in descending order
+      }
+    );
+    setChatRooms(sortedRooms);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchChatRooms = async () => {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const response = await API.graphql(
-        graphqlOperation(listChatRooms, {id: authUser.attributes.sub})
-      );
-      const castedResponse = response as GraphQLResult<any>; // Casting the chat room data 
-
-      const rooms = castedResponse?.data?.getUser?.ChatRooms?.items?.filter(
-        (item: any) => !item._deleted
-      );
-      const sortedRooms = rooms.sort(
-        (r1: any, r2: any) => {
-          // new Date(r2.chatRoom.updatedAt) - new Date(r1.chatRoom.updatedAt)
-          const date1 = new Date(r1.chatRoom.updatedAt).getTime();  // Convert to milliseconds
-          const date2 = new Date(r2.chatRoom.updatedAt).getTime();
-          // Ensure that both dates are valid numbers
-          if (isNaN(date1) || isNaN(date2)) {
-            return 0;  // Keep the current order if either date is invalid
-          }
-          return date2 - date1;  // Sort in descending order
-        }
-      );
-
-      setChatRooms(sortedRooms);
-    };
     fetchChatRooms(); 
   }, [])
 
@@ -47,9 +50,9 @@ export default function Chat() {
     
       <FlatList
           data={chatRoom}
-          renderItem={({item}) => 
-            <ChatListItem chat={item.chatRoom}/>
-      }
+          renderItem={({item}) => <ChatListItem chat={item.chatRoom}/>}
+          refreshing={loading}
+          onRefresh={fetchChatRooms}
       />
     </SafeAreaView>
   );
