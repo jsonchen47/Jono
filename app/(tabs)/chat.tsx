@@ -9,33 +9,34 @@ import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 
 
-const chat = {
-
-  id: "1",
-  user: {
-    image: 
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/lukas.jpeg",
-    name: "Lukas",
-  },
-  lastMessage: {
-    text: "Oke",
-    createdAt: "07:30"
-  },
-};
-
 export default function Chat() {
   const [chatRoom, setChatRooms] = useState<any>([]);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
       const authUser = await Auth.currentAuthenticatedUser();
-
       const response = await API.graphql(
         graphqlOperation(listChatRooms, {id: authUser.attributes.sub})
       );
       const castedResponse = response as GraphQLResult<any>; // Casting the chat room data 
 
-      setChatRooms(castedResponse.data.getUser.ChatRooms.items);
+      const rooms = castedResponse?.data?.getUser?.ChatRooms?.items?.filter(
+        (item: any) => !item._deleted
+      );
+      const sortedRooms = rooms.sort(
+        (r1: any, r2: any) => {
+          // new Date(r2.chatRoom.updatedAt) - new Date(r1.chatRoom.updatedAt)
+          const date1 = new Date(r1.chatRoom.updatedAt).getTime();  // Convert to milliseconds
+          const date2 = new Date(r2.chatRoom.updatedAt).getTime();
+          // Ensure that both dates are valid numbers
+          if (isNaN(date1) || isNaN(date2)) {
+            return 0;  // Keep the current order if either date is invalid
+          }
+          return date2 - date1;  // Sort in descending order
+        }
+      );
+
+      setChatRooms(sortedRooms);
     };
     fetchChatRooms(); 
   }, [])
@@ -47,16 +48,7 @@ export default function Chat() {
       <FlatList
           data={chatRoom}
           renderItem={({item}) => 
-            <Link
-            href={{
-              pathname: '../chatScreen/${item.id}',
-              params: { id: item.id, name: item.user?.name },
-            }}>
             <ChatListItem chat={item.chatRoom}/>
-            {/* <Text>
-              hi
-            </Text> */}
-            </Link>
       }
       />
     </SafeAreaView>

@@ -14,13 +14,16 @@ export const createChatRoom = /* GraphQL */ `mutation CreateChatRoom(
 ) {
   createChatRoom(input: $input, condition: $condition) {
     id
+    name
+    image
     Messages {
       items {
         id
+        createdAt
         text
         chatroomID
         userID
-        createdAt
+        images
         updatedAt
         __typename
       }
@@ -39,8 +42,19 @@ export const createChatRoom = /* GraphQL */ `mutation CreateChatRoom(
       nextToken
       __typename
     }
+    LastMessage {
+      id
+      createdAt
+      text
+      chatroomID
+      userID
+      images
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
+    chatRoomLastMessageId
     __typename
   }
 }
@@ -54,13 +68,16 @@ export const updateChatRoom = /* GraphQL */ `mutation UpdateChatRoom(
 ) {
   updateChatRoom(input: $input, condition: $condition) {
     id
+    name
+    image
     Messages {
       items {
         id
+        createdAt
         text
         chatroomID
         userID
-        createdAt
+        images
         updatedAt
         __typename
       }
@@ -79,8 +96,19 @@ export const updateChatRoom = /* GraphQL */ `mutation UpdateChatRoom(
       nextToken
       __typename
     }
+    LastMessage {
+      id
+      createdAt
+      text
+      chatroomID
+      userID
+      images
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
+    chatRoomLastMessageId
     __typename
   }
 }
@@ -94,13 +122,16 @@ export const deleteChatRoom = /* GraphQL */ `mutation DeleteChatRoom(
 ) {
   deleteChatRoom(input: $input, condition: $condition) {
     id
+    name
+    image
     Messages {
       items {
         id
+        createdAt
         text
         chatroomID
         userID
-        createdAt
+        images
         updatedAt
         __typename
       }
@@ -119,8 +150,19 @@ export const deleteChatRoom = /* GraphQL */ `mutation DeleteChatRoom(
       nextToken
       __typename
     }
+    LastMessage {
+      id
+      createdAt
+      text
+      chatroomID
+      userID
+      images
+      updatedAt
+      __typename
+    }
     createdAt
     updatedAt
+    chatRoomLastMessageId
     __typename
   }
 }
@@ -134,10 +176,11 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
 ) {
   createMessage(input: $input, condition: $condition) {
     id
+    createdAt
     text
     chatroomID
     userID
-    createdAt
+    images
     updatedAt
     __typename
   }
@@ -152,10 +195,11 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
 ) {
   updateMessage(input: $input, condition: $condition) {
     id
+    createdAt
     text
     chatroomID
     userID
-    createdAt
+    images
     updatedAt
     __typename
   }
@@ -170,10 +214,11 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
 ) {
   deleteMessage(input: $input, condition: $condition) {
     id
+    createdAt
     text
     chatroomID
     userID
-    createdAt
+    images
     updatedAt
     __typename
   }
@@ -194,10 +239,11 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     Messages {
       items {
         id
+        createdAt
         text
         chatroomID
         userID
-        createdAt
+        images
         updatedAt
         __typename
       }
@@ -237,10 +283,11 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     Messages {
       items {
         id
+        createdAt
         text
         chatroomID
         userID
-        createdAt
+        images
         updatedAt
         __typename
       }
@@ -280,10 +327,11 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     Messages {
       items {
         id
+        createdAt
         text
         chatroomID
         userID
-        createdAt
+        images
         updatedAt
         __typename
       }
@@ -321,6 +369,8 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
     userId
     chatRoom {
       id
+      name
+      image
       Messages {
         nextToken
         __typename
@@ -329,8 +379,19 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
         nextToken
         __typename
       }
+      LastMessage {
+        id
+        createdAt
+        text
+        chatroomID
+        userID
+        images
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
+      chatRoomLastMessageId
       __typename
     }
     user {
@@ -369,6 +430,8 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
     userId
     chatRoom {
       id
+      name
+      image
       Messages {
         nextToken
         __typename
@@ -377,8 +440,19 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
         nextToken
         __typename
       }
+      LastMessage {
+        id
+        createdAt
+        text
+        chatroomID
+        userID
+        images
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
+      chatRoomLastMessageId
       __typename
     }
     user {
@@ -417,6 +491,8 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
     userId
     chatRoom {
       id
+      name
+      image
       Messages {
         nextToken
         __typename
@@ -425,8 +501,19 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
         nextToken
         __typename
       }
+      LastMessage {
+        id
+        createdAt
+        text
+        chatroomID
+        userID
+        images
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
+      chatRoomLastMessageId
       __typename
     }
     user {

@@ -26,11 +26,14 @@ const ChatListItem = ({chat}: any) => {
     fetchUser(); 
   }, [])
 
-  console.log(user)
+  // console.log(chat.id)
 
   const navigation = useNavigation<any>(); 
     return (
-    <Pressable onPress={() => router.push({pathname: '/chatScreen/[id]', params: {id: chat.id, name: user?.name}})} style={styles.container}>
+    <Pressable onPress={() => 
+     router.push({pathname: '/chatScreen/[id]', params: {id: chat.id, chatRoomID: chat.id, name: user?.name}})} style={styles.container}
+    
+     >
       <View style={styles.container}>
         <Image source={{ uri: user?.image}}
           style={styles.image}/>
@@ -39,10 +42,14 @@ const ChatListItem = ({chat}: any) => {
             <Text style={styles.name} numberOfLines={1}>
               {user?.name}
           </Text>
-            <Text style={styles.subTitle}>{dayjs(chat.lastMessage?.createdAt).fromNow(true)}</Text>
+          {chat.LastMessage && (
+            <Text style={styles.subTitle}>
+              {dayjs(chat.LastMessage?.createdAt).fromNow(true)}
+            </Text>
+          )}          
           </View>
           <Text numberOfLines={2} style={styles.subTitle}>
-            {chat.lastMessage?.text}
+            {chat.LastMessage?.text}
           </Text>
         </View>
       </View>
