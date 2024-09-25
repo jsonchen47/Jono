@@ -54,6 +54,20 @@ export default function ProfileLayout() {
         }}
         
       />
+      <Stack.Screen
+        name="newGroupScreen"
+        options={{
+          // Hide the header for this route
+          // headerShown: false,
+          title: 'Project',
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTintColor: 'black',
+          // tabBarVisible: false // Hide tab bar for Project page
+
+        }}
+      />
     </Stack>
   );
 }
