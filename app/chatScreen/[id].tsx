@@ -9,6 +9,11 @@ import { useNavigation } from '@react-navigation/native';
 import { API, graphqlOperation } from "aws-amplify";
 import { getChatRoom, listMessagesByChatRoom } from "../../src/graphql/queries";
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { Observable } from 'rxjs'; // For Observable type
+import {
+  onCreateMessage,
+  onUpdateChatRoom,
+} from "../../src/graphql/subscriptions";
 
 
 const bg = require("../../assets/images/BG.png");
@@ -16,7 +21,7 @@ const bg = require("../../assets/images/BG.png");
 
 export default function DetailsScreen() {
   const [chatRoom, setChatRoom] = useState<any>(null);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
 
   
   const { chatRoomID, name } = useLocalSearchParams();
@@ -33,7 +38,6 @@ export default function DetailsScreen() {
       const result = await API.graphql(graphqlOperation(getChatRoom, { id: chatRoomID }));
       const castedResult = result as GraphQLResult<any>
       setChatRoom(castedResult.data?.getChatRoom);
-      // setMessages(castedResult.data?.getChatRoom?.Messages.items)
     };
 
     fetchChatRoom();
@@ -48,6 +52,21 @@ export default function DetailsScreen() {
       setMessages(castedResult.data?.listMessagesByChatRoom?.items);
     };
     fetchMessages(); 
+
+    // Subscribe to new messages
+    const subscription = API.graphql(
+      graphqlOperation(onCreateMessage, {
+        filter: { chatroomID: { eq: chatRoomID } },
+      })
+    )
+    // const castedSubscription = subscription as GraphQLResult<any>
+    const castedSubscription = subscription as unknown as Observable<GraphQLResult>
+    castedSubscription.subscribe({
+      next: ({ value }: any) => {
+        setMessages((m: any) => [value.data.onCreateMessage, ...m]);
+      },
+      error: (err: any) => console.warn(err),
+    });
     
   }, [chatRoomID]);
 
