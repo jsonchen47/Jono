@@ -20,17 +20,18 @@ const bg = require("../../assets/images/BG.png");
 
 
 export default function DetailsScreen() {
+
   const [chatRoom, setChatRoom] = useState<any>(null);
   const [messages, setMessages] = useState<any>([]);
 
   
   const { chatRoomID, name } = useLocalSearchParams();
-  // console.log(name)
+  console.log(name)
   const router = useRouter();
   const height = useHeaderHeight()
   const navigation = useNavigation();
 
-  // console.log(chatRoomID)
+  console.log(chatRoomID)
 
   // Fetch chat room
   useEffect(() => {

@@ -24,11 +24,13 @@ export default function Chat() {
     const rooms = castedResponse?.data?.getUser?.ChatRooms?.items?.filter(
       (item: any) => !item._deleted
     );
+    // console.log(rooms)
     const sortedRooms = rooms.sort(
       (r1: any, r2: any) => {
         // new Date(r2.chatRoom.updatedAt) - new Date(r1.chatRoom.updatedAt)
         const date1 = new Date(r1.chatRoom.updatedAt).getTime();  // Convert to milliseconds
         const date2 = new Date(r2.chatRoom.updatedAt).getTime();
+        
         // Ensure that both dates are valid numbers
         if (isNaN(date1) || isNaN(date2)) {
           return 0;  // Keep the current order if either date is invalid
@@ -37,7 +39,9 @@ export default function Chat() {
       }
     );
     setChatRooms(sortedRooms);
+    // setChatRooms(rooms);
     setLoading(false);
+    console.log(chatRoom[0].chatRoom.users.items)
   };
 
   useEffect(() => {

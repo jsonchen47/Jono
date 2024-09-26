@@ -23,12 +23,12 @@ const ChatListItem = ({chat}: any) => {
     const fetchUser = async () => {
       const authUser = await Auth.currentAuthenticatedUser(); 
 
-      const userItem = chatRoom.users.items.find((item: any) => item.user.id != authUser.attributes.sub);
+      const userItem = chat.users.items.find((item: any) => item.user.id != authUser.attributes.sub);
       setUser(userItem?.user)
     };
 
     fetchUser(); 
-  }, [])
+  }, [chat])
 
 // Fetch chat room
 useEffect(() => {

@@ -102,9 +102,9 @@ const ContactsScreen = () => {
         renderItem={({ item }: any) => (
           <ContactListItem
             user={item}
-            selectable
+            // selectable
             onPress={() => onContactPress(item.id)}
-            isSelected={selectedUserIds.includes(item.id)}
+            // isSelected={selectedUserIds.includes(item.id)}
           />
         )}
       />
