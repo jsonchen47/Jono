@@ -23,19 +23,22 @@ const ChatListItem = ({chat}: any) => {
     const fetchUser = async () => {
       const authUser = await Auth.currentAuthenticatedUser(); 
 
-      const userItem = chat.users.items.find((item: any) => item.user.id != authUser.attributes.sub);
+      const userItem = chatRoom.users.items.find((item: any) => item.user.id != authUser.attributes.sub);
       setUser(userItem?.user)
     };
 
     fetchUser(); 
-  }, [chat])
+    // setChatRoom(chat.id)
+  }, [])
 
 // Fetch chat room
 useEffect(() => {
   const subscription = API.graphql(
-    graphqlOperation(onUpdateChatRoom, { 
+    graphqlOperation(onUpdateChatRoom
+      , { 
       filter: { id: { eq: chat.id } } 
-    })
+    }
+    )
   ) as unknown as Observable<GraphQLResult<any>>;
   
   const subscriptionHandler = subscription.subscribe({

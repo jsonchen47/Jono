@@ -7,6 +7,8 @@ import {listChatRooms} from "../../src/backend/chatQueries"
 import {useEffect, useState} from 'react'
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { onUpdateChatRoom } from '../../src/graphql/subscriptions'; // Your subscription query
+import { Observable } from 'rxjs'; // For Observable type
 
 
 export default function Chat() {
@@ -19,18 +21,17 @@ export default function Chat() {
     const response = await API.graphql(
       graphqlOperation(listChatRooms, {id: authUser.attributes.sub})
     );
+
     const castedResponse = response as GraphQLResult<any>; // Casting the chat room data 
 
     const rooms = castedResponse?.data?.getUser?.ChatRooms?.items?.filter(
       (item: any) => !item._deleted
     );
-    // console.log(rooms)
     const sortedRooms = rooms.sort(
       (r1: any, r2: any) => {
-        // new Date(r2.chatRoom.updatedAt) - new Date(r1.chatRoom.updatedAt)
         const date1 = new Date(r1.chatRoom.updatedAt).getTime();  // Convert to milliseconds
         const date2 = new Date(r2.chatRoom.updatedAt).getTime();
-        
+
         // Ensure that both dates are valid numbers
         if (isNaN(date1) || isNaN(date2)) {
           return 0;  // Keep the current order if either date is invalid
@@ -39,9 +40,8 @@ export default function Chat() {
       }
     );
     setChatRooms(sortedRooms);
-    // setChatRooms(rooms);
     setLoading(false);
-    console.log(chatRoom[0].chatRoom.users.items)
+    console.log(chatRoom[0])
   };
 
   useEffect(() => {
@@ -49,13 +49,15 @@ export default function Chat() {
   }, [])
 
   return (
-    
     <SafeAreaView style={styles.container}>
-    
       <FlatList
           data={chatRoom}
-          renderItem={({item}) => <ChatListItem chat={item.chatRoom}/>}
+          keyExtractor={(item) => item.chatRoom.id}
+          renderItem={({item}) => 
+          <ChatListItem chat={item.chatRoom}/>
+        }
           refreshing={loading}
+          extraData={chatRoom}
           onRefresh={fetchChatRooms}
       />
     </SafeAreaView>

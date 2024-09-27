@@ -26,12 +26,10 @@ export default function DetailsScreen() {
 
   
   const { chatRoomID, name } = useLocalSearchParams();
-  console.log(name)
   const router = useRouter();
   const height = useHeaderHeight()
   const navigation = useNavigation();
 
-  console.log(chatRoomID)
 
   // Fetch chat room
   useEffect(() => {
@@ -65,7 +63,6 @@ export default function DetailsScreen() {
   useEffect(() => {
     const fetchMessages = async () => {
       const result = await API.graphql(graphqlOperation(listMessagesByChatRoom, {chatroomID: chatRoomID, sortDirection: "DESC"}))
-      console.log(result)
       const castedResult = result as GraphQLResult<any>
       setMessages(castedResult.data?.listMessagesByChatRoom?.items);
     };
@@ -95,8 +92,6 @@ export default function DetailsScreen() {
     
   }, [chatRoomID]);
 
-  // console.log(messages)
-
   // Set the header title to the user's name
   useEffect(() => {
     navigation.setOptions({
@@ -109,7 +104,6 @@ export default function DetailsScreen() {
     return <ActivityIndicator />;
   }
 
-  // console.log(chatRoom)
 
   return (
     
