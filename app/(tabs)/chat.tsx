@@ -16,7 +16,7 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
 
   const fetchChatRooms = async () => {
-    setLoading(true);
+    // setLoading(true);
     const authUser = await Auth.currentAuthenticatedUser();
     const response = await API.graphql(
       graphqlOperation(listChatRooms, {id: authUser.attributes.sub})
@@ -40,12 +40,29 @@ export default function Chat() {
       }
     );
     setChatRooms(sortedRooms);
-    setLoading(false);
+    // setLoading(false);
     console.log(chatRoom[0])
   };
 
   useEffect(() => {
-    fetchChatRooms(); 
+
+    // Subscribe to chat room updates
+    const subscription = API.graphql(
+      graphqlOperation(onUpdateChatRoom)
+    ) as unknown as Observable<GraphQLResult<any>>;
+
+    const subscriptionHandler = subscription.subscribe({
+      next: () => {
+        // Refetch chat rooms when a new update happens
+        fetchChatRooms();
+      },
+      error: (error) => console.warn("Subscription error:", error),
+    });
+
+    // Cleanup subscription on unmount
+    return () => subscriptionHandler.unsubscribe();
+
+    // fetchChatRooms(); 
   }, [])
 
   return (
@@ -56,9 +73,8 @@ export default function Chat() {
           renderItem={({item}) => 
           <ChatListItem chat={item.chatRoom}/>
         }
-          refreshing={loading}
-          extraData={chatRoom}
-          onRefresh={fetchChatRooms}
+          // refreshing={loading}
+          // onRefresh={fetchChatRooms}
       />
     </SafeAreaView>
   );
