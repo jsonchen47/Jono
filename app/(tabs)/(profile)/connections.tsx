@@ -14,6 +14,8 @@ import getCommonChatRoomWithUser from '../../../src/services/chatRoomService'
 
 const connections = () => {
 const [users, setUsers] = useState<any>([]);
+const [selectedUserIds, setSelectedUserIds] = useState<any>([]);
+  const [name, setName] = useState<any>("");
 const router = useRouter();
 
 useEffect(() => {
@@ -64,9 +66,7 @@ const createAChatRoomWithTheUser = async (user: any) => {
   // Navigate to the newly created ChatRoom
   // router.push('/chatScreen/${newChatRoom.id}')
   router.push({pathname: '/chatScreen/[id]', params: {id: newChatRoom.id, chatRoomID: newChatRoom.id, name: user?.name}}); 
-
 }
- 
 
   return (
     <View>
@@ -76,6 +76,8 @@ const createAChatRoomWithTheUser = async (user: any) => {
             <ContactListItem 
               user={item}
               onPress={() => createAChatRoomWithTheUser(item)}
+              isSelected={false}
+              selectable={false}
             />
         }
         ListHeaderComponent={() => (

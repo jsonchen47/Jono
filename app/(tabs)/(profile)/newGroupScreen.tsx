@@ -51,22 +51,29 @@ const ContactsScreen = () => {
     const newChatRoom = castedNewChatRoomData.data?.createChatRoom;
 
     // Add the selected users to the ChatRoom
-
+    // console.log(newChatRoom.id)
+    // console.log(selectedUserIds)
     await Promise.all(
+      
       selectedUserIds.map((userID: any) =>
-        API.graphql(
+      {
+        console.log('User ID:', userID); // Log the individual userID
+        return API.graphql(
           graphqlOperation(createUserChatRoom, {
-            input: { chatRoomID: newChatRoom.id, userID },
+            input: { chatRoomId: newChatRoom.id, userId: userID },
           })
         )
+      } 
       )
     );
 
     // Add the auth user to the ChatRoom
     const authUser = await Auth.currentAuthenticatedUser();
+    console.log(newChatRoom.id)
+    // console.log(authUser.attributes.sub)
     await API.graphql(
       graphqlOperation(createUserChatRoom, {
-        input: { chatRoomID: newChatRoom.id, userID: authUser.attributes.sub },
+        input: { chatRoomId: newChatRoom.id, userId: authUser.attributes.sub },
       })
     );
 
@@ -74,7 +81,7 @@ const ContactsScreen = () => {
     setName("");
     // navigate to the newly created ChatRoom
     // navigation.navigate("Chat", { id: newChatRoom.id });
-    router.push('/chat/${id: newChatRoom.id }')
+    router.push({pathname: '/chatScreen/[id]', params: {id: newChatRoom.id, chatRoomID: newChatRoom.id, name: name}})
   };
 
   const onContactPress = (id: any) => {
@@ -102,9 +109,9 @@ const ContactsScreen = () => {
         renderItem={({ item }: any) => (
           <ContactListItem
             user={item}
-            // selectable
+            selectable
             onPress={() => onContactPress(item.id)}
-            // isSelected={selectedUserIds.includes(item.id)}
+            isSelected={selectedUserIds.includes(item.id)}
           />
         )}
       />
