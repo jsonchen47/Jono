@@ -99,20 +99,6 @@ const Header = () => {
 // The projects in the large paging view 
 function PagerProjects() {
   return (
-    // <View style={styles.pagerViewOuterContainer}>
-    //   <PagerView style={styles.pagerViewContainer} initialPage={0}>
-    //     <View style={styles.page} key="1">
-    //       <Text>First page</Text>
-    //       <Text>Swipe ➡️</Text>
-    //     </View>
-    //     <View style={styles.page} key="2">
-    //       <Text>Second page</Text>
-    //     </View>
-    //     <View style={styles.page} key="3">
-    //       <Text>Third page</Text>
-    //     </View>
-    //   </PagerView>
-    // </View>
     <View style={styles.pagerViewOuterContainer}>
       <PagerView 
         style={styles.pagerViewContainer} 
@@ -126,14 +112,12 @@ function PagerProjects() {
             <ImageBackground 
               style={styles.largeProjectImageBackground} 
               imageStyle={styles.largeProjectImage}
-              
               source={project.image}
               >
               <LinearGradient
                 colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
                 style={styles.largeProjectGradient}
                 >
-                {/* <Image source={project.image} style={styles.largeProjectImage} /> */}
                 <View>
                   <View style={styles.largeProjectTextContainer}>
                     <Text style={styles.largeProjectAuthor}>{project.author}</Text>
@@ -168,11 +152,45 @@ function NewProjectsScreen() {
       {/* Browse projects cards */}
       <View style={styles.browseProjectsOuterContainer}>
         <View style={styles.browseProjectsContainer}>
-        {sampleProjects.map((item, index) => (
+        {sampleProjects.map((project, index) => (
           <View key={index} style={styles.browseProjectsGridItem}>
-            <Image style={styles.browseProjectsImage} source={item.image}/>
-            <Text style={styles.browseProjectsText}>{item.title}</Text>
+            <Image style={styles.browseProjectsImage} source={project.image}/>
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
+              style={styles.browseProjectsLinearGradient}
+            >
+            <View style={styles.browseProjectsTextContainer}>
+              <Text style={styles.browseProjectsTitle}>{project.title}</Text>
+              <Text style={styles.browseProjectAuthor}>{project.author}</Text>
+            </View>
+            </LinearGradient>
+            {/* <ImageBackground>
+              source={project.image}
+              imageStyle={styles.browseProjectsImage}
+            </ImageBackground> */}
           </View>
+          // <View
+          //   style={styles.browseProjectsGridItem}
+          //   key={project.id}
+          //   >
+          //   <ImageBackground 
+          //     style={styles.largeProjectImageBackground} 
+          //     imageStyle={styles.browseProjectsImage}
+          //     source={project.image}
+          //     >
+          //     <LinearGradient
+          //       colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} // Darker at the top, lighter at the bottom
+          //       style={styles.tabsContainer}
+          //       >
+          //       <View>
+          //         <View style={styles.tabsContainer}>
+          //           <Text style={styles.tabsContainer}>{project.title}</Text>
+          //           <Text style={styles.tabsContainer}>{project.author}</Text>
+          //         </View>
+          //       </View>
+          //     </LinearGradient>
+          //   </ImageBackground>
+          // </View>
         ))}
         </View>
       </View>
@@ -349,63 +367,8 @@ const styles = StyleSheet.create({
     width: '100%', 
     height: '100%',
   },
-  // Browse Projects
-  browseProjectsHeaderContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 20, 
-  }, 
-  browseProjectsHeaderText: {
-    fontWeight: 'bold', 
-    fontSize: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  browseProjectsSubtitleText: {
-    fontSize: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'gray',
-  },
-  browseProjectsOuterContainer: {
-    width: '100%', 
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  browseProjectsContainer: {
-    width: '90%',
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  browseProjectsGridItem: {
-    width: '48%', // Two items per row with spacing
-    marginBottom: 10,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-  browseProjectsImage: {
-    width: '100%', 
-    height: windowHeight/5, 
-    borderRadius: 15,
-  },
-  browseProjectsText: {
-    paddingTop: 5, 
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    fontWeight: 'bold',
-    width: '100%'
-  }, 
-  projectsScreenContainer: {
-    width: "100%", 
-  },
-  outerContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  }, 
-  // Large projects
-  largeProjectContainer: {
+   // Large projects
+   largeProjectContainer: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -448,5 +411,87 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 15, // Match the border radius of the image
   },
+  // Browse Projects
+  browseProjectsHeaderContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 20, 
+  }, 
+  browseProjectsHeaderText: {
+    fontWeight: 'bold', 
+    fontSize: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  browseProjectsSubtitleText: {
+    fontSize: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'gray',
+  },
+  browseProjectsOuterContainer: {
+    width: '100%', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  browseProjectsContainer: {
+    width: '90%',
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  browseProjectsGridItem: {
+    width: '48%', // Two items per row with spacing
+    marginBottom: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  browseProjectsImage: {
+    width: '100%', 
+    height: windowHeight/5, 
+    borderRadius: 15,
+  },
+  browseProjectsLinearGradient: {
+    position: 'absolute',
+    height: '100%', 
+    width: '100%', 
+    borderRadius: 15,
+    justifyContent: 'flex-end',
+  },
+  browseProjectsTextContainer: {
+    
+   
+    // alignItems: 'flex-end',
+    // width: '100%', 
+    // height: '100%', 
+    // flex: 1,
+    padding: 10, 
+    // backgroundColor: 'green',
+  },
+  browseProjectsTitle: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    fontWeight: 'bold',
+    
+    fontSize: 15, 
+    color: 'white'
+    // width: '100%',
+   
+    // backgroundColor: 'red',
+  }, 
+  browseProjectAuthor: {
+    fontSize: 15, 
+    color: 'lightgray',
+    paddingTop: 5,
+  },
+  projectsScreenContainer: {
+    width: "100%", 
+  },
+  outerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  }, 
+ 
 })
 
