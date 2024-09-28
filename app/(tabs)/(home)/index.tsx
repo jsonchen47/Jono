@@ -114,21 +114,24 @@ function PagerProjects() {
     //   </PagerView>
     // </View>
     <View style={styles.pagerViewOuterContainer}>
-      <PagerView style={styles.pagerViewContainer} initialPage={0}>
+      <PagerView 
+        style={styles.pagerViewContainer} 
+        initialPage={0}
+        >
         {sampleProjects.map((project, index) => (
           <View
             style={styles.largeProjectContainer}
             key={project.id}
             >
             <ImageBackground 
-              style={styles.page} 
+              style={styles.largeProjectImageBackground} 
               imageStyle={styles.largeProjectImage}
               
               source={project.image}
               >
               <LinearGradient
                 colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
-                style={styles.gradient}
+                style={styles.largeProjectGradient}
                 >
                 {/* <Image source={project.image} style={styles.largeProjectImage} /> */}
                 <View>
@@ -151,15 +154,28 @@ function NewProjectsScreen() {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.projectsScreenContainer}>
+      {/* Main projects */}
       <PagerProjects/>
-        <View style={styles.flexBoxContainer}>
+      {/* Browse projects text */}
+      <View style={styles.browseProjectsHeaderContainer}>
+        <Text style={styles.browseProjectsHeaderText}>
+          Browse all projects
+        </Text>
+        <Text style={styles.browseProjectsSubtitleText}>
+          Explore a world of ideas
+        </Text>
+      </View>
+      {/* Browse projects cards */}
+      <View style={styles.browseProjectsOuterContainer}>
+        <View style={styles.browseProjectsContainer}>
         {sampleProjects.map((item, index) => (
-          <View key={index} style={styles.flexBoxGridItem}>
-            <Image style={styles.flexBoxImage} source={item.image}/>
-            <Text style={styles.flexBoxText}>{item.title}</Text>
+          <View key={index} style={styles.browseProjectsGridItem}>
+            <Image style={styles.browseProjectsImage} source={item.image}/>
+            <Text style={styles.browseProjectsText}>{item.title}</Text>
           </View>
         ))}
         </View>
+      </View>
       </View>
     </View>
   );
@@ -289,8 +305,6 @@ export default index
 
 const styles = StyleSheet.create({
   tabsContainer: {
-    // marginTop: 100, 
-    // flex: 1,
   },
   safeAreaViewContainer: {
     flex: 1,
@@ -315,72 +329,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8E8E8',
     height: 50,
   },
-  pagerView: {
-    flex: 1,
-  },
-  // Browse styles
-  linearGradientView: {
-    top: 0,  // Set to top of the image
-    left: 0, // Set to the left side
-    right: 0, // Set to the right side
-    bottom: 0, // Set to the bottom side, so it covers the image
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  }, 
-  flatListContent: {
-    paddingHorizontal: (windowWidth-2*(windowWidth/2.5))/3, // Padding on the left and right
-  },
-  browseProjectsView: {
+  // Pager View
+  pagerViewOuterContainer: {
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 5,
-  },
-  browseProjectImages: {
-    width: windowWidth/2.1, 
-    height: windowHeight/5,
-    borderRadius: 15, 
-  },
-  browseProjectsText: {
-    fontWeight: 'bold',
-    fontSize: 15,
-    color: 'white',
-    justifyContent: 'flex-end',
   }, 
-  browseOverImageTextView: {
-    top: 15,  // Set to top of the image
-    left: 15, // Set to the left side
-    right: 15, // Set to the right side
-    bottom: 15, // Set to the bottom side, so it covers the image
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-  },
-  browseLinearGradient: {
-    width: windowWidth/2.2, 
-    height: windowHeight/5/1.5,
-    borderRadius: 15, 
-  },
-  browseAuthorText: {
-    fontSize: 10,
-    color: 'white',
-    justifyContent: 'flex-end',
-    paddingTop: 5,
-  },
-  flatListContainer: {
-    flexGrow: 1,
-    // paddingHorizontal: 5,
-  }, 
-  flatListColumnWrapper: {
-    justifyContent: 'space-between', // Evenly space out the columns
-  },
   pagerViewContainer: {
-    // alignSelf: 'stretch',
-    // flex: 1,
     width: '100%', 
-    height: windowHeight/2,
-    marginTop: 10,
-    marginBottom: 10,
+    height: windowHeight/2.2,
+    marginTop: 20,
+    marginBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
   }, 
@@ -389,76 +348,77 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%', 
     height: '100%',
-    backgroundColor: 'green',
-    // alignSelf: 'stretch',
-    // flex: 1,
   },
-  pagerViewOuterContainer: {
-    // width: '90%', 
-    // height: windowHeight/2, 
-    width: '100%',
+  // Browse Projects
+  browseProjectsHeaderContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    
+    paddingBottom: 20, 
   }, 
-  flatListHeaderStyle: {
-    height: '50%',
+  browseProjectsHeaderText: {
+    fontWeight: 'bold', 
+    fontSize: 20,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
-  }, 
-  flatListOuterContainer: {
-    flexGrow: 1, 
-  }, 
-  flexBoxContainer: {
+  },
+  browseProjectsSubtitleText: {
+    fontSize: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'gray',
+  },
+  browseProjectsOuterContainer: {
+    width: '100%', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  browseProjectsContainer: {
+    width: '90%',
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    // padding: 10,
   },
-  flexBoxCardView: { 
-
-  },
-  flexBoxGridItem: {
+  browseProjectsGridItem: {
     width: '48%', // Two items per row with spacing
     marginBottom: 10,
-    // padding: 20,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    // width: windowWidth/2.2,
-    // height: windowHeight/5, 
   },
-  flexBoxImage: {
+  browseProjectsImage: {
     width: '100%', 
     height: windowHeight/5, 
     borderRadius: 15,
   },
-  flexBoxText: {
+  browseProjectsText: {
     paddingTop: 5, 
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     fontWeight: 'bold',
-    // padding: 5,
     width: '100%'
   }, 
   projectsScreenContainer: {
     width: "100%", 
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   outerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   }, 
+  // Large projects
   largeProjectContainer: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  largeProjectImageBackground: {
+    width: '90%',
+    height: '100%',
+  },
   largeProjectImage: {
+    // padding: 30,
     width: '100%',
     height: '100%', 
-    borderRadius: 30,
+    borderRadius: 15,
   }, 
   largeProjectTextContainer: {
     justifyContent: 'flex-start',
@@ -475,18 +435,18 @@ const styles = StyleSheet.create({
   largeProjectTitle: {
     fontWeight: 'bold',
     color: 'white',
-    fontSize: 30,
+    fontSize: 25,
     flexShrink: 1,
     paddingTop: 10,
   }, 
-  gradient: {
+  largeProjectGradient: {
     flex: 1, 
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute', 
     width: '100%', 
     height: '100%',
-    borderRadius: 30, // Match the border radius of the image
+    borderRadius: 15, // Match the border radius of the image
   },
 })
 
