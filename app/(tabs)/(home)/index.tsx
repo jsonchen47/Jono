@@ -1,4 +1,4 @@
-import { Image, View, Text, SafeAreaView, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet, Dimensions } from 'react-native'
+import { Image, View, Text, SafeAreaView, ImageBackground, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import { TabView, TabBar, SceneRendererProps, NavigationState, Route, TabBarIndicatorProps, TabBarItemProps } from 'react-native-tab-view';
@@ -79,32 +79,6 @@ const sampleProjects = [
   },
 ];
 
-// Props for the FlatList 
-
-type ItemProps = {
-  title: string
-  image: any
-  author: string
-};
-
-const Item = ({title, image, author, }: ItemProps) => (
-  <View style={styles.browseProjectsView}>
-    <Image style={styles.browseProjectImages} source={image} />
-    <View style={styles.linearGradientView}>
-      <LinearGradient 
-        style={styles.browseLinearGradient}
-        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
-      </LinearGradient>
-    </View>
-    <View style={styles.browseOverImageTextView}>
-      <Text style={styles.browseProjectsText}>{title}</Text>  
-      <Text style={styles.browseAuthorText}>
-          {author}
-      </Text>
-    </View>
-  </View>
-);
-
 const Header = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   return (
@@ -125,58 +99,69 @@ const Header = () => {
 // The projects in the large paging view 
 function PagerProjects() {
   return (
+    // <View style={styles.pagerViewOuterContainer}>
+    //   <PagerView style={styles.pagerViewContainer} initialPage={0}>
+    //     <View style={styles.page} key="1">
+    //       <Text>First page</Text>
+    //       <Text>Swipe ➡️</Text>
+    //     </View>
+    //     <View style={styles.page} key="2">
+    //       <Text>Second page</Text>
+    //     </View>
+    //     <View style={styles.page} key="3">
+    //       <Text>Third page</Text>
+    //     </View>
+    //   </PagerView>
+    // </View>
     <View style={styles.pagerViewOuterContainer}>
       <PagerView style={styles.pagerViewContainer} initialPage={0}>
-        <View style={styles.page} key="1">
-          <Text>First page</Text>
-          <Text>Swipe ➡️</Text>
-        </View>
-        <View style={styles.page} key="2">
-          <Text>Second page</Text>
-        </View>
-        <View style={styles.page} key="3">
-          <Text>Third page</Text>
-        </View>
+        {sampleProjects.map((project, index) => (
+          <View
+            style={styles.largeProjectContainer}
+            key={project.id}
+            >
+            <ImageBackground 
+              style={styles.page} 
+              imageStyle={styles.largeProjectImage}
+              
+              source={project.image}
+              >
+              <LinearGradient
+                colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
+                style={styles.gradient}
+                >
+                {/* <Image source={project.image} style={styles.largeProjectImage} /> */}
+                <View>
+                  <View style={styles.largeProjectTextContainer}>
+                    <Text style={styles.largeProjectAuthor}>{project.author}</Text>
+                    <Text style={styles.largeProjectTitle}>{project.title}</Text>
+                  </View>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+          </View>
+        ))}
       </PagerView>
     </View>
-  );
-}
-
-// Screen that can be filtered and used for all screens
-function ProjectsScreen() {
-  return (
-    <View style={styles.flatListOuterContainer} >
-      
-      <Tabs.FlatList 
-        nestedScrollEnabled={true}
-        ListHeaderComponentStyle={styles.flatListHeaderStyle}
-        ListHeaderComponent={
-          <PagerProjects/>
-        }
-        contentContainerStyle={styles.flatListContainer}
-        columnWrapperStyle={styles.flatListColumnWrapper}
-        numColumns={2}
-        data={sampleProjects}
-          renderItem={({item}) => (
-          <View>
-            <Item title={item.title} image={item.image} author={item.author}/>
-          </View>
-        )}
-      />
-    </View>
+    // <Text>hi</Text>
   );
 }
 
 function NewProjectsScreen() {
   return (
-    <View style={styles.flexBoxContainer}>
-    {sampleProjects.map((item, index) => (
-      <View key={index} style={styles.flexBoxGridItem}>
-        <Image style={styles.flexBoxImage} source={item.image}/>
-        <Text style={styles.flexBoxText}>{item.title}</Text>
+    <View style={styles.outerContainer}>
+      <View style={styles.projectsScreenContainer}>
+      <PagerProjects/>
+        <View style={styles.flexBoxContainer}>
+        {sampleProjects.map((item, index) => (
+          <View key={index} style={styles.flexBoxGridItem}>
+            <Image style={styles.flexBoxImage} source={item.image}/>
+            <Text style={styles.flexBoxText}>{item.title}</Text>
+          </View>
+        ))}
+        </View>
       </View>
-    ))}
-  </View>
+    </View>
   );
 }
 
@@ -393,20 +378,28 @@ const styles = StyleSheet.create({
     // alignSelf: 'stretch',
     // flex: 1,
     width: '100%', 
-    height: '100%',
+    height: windowHeight/2,
+    marginTop: 10,
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   }, 
   page: {
-    backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%', 
     height: '100%',
+    backgroundColor: 'green',
     // alignSelf: 'stretch',
     // flex: 1,
   },
   pagerViewOuterContainer: {
-    width: '90%', 
-    height: '90%', 
+    // width: '90%', 
+    // height: windowHeight/2, 
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
   }, 
   flatListHeaderStyle: {
     height: '50%',
@@ -417,13 +410,16 @@ const styles = StyleSheet.create({
     flexGrow: 1, 
   }, 
   flexBoxContainer: {
+    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    padding: 10,
+    // padding: 10,
+  },
+  flexBoxCardView: { 
+
   },
   flexBoxGridItem: {
-    // backgroundColor: '#ddd',
     width: '48%', // Two items per row with spacing
     marginBottom: 10,
     // padding: 20,
@@ -433,7 +429,7 @@ const styles = StyleSheet.create({
     // height: windowHeight/5, 
   },
   flexBoxImage: {
-    width: windowWidth/2.2, 
+    width: '100%', 
     height: windowHeight/5, 
     borderRadius: 15,
   },
@@ -441,7 +437,56 @@ const styles = StyleSheet.create({
     paddingTop: 5, 
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
     // padding: 5,
-  }
+    width: '100%'
+  }, 
+  projectsScreenContainer: {
+    width: "100%", 
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  outerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  }, 
+  largeProjectContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  largeProjectImage: {
+    width: '100%',
+    height: '100%', 
+    borderRadius: 30,
+  }, 
+  largeProjectTextContainer: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    padding: 25, 
+    width: windowWidth/1.1,
+    height: '100%',
+  },
+  largeProjectAuthor: {
+    color: 'white',
+    fontSize: 15,
+    textTransform: 'uppercase',
+  }, 
+  largeProjectTitle: {
+    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 30,
+    flexShrink: 1,
+    paddingTop: 10,
+  }, 
+  gradient: {
+    flex: 1, 
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute', 
+    width: '100%', 
+    height: '100%',
+    borderRadius: 30, // Match the border radius of the image
+  },
 })
+
