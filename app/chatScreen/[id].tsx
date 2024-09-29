@@ -14,6 +14,8 @@ import {
   onCreateMessage,
   onUpdateChatRoom,
 } from "../../src/graphql/subscriptions";
+import { Link } from 'expo-router';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 
 
 const bg = require("../../assets/images/BG.png");
@@ -29,7 +31,6 @@ export default function DetailsScreen() {
   const router = useRouter();
   const height = useHeaderHeight()
   const navigation = useNavigation();
-
 
   // Fetch chat room
   useEffect(() => {
@@ -58,6 +59,24 @@ export default function DetailsScreen() {
     return () => subscriptionHandler.unsubscribe();
 
   }, [chatRoomID]);
+
+  console.log(chatRoomID)
+
+  useEffect(() => {
+    // Set the header title to the user's name
+    navigation.setOptions({ 
+      title: '', 
+      headerRight: () => 
+      <Link
+        href={{
+          pathname: '/groupInfoScreen',
+          params: {chatroomID: chatRoomID}
+        }}>
+        <Icon name='gear' style={styles.icon} ></Icon>
+       </Link>
+        
+    });
+  }, [navigation]);
 
   // Fetch messages
   useEffect(() => {
@@ -95,10 +114,10 @@ export default function DetailsScreen() {
   // Set the header title to the user's name
   useEffect(() => {
     navigation.setOptions({
-      title: name || 'Chat',  // Fallback to 'Chat' if name is not available
+      title: chatRoom?.name || name || 'Chat',  // Fallback to 'Chat' if name is not available
       headerBackTitle: 'Chat',
     });
-  }, [name, navigation]);
+  }, [chatRoom, name, navigation]);
 
   if (!chatRoom) {
     return <ActivityIndicator />;
@@ -106,6 +125,7 @@ export default function DetailsScreen() {
 
 
   return (
+    
     
     <SafeAreaView style={styles.container}>
     <KeyboardAvoidingView 
@@ -142,5 +162,12 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: 10,
-  }
+  }, 
+  icon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display:"flex",
+    fontSize: 20,
+    paddingRight: 10,
+  },
 });

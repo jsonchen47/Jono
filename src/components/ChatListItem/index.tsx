@@ -56,8 +56,10 @@ useEffect(() => {
 
   const navigation = useNavigation<any>(); 
     return (
-    <Pressable onPress={() => 
-     router.push({pathname: '/chatScreen/[id]', params: {id: chatRoom.id, chatRoomID: chatRoom.id, name: user?.name}})} style={styles.container}
+    <Pressable 
+      onPress={() => 
+      router.push({pathname: '/chatScreen/[id]', params: {id: chatRoom.id, chatRoomID: chatRoom.id, name: user?.name}})} 
+     style={styles.container}
     
      >
       <View style={styles.container}>
@@ -66,7 +68,7 @@ useEffect(() => {
         <View style={styles.content}>
           <View style={styles.row}>
             <Text style={styles.name} numberOfLines={1}>
-              {user?.name}
+              {chatRoom.name || user?.name}
           </Text>
           {chatRoom.LastMessage && (
             <Text style={styles.subTitle}>

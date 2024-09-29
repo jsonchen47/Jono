@@ -73,6 +73,19 @@ useEffect(() => {
             <Stack.Screen
             name="chatScreen/[id]"
             />
+            <Stack.Screen
+              name="groupInfoScreen"
+              options={{
+                // Hide the header for this route
+                // headerShown: false,
+                title: 'Group Info',
+                headerStyle: {
+                  backgroundColor: 'white',
+                },
+                headerTintColor: 'black',
+                // tabBarVisible: false // Hide tab bar for Project page
+              }}
+            />
           </Stack>
           {/* <View>
             <Text>hi</Text>
