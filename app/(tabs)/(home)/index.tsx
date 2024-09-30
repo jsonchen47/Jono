@@ -8,6 +8,8 @@ import { Searchbar } from 'react-native-paper';
 import PagerView from 'react-native-pager-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
+import { PageIndicator } from 'react-native-page-indicator';
+import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -98,11 +100,14 @@ const Header = () => {
 
 // The projects in the large paging view 
 function PagerProjects() {
+  const [currentPage, setCurrentPage] = React.useState(0);
+
   return (
     <View style={styles.pagerViewOuterContainer}>
       <PagerView 
         style={styles.pagerViewContainer} 
         initialPage={0}
+        onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
         >
         {sampleProjects.map((project, index) => (
           <View
@@ -123,9 +128,16 @@ function PagerProjects() {
                     <Text style={styles.largeProjectAuthor}>{project.author}</Text>
                     <Text style={styles.largeProjectTitle}>{project.title}</Text>
                   </View>
+                  
                 </View>
               </LinearGradient>
             </ImageBackground>
+            <PageIndicator 
+                    style={styles.indicator}
+                    current={currentPage}
+                    count={7} // Adjust based on your number of pages
+                    color='white'
+                  />
           </View>
         ))}
       </PagerView>
@@ -164,33 +176,7 @@ function NewProjectsScreen() {
               <Text style={styles.browseProjectAuthor}>{project.author}</Text>
             </View>
             </LinearGradient>
-            {/* <ImageBackground>
-              source={project.image}
-              imageStyle={styles.browseProjectsImage}
-            </ImageBackground> */}
           </View>
-          // <View
-          //   style={styles.browseProjectsGridItem}
-          //   key={project.id}
-          //   >
-          //   <ImageBackground 
-          //     style={styles.largeProjectImageBackground} 
-          //     imageStyle={styles.browseProjectsImage}
-          //     source={project.image}
-          //     >
-          //     <LinearGradient
-          //       colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} // Darker at the top, lighter at the bottom
-          //       style={styles.tabsContainer}
-          //       >
-          //       <View>
-          //         <View style={styles.tabsContainer}>
-          //           <Text style={styles.tabsContainer}>{project.title}</Text>
-          //           <Text style={styles.tabsContainer}>{project.author}</Text>
-          //         </View>
-          //       </View>
-          //     </LinearGradient>
-          //   </ImageBackground>
-          // </View>
         ))}
         </View>
       </View>
@@ -460,25 +446,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   browseProjectsTextContainer: {
-    
-   
-    // alignItems: 'flex-end',
-    // width: '100%', 
-    // height: '100%', 
-    // flex: 1,
     padding: 10, 
-    // backgroundColor: 'green',
   },
   browseProjectsTitle: {
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     fontWeight: 'bold',
-    
     fontSize: 15, 
     color: 'white'
-    // width: '100%',
-   
-    // backgroundColor: 'red',
   }, 
   browseProjectAuthor: {
     fontSize: 15, 
@@ -492,6 +467,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   }, 
- 
+  indicator: {
+    position: 'absolute',
+    height: '100%',
+    // backgroundColor: 'green',
+    // justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    padding: 25,
+  },
 })
 
