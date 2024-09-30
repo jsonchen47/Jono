@@ -21,8 +21,6 @@ const InputBox = ({chatroom}: any) => {
         userID: authUser.attributes.sub,
       };
 
-      
-  
       const newMessageData = await API.graphql(
         graphqlOperation(createMessage, { input: newMessage })
       );

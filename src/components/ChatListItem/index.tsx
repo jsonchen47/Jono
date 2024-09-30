@@ -7,11 +7,18 @@ import { useRouter } from 'expo-router';
 import {onUpdateChatRoom} from '../../graphql/subscriptions'
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { Observable } from 'rxjs'; // For Observable type
+import SwipeRow from '@nghinv/react-native-swipe-row';
+import { ListItem } from '@rneui/themed';
+import { Button } from '@rneui/themed';
+
 
 import getCommonChatRoomWithUser from '../../services/chatRoomService'
 import { useEffect, useState} from 'react';
 
 dayjs.extend(relativeTime);
+
+
+// For swipabble delete 
 
 const ChatListItem = ({chat}: any) => {
   const router = useRouter();
@@ -56,32 +63,45 @@ useEffect(() => {
 
   const navigation = useNavigation<any>(); 
     return (
-    <Pressable 
-      onPress={() => 
-      router.push({pathname: '/chatScreen/[id]', params: {id: chatRoom.id, chatRoomID: chatRoom.id, name: user?.name}})} 
-     style={styles.container}
-    
-     >
-      <View style={styles.container}>
-        <Image source={{ uri: user?.image}}
-          style={styles.image}/>
-        <View style={styles.content}>
-          <View style={styles.row}>
-            <Text style={styles.name} numberOfLines={1}>
-              {chatRoom.name || user?.name}
-          </Text>
-          {chatRoom.LastMessage && (
-            <Text style={styles.subTitle}>
-              {dayjs(chatRoom.LastMessage?.createdAt).fromNow(true)}
-            </Text>
-          )}          
+      <View style={styles.outerView}>
+      <ListItem.Swipeable
+      // style={styles.container}
+      rightContent={(reset) => (
+        <Button
+          title="Delete"
+          onPress={() => reset()}
+          icon={{ name: 'delete', color: 'white' }}
+          buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+        />
+      )}
+      >
+        <Pressable 
+          onPress={() => 
+          router.push({pathname: '/chatScreen/[id]', params: {id: chatRoom.id, chatRoomID: chatRoom.id, name: user?.name}})} 
+        style={styles.container}
+        >
+          <View style={styles.container}>
+            <Image source={{ uri: user?.image}}
+              style={styles.image}/>
+            <View style={styles.content}>
+              <View style={styles.row}>
+                <Text style={styles.name} numberOfLines={1}>
+                  {chatRoom.name || user?.name}
+              </Text>
+              {chatRoom.LastMessage && (
+                <Text style={styles.subTitle}>
+                  {dayjs(chatRoom.LastMessage?.createdAt).fromNow(true)}
+                </Text>
+              )}          
+              </View>
+              <Text numberOfLines={2} style={styles.subTitle}>
+                {chatRoom.LastMessage?.text}
+              </Text>
+            </View>
           </View>
-          <Text numberOfLines={2} style={styles.subTitle}>
-            {chatRoom.LastMessage?.text}
-          </Text>
-        </View>
+        </Pressable>
+      </ListItem.Swipeable>
       </View>
-    </Pressable>
     );
 };
 
@@ -89,15 +109,23 @@ export default ChatListItem;
 
 
 const styles = StyleSheet.create({
+    outerView: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: 'lightgray'
+    },
+    swipeList: {
+      // height: 70,
+      paddingVertical: 0,
+      
+    },
     container: {
       flex: 1,
     //   justifyContent: 'center',
     //   alignItems: 'center',
       flexDirection: 'row',
-      marginHorizontal: 10, 
-      marginVertical: 5,
-      height: 70,
+      height: 60,
       width: '100%',
+      
     },
     image: {
       width: 60, 
@@ -108,9 +136,6 @@ const styles = StyleSheet.create({
     content: {
       flex: 1,
 
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: 'lightgray'
-  
     }, 
     row: {
       flexDirection: 'row',

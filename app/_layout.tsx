@@ -15,6 +15,8 @@ import { useEffect } from 'react';
 import {getUser} from '../src/graphql/queries'
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import {createUser} from '../src/graphql/mutations';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 
 Amplify.configure({ ...awsconfig, Analytics: {disabled: true}});
 
@@ -61,37 +63,39 @@ useEffect(() => {
 }, []);
 
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
-      <PaperProvider>
-          <Stack>
-            <Stack.Screen 
-              name="(tabs)" 
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-            name="chatScreen/[id]"
-            />
-            <Stack.Screen
-              name="groupInfoScreen"
-              options={{
-                // Hide the header for this route
-                // headerShown: false,
-                title: 'Group Info',
-                headerStyle: {
-                  backgroundColor: 'white',
-                },
-                headerTintColor: 'black',
-                // tabBarVisible: false // Hide tab bar for Project page
-              }}
-            />
-          </Stack>
-          {/* <View>
-            <Text>hi</Text>
-          </View> */}
-      </PaperProvider>
-     </ApplicationProvider>
+    <GestureHandlerRootView>
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <PaperProvider>
+            <Stack>
+              <Stack.Screen 
+                name="(tabs)" 
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+              name="chatScreen/[id]"
+              />
+              <Stack.Screen
+                name="groupInfoScreen"
+                options={{
+                  // Hide the header for this route
+                  // headerShown: false,
+                  title: 'Group Info',
+                  headerStyle: {
+                    backgroundColor: 'white',
+                  },
+                  headerTintColor: 'black',
+                  // tabBarVisible: false // Hide tab bar for Project page
+                }}
+              />
+            </Stack>
+            {/* <View>
+              <Text>hi</Text>
+            </View> */}
+        </PaperProvider>
+      </ApplicationProvider>
+     </GestureHandlerRootView>
   );
 }
 
