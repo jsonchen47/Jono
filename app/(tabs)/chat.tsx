@@ -9,11 +9,54 @@ import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { onUpdateChatRoom } from '../../src/graphql/subscriptions'; // Your subscription query
 import { Observable } from 'rxjs'; // For Observable type
+import { ListItem } from '@rneui/themed';
+import { Button } from '@rneui/themed';
+import { deleteUserChatRoom, deleteChatRoom } from "../../src/graphql/mutations";
 
 
 export default function Chat() {
-  const [chatRoom, setChatRooms] = useState<any>([]);
+  const [chatRooms, setChatRooms] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  // const [chatRoomForDeletion, setChatRoomForDeletion] = useState<any>();
+
+
+  // To remove the ChatRoomUser join table 
+  const removeChatRoom = async (chatRoom: any) => {
+
+    // Remove chatRoom from UI
+    const updatedChatRooms = chatRooms.filter((room: any) => room.chatRoom.id !== chatRoom.id);
+    setChatRooms(updatedChatRooms);
+
+    // Set the chat room for deletion
+    const result = await API.graphql(
+      graphqlOperation(getChatRoom, { id: chatRoom.id })
+    );
+    const castedResult = result as GraphQLResult<any>
+    const chatRoomForDeletion = castedResult.data?.getChatRoom;
+
+    // Get the users from the chatRoom
+    const chatRoomUsers = chatRoomForDeletion.users.items.filter((item: any) => !item._deleted);
+    // Remove the UserChatRoom
+    for (const chatRoomUser of chatRoomUsers) {
+      console.log(chatRoomUser.id)
+      await API.graphql(
+        graphqlOperation(deleteUserChatRoom, {
+          input: { id: chatRoomUser.id },
+        })
+      );
+    }
+
+    // Remove the ChatRoom 
+    await API.graphql(
+      graphqlOperation(deleteChatRoom, {
+        input: { id: chatRoomForDeletion.id },
+      })
+    );
+  };
+
+  const handlePress = (chatRoom: any) => {
+    removeChatRoom(chatRoom); 
+  };
 
   const fetchChatRooms = async () => {
     // setLoading(true);
@@ -38,7 +81,7 @@ export default function Chat() {
     );
     setChatRooms(sortedRooms);
     // setLoading(false);
-    console.log(chatRoom)
+    console.log(chatRooms)
   };
 
   useEffect(() => {
@@ -63,10 +106,29 @@ export default function Chat() {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-          data={chatRoom}
+          data={chatRooms}
           keyExtractor={(item) => item.chatRoom.id}
           renderItem={({item}) => 
-          <ChatListItem chat={item.chatRoom}/>
+          <View style={styles.listUnderline}>
+            <ListItem.Swipeable
+            // style={styles.container}
+              rightContent={(reset) => (
+                <Button
+                  title="Delete"
+                  onPress={() => 
+                    {
+                      handlePress(item.chatRoom);
+                      reset();
+                    }
+                  }
+                  icon={{ name: 'delete', color: 'white' }}
+                  buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
+                />
+              )}
+              >
+              <ChatListItem chat={item.chatRoom}/>
+            </ListItem.Swipeable>
+          </View>
         }
           // refreshing={loading}
           // onRefresh={fetchChatRooms}
@@ -82,4 +144,41 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // paddingVertical: 50,
   },
+  listUnderline: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: 'lightgray'
+  }
 });
+
+
+// getChatRoom graphql operation
+export const getChatRoom = /* GraphQL */ `
+  query GetChatRoom($id: ID!) {
+    getChatRoom(id: $id) {
+      id
+      updatedAt
+      name
+      LastMessage {
+        text
+        createdAt
+      }
+      users {
+        items {
+          id
+          chatRoomId
+          createdAt
+          updatedAt
+          user {
+            id
+            name
+            status
+            image
+          }
+        }
+        nextToken
+      }
+      createdAt
+      chatRoomLastMessageId
+    }
+  }
+`;

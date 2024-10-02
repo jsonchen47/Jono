@@ -16,6 +16,7 @@ import { onUpdateChatRoom } from "../src/graphql/subscriptions";
 import { deleteUserChatRoom } from "../src/graphql/mutations";
 import ContactListItem from "../src/components/ContactListItem";
 import { Observable } from 'rxjs'; // For Observable type
+import { ListItem } from '@rneui/themed';
 
 
 const ChatRoomInfo = () => {
@@ -35,7 +36,6 @@ const ChatRoomInfo = () => {
     );
     const castedResult = result as GraphQLResult<any>
     setChatRoom(castedResult.data?.getChatRoom);
-    // setUsers(chatRoom.users.items.filter((item: any) => !item._deleted));      
     setLoading(false);
   };
 
@@ -65,12 +65,13 @@ const ChatRoomInfo = () => {
   }, [chatroomID]);
 
   const removeChatRoomUser = async (chatRoomUser: any) => {
-    await API.graphql(
-      graphqlOperation(deleteUserChatRoom, {
-        input: { _version: chatRoomUser._version, id: chatRoomUser.id },
-      })
-    );
-    // setUsers(chatRoom.users.items.filter((item: any) => !item._deleted));      
+    console.log(users)
+    // await API.graphql(
+    //   graphqlOperation(deleteUserChatRoom, {
+    //     input: { _version: chatRoomUser._version, id: chatRoomUser.id },
+    //   })
+    // );
+
   };
 
   const onContactPress = (chatRoomUser: any) => {
@@ -95,7 +96,6 @@ const ChatRoomInfo = () => {
     return <ActivityIndicator />;
   }
 
-  // setUsers(chatRoom.users.items.filter((item: any) => !item._deleted));
 
   const users = chatRoom.users.items.filter((item: any) => !item._deleted);
 
@@ -125,7 +125,8 @@ const ChatRoomInfo = () => {
               user={item.user}
               onPress={() => onContactPress(item)} 
               selectable={false} 
-              isSelected={false}            />
+              isSelected={false}   
+            />
           )}
           onRefresh={fetchChatRoom}
           refreshing={loading}

@@ -10,10 +10,11 @@ import { Observable } from 'rxjs'; // For Observable type
 import SwipeRow from '@nghinv/react-native-swipe-row';
 import { ListItem } from '@rneui/themed';
 import { Button } from '@rneui/themed';
-
-
+import { deleteUserChatRoom, deleteChatRoom } from "../../../src/graphql/mutations";
+import { updateChatRoom } from '../../../src/graphql/mutations'; 
 import getCommonChatRoomWithUser from '../../services/chatRoomService'
 import { useEffect, useState} from 'react';
+import ChatRoomInfo from '@/app/groupInfoScreen';
 
 dayjs.extend(relativeTime);
 
@@ -21,10 +22,52 @@ dayjs.extend(relativeTime);
 // For swipabble delete 
 
 const ChatListItem = ({chat}: any) => {
+
+
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [chatRoom, setChatRoom] = useState(chat);
+  // const [users, setUsers] = useState<any>();
 
+  const fetchChatRoom = async () => {
+    // setLoading(true);
+    const result = await API.graphql(
+      graphqlOperation(getChatRoom, { id: chat.id })
+    );
+    const castedResult = result as GraphQLResult<any>
+    setChatRoom(castedResult.data?.getChatRoom);
+    // setLoading(false);
+  };
+
+  // To remove the ChatRoomUser join table 
+  const removeChatRoom = async (chatRoom: any) => {
+
+    // // Get the users from the chatRoom
+    // const chatRoomUsers = chatRoom.users.items.filter((item: any) => !item._deleted);
+    // // console.log(chatRoomUsers)
+    // // console.log(user)
+    // // Remove the UserChatRoom
+    // for (const chatRoomUser of chatRoomUsers) {
+    //   console.log(chatRoomUser.id)
+    //   // console.log(chatRoomUser)
+    //   await API.graphql(
+    //     graphqlOperation(deleteUserChatRoom, {
+    //       input: { id: chatRoomUser.id },
+    //     })
+    //   );
+    // }
+
+    // // Remove the ChatRoom 
+    // await API.graphql(
+    //   graphqlOperation(deleteChatRoom, {
+    //     input: { id: chatRoom.id },
+    //   })
+    // );
+  };
+
+  const handlePress = () => {
+    removeChatRoom(chatRoom); 
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,6 +75,7 @@ const ChatListItem = ({chat}: any) => {
 
       const userItem = chatRoom.users.items.find((item: any) => item.user.id != authUser.attributes.sub);
       setUser(userItem?.user)
+
     };
 
     fetchUser(); 
@@ -40,6 +84,9 @@ const ChatListItem = ({chat}: any) => {
 
 // Fetch chat room
 useEffect(() => {
+
+  fetchChatRoom(); 
+
   const subscription = API.graphql(
     graphqlOperation(onUpdateChatRoom
       , { 
@@ -61,20 +108,11 @@ useEffect(() => {
 
 }, [chat.id]);
 
-  const navigation = useNavigation<any>(); 
+const navigation = useNavigation<any>(); 
+
+  
     return (
-      <View style={styles.outerView}>
-      <ListItem.Swipeable
-      // style={styles.container}
-      rightContent={(reset) => (
-        <Button
-          title="Delete"
-          onPress={() => reset()}
-          icon={{ name: 'delete', color: 'white' }}
-          buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
-        />
-      )}
-      >
+      
         <Pressable 
           onPress={() => 
           router.push({pathname: '/chatScreen/[id]', params: {id: chatRoom.id, chatRoomID: chatRoom.id, name: user?.name}})} 
@@ -100,12 +138,40 @@ useEffect(() => {
             </View>
           </View>
         </Pressable>
-      </ListItem.Swipeable>
-      </View>
     );
 };
 
-export default ChatListItem;
+// getChatRoom graphql operation
+export const getChatRoom = /* GraphQL */ `
+  query GetChatRoom($id: ID!) {
+    getChatRoom(id: $id) {
+      id
+      updatedAt
+      name
+      LastMessage {
+        text
+        createdAt
+      }
+      users {
+        items {
+          id
+          chatRoomId
+          createdAt
+          updatedAt
+          user {
+            id
+            name
+            status
+            image
+          }
+        }
+        nextToken
+      }
+      createdAt
+      chatRoomLastMessageId
+    }
+  }
+`;
 
 
 const styles = StyleSheet.create({
@@ -150,3 +216,5 @@ const styles = StyleSheet.create({
     }
   });
   
+
+  export default ChatListItem;

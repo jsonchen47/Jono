@@ -1,4 +1,4 @@
-import { Image, View, Text, SafeAreaView, ImageBackground, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet, Dimensions } from 'react-native'
+import { Image, View, Pressable, Text, SafeAreaView, ImageBackground, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import { TabView, TabBar, SceneRendererProps, NavigationState, Route, TabBarIndicatorProps, TabBarItemProps } from 'react-native-tab-view';
@@ -10,10 +10,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import { PageIndicator } from 'react-native-page-indicator';
 import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
 
 const sampleProjects = [
   {
@@ -100,6 +103,8 @@ const Header = () => {
 
 // The projects in the large paging view 
 function PagerProjects() {
+  const router = useRouter(); 
+
   const [currentPage, setCurrentPage] = React.useState(0);
 
   return (
@@ -114,6 +119,15 @@ function PagerProjects() {
             style={styles.largeProjectContainer}
             key={project.id}
             >
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: '/project/[id]',
+                  params: { id: project.id },
+                })
+              }
+              style={styles.largeProjectContainer}
+              >
             <ImageBackground 
               style={styles.largeProjectImageBackground} 
               imageStyle={styles.largeProjectImage}
@@ -135,9 +149,10 @@ function PagerProjects() {
             <PageIndicator 
                     style={styles.indicator}
                     current={currentPage}
-                    count={7} // Adjust based on your number of pages
+                    count={sampleProjects.length} // Adjust based on your number of pages
                     color='white'
                   />
+            </Pressable>
           </View>
         ))}
       </PagerView>
@@ -147,6 +162,8 @@ function PagerProjects() {
 }
 
 function NewProjectsScreen() {
+  const router = useRouter(); 
+
   return (
     <View style={styles.outerContainer}>
       <View style={styles.projectsScreenContainer}>
@@ -165,7 +182,17 @@ function NewProjectsScreen() {
       <View style={styles.browseProjectsOuterContainer}>
         <View style={styles.browseProjectsContainer}>
         {sampleProjects.map((project, index) => (
-          <View key={index} style={styles.browseProjectsGridItem}>
+          // <View  >
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: '/project/[id]',
+                  params: { id: project.id },
+                })
+              }
+              key={index}
+              style={styles.browseProjectsGridItem}
+            >
             <Image style={styles.browseProjectsImage} source={project.image}/>
             <LinearGradient
               colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
@@ -176,7 +203,8 @@ function NewProjectsScreen() {
               <Text style={styles.browseProjectAuthor}>{project.author}</Text>
             </View>
             </LinearGradient>
-          </View>
+            </Pressable>
+          // </View>
         ))}
         </View>
       </View>
