@@ -12,7 +12,7 @@ import { PageIndicator } from 'react-native-page-indicator';
 import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import { Link } from 'expo-router';
 import { useRouter } from 'expo-router';
-
+import ProjectCard from '../../../src/components/ProjectCard'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -182,7 +182,6 @@ function NewProjectsScreen() {
       <View style={styles.browseProjectsOuterContainer}>
         <View style={styles.browseProjectsContainer}>
         {sampleProjects.map((project, index) => (
-          // <View  >
             <Pressable
               onPress={() =>
                 router.push({
@@ -193,20 +192,29 @@ function NewProjectsScreen() {
               key={index}
               style={styles.browseProjectsGridItem}
             >
-            <Image style={styles.browseProjectsImage} source={project.image}/>
-            <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
-              style={styles.browseProjectsLinearGradient}
-            >
-            <View style={styles.browseProjectsTextContainer}>
-              <Text style={styles.browseProjectsTitle}>{project.title}</Text>
-              <Text style={styles.browseProjectAuthor}>{project.author}</Text>
-            </View>
-            </LinearGradient>
+              <Image style={styles.browseProjectsImage} source={project.image}/>
+              <LinearGradient
+                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
+                style={styles.browseProjectsLinearGradient}
+              >
+              <View style={styles.browseProjectsTextContainer}>
+                <Text style={styles.browseProjectsTitle}>{project.title}</Text>
+                <Text style={styles.browseProjectAuthor}>{project.author}</Text>
+              </View>
+              </LinearGradient>
+                 {/* <ProjectCard
+                 project={project}
+                  /> */}
             </Pressable>
-          // </View>
+            // <View key={index} style={styles.browseProjectsGridItem}>
+            //   <ProjectCard
+            //     project={project}
+            //   />
+            // </View>
+            
         ))}
         </View>
+        
       </View>
       </View>
     </View>

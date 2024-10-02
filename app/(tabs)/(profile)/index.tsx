@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, Button as Button2 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Button, Chip } from 'react-native-paper';
+import { Chip, Button as Button3 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -10,7 +10,8 @@ import { FlatGrid } from 'react-native-super-grid';
 import { Tabs } from 'react-native-collapsible-tab-view'
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Button as Button3 } from '@rneui/themed';
+import { Button } from '@rneui/themed';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -172,15 +173,27 @@ const Header = () => {
         {/* Buttons */}
         <View style={styles.allButtonsContainer}>
           <View style={styles.buttonContainer}>
-            <Button  compact style={styles.button} mode="outlined" onPress={() => console.log('Pressed')} textColor="black">
-              <Text style={{ fontSize: 15 }}>Edit Profile</Text>
-            </Button>
+            <Button3   
+              style={styles.button} 
+              mode="outlined" 
+              onPress={() => console.log('Pressed')} 
+              textColor="black"
+              contentStyle={{ paddingVertical: 0, paddingHorizontal: 8 }}
+            >
+              <Text style={styles.buttonText}>Edit Profile</Text>
+            </Button3>
+
           </View>
           <View style={{padding: 5}}></View>
           <View style={styles.buttonContainer}>
-            <Button  style={styles.button} mode="outlined" onPress={() => console.log('Pressed')} textColor="black">
-              <Text style={{ fontSize: 15 }}>Share Profile</Text>
-            </Button>
+            <Button3  
+              style={styles.button} 
+              mode="outlined" 
+              onPress={() => console.log('Pressed')} 
+              textColor="black"
+            >
+              <Text style={styles.buttonText}>Share Profile</Text>
+            </Button3>
           </View>
         </View>
         
@@ -210,12 +223,12 @@ export default function ProfileScreen() {
           pathname: '/settings',
         }}>
         <Icon name='gear' style={styles.icon} ></Icon>
-       </Link>
+      </Link>
         
     });
   }, [navigation]);
 
-  function OwnedScreen() {
+  function ProjectsScreen() {
     return (
       // <View style={styles.flatListContainer} >
         <View>
@@ -240,19 +253,19 @@ export default function ProfileScreen() {
     <Tabs.Container 
       renderHeader={Header}
     >
+      <Tabs.Tab name="About">
+        <View>
+        </View>
+      </Tabs.Tab>
       <Tabs.Tab name="Projects">
         {/* <Tabs.ScrollView> */}
-          <OwnedScreen/>
+          <ProjectsScreen/>
         {/* </Tabs.ScrollView> */}
-        
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
         <View></View>
       </Tabs.Tab>
-      <Tabs.Tab name="Skills">
-        <View>
-        </View>
-      </Tabs.Tab>
+      
       
     </Tabs.Container>
     // </View>
@@ -278,17 +291,14 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   imageContainer: {
-    // padding: 30,
-    // justifyContent: 'flex-end',
-    // flexShrink: 1,  
+ 
   },
   topContent: {
     flexDirection: 'row',
     // padding: 30,
     justifyContent: 'space-between',
     width: '100%',
-    // width: windowWidth,
-    // flexBasis: 'auto',
+ 
   },
   name: {
     fontSize: 24,
@@ -333,9 +343,16 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     width: '100%',
     borderRadius: 10,
-    fontSize: 25,
-    height: 40,
+    height: 45,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   }, 
+  buttonText: {
+    fontSize: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   subTitle: {
     flex: 1,
     fontSize: 17,
