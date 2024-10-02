@@ -1,5 +1,5 @@
 import { Image, View, Pressable, Text, SafeAreaView, ImageBackground, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet, Dimensions } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import { TabView, TabBar, SceneRendererProps, NavigationState, Route, TabBarIndicatorProps, TabBarItemProps } from 'react-native-tab-view';
 import { Scene, Event } from 'react-native-tab-view/lib/typescript/src/types';
@@ -13,6 +13,10 @@ import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors
 import { Link } from 'expo-router';
 import { useRouter } from 'expo-router';
 import ProjectCard from '../../../src/components/ProjectCard'
+import {listProjects} from '../../../src/backend/queries'
+import { API, graphqlOperation } from 'aws-amplify';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -222,8 +226,37 @@ function NewProjectsScreen() {
 }
 
 const index = () => {
+
+  const [projects, setProjects] = useState<any>([]);
+  const [loading, setLoading] = useState<any>(true);
+  const [error, setError] = useState<any>(null);
  
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectData = await API.graphql(graphqlOperation(listProjects));
+        const castedProjectData = projectData as GraphQLResult<any>
+        setProjects(castedProjectData.data.listProjects.items);
+      } catch (err) {
+        setError(err);
+        console.error("Error fetching projects:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error fetching projects: {error.message}</Text>;
+  }
 
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
@@ -268,6 +301,17 @@ const index = () => {
           ) })}
         >
           <View></View>
+          <Tabs.FlatList
+            data={projects}
+            keyExtractor={(item: any) => item.id}
+            renderItem={({ item }) => (
+              <View >
+                <Image source={{ uri: item.image }}  />
+                <Text >{item.title}</Text>
+                <Text>{item.description}</Text>
+              </View>
+            )}
+          />
         </Tabs.Tab>
         <Tabs.Tab 
           name="Finance"

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, ScrollView, Image, SafeAreaView } fro
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Navigator from '../../src/navigation';
 import ChatListItem from '../../src/components/ChatListItem'
-import {listChatRooms} from "../../src/backend/chatQueries"
+import {listChatRooms} from "../../src/backend/queries"
 import {useEffect, useState} from 'react'
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';

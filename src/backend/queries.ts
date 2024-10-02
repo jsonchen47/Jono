@@ -29,4 +29,20 @@ export const listChatRooms = /* GraphQL */
         }
     }`
     
-    
+
+// graphql/queries.js
+export const listProjects = /* GraphQL */ `
+  query ListProjects {
+    listProjects {
+      items {
+        id
+        title
+        description
+        image
+        skills
+        resources
+        ownerIDs
+      }
+    }
+  }
+`
