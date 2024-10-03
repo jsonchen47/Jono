@@ -8,50 +8,35 @@ import { Link } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from '../graphql/queries'
-import LargeProjectCard from '../components/LargeProjectCard';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const ProjectsScreen = ({projects}: any) => {
 
-const router = useRouter(); 
+const LargeProjectCard = ({project}: any) => {
+    const router = useRouter(); 
+    const [user, setUser] = useState<any>(null);
 
-  const [users, setUsers] = useState<any>("");
-  const [currentPage, setCurrentPage] = React.useState(0);
+    const fetchUser = async (ownerID: any) => {
+        const result = await API.graphql(
+          graphqlOperation(getUser, { id: ownerID })
+        );
+        const castedResult = result as GraphQLResult<any>
+        setUser(castedResult.data?.getUser);
+        // console.log(user.name)
+    };
 
-  const fetchUser = async (ownerID: any) => {
-    
-    const result = await API.graphql(
-      graphqlOperation(getUser, { id: ownerID })
-    );
-    const castedResult = result as GraphQLResult<any>
-    setUsers(castedResult.data?.getUser);
-    
-  };
+    useEffect(() => {
+      if (project.ownerIDs?.[0]) {
+        fetchUser(project.ownerIDs[0]);
+      }
+      // fetchUser(project.ownerIDs?.[0] ?? "")
+    }, [project.ownerIDs]);
 
-  return (
-    <View style={styles.pagerViewOuterContainer}>
-    <PagerView 
-      style={styles.pagerViewContainer} 
-      initialPage={0}
-      onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
-      >
-      {projects.map((project: any, index: any) => (
-        <View
-          style={styles.largeProjectContainer}
-          key={project.id}
-          >
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: '/project/[id]',
-                params: { id: project.id },
-              })
-            }
-            style={styles.largeProjectContainer}
-            >
-          {/* <ImageBackground 
+    return (
+        // <View>
+        // <Text>yolo</Text>
+        <ImageBackground 
             style={styles.largeProjectImageBackground} 
             imageStyle={styles.largeProjectImage}
             // imageStyle={{ width: 100, height: 100 }}
@@ -64,55 +49,21 @@ const router = useRouter();
               >
               <View>
                 <View style={styles.largeProjectTextContainer}>
-                  <Text style={styles.largeProjectAuthor}>{project.author}</Text>
+                  <Text style={styles.largeProjectAuthor}>{user?.name ?? ""}</Text>
                   <Text style={styles.largeProjectTitle}>{project.title}</Text>
                 </View>
                 
               </View>
             </LinearGradient>
-          </ImageBackground> */}
-          
-                <LargeProjectCard project = {project}/>
-                <PageIndicator 
-                  style={styles.indicator}
-                  current={currentPage}
-                  count={projects.length} // Adjust based on your number of pages
-                  color='white'
-                />
-          </Pressable>
-        </View>
-      ))}
-    </PagerView>
-  </View>
-  )
+          </ImageBackground>
+        // </View>
+    )
 }
 
-export default ProjectsScreen
+export default LargeProjectCard
 
 const styles = StyleSheet.create({
-    // Pager View
-  pagerViewOuterContainer: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    
-  }, 
-  pagerViewContainer: {
-    width: '100%', 
-    height: windowHeight/2.2,
-    marginTop: 20,
-    marginBottom: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: 'red'
-  }, 
-  page: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%', 
-    height: '100%',
-  },
-   // Large projects
+    // Large projects
    largeProjectContainer: {
     width: '100%',
     justifyContent: 'center',
