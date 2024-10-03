@@ -16,7 +16,7 @@ import ProjectCard from '../../../src/components/ProjectCard'
 import {listProjects} from '../../../src/backend/queries'
 import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-
+import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -165,7 +165,7 @@ function PagerProjects() {
   );
 }
 
-function NewProjectsScreen() {
+function ProjectsScreenOld() {
   const router = useRouter(); 
 
   return (
@@ -288,7 +288,7 @@ const index = () => {
           >
           <Tabs.ScrollView>
           {/* <ProjectsScreen/> */}
-          <NewProjectsScreen/>
+          <ProjectsScreenOld/>
           </Tabs.ScrollView>
         </Tabs.Tab>
         <Tabs.Tab 
@@ -306,9 +306,13 @@ const index = () => {
             keyExtractor={(item: any) => item.id}
             renderItem={({ item }) => (
               <View >
-                <Image source={{ uri: item.image }}  />
+                <Image 
+                  source={{ uri: item.image }}  
+                  style={{ width: 100, height: 100 }}
+                />
                 <Text >{item.title}</Text>
                 <Text>{item.description}</Text>
+                <Text>{item.image}</Text>
               </View>
             )}
           />
@@ -322,7 +326,11 @@ const index = () => {
             </View>
           ) })}
         >
-          <View></View>
+          <Tabs.ScrollView>
+
+          {/* <View></View> */}
+          <ProjectsScreen projects={projects}/>
+          </Tabs.ScrollView>
         </Tabs.Tab>
         <Tabs.Tab 
           name="Tech"
