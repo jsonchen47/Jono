@@ -186,6 +186,7 @@ function ProjectsScreenOld() {
       <View style={styles.browseProjectsOuterContainer}>
         <View style={styles.browseProjectsContainer}>
         {sampleProjects.map((project, index) => (
+          <View  key={index} style={styles.browseProjectsGridItem}>
             <Pressable
               onPress={() =>
                 router.push({
@@ -194,7 +195,8 @@ function ProjectsScreenOld() {
                 })
               }
               key={index}
-              style={styles.browseProjectsGridItem}
+              // style={styles.browseProjectsGridItem}
+              style={{width: '100%'}}
             >
               <Image style={styles.browseProjectsImage} source={project.image}/>
               <LinearGradient
@@ -206,15 +208,9 @@ function ProjectsScreenOld() {
                 <Text style={styles.browseProjectAuthor}>{project.author}</Text>
               </View>
               </LinearGradient>
-                 {/* <ProjectCard
-                 project={project}
-                  /> */}
+                
             </Pressable>
-            // <View key={index} style={styles.browseProjectsGridItem}>
-            //   <ProjectCard
-            //     project={project}
-            //   />
-            // </View>
+            </View>
             
         ))}
         </View>
@@ -515,6 +511,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
+  browseProjectsGridItemContainer: {
+    width: '100%',
+    height: '100%',
+  },
   browseProjectsGridItem: {
     width: '48%', // Two items per row with spacing
     marginBottom: 10,
@@ -525,6 +525,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     height: windowHeight/5, 
     borderRadius: 15,
+    backgroundColor: 'green'
   },
   browseProjectsLinearGradient: {
     position: 'absolute',
@@ -532,6 +533,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     borderRadius: 15,
     justifyContent: 'flex-end',
+    // backgroundColor: 'red'
   },
   browseProjectsTextContainer: {
     padding: 10, 

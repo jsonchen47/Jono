@@ -34,8 +34,15 @@ const LargeProjectCard = ({project}: any) => {
     }, [project.ownerIDs]);
 
     return (
-        // <View>
-        // <Text>yolo</Text>
+      <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: '/project/[id]',
+                  params: { id: project.id },
+                })
+              }
+              style={styles.largeProjectContainer}
+              >
         <ImageBackground 
             style={styles.largeProjectImageBackground} 
             imageStyle={styles.largeProjectImage}
@@ -56,7 +63,7 @@ const LargeProjectCard = ({project}: any) => {
               </View>
             </LinearGradient>
           </ImageBackground>
-        // </View>
+          </Pressable>
     )
 }
 

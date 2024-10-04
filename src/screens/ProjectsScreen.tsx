@@ -9,6 +9,7 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from '../graphql/queries'
 import LargeProjectCard from '../components/LargeProjectCard';
+import SmallProjectCard from '../components/SmallProjectCard';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -31,65 +32,91 @@ const router = useRouter();
   };
 
   return (
-    <View style={styles.pagerViewOuterContainer}>
-    <PagerView 
-      style={styles.pagerViewContainer} 
-      initialPage={0}
-      onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
-      >
-      {projects.map((project: any, index: any) => (
-        <View
-          style={styles.largeProjectContainer}
-          key={project.id}
+    <View style={styles.projectsScreenContainer}>
+      {/* PAGER PROJECT CARDS */}
+      <View style={styles.pagerViewOuterContainer}> 
+        <PagerView 
+          style={styles.pagerViewContainer} 
+          initialPage={0}
+          onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
           >
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: '/project/[id]',
-                params: { id: project.id },
-              })
-            }
-            style={styles.largeProjectContainer}
-            >
-          {/* <ImageBackground 
-            style={styles.largeProjectImageBackground} 
-            imageStyle={styles.largeProjectImage}
-            // imageStyle={{ width: 100, height: 100 }}
-            source={{uri: project.image}}
-            resizeMode="cover"
-            >
-            <LinearGradient
-              colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
-              style={styles.largeProjectGradient}
+          {projects.map((project: any, index: any) => (
+            <View
+              style={styles.largeProjectContainer}
+              key={project.id}
               >
-              <View>
-                <View style={styles.largeProjectTextContainer}>
-                  <Text style={styles.largeProjectAuthor}>{project.author}</Text>
-                  <Text style={styles.largeProjectTitle}>{project.title}</Text>
-                </View>
-                
-              </View>
-            </LinearGradient>
-          </ImageBackground> */}
-          
-                <LargeProjectCard project = {project}/>
-                <PageIndicator 
+              <LargeProjectCard project = {project}/>
+              <PageIndicator 
                   style={styles.indicator}
                   current={currentPage}
                   count={projects.length} // Adjust based on your number of pages
                   color='white'
                 />
-          </Pressable>
+            </View>
+          ))}
+        </PagerView>
+      </View>
+
+      {/* BROWSE PROJECTS TEXT */}
+      <View style={styles.browseProjectsHeaderContainer}>
+        <Text style={styles.browseProjectsHeaderText}>
+          Browse all projects
+        </Text>
+        <Text style={styles.browseProjectsSubtitleText}>
+          Explore a world of ideas
+        </Text>
+      </View>
+
+      {/* BROWSE PROJECT CARDS */}
+      <View style={styles.browseProjectsOuterContainer}>
+        <View style={styles.browseProjectsContainer}>
+        {projects.map((project: any, index: any) => (
+          <View  key={index} style={styles.browseProjectsGridItem}>
+            {/* <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: '/project/[id]',
+                  params: { id: project.id },
+                })
+              }
+              key={index}
+              // style={styles.browseProjectsGridItem}
+              style={{width: '100%'}}
+            >
+              <Image style={styles.browseProjectsImage} source={{uri: project.image}}/>
+              <LinearGradient
+                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
+                style={styles.browseProjectsLinearGradient}
+              >
+              <View style={styles.browseProjectsTextContainer}>
+                <Text style={styles.browseProjectsTitle}>{project.title}</Text>
+                <Text style={styles.browseProjectAuthor}>{project.author}</Text>
+              </View>
+              </LinearGradient>
+            </Pressable> */}
+            <SmallProjectCard project = {project}/>
+          </View>
+        ))}
         </View>
-      ))}
-    </PagerView>
-  </View>
+      </View>
+
+
+    </View>
   )
 }
 
 export default ProjectsScreen
 
 const styles = StyleSheet.create({
+  projectsScreenContainer: {
+    width: "100%", 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // outerContainer: {
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // }, 
     // Pager View
   pagerViewOuterContainer: {
     width: '100%',
@@ -162,5 +189,73 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'flex-end',
     padding: 25,
+  },
+  // Browse Projects Text
+  browseProjectsHeaderContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 20, 
+  }, 
+  browseProjectsHeaderText: {
+    fontWeight: 'bold', 
+    fontSize: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  browseProjectsSubtitleText: {
+    fontSize: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'gray',
+  },
+  // Browse Projects
+  browseProjectsOuterContainer: {
+    width: '100%', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  browseProjectsContainer: {
+    width: '90%',
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  browseProjectsGridItemContainer: {
+    width: '100%',
+    height: '100%',
+  },
+  browseProjectsGridItem: {
+    width: '48%', // Two items per row with spacing
+    marginBottom: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  browseProjectsImage: {
+    width: '100%', 
+    height: windowHeight/5, 
+    borderRadius: 15,
+  },
+  browseProjectsLinearGradient: {
+    position: 'absolute',
+    height: '100%', 
+    width: '100%', 
+    borderRadius: 15,
+    justifyContent: 'flex-end',
+  },
+  browseProjectsTextContainer: {
+    padding: 10, 
+  },
+  browseProjectsTitle: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    fontWeight: 'bold',
+    fontSize: 15, 
+    color: 'white'
+  }, 
+  browseProjectAuthor: {
+    fontSize: 15, 
+    color: 'lightgray',
+    paddingTop: 5,
   },
 })
