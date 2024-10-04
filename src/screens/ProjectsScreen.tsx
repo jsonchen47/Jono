@@ -10,29 +10,29 @@ import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from '../graphql/queries'
 import LargeProjectCard from '../components/LargeProjectCard';
 import SmallProjectCard from '../components/SmallProjectCard';
+import ProjectGrid from '../components/ProjectsGrid';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const ProjectsScreen = ({projects}: any) => {
 
-const router = useRouter(); 
-
+  const router = useRouter(); 
   const [users, setUsers] = useState<any>("");
   const [currentPage, setCurrentPage] = React.useState(0);
 
+  // FETCH USERS
   const fetchUser = async (ownerID: any) => {
-    
     const result = await API.graphql(
       graphqlOperation(getUser, { id: ownerID })
     );
     const castedResult = result as GraphQLResult<any>
     setUsers(castedResult.data?.getUser);
-    
   };
 
   return (
     <View style={styles.projectsScreenContainer}>
+
       {/* PAGER PROJECT CARDS */}
       <View style={styles.pagerViewOuterContainer}> 
         <PagerView 
@@ -68,39 +68,7 @@ const router = useRouter();
       </View>
 
       {/* BROWSE PROJECT CARDS */}
-      <View style={styles.browseProjectsOuterContainer}>
-        <View style={styles.browseProjectsContainer}>
-        {projects.map((project: any, index: any) => (
-          <View  key={index} style={styles.browseProjectsGridItem}>
-            {/* <Pressable
-              onPress={() =>
-                router.push({
-                  pathname: '/project/[id]',
-                  params: { id: project.id },
-                })
-              }
-              key={index}
-              // style={styles.browseProjectsGridItem}
-              style={{width: '100%'}}
-            >
-              <Image style={styles.browseProjectsImage} source={{uri: project.image}}/>
-              <LinearGradient
-                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
-                style={styles.browseProjectsLinearGradient}
-              >
-              <View style={styles.browseProjectsTextContainer}>
-                <Text style={styles.browseProjectsTitle}>{project.title}</Text>
-                <Text style={styles.browseProjectAuthor}>{project.author}</Text>
-              </View>
-              </LinearGradient>
-            </Pressable> */}
-            <SmallProjectCard project = {project}/>
-          </View>
-        ))}
-        </View>
-      </View>
-
-
+      <ProjectGrid projects = {projects}/>
     </View>
   )
 }
@@ -113,10 +81,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // outerContainer: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // }, 
     // Pager View
   pagerViewOuterContainer: {
     width: '100%',

@@ -8,9 +8,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { FlatGrid } from 'react-native-super-grid';
 import { Tabs } from 'react-native-collapsible-tab-view'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@rneui/themed';
+import { API, graphqlOperation } from 'aws-amplify';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import ProjectsScreen from '../../../src/screens/ProjectsScreen';
+import {listProjects} from '../../../src/backend/queries'
+import ProjectsGrid from '@/src/components/ProjectsGrid';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -228,22 +233,45 @@ export default function ProfileScreen() {
     });
   }, [navigation]);
 
-  function ProjectsScreen() {
+  function ProjectsTab() {
+    const [projects, setProjects] = useState<any>([]);
+    const [loading, setLoading] = useState<any>(true);
+    const [error, setError] = useState<any>(null);
+  
+    useEffect(() => {
+      const fetchProjects = async () => {
+        try {
+          const projectData = await API.graphql(graphqlOperation(listProjects));
+          const castedProjectData = projectData as GraphQLResult<any>
+          setProjects(castedProjectData.data.listProjects.items);
+        } catch (err) {
+          setError(err);
+          console.error("Error fetching projects:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProjects();
+    }, []);
+
+    if (loading) {
+      return <Text>Loading...</Text>;
+    }
+
+    if (error) {
+      return <Text>Error fetching projects: {error.message}</Text>;
+    }
     return (
-      // <View style={styles.flatListContainer} >
-        <View>
-          <Tabs.FlatList 
-              contentContainerStyle={styles.flatListContainer}
-              columnWrapperStyle={styles.flatListColumnWrapper}
-              numColumns={2}
-              data={sampleProjects}
-                renderItem={({item}) => (
-                <View>
-                  <Item title={item.title} image={item.image} author={item.author}/>
-                </View>
-              )}
-            />
-        </View>
+
+      
+        <ScrollView>
+          
+           
+              <ProjectsGrid projects = {projects}/>
+
+            
+        </ScrollView>
     );
   }
 
@@ -259,7 +287,7 @@ export default function ProfileScreen() {
       </Tabs.Tab>
       <Tabs.Tab name="Projects">
         {/* <Tabs.ScrollView> */}
-          <ProjectsScreen/>
+          <ProjectsTab/>
         {/* </Tabs.ScrollView> */}
       </Tabs.Tab>
       <Tabs.Tab name="Teams">

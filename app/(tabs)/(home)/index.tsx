@@ -1,18 +1,9 @@
 import { Image, View, Pressable, Text, SafeAreaView, ImageBackground, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
-import { TabView, TabBar, SceneRendererProps, NavigationState, Route, TabBarIndicatorProps, TabBarItemProps } from 'react-native-tab-view';
-import { Scene, Event } from 'react-native-tab-view/lib/typescript/src/types';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Searchbar } from 'react-native-paper';
-import PagerView from 'react-native-pager-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
-import { PageIndicator } from 'react-native-page-indicator';
-import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
-import { Link } from 'expo-router';
-import { useRouter } from 'expo-router';
-import ProjectCard from '../../../src/components/ProjectCard'
 import {listProjects} from '../../../src/backend/queries'
 import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
@@ -20,73 +11,6 @@ import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-
-const sampleProjects = [
-  {
-    id: 1,
-    title: 'Renewable energy powered robot to clean oceans',
-    image: require('../../../assets/images/solar.png'),
-    author: 'Barack Obama',
-    description: 'This robot will be powered by solar power as well as the mechanical movement of the waves. I am looking for some engineers who are interested in working with me on the project.',
-    skills: ['Engineering', 'Coding', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 2,
-    title: 'Wave-powered method to desalinate water',
-    image: require('../../../assets/images/cleanocean.jpg'),
-    author: 'Jennifer Lawrence',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 3,
-    title: 'App that automatically translates to pinyin',
-    image: require('../../../assets/images/chinese.png'),
-    author: 'Steve Carrel',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 4,
-    title: 'Advertising to help the homeless',
-    image: require('../../../assets/images/homeless.png'),
-    author: 'Ryan Reynolds',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 5,
-    title: 'Genetically modified camel',
-    image: require('../../../assets/images/camel.png'),
-    author: 'Pablo Picasso',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 6,
-    title: 'John Doe',
-    image: require('../../../assets/images/chair.png'),
-    author: 'Engineer',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 7,
-    title: 'John Doe',
-    image: require('../../../assets/images/chair.png'),
-    author: 'Engineer',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-];
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -103,122 +27,6 @@ const Header = () => {
     </View>
     </SafeAreaView>
   )
-}
-
-// The projects in the large paging view 
-function PagerProjects() {
-  const router = useRouter(); 
-
-  const [currentPage, setCurrentPage] = React.useState(0);
-
-  return (
-    <View style={styles.pagerViewOuterContainer}>
-      <PagerView 
-        style={styles.pagerViewContainer} 
-        initialPage={0}
-        onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
-        >
-        {sampleProjects.map((project, index) => (
-          <View
-            style={styles.largeProjectContainer}
-            key={project.id}
-            >
-            <Pressable
-              onPress={() =>
-                router.push({
-                  pathname: '/project/[id]',
-                  params: { id: project.id },
-                })
-              }
-              style={styles.largeProjectContainer}
-              >
-            <ImageBackground 
-              style={styles.largeProjectImageBackground} 
-              imageStyle={styles.largeProjectImage}
-              source={project.image}
-              >
-              <LinearGradient
-                colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
-                style={styles.largeProjectGradient}
-                >
-                <View>
-                  <View style={styles.largeProjectTextContainer}>
-                    <Text style={styles.largeProjectAuthor}>{project.author}</Text>
-                    <Text style={styles.largeProjectTitle}>{project.title}</Text>
-                  </View>
-                  
-                </View>
-              </LinearGradient>
-            </ImageBackground>
-            <PageIndicator 
-                    style={styles.indicator}
-                    current={currentPage}
-                    count={sampleProjects.length} // Adjust based on your number of pages
-                    color='white'
-                  />
-            </Pressable>
-          </View>
-        ))}
-      </PagerView>
-    </View>
-    // <Text>hi</Text>
-  );
-}
-
-function ProjectsScreenOld() {
-  const router = useRouter(); 
-
-  return (
-    <View style={styles.outerContainer}>
-      <View style={styles.projectsScreenContainer}>
-      {/* Main projects */}
-      <PagerProjects/>
-      {/* Browse projects text */}
-      <View style={styles.browseProjectsHeaderContainer}>
-        <Text style={styles.browseProjectsHeaderText}>
-          Browse all projects
-        </Text>
-        <Text style={styles.browseProjectsSubtitleText}>
-          Explore a world of ideas
-        </Text>
-      </View>
-      {/* Browse projects cards */}
-      <View style={styles.browseProjectsOuterContainer}>
-        <View style={styles.browseProjectsContainer}>
-        {sampleProjects.map((project, index) => (
-          <View  key={index} style={styles.browseProjectsGridItem}>
-            <Pressable
-              onPress={() =>
-                router.push({
-                  pathname: '/project/[id]',
-                  params: { id: project.id },
-                })
-              }
-              key={index}
-              // style={styles.browseProjectsGridItem}
-              style={{width: '100%'}}
-            >
-              <Image style={styles.browseProjectsImage} source={project.image}/>
-              <LinearGradient
-                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
-                style={styles.browseProjectsLinearGradient}
-              >
-              <View style={styles.browseProjectsTextContainer}>
-                <Text style={styles.browseProjectsTitle}>{project.title}</Text>
-                <Text style={styles.browseProjectAuthor}>{project.author}</Text>
-              </View>
-              </LinearGradient>
-                
-            </Pressable>
-            </View>
-            
-        ))}
-        </View>
-        
-      </View>
-      </View>
-    </View>
-  );
 }
 
 const index = () => {
@@ -256,10 +64,7 @@ const index = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
-      {/* <View style={styles.tabsContainer}> */}
       <Tabs.Container 
-        
-        // headerContainerStyle={styles.headerContainer}
         pagerProps={{ scrollEnabled: false }}
         headerHeight={50}
         minHeaderHeight={50}
@@ -269,12 +74,13 @@ const index = () => {
             {...props}
             scrollEnabled={true} // Enable scrollable tabs
             tabStyle={{ height: 70 }} // Customize the width of each tab
-            
           />
         )}
         >
+
+        {/* ALL PROJECTS */}
         <Tabs.Tab 
-          name="My Projects" 
+          name="All Projects" 
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
               <Icon name="star" size={22} />
@@ -283,10 +89,11 @@ const index = () => {
           ) })}
           >
           <Tabs.ScrollView>
-          {/* <ProjectsScreen/> */}
-          <ProjectsScreenOld/>
+            <ProjectsScreen projects = {projects}/>
           </Tabs.ScrollView>
         </Tabs.Tab>
+
+        {/* HEALTH PROJECTS */}
         <Tabs.Tab 
           name="Health"
           label={(() => { return (
@@ -297,22 +104,9 @@ const index = () => {
           ) })}
         >
           <View></View>
-          <Tabs.FlatList
-            data={projects}
-            keyExtractor={(item: any) => item.id}
-            renderItem={({ item }) => (
-              <View >
-                <Image 
-                  source={{ uri: item.image }}  
-                  style={{ width: 100, height: 100 }}
-                />
-                <Text >{item.title}</Text>
-                <Text>{item.description}</Text>
-                <Text>{item.image}</Text>
-              </View>
-            )}
-          />
         </Tabs.Tab>
+
+        {/* FINANCE PROJECTS */}
         <Tabs.Tab 
           name="Finance"
           label={(() => { return (
@@ -323,11 +117,12 @@ const index = () => {
           ) })}
         >
           <Tabs.ScrollView>
-
           {/* <View></View> */}
           <ProjectsScreen projects={projects}/>
           </Tabs.ScrollView>
         </Tabs.Tab>
+
+        
         <Tabs.Tab 
           name="Tech"
           label={(() => { return (
@@ -384,7 +179,6 @@ const index = () => {
           <View></View>
         </Tabs.Tab>
       </Tabs.Container>
-      {/* </View> */}
     </SafeAreaView>
   )
 }

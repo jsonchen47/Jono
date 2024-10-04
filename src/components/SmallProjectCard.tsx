@@ -55,7 +55,7 @@ const SmallProjectCard = ({project}: any) => {
               >
               <View style={styles.browseProjectsTextContainer}>
                 <Text style={styles.browseProjectsTitle}>{project.title}</Text>
-                <Text style={styles.browseProjectAuthor}>{user.name}</Text>
+                <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
               </View>
               </LinearGradient>
         </Pressable>
