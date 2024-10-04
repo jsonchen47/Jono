@@ -265,13 +265,11 @@ export default function ProfileScreen() {
     return (
 
       
-        <ScrollView>
-          
-           
-              <ProjectsGrid projects = {projects}/>
-
-            
-        </ScrollView>
+        // <ScrollView>
+           <View style={{paddingTop: windowWidth*0.05}}>
+          <ProjectsGrid  projects = {projects}/>
+          </View>
+         // </ScrollView> 
     );
   }
 
@@ -286,9 +284,9 @@ export default function ProfileScreen() {
         </View>
       </Tabs.Tab>
       <Tabs.Tab name="Projects">
-        {/* <Tabs.ScrollView> */}
+        <Tabs.ScrollView>
           <ProjectsTab/>
-        {/* </Tabs.ScrollView> */}
+        </Tabs.ScrollView>
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
         <View></View>
