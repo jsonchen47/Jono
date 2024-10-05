@@ -89,6 +89,9 @@ useEffect(() => {
                   // tabBarVisible: false // Hide tab bar for Project page
                 }}
               />
+              <Stack.Screen
+              name="newProject"
+              />
             </Stack>
             {/* <View>
               <Text>hi</Text>
