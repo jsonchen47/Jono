@@ -28,6 +28,7 @@ const ProjectsScreen = ({projects}: any) => {
     );
     const castedResult = result as GraphQLResult<any>
     setUsers(castedResult.data?.getUser);
+    console.log(projects)
   };
 
   return (
@@ -35,10 +36,14 @@ const ProjectsScreen = ({projects}: any) => {
 
       {/* PAGER PROJECT CARDS */}
       <View style={styles.pagerViewOuterContainer}> 
+        {/* <Text>hi</Text> */}
         <PagerView 
           style={styles.pagerViewContainer} 
           initialPage={0}
-          onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
+          onPageSelected={(e) => {
+            setCurrentPage(e.nativeEvent.position)
+          }
+          }
           >
           {projects?.map((project: any, index: any) => (
             <View
@@ -51,7 +56,7 @@ const ProjectsScreen = ({projects}: any) => {
                   current={currentPage}
                   count={projects.length} // Adjust based on your number of pages
                   color='white'
-                />
+              />
             </View>
           ))}
         </PagerView>
@@ -84,15 +89,16 @@ const styles = StyleSheet.create({
     // Pager View
   pagerViewOuterContainer: {
     width: '100%',
+    height:  windowHeight/2.2, 
     justifyContent: 'center',
     alignItems: 'center',
-    
+    marginTop: 20,
+    marginBottom: 20,
   }, 
   pagerViewContainer: {
     width: '100%', 
     height: windowHeight/2.2,
-    marginTop: 20,
-    marginBottom: 20,
+   
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'red'

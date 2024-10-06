@@ -35,14 +35,14 @@ const LargeProjectCard = ({project}: any) => {
 
     return (
       <Pressable
-              onPress={() =>
-                router.push({
-                  pathname: '/project/[id]',
-                  params: { id: project.id },
-                })
-              }
-              style={styles.largeProjectContainer}
-              >
+        onPress={() =>
+          router.push({
+            pathname: '/project/[id]',
+            params: { id: project.id },
+          })
+        }
+        style={styles.largeProjectContainer}
+        >
         <ImageBackground 
             style={styles.largeProjectImageBackground} 
             imageStyle={styles.largeProjectImage}
@@ -63,7 +63,7 @@ const LargeProjectCard = ({project}: any) => {
               </View>
             </LinearGradient>
           </ImageBackground>
-          </Pressable>
+        </Pressable>
     )
 }
 

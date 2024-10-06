@@ -29,7 +29,7 @@ useEffect(() => {
     const authUser = await Auth.currentAuthenticatedUser({
       bypassCache: true,
     });
-    console.log(authUser);
+    // console.log(authUser);
 
     // query the database using Auth user id (sub)
     const result = await API.graphql(
@@ -41,7 +41,7 @@ useEffect(() => {
 
     // If userData exists and has data, then exit the syncUser and don't add new user
     if (userData.data && userData.data.getUser) {
-      console.log("User already exists in DB");
+      // console.log("User already exists in DB");
       return;
     }
 
@@ -51,7 +51,7 @@ useEffect(() => {
       name: authUser.attributes.phone_number, 
       status: 'Hey, I am using Jono',
     }
-    console.log(newUser);
+    // console.log(newUser);
 
     const newUserResponse = await API.graphql(
       graphqlOperation(createUser, {input: newUser})

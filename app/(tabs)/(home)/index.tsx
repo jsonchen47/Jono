@@ -13,19 +13,19 @@ import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const fetchProjectsByCategory = async (category1: any) => {
+const fetchProjectsByCategory = async (category: any) => {
   try {
     const projectData = await API.graphql(graphqlOperation(listProjects, {
       filter: {
         categories: {
-          contains: category1,  // Checks if the category array contains the given string
-          ne: null       
+          contains: category,  // Checks if the category array contains the given string  
         }
       }
     }));
     const castedProjectData = projectData as GraphQLResult<any>
-    console.log(castedProjectData.data.listProjects.items)
+    // console.log(castedProjectData.data.listProjects.items)
     return castedProjectData.data.listProjects.items;
+    
   } catch (err) {
     console.log('Error fetching projects', err);
   }
@@ -42,11 +42,13 @@ const ProjectsScreenByCategory = ({ category }: any) => {
       setProjects(result);
     };
     getProjects();
-    // console.log(projects)
   }, [category]);
 
   return (
+
     <ProjectsScreen projects = {projects}/>
+
+    
   );
 };
 
@@ -80,6 +82,7 @@ const index = () => {
         const projectData = await API.graphql(graphqlOperation(listProjects));
         const castedProjectData = projectData as GraphQLResult<any>
         setProjects(castedProjectData.data.listProjects.items);
+        // console.log(castedProjectData.data.listProjects.items)
       } catch (err) {
         setError(err);
         console.error("Error fetching projects:", err);
@@ -143,6 +146,7 @@ const index = () => {
           {/* <View></View> */}
           <Tabs.ScrollView>
             <ProjectsScreenByCategory category = 'health'/>
+            {/* <ProjectsScreen projects = {projects}/> */}
           </Tabs.ScrollView>
         </Tabs.Tab>
 
