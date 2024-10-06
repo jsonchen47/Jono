@@ -8,6 +8,68 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
+export const getProject = /* GraphQL */ `query GetProject($id: ID!) {
+  getProject(id: $id) {
+    id
+    ownerIDs
+    Users {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    title
+    description
+    image
+    skills
+    resources
+    categories
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetProjectQueryVariables,
+  APITypes.GetProjectQuery
+>;
+export const listProjects = /* GraphQL */ `query ListProjects(
+  $filter: ModelProjectFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listProjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListProjectsQueryVariables,
+  APITypes.ListProjectsQuery
+>;
 export const getChatRoom = /* GraphQL */ `query GetChatRoom($id: ID!) {
   getChatRoom(id: $id) {
     id
@@ -238,6 +300,18 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
       nextToken
       __typename
     }
+    Projects {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -263,6 +337,10 @@ export const listUsers = /* GraphQL */ `query ListUsers(
         nextToken
         __typename
       }
+      Projects {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -272,6 +350,206 @@ export const listUsers = /* GraphQL */ `query ListUsers(
   }
 }
 ` as GeneratedQuery<APITypes.ListUsersQueryVariables, APITypes.ListUsersQuery>;
+export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
+  getUserProject(id: $id) {
+    id
+    projectId
+    userId
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetUserProjectQueryVariables,
+  APITypes.GetUserProjectQuery
+>;
+export const listUserProjects = /* GraphQL */ `query ListUserProjects(
+  $filter: ModelUserProjectFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUserProjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      projectId
+      userId
+      project {
+        id
+        ownerIDs
+        title
+        description
+        image
+        skills
+        resources
+        categories
+        createdAt
+        updatedAt
+        __typename
+      }
+      user {
+        id
+        name
+        status
+        image
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListUserProjectsQueryVariables,
+  APITypes.ListUserProjectsQuery
+>;
+export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjectId(
+  $projectId: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelUserProjectFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  userProjectsByProjectId(
+    projectId: $projectId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      projectId
+      userId
+      project {
+        id
+        ownerIDs
+        title
+        description
+        image
+        skills
+        resources
+        categories
+        createdAt
+        updatedAt
+        __typename
+      }
+      user {
+        id
+        name
+        status
+        image
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.UserProjectsByProjectIdQueryVariables,
+  APITypes.UserProjectsByProjectIdQuery
+>;
+export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
+  $userId: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelUserProjectFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  userProjectsByUserId(
+    userId: $userId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      projectId
+      userId
+      project {
+        id
+        ownerIDs
+        title
+        description
+        image
+        skills
+        resources
+        categories
+        createdAt
+        updatedAt
+        __typename
+      }
+      user {
+        id
+        name
+        status
+        image
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.UserProjectsByUserIdQueryVariables,
+  APITypes.UserProjectsByUserIdQuery
+>;
 export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
   getUserChatRoom(id: $id) {
     id
@@ -314,6 +592,10 @@ export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
         __typename
       }
       ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
         nextToken
         __typename
       }

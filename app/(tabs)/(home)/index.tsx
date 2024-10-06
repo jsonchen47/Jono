@@ -4,13 +4,52 @@ import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Searchbar } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {listProjects} from '../../../src/backend/queries'
+// import {listProjects} from '../../../src/backend/queries'
+import { listProjects } from '@/src/graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
+const fetchProjectsByCategory = async (category1: any) => {
+  try {
+    const projectData = await API.graphql(graphqlOperation(listProjects, {
+      filter: {
+        categories: {
+          contains: category1,  // Checks if the category array contains the given string
+          ne: null       
+        }
+      }
+    }));
+    const castedProjectData = projectData as GraphQLResult<any>
+    console.log(castedProjectData.data.listProjects.items)
+    return castedProjectData.data.listProjects.items;
+  } catch (err) {
+    console.log('Error fetching projects', err);
+  }
+};
+
+const ProjectsScreenByCategory = ({ category }: any) => {
+  const [projects, setProjects] = useState<any>([]);
+
+  useEffect(() => {
+    // console.log(category)
+    const getProjects = async () => {
+      const result = await fetchProjectsByCategory(category);
+      // console.log(result)
+      setProjects(result);
+    };
+    getProjects();
+    // console.log(projects)
+  }, [category]);
+
+  return (
+    <ProjectsScreen projects = {projects}/>
+  );
+};
+
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -35,8 +74,6 @@ const index = () => {
   const [loading, setLoading] = useState<any>(true);
   const [error, setError] = useState<any>(null);
  
-  const insets = useSafeAreaInsets();
-
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -103,7 +140,10 @@ const index = () => {
             </View>
           ) })}
         >
-          <View></View>
+          {/* <View></View> */}
+          <Tabs.ScrollView>
+            <ProjectsScreenByCategory category = 'health'/>
+          </Tabs.ScrollView>
         </Tabs.Tab>
 
         {/* FINANCE PROJECTS */}

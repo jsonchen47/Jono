@@ -8,6 +8,99 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
+export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filter: ModelSubscriptionProjectFilterInput) {
+  onCreateProject(filter: $filter) {
+    id
+    ownerIDs
+    Users {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    title
+    description
+    image
+    skills
+    resources
+    categories
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateProjectSubscriptionVariables,
+  APITypes.OnCreateProjectSubscription
+>;
+export const onUpdateProject = /* GraphQL */ `subscription OnUpdateProject($filter: ModelSubscriptionProjectFilterInput) {
+  onUpdateProject(filter: $filter) {
+    id
+    ownerIDs
+    Users {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    title
+    description
+    image
+    skills
+    resources
+    categories
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateProjectSubscriptionVariables,
+  APITypes.OnUpdateProjectSubscription
+>;
+export const onDeleteProject = /* GraphQL */ `subscription OnDeleteProject($filter: ModelSubscriptionProjectFilterInput) {
+  onDeleteProject(filter: $filter) {
+    id
+    ownerIDs
+    Users {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    title
+    description
+    image
+    skills
+    resources
+    categories
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteProjectSubscriptionVariables,
+  APITypes.OnDeleteProjectSubscription
+>;
 export const onCreateChatRoom = /* GraphQL */ `subscription OnCreateChatRoom($filter: ModelSubscriptionChatRoomFilterInput) {
   onCreateChatRoom(filter: $filter) {
     id
@@ -241,6 +334,18 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
       nextToken
       __typename
     }
+    Projects {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -274,6 +379,18 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
       items {
         id
         chatRoomId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    Projects {
+      items {
+        id
+        projectId
         userId
         createdAt
         updatedAt
@@ -323,6 +440,18 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
       nextToken
       __typename
     }
+    Projects {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -331,6 +460,168 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
 ` as GeneratedSubscription<
   APITypes.OnDeleteUserSubscriptionVariables,
   APITypes.OnDeleteUserSubscription
+>;
+export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProject(
+  $filter: ModelSubscriptionUserProjectFilterInput
+) {
+  onCreateUserProject(filter: $filter) {
+    id
+    projectId
+    userId
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateUserProjectSubscriptionVariables,
+  APITypes.OnCreateUserProjectSubscription
+>;
+export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProject(
+  $filter: ModelSubscriptionUserProjectFilterInput
+) {
+  onUpdateUserProject(filter: $filter) {
+    id
+    projectId
+    userId
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateUserProjectSubscriptionVariables,
+  APITypes.OnUpdateUserProjectSubscription
+>;
+export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProject(
+  $filter: ModelSubscriptionUserProjectFilterInput
+) {
+  onDeleteUserProject(filter: $filter) {
+    id
+    projectId
+    userId
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteUserProjectSubscriptionVariables,
+  APITypes.OnDeleteUserProjectSubscription
 >;
 export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChatRoom(
   $filter: ModelSubscriptionUserChatRoomFilterInput
@@ -376,6 +667,10 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
         __typename
       }
       ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
         nextToken
         __typename
       }
@@ -439,6 +734,10 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
         nextToken
         __typename
       }
+      Projects {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -496,6 +795,10 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
         __typename
       }
       ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
         nextToken
         __typename
       }

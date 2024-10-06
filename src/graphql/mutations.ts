@@ -8,6 +8,108 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createProject = /* GraphQL */ `mutation CreateProject(
+  $input: CreateProjectInput!
+  $condition: ModelProjectConditionInput
+) {
+  createProject(input: $input, condition: $condition) {
+    id
+    ownerIDs
+    Users {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    title
+    description
+    image
+    skills
+    resources
+    categories
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateProjectMutationVariables,
+  APITypes.CreateProjectMutation
+>;
+export const updateProject = /* GraphQL */ `mutation UpdateProject(
+  $input: UpdateProjectInput!
+  $condition: ModelProjectConditionInput
+) {
+  updateProject(input: $input, condition: $condition) {
+    id
+    ownerIDs
+    Users {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    title
+    description
+    image
+    skills
+    resources
+    categories
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateProjectMutationVariables,
+  APITypes.UpdateProjectMutation
+>;
+export const deleteProject = /* GraphQL */ `mutation DeleteProject(
+  $input: DeleteProjectInput!
+  $condition: ModelProjectConditionInput
+) {
+  deleteProject(input: $input, condition: $condition) {
+    id
+    ownerIDs
+    Users {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    title
+    description
+    image
+    skills
+    resources
+    categories
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteProjectMutationVariables,
+  APITypes.DeleteProjectMutation
+>;
 export const createChatRoom = /* GraphQL */ `mutation CreateChatRoom(
   $input: CreateChatRoomInput!
   $condition: ModelChatRoomConditionInput
@@ -262,6 +364,18 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       nextToken
       __typename
     }
+    Projects {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -298,6 +412,18 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
       items {
         id
         chatRoomId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    Projects {
+      items {
+        id
+        projectId
         userId
         createdAt
         updatedAt
@@ -350,6 +476,18 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
       nextToken
       __typename
     }
+    Projects {
+      items {
+        id
+        projectId
+        userId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -358,6 +496,171 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
 ` as GeneratedMutation<
   APITypes.DeleteUserMutationVariables,
   APITypes.DeleteUserMutation
+>;
+export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
+  $input: CreateUserProjectInput!
+  $condition: ModelUserProjectConditionInput
+) {
+  createUserProject(input: $input, condition: $condition) {
+    id
+    projectId
+    userId
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateUserProjectMutationVariables,
+  APITypes.CreateUserProjectMutation
+>;
+export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
+  $input: UpdateUserProjectInput!
+  $condition: ModelUserProjectConditionInput
+) {
+  updateUserProject(input: $input, condition: $condition) {
+    id
+    projectId
+    userId
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateUserProjectMutationVariables,
+  APITypes.UpdateUserProjectMutation
+>;
+export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
+  $input: DeleteUserProjectInput!
+  $condition: ModelUserProjectConditionInput
+) {
+  deleteUserProject(input: $input, condition: $condition) {
+    id
+    projectId
+    userId
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteUserProjectMutationVariables,
+  APITypes.DeleteUserProjectMutation
 >;
 export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
   $input: CreateUserChatRoomInput!
@@ -404,6 +707,10 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
         __typename
       }
       ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
         nextToken
         __typename
       }
@@ -468,6 +775,10 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
         nextToken
         __typename
       }
+      Projects {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -526,6 +837,10 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
         __typename
       }
       ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
         nextToken
         __typename
       }

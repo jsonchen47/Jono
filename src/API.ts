@@ -2,22 +2,30 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateChatRoomInput = {
+export type CreateProjectInput = {
   id?: string | null,
-  name?: string | null,
+  ownerIDs?: Array< string | null > | null,
+  title: string,
+  description?: string | null,
   image?: string | null,
-  chatRoomLastMessageId?: string | null,
+  skills?: Array< string | null > | null,
+  resources?: Array< string | null > | null,
+  categories?: Array< string | null > | null,
 };
 
-export type ModelChatRoomConditionInput = {
-  name?: ModelStringInput | null,
+export type ModelProjectConditionInput = {
+  ownerIDs?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
   image?: ModelStringInput | null,
-  and?: Array< ModelChatRoomConditionInput | null > | null,
-  or?: Array< ModelChatRoomConditionInput | null > | null,
-  not?: ModelChatRoomConditionInput | null,
+  skills?: ModelStringInput | null,
+  resources?: ModelStringInput | null,
+  categories?: ModelStringInput | null,
+  and?: Array< ModelProjectConditionInput | null > | null,
+  or?: Array< ModelProjectConditionInput | null > | null,
+  not?: ModelProjectConditionInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
-  chatRoomLastMessageId?: ModelIDInput | null,
 };
 
 export type ModelStringInput = {
@@ -60,33 +68,49 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
-export type ChatRoom = {
-  __typename: "ChatRoom",
+export type Project = {
+  __typename: "Project",
   id: string,
-  name?: string | null,
+  ownerIDs?: Array< string | null > | null,
+  Users?: ModelUserProjectConnection | null,
+  title: string,
+  description?: string | null,
   image?: string | null,
-  Messages?: ModelMessageConnection | null,
-  users?: ModelUserChatRoomConnection | null,
-  LastMessage?: Message | null,
+  skills?: Array< string | null > | null,
+  resources?: Array< string | null > | null,
+  categories?: Array< string | null > | null,
   createdAt: string,
   updatedAt: string,
-  chatRoomLastMessageId?: string | null,
+};
+
+export type ModelUserProjectConnection = {
+  __typename: "ModelUserProjectConnection",
+  items:  Array<UserProject | null >,
+  nextToken?: string | null,
+};
+
+export type UserProject = {
+  __typename: "UserProject",
+  id: string,
+  projectId: string,
+  userId: string,
+  project: Project,
+  user: User,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type User = {
+  __typename: "User",
+  id: string,
+  name: string,
+  status?: string | null,
+  image?: string | null,
+  Messages?: ModelMessageConnection | null,
+  ChatRooms?: ModelUserChatRoomConnection | null,
+  Projects?: ModelUserProjectConnection | null,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type ModelMessageConnection = {
@@ -123,16 +147,66 @@ export type UserChatRoom = {
   updatedAt: string,
 };
 
-export type User = {
-  __typename: "User",
+export type ChatRoom = {
+  __typename: "ChatRoom",
   id: string,
-  name: string,
-  status?: string | null,
+  name?: string | null,
   image?: string | null,
   Messages?: ModelMessageConnection | null,
-  ChatRooms?: ModelUserChatRoomConnection | null,
+  users?: ModelUserChatRoomConnection | null,
+  LastMessage?: Message | null,
   createdAt: string,
   updatedAt: string,
+  chatRoomLastMessageId?: string | null,
+};
+
+export type UpdateProjectInput = {
+  id: string,
+  ownerIDs?: Array< string | null > | null,
+  title?: string | null,
+  description?: string | null,
+  image?: string | null,
+  skills?: Array< string | null > | null,
+  resources?: Array< string | null > | null,
+  categories?: Array< string | null > | null,
+};
+
+export type DeleteProjectInput = {
+  id: string,
+};
+
+export type CreateChatRoomInput = {
+  id?: string | null,
+  name?: string | null,
+  image?: string | null,
+  chatRoomLastMessageId?: string | null,
+};
+
+export type ModelChatRoomConditionInput = {
+  name?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  and?: Array< ModelChatRoomConditionInput | null > | null,
+  or?: Array< ModelChatRoomConditionInput | null > | null,
+  not?: ModelChatRoomConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  chatRoomLastMessageId?: ModelIDInput | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
 };
 
 export type UpdateChatRoomInput = {
@@ -209,6 +283,32 @@ export type DeleteUserInput = {
   id: string,
 };
 
+export type CreateUserProjectInput = {
+  id?: string | null,
+  projectId: string,
+  userId: string,
+};
+
+export type ModelUserProjectConditionInput = {
+  projectId?: ModelIDInput | null,
+  userId?: ModelIDInput | null,
+  and?: Array< ModelUserProjectConditionInput | null > | null,
+  or?: Array< ModelUserProjectConditionInput | null > | null,
+  not?: ModelUserProjectConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type UpdateUserProjectInput = {
+  id: string,
+  projectId?: string | null,
+  userId?: string | null,
+};
+
+export type DeleteUserProjectInput = {
+  id: string,
+};
+
 export type CreateUserChatRoomInput = {
   id?: string | null,
   chatRoomId: string,
@@ -233,6 +333,28 @@ export type UpdateUserChatRoomInput = {
 
 export type DeleteUserChatRoomInput = {
   id: string,
+};
+
+export type ModelProjectFilterInput = {
+  id?: ModelIDInput | null,
+  ownerIDs?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  skills?: ModelStringInput | null,
+  resources?: ModelStringInput | null,
+  categories?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelProjectFilterInput | null > | null,
+  or?: Array< ModelProjectFilterInput | null > | null,
+  not?: ModelProjectFilterInput | null,
+};
+
+export type ModelProjectConnection = {
+  __typename: "ModelProjectConnection",
+  items:  Array<Project | null >,
+  nextToken?: string | null,
 };
 
 export type ModelChatRoomFilterInput = {
@@ -300,6 +422,17 @@ export type ModelUserConnection = {
   nextToken?: string | null,
 };
 
+export type ModelUserProjectFilterInput = {
+  id?: ModelIDInput | null,
+  projectId?: ModelIDInput | null,
+  userId?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelUserProjectFilterInput | null > | null,
+  or?: Array< ModelUserProjectFilterInput | null > | null,
+  not?: ModelUserProjectFilterInput | null,
+};
+
 export type ModelUserChatRoomFilterInput = {
   id?: ModelIDInput | null,
   chatRoomId?: ModelIDInput | null,
@@ -311,15 +444,19 @@ export type ModelUserChatRoomFilterInput = {
   not?: ModelUserChatRoomFilterInput | null,
 };
 
-export type ModelSubscriptionChatRoomFilterInput = {
+export type ModelSubscriptionProjectFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
+  ownerIDs?: ModelSubscriptionStringInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
   image?: ModelSubscriptionStringInput | null,
+  skills?: ModelSubscriptionStringInput | null,
+  resources?: ModelSubscriptionStringInput | null,
+  categories?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionChatRoomFilterInput | null > | null,
-  or?: Array< ModelSubscriptionChatRoomFilterInput | null > | null,
-  chatRoomLastMessageId?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionProjectFilterInput | null > | null,
+  or?: Array< ModelSubscriptionProjectFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -352,6 +489,17 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
+export type ModelSubscriptionChatRoomFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  image?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionChatRoomFilterInput | null > | null,
+  or?: Array< ModelSubscriptionChatRoomFilterInput | null > | null,
+  chatRoomLastMessageId?: ModelSubscriptionIDInput | null,
+};
+
 export type ModelSubscriptionMessageFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
@@ -375,6 +523,16 @@ export type ModelSubscriptionUserFilterInput = {
   or?: Array< ModelSubscriptionUserFilterInput | null > | null,
 };
 
+export type ModelSubscriptionUserProjectFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  projectId?: ModelSubscriptionIDInput | null,
+  userId?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionUserProjectFilterInput | null > | null,
+  or?: Array< ModelSubscriptionUserProjectFilterInput | null > | null,
+};
+
 export type ModelSubscriptionUserChatRoomFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   chatRoomId?: ModelSubscriptionIDInput | null,
@@ -383,6 +541,105 @@ export type ModelSubscriptionUserChatRoomFilterInput = {
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserChatRoomFilterInput | null > | null,
   or?: Array< ModelSubscriptionUserChatRoomFilterInput | null > | null,
+};
+
+export type CreateProjectMutationVariables = {
+  input: CreateProjectInput,
+  condition?: ModelProjectConditionInput | null,
+};
+
+export type CreateProjectMutation = {
+  createProject?:  {
+    __typename: "Project",
+    id: string,
+    ownerIDs?: Array< string | null > | null,
+    Users?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    title: string,
+    description?: string | null,
+    image?: string | null,
+    skills?: Array< string | null > | null,
+    resources?: Array< string | null > | null,
+    categories?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateProjectMutationVariables = {
+  input: UpdateProjectInput,
+  condition?: ModelProjectConditionInput | null,
+};
+
+export type UpdateProjectMutation = {
+  updateProject?:  {
+    __typename: "Project",
+    id: string,
+    ownerIDs?: Array< string | null > | null,
+    Users?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    title: string,
+    description?: string | null,
+    image?: string | null,
+    skills?: Array< string | null > | null,
+    resources?: Array< string | null > | null,
+    categories?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteProjectMutationVariables = {
+  input: DeleteProjectInput,
+  condition?: ModelProjectConditionInput | null,
+};
+
+export type DeleteProjectMutation = {
+  deleteProject?:  {
+    __typename: "Project",
+    id: string,
+    ownerIDs?: Array< string | null > | null,
+    Users?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    title: string,
+    description?: string | null,
+    image?: string | null,
+    skills?: Array< string | null > | null,
+    resources?: Array< string | null > | null,
+    categories?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreateChatRoomMutationVariables = {
@@ -636,6 +893,18 @@ export type CreateUserMutation = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    Projects?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -673,6 +942,18 @@ export type UpdateUserMutation = {
         __typename: "UserChatRoom",
         id: string,
         chatRoomId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    Projects?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
         userId: string,
         createdAt: string,
         updatedAt: string,
@@ -722,6 +1003,180 @@ export type DeleteUserMutation = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    Projects?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateUserProjectMutationVariables = {
+  input: CreateUserProjectInput,
+  condition?: ModelUserProjectConditionInput | null,
+};
+
+export type CreateUserProjectMutation = {
+  createUserProject?:  {
+    __typename: "UserProject",
+    id: string,
+    projectId: string,
+    userId: string,
+    project:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    user:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateUserProjectMutationVariables = {
+  input: UpdateUserProjectInput,
+  condition?: ModelUserProjectConditionInput | null,
+};
+
+export type UpdateUserProjectMutation = {
+  updateUserProject?:  {
+    __typename: "UserProject",
+    id: string,
+    projectId: string,
+    userId: string,
+    project:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    user:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteUserProjectMutationVariables = {
+  input: DeleteUserProjectInput,
+  condition?: ModelUserProjectConditionInput | null,
+};
+
+export type DeleteUserProjectMutation = {
+  deleteUserProject?:  {
+    __typename: "UserProject",
+    id: string,
+    projectId: string,
+    userId: string,
+    project:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    user:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -777,6 +1232,10 @@ export type CreateUserChatRoomMutation = {
       } | null,
       ChatRooms?:  {
         __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -839,6 +1298,10 @@ export type UpdateUserChatRoomMutation = {
         __typename: "ModelUserChatRoomConnection",
         nextToken?: string | null,
       } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -899,11 +1362,77 @@ export type DeleteUserChatRoomMutation = {
         __typename: "ModelUserChatRoomConnection",
         nextToken?: string | null,
       } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type GetProjectQueryVariables = {
+  id: string,
+};
+
+export type GetProjectQuery = {
+  getProject?:  {
+    __typename: "Project",
+    id: string,
+    ownerIDs?: Array< string | null > | null,
+    Users?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    title: string,
+    description?: string | null,
+    image?: string | null,
+    skills?: Array< string | null > | null,
+    resources?: Array< string | null > | null,
+    categories?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListProjectsQueryVariables = {
+  filter?: ModelProjectFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListProjectsQuery = {
+  listProjects?:  {
+    __typename: "ModelProjectConnection",
+    items:  Array< {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
   } | null,
 };
 
@@ -1127,6 +1656,18 @@ export type GetUserQuery = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    Projects?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1155,6 +1696,196 @@ export type ListUsersQuery = {
         __typename: "ModelUserChatRoomConnection",
         nextToken?: string | null,
       } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUserProjectQueryVariables = {
+  id: string,
+};
+
+export type GetUserProjectQuery = {
+  getUserProject?:  {
+    __typename: "UserProject",
+    id: string,
+    projectId: string,
+    userId: string,
+    project:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    user:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListUserProjectsQueryVariables = {
+  filter?: ModelUserProjectFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListUserProjectsQuery = {
+  listUserProjects?:  {
+    __typename: "ModelUserProjectConnection",
+    items:  Array< {
+      __typename: "UserProject",
+      id: string,
+      projectId: string,
+      userId: string,
+      project:  {
+        __typename: "Project",
+        id: string,
+        ownerIDs?: Array< string | null > | null,
+        title: string,
+        description?: string | null,
+        image?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        categories?: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      user:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        status?: string | null,
+        image?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type UserProjectsByProjectIdQueryVariables = {
+  projectId: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserProjectFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type UserProjectsByProjectIdQuery = {
+  userProjectsByProjectId?:  {
+    __typename: "ModelUserProjectConnection",
+    items:  Array< {
+      __typename: "UserProject",
+      id: string,
+      projectId: string,
+      userId: string,
+      project:  {
+        __typename: "Project",
+        id: string,
+        ownerIDs?: Array< string | null > | null,
+        title: string,
+        description?: string | null,
+        image?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        categories?: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      user:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        status?: string | null,
+        image?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type UserProjectsByUserIdQueryVariables = {
+  userId: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserProjectFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type UserProjectsByUserIdQuery = {
+  userProjectsByUserId?:  {
+    __typename: "ModelUserProjectConnection",
+    items:  Array< {
+      __typename: "UserProject",
+      id: string,
+      projectId: string,
+      userId: string,
+      project:  {
+        __typename: "Project",
+        id: string,
+        ownerIDs?: Array< string | null > | null,
+        title: string,
+        description?: string | null,
+        image?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        categories?: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      },
+      user:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        status?: string | null,
+        image?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      },
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -1211,6 +1942,10 @@ export type GetUserChatRoomQuery = {
       } | null,
       ChatRooms?:  {
         __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -1339,6 +2074,102 @@ export type UserChatRoomsByUserIdQuery = {
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type OnCreateProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionProjectFilterInput | null,
+};
+
+export type OnCreateProjectSubscription = {
+  onCreateProject?:  {
+    __typename: "Project",
+    id: string,
+    ownerIDs?: Array< string | null > | null,
+    Users?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    title: string,
+    description?: string | null,
+    image?: string | null,
+    skills?: Array< string | null > | null,
+    resources?: Array< string | null > | null,
+    categories?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionProjectFilterInput | null,
+};
+
+export type OnUpdateProjectSubscription = {
+  onUpdateProject?:  {
+    __typename: "Project",
+    id: string,
+    ownerIDs?: Array< string | null > | null,
+    Users?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    title: string,
+    description?: string | null,
+    image?: string | null,
+    skills?: Array< string | null > | null,
+    resources?: Array< string | null > | null,
+    categories?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionProjectFilterInput | null,
+};
+
+export type OnDeleteProjectSubscription = {
+  onDeleteProject?:  {
+    __typename: "Project",
+    id: string,
+    ownerIDs?: Array< string | null > | null,
+    Users?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    title: string,
+    description?: string | null,
+    image?: string | null,
+    skills?: Array< string | null > | null,
+    resources?: Array< string | null > | null,
+    categories?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 
@@ -1586,6 +2417,18 @@ export type OnCreateUserSubscription = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    Projects?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1622,6 +2465,18 @@ export type OnUpdateUserSubscription = {
         __typename: "UserChatRoom",
         id: string,
         chatRoomId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    Projects?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
         userId: string,
         createdAt: string,
         updatedAt: string,
@@ -1670,6 +2525,177 @@ export type OnDeleteUserSubscription = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    Projects?:  {
+      __typename: "ModelUserProjectConnection",
+      items:  Array< {
+        __typename: "UserProject",
+        id: string,
+        projectId: string,
+        userId: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateUserProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionUserProjectFilterInput | null,
+};
+
+export type OnCreateUserProjectSubscription = {
+  onCreateUserProject?:  {
+    __typename: "UserProject",
+    id: string,
+    projectId: string,
+    userId: string,
+    project:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    user:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateUserProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionUserProjectFilterInput | null,
+};
+
+export type OnUpdateUserProjectSubscription = {
+  onUpdateUserProject?:  {
+    __typename: "UserProject",
+    id: string,
+    projectId: string,
+    userId: string,
+    project:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    user:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteUserProjectSubscriptionVariables = {
+  filter?: ModelSubscriptionUserProjectFilterInput | null,
+};
+
+export type OnDeleteUserProjectSubscription = {
+  onDeleteUserProject?:  {
+    __typename: "UserProject",
+    id: string,
+    projectId: string,
+    userId: string,
+    project:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    },
+    user:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    },
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1724,6 +2750,10 @@ export type OnCreateUserChatRoomSubscription = {
       } | null,
       ChatRooms?:  {
         __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -1785,6 +2815,10 @@ export type OnUpdateUserChatRoomSubscription = {
         __typename: "ModelUserChatRoomConnection",
         nextToken?: string | null,
       } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -1842,6 +2876,10 @@ export type OnDeleteUserChatRoomSubscription = {
       } | null,
       ChatRooms?:  {
         __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,

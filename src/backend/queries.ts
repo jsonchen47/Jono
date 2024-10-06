@@ -42,6 +42,7 @@ export const listProjects = /* GraphQL */ `
         skills
         resources
         ownerIDs
+        categories
       }
     }
   }

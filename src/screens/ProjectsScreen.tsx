@@ -40,7 +40,7 @@ const ProjectsScreen = ({projects}: any) => {
           initialPage={0}
           onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
           >
-          {projects.map((project: any, index: any) => (
+          {projects?.map((project: any, index: any) => (
             <View
               style={styles.largeProjectContainer}
               key={project.id}
