@@ -9,7 +9,7 @@ const ProjectsGrid = ({projects}: any) => {
     // </View>
     <View style={styles.browseProjectsOuterContainer}>
         <View style={styles.browseProjectsContainer}>
-        {projects.map((project: any, index: any) => (
+        {projects?.map((project: any, index: any) => (
           <View  key={index} style={styles.browseProjectsGridItem}>
             <SmallProjectCard project = {project}/>
             {/* <Text>hi</Text> */}

@@ -28,7 +28,6 @@ export const listChatRooms = /* GraphQL */
             }
         }
     }`
-    
 
 // graphql/queries.js
 export const listProjects = /* GraphQL */ `
@@ -44,6 +43,29 @@ export const listProjects = /* GraphQL */ `
         ownerIDs
         categories
       }
+    }
+  }
+`
+
+export const listTeamsByUser = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      Projects {
+        items {
+          project {
+            createdAt
+            description
+            id
+            image
+            ownerIDs
+            resources
+            skills
+            title
+            categories
+          }
+        }
+      }
+      id
     }
   }
 `

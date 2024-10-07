@@ -36,7 +36,8 @@ const ProjectsScreen = ({projects}: any) => {
 
       {/* PAGER PROJECT CARDS */}
       <View style={styles.pagerViewOuterContainer}> 
-        {/* <Text>hi</Text> */}
+      {/* For some reason the catgory view won't render unless this text is here - figure out later */}
+        <Text style={{fontSize: 1}}> </Text>
         <PagerView 
           style={styles.pagerViewContainer} 
           initialPage={0}
@@ -45,11 +46,13 @@ const ProjectsScreen = ({projects}: any) => {
           }
           }
           >
+            
           {projects?.map((project: any, index: any) => (
             <View
               style={styles.largeProjectContainer}
               key={project.id}
               >
+                
               <LargeProjectCard project = {project}/>
               <PageIndicator 
                   style={styles.indicator}
@@ -97,11 +100,9 @@ const styles = StyleSheet.create({
   }, 
   pagerViewContainer: {
     width: '100%', 
-    height: windowHeight/2.2,
-   
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'red'
   }, 
   page: {
     justifyContent: 'center',

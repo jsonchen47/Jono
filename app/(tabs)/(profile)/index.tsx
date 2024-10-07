@@ -3,114 +3,19 @@ import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, Li
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Chip, Button as Button3 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { NavigationContainer } from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
-import { FlatGrid } from 'react-native-super-grid';
 import { Tabs } from 'react-native-collapsible-tab-view'
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@rneui/themed';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import ProjectsScreen from '../../../src/screens/ProjectsScreen';
-import {listProjects} from '../../../src/backend/queries'
-import ProjectsGrid from '@/src/components/ProjectsGrid';
+import { getUser, listProjects } from '../../../src/graphql/queries'
+import { listTeamsByUser } from '@/src/backend/queries';
 
+import ProjectsGrid from '@/src/components/ProjectsGrid';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-
-const sampleProjects = [
-  {
-    id: 1,
-    title: 'Renewable energy powered robot to clean oceans',
-    image: require('../../../assets/images/solar.png'),
-    author: 'Barack Obama',
-    description: 'This robot will be powered by solar power as well as the mechanical movement of the waves. I am looking for some engineers who are interested in working with me on the project.',
-    skills: ['Engineering', 'Coding', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 2,
-    title: 'Wave-powered method to desalinate water',
-    image: require('../../../assets/images/cleanocean.jpg'),
-    author: 'Jennifer Lawrence',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 3,
-    title: 'App that automatically translates to pinyin',
-    image: require('../../../assets/images/chinese.png'),
-    author: 'Steve Carrel',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 4,
-    title: 'Advertising to help the homeless',
-    image: require('../../../assets/images/homeless.png'),
-    author: 'Ryan Reynolds',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 5,
-    title: 'Genetically modified camel',
-    image: require('../../../assets/images/camel.png'),
-    author: 'Pablo Picasso',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 6,
-    title: 'John Doe',
-    image: require('../../../assets/images/chair.png'),
-    author: 'Engineer',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-  {
-    id: 7,
-    title: 'John Doe',
-    image: require('../../../assets/images/chair.png'),
-    author: 'Engineer',
-    description: '',
-    skills: ['Engineering', 'Environmental Science'],
-    resources: ['Solar Panels', 'Fabrication Facility'],
-  },
-];
-
-type ItemProps = {
-  title: string
-  image: any
-  author: string
-};
-
-const Item = ({title, image, author, }: ItemProps) => (
-  <View style={styles.browseProjectsView}>
-    <Image style={styles.browseProjectImages} source={image} />
-    <View style={styles.linearGradientView}>
-      <LinearGradient 
-        style={styles.browseLinearGradient}
-        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}>
-      </LinearGradient>
-    </View>
-    <View style={styles.browseOverImageTextView}>
-      <Text style={styles.browseProjectsText}>{title}</Text>  
-      <Text style={styles.browseAuthorText}>
-          {author}
-      </Text>
-    </View>
-  </View>
-);
 
 const color = ['red', '#66CCFF', '#FFCC00', '#1C9379', '#8A7BA7'];
 
@@ -118,8 +23,6 @@ const randomColor = () => {
   let col = color[Math.floor(Math.random() * color.length)];
   return col;
 };
-
-const Tab = createMaterialTopTabNavigator();
 
 const user = 
 {
@@ -217,9 +120,58 @@ function JoinedScreen() {
 
 export default function ProfileScreen() {
 
+  const [projects, setProjects] = useState<any>([]);
+  const [teams, setTeams] = useState<any>([]);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState<any>(true);
+  const [error, setError] = useState<any>(null);
   const navigation = useNavigation();
+
+  // FETCH THE USER AND CORRESPONDING PROJECTS
+  const fetchUserAndProjects = async () => {
+    try {
+      // Fetch the Auth user
+      const authUser = await Auth.currentAuthenticatedUser();
+      const userID = authUser.attributes.sub
+
+      // Fetch the Auth user's User object
+      const userResult = await API.graphql(
+        graphqlOperation(getUser, { id: userID })
+      );
+      const castedUserResult = userResult as GraphQLResult<any>
+      setUser(castedUserResult.data?.getUser);
+
+      // Fetch the owned projects
+      const projectsData = await API.graphql(graphqlOperation(listProjects, {
+        filter: {
+          ownerIDs: {
+            contains: userID,  
+          }
+        }
+      }));
+      const castedProjectsData = projectsData as GraphQLResult<any>
+      setProjects(castedProjectsData.data.listProjects.items)
+
+      // Fetch the teams 
+      const teamsData = await API.graphql(graphqlOperation(listTeamsByUser, {id: userID}))
+      const castedTeamsData = teamsData as GraphQLResult<any>
+      const rawTeams = castedTeamsData?.data?.getUser?.Projects?.items
+      const filteredTeams = rawTeams.filter((item: any) => { // Filter out projects that have userID in the ownerIDs array
+        return !item.project.ownerIDs.includes(userID); // Check if userID is not in the ownerIDs array
+      });
+      const transformedTeams = filteredTeams.map((item: any) => item.project); // Pull just the projects out and remove the "project" label
+      setTeams(transformedTeams)
+
+    } catch (err) {
+      setError(err);
+      console.error("Error fetching projects:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
-    // Set the header title to the user's name
+    // SET TOP NAVIGATION BAR
     navigation.setOptions({ 
       title: '', 
       headerRight: () => 
@@ -229,50 +181,27 @@ export default function ProfileScreen() {
         }}>
         <Icon name='gear' style={styles.icon} ></Icon>
       </Link>
-        
     });
-  }, [navigation]);
+
+    // FETCH THE USER AND PROJECTS
+    fetchUserAndProjects();
+  }, []);
 
   function ProjectsTab() {
-    const [projects, setProjects] = useState<any>([]);
-    const [loading, setLoading] = useState<any>(true);
-    const [error, setError] = useState<any>(null);
-  
-    useEffect(() => {
-      const fetchProjects = async () => {
-        try {
-          const projectData = await API.graphql(graphqlOperation(listProjects));
-          const castedProjectData = projectData as GraphQLResult<any>
-          setProjects(castedProjectData.data.listProjects.items);
-        } catch (err) {
-          setError(err);
-          console.error("Error fetching projects:", err);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchProjects();
-    }, []);
-
-    if (loading) {
-      return <Text>Loading...</Text>;
-    }
-
-    if (error) {
-      return <Text>Error fetching projects: {error.message}</Text>;
-    }
     return (
-
-      
-        // <ScrollView>
-           <View style={{paddingTop: windowWidth*0.05}}>
+        <View style={{paddingTop: windowWidth*0.05}}>
           <ProjectsGrid  projects = {projects}/>
-          </View>
-         // </ScrollView> 
+        </View>
     );
   }
 
+  function TeamsTab() {
+    return (
+      <View style={{paddingTop: windowWidth*0.05}}>
+        <ProjectsGrid  projects = {teams}/>
+      </View>
+  );
+  }
 
   return (
     // <View style={styles.flatListContainer}>
@@ -289,7 +218,9 @@ export default function ProfileScreen() {
         </Tabs.ScrollView>
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
-        <View></View>
+        <Tabs.ScrollView>
+          <TeamsTab/>
+        </Tabs.ScrollView>
       </Tabs.Tab>
       
       
