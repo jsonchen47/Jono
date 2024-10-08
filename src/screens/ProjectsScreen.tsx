@@ -11,25 +11,82 @@ import { getUser } from '../graphql/queries'
 import LargeProjectCard from '../components/LargeProjectCard';
 import SmallProjectCard from '../components/SmallProjectCard';
 import ProjectGrid from '../components/ProjectsGrid';
+import { listProjects } from '@/src/graphql/queries';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const ProjectsScreen = ({projects}: any) => {
+
+
+const ProjectsScreen = ({category}: any) => {
 
   const router = useRouter(); 
   const [users, setUsers] = useState<any>("");
   const [currentPage, setCurrentPage] = React.useState(0);
+  const [projects, setProjects] = useState<any>([]);
+  const [loading, setLoading] = useState<any>(true);
+  const [error, setError] = useState<any>(null);
 
-  // FETCH USERS
-  const fetchUser = async (ownerID: any) => {
-    const result = await API.graphql(
-      graphqlOperation(getUser, { id: ownerID })
-    );
-    const castedResult = result as GraphQLResult<any>
-    setUsers(castedResult.data?.getUser);
+  useEffect(() => {
+
+    const fetchProjectsByCategory = async (category: any) => {
+      try {
+        const projectData = await API.graphql(graphqlOperation(listProjects, {
+          filter: {
+            categories: {
+              contains: category,  // Checks if the category array contains the given string  
+            }
+          }
+        }));
+        const castedProjectData = projectData as GraphQLResult<any>
+        return castedProjectData.data.listProjects.items;
+        
+      } catch (err) {
+        console.log('Error fetching projects', err);
+      }
+    };
+
+    const fetchAllProjects = async () => {
+      try {
+        const projectData = await API.graphql(graphqlOperation(listProjects));
+        const castedProjectData = projectData as GraphQLResult<any>
+        setProjects(castedProjectData.data.listProjects.items);
+        console.log(castedProjectData.data.listProjects.items)
+      } catch (err) {
+        setError(err);
+        console.error("Error fetching projects:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const getCategoryProjects = async () => {
+      // const result = await fetchProjectsByCategory(category);
+
+      const projectData = await API.graphql(graphqlOperation(listProjects, {
+        filter: {
+          categories: {
+            contains: category,  // Checks if the category array contains the given string  
+          }
+        }
+      }));
+      const castedProjectData = projectData as GraphQLResult<any>
+      const result = castedProjectData.data.listProjects.items;
+
+      // console.log(result)
+      setProjects(result);
+    };
+
+    if (category != "") {
+      getCategoryProjects();
+    }
+    else {
+      fetchAllProjects();
+    }
     console.log(projects)
-  };
+    
+  }, []);
 
   return (
     <View style={styles.projectsScreenContainer}>
@@ -93,12 +150,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
+    // backgroundColor: 'red'
   }, 
   pagerViewContainer: {
     width: '100%', 
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+
   }, 
   page: {
     justifyContent: 'center',
@@ -109,6 +168,7 @@ const styles = StyleSheet.create({
    // Large projects
    largeProjectContainer: {
     width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },

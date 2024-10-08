@@ -22,7 +22,6 @@ const fetchProjectsByCategory = async (category: any) => {
       }
     }));
     const castedProjectData = projectData as GraphQLResult<any>
-    // console.log(castedProjectData.data.listProjects.items)
     return castedProjectData.data.listProjects.items;
     
   } catch (err) {
@@ -41,10 +40,13 @@ const ProjectsScreenByCategory = ({ category }: any) => {
       setProjects(result);
     };
     getProjects();
-  }, [category]);
+  }, []);
 
   return (
-    <ProjectsScreen projects = {projects}/>
+    <View>
+      {/* <ProjectsScreen projects = {projects} category = "" /> */}
+    </View>
+    
   );
 };
 
@@ -71,6 +73,7 @@ const index = () => {
   const [projects, setProjects] = useState<any>([]);
   const [loading, setLoading] = useState<any>(true);
   const [error, setError] = useState<any>(null);
+  
  
   useEffect(() => {
     const fetchProjects = async () => {
@@ -125,7 +128,11 @@ const index = () => {
           ) })}
           >
           <Tabs.ScrollView>
-            <ProjectsScreen projects = {projects}/>
+            <View>
+              <ProjectsScreen category = ""/>
+              {/* <ProjectsScreen projects = {projects } category = ""/> */}
+            </View>
+            
           </Tabs.ScrollView>
         </Tabs.Tab>
 
@@ -141,8 +148,9 @@ const index = () => {
         >
           {/* <View></View> */}
           <Tabs.ScrollView>
+            <ProjectsScreen category = 'health'/>
             {/* <ProjectsScreenByCategory category = 'health'/> */}
-            <ProjectsScreen projects = {projects}/>
+            {/* <ProjectsScreen projects = {projects} category = ""/> */}
           </Tabs.ScrollView>
         </Tabs.Tab>
 
@@ -158,11 +166,10 @@ const index = () => {
         >
           <Tabs.ScrollView>
           {/* <View></View> */}
-          <ProjectsScreen projects={projects}/>
+          {/* <ProjectsScreen projects={projects} category = ""/> */}
           </Tabs.ScrollView>
         </Tabs.Tab>
 
-        
         <Tabs.Tab 
           name="Tech"
           label={(() => { return (

@@ -16,7 +16,6 @@ export default function SavedScreen() {
   const [error, setError] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
 
-
   // FETCH PROJECTS BASED ON FILTERING BY USER'S SAVED PROJECTS
   useEffect(() => {
     const fetchProjects = async () => {
@@ -36,9 +35,11 @@ export default function SavedScreen() {
 
         // Create a filter that can do an "in" filtration
         const savedProjectsIDs = user?.savedProjectsIDs
+        console.log(user?.savedProjectsIDs)
         const filter = {
           or: savedProjectsIDs?.map((savedProjectID: any) => ({
             id: { eq: savedProjectID }
+            // id: { eq: "" }
           }))
         };
 
