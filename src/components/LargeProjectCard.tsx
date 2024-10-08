@@ -8,6 +8,8 @@ import { Link } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from '../graphql/queries'
+import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -43,6 +45,7 @@ const LargeProjectCard = ({project}: any) => {
         }
         style={styles.largeProjectContainer}
         >
+         
         <ImageBackground 
             style={styles.largeProjectImageBackground} 
             imageStyle={styles.largeProjectImage}
@@ -50,6 +53,7 @@ const LargeProjectCard = ({project}: any) => {
             source={{uri: project.image}}
             resizeMode="cover"
             >
+              
             <LinearGradient
               colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
               style={styles.largeProjectGradient}
@@ -62,6 +66,13 @@ const LargeProjectCard = ({project}: any) => {
                 
               </View>
             </LinearGradient>
+             {/* Icon */}
+          <View style={styles.iconLargeContainer}>
+              <View style={styles.iconSmallContainer}>
+                <Icon name="heart" size={27} style={styles.iconFill}/>
+                <Icon name="heart-outline" size={30} style={styles.iconOutline}/>
+              </View>
+            </View>
           </ImageBackground>
         </Pressable>
     )
@@ -122,4 +133,36 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     padding: 25,
   },
+  // Icon
+  iconOutline: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    position: 'absolute', 
+    padding: 12,
+    // backgroundColor: 'red'
+  },
+  iconFill: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'black',
+    position: 'absolute', 
+    padding: 12,
+    opacity: 0.7 
+    // backgroundColor: 'red'
+  },
+  iconSmallContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'blue',
+    padding: 32,
+  },
+  iconLargeContainer: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    width: '100%',
+    height: '100%',
+    // backgroundColor: 'green',
+    position: 'absolute'
+  }
 })

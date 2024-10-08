@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     color: 'black',
     position: 'absolute', 
     padding: 12,
+    opacity: 0.7 
     // backgroundColor: 'red'
   },
   iconSmallContainer: {
