@@ -1,14 +1,11 @@
 import { View, Text, Image, Pressable, ImageBackground, StyleSheet, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import PagerView from 'react-native-pager-view';
-import { PageIndicator } from 'react-native-page-indicator';
 import { useRouter } from 'expo-router';
-import { Link } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from '../graphql/queries'
-import LargeProjectCard from '../components/LargeProjectCard';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -44,14 +41,20 @@ const SmallProjectCard = ({project}: any) => {
             style={{width: '100%'}}
             >
             <Image style={styles.browseProjectsImage} source={{uri: project.image}}/>
-            <LinearGradient
-            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
-            style={styles.browseProjectsLinearGradient}
-            >
-            <View style={styles.browseProjectsTextContainer}>
-            <Text style={styles.browseProjectsTitle}>{project.title}</Text>
-            <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
+            <View style={styles.iconLargeContainer}>
+              <View style={styles.iconSmallContainer}>
+                <Icon name="heart" size={27} style={styles.iconFill}/>
+                <Icon name="heart-outline" size={30} style={styles.iconOutline}/>
+              </View>
             </View>
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
+              style={styles.browseProjectsLinearGradient}
+              >
+              <View style={styles.browseProjectsTextContainer}>
+                <Text style={styles.browseProjectsTitle}>{project.title}</Text>
+                <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
+              </View>
             </LinearGradient>
         </Pressable>
     )
@@ -130,6 +133,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   }, 
+  // Icon
+  iconOutline: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    position: 'absolute', 
+    padding: 12,
+    // backgroundColor: 'red'
+  },
+  iconFill: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'black',
+    position: 'absolute', 
+    padding: 12,
+    // backgroundColor: 'red'
+  },
+  iconSmallContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'blue',
+    padding: 25,
+  },
+  iconLargeContainer: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    width: '100%',
+    height: '100%',
+    // backgroundColor: 'green',
+    position: 'absolute'
+  }
 })
 
 
