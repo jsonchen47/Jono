@@ -346,6 +346,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
       nextToken
       __typename
     }
+    savedProjectsIDs
     createdAt
     updatedAt
     __typename
@@ -399,6 +400,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
       nextToken
       __typename
     }
+    savedProjectsIDs
     createdAt
     updatedAt
     __typename
@@ -452,6 +454,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
       nextToken
       __typename
     }
+    savedProjectsIDs
     createdAt
     updatedAt
     __typename
@@ -502,6 +505,7 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename
@@ -556,6 +560,7 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename
@@ -610,6 +615,7 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename
@@ -674,6 +680,7 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename
@@ -738,6 +745,7 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename
@@ -802,6 +810,7 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename

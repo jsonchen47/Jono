@@ -1,26 +1,71 @@
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-// import { SearchBar } from 'react-native-elements';
-// import { SearchBar } from '@rneui/themed';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { getUser, listProjects } from '../../src/graphql/queries'
+import ProjectsGrid from '@/src/components/ProjectsGrid';
 
-import { Searchbar } from 'react-native-paper';
+
+export default function SavedScreen() {
+  const [projects, setProjects] = useState<any>([]);
+  const [loading, setLoading] = useState<any>(true);
+  const [error, setError] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
 
 
+  // FETCH PROJECTS BASED ON FILTERING BY USER'S SAVED PROJECTS
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        // Fetch the Auth user
+        const authUser = await Auth.currentAuthenticatedUser();
+        const userID = authUser.attributes.sub
 
-export default function SearchScreen() {
+        // Fetch the Auth user's User object
+        const userResult = await API.graphql(
+          graphqlOperation(getUser, { id: userID })
+        );
+        const castedUserResult = userResult as GraphQLResult<any>
+        setUser(castedUserResult.data?.getUser);
 
-  const [searchQuery, setSearchQuery] = React.useState('');
-  
+        // Fetch the saved projects by ID
+        if (user?.savedProjectsIDs && user?.savedProjectsIDs.length > 0) {  // Check if savedProjectsIDs exist
+          console.log( user?.savedProjectsIDs)
+          const savedProjectsData = await API.graphql(graphqlOperation(listProjects, { // Fetch the projects saved by the user
+            filter: {
+              categories: {
+                in: user?.savedProjectsIDs, // Use 'in' to filter projects based on savedProjectsIDs
+              }
+            }
+          }));
+
+          
+          // const castedSavedProjectsData = savedProjectsData as GraphQLResult<any>;
+          // console.log(castedSavedProjectsData?.data)
+          // setProjects(castedSavedProjectsData?.data?.listProjects?.items);
+
+          
+        } else {
+          // If no saved projects, set an empty array or handle accordingly
+          setProjects([]);
+        }
+
+      } catch (err) {
+        setError(err);
+        console.error("Error fetching projects:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   return (
     <View style={styles.container}>
-      {/* <Text>Search</Text> */}
-      <Searchbar
-        placeholder="Search hi"
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-      />
+      <ProjectsGrid projects = {projects}/>
     </View>
   );
 }

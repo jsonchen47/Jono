@@ -45,10 +45,7 @@ const ProjectsScreenByCategory = ({ category }: any) => {
   }, [category]);
 
   return (
-
     <ProjectsScreen projects = {projects}/>
-
-    
   );
 };
 
@@ -145,8 +142,8 @@ const index = () => {
         >
           {/* <View></View> */}
           <Tabs.ScrollView>
-            <ProjectsScreenByCategory category = 'health'/>
-            {/* <ProjectsScreen projects = {projects}/> */}
+            {/* <ProjectsScreenByCategory category = 'health'/> */}
+            <ProjectsScreen projects = {projects}/>
           </Tabs.ScrollView>
         </Tabs.Tab>
 

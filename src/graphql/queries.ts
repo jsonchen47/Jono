@@ -312,6 +312,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
       nextToken
       __typename
     }
+    savedProjectsIDs
     createdAt
     updatedAt
     __typename
@@ -341,6 +342,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename
@@ -389,6 +391,7 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename
@@ -430,6 +433,7 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         name
         status
         image
+        savedProjectsIDs
         createdAt
         updatedAt
         __typename
@@ -482,6 +486,7 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         name
         status
         image
+        savedProjectsIDs
         createdAt
         updatedAt
         __typename
@@ -534,6 +539,7 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         name
         status
         image
+        savedProjectsIDs
         createdAt
         updatedAt
         __typename
@@ -599,6 +605,7 @@ export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
         nextToken
         __typename
       }
+      savedProjectsIDs
       createdAt
       updatedAt
       __typename
@@ -636,6 +643,7 @@ export const listUserChatRooms = /* GraphQL */ `query ListUserChatRooms(
         name
         status
         image
+        savedProjectsIDs
         createdAt
         updatedAt
         __typename
@@ -684,6 +692,7 @@ export const userChatRoomsByChatRoomId = /* GraphQL */ `query UserChatRoomsByCha
         name
         status
         image
+        savedProjectsIDs
         createdAt
         updatedAt
         __typename
@@ -732,6 +741,7 @@ export const userChatRoomsByUserId = /* GraphQL */ `query UserChatRoomsByUserId(
         name
         status
         image
+        savedProjectsIDs
         createdAt
         updatedAt
         __typename

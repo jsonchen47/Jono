@@ -24,38 +24,23 @@ const randomColor = () => {
   return col;
 };
 
-const user = 
-{
-  id: 1,
-  name: "Barack Obama",
-  username: '@obamamama',
-  bio: 'I’m a painter, musician, and part-time president',
-  image: require('../../../assets/images/obama.jpeg'),
-  email: "john.doe@example.com",
-  numProjects: 7,
-  numTeams: 7, 
-  numConnections: 322,
-  skills: ["React", "JavaScript", "Node.js"],
-  resources: ["Laptop", "Online Tutorials"]
-};
-
-const Header = () => {
+const Header = ({user}: any) => {
   return (
     <SafeAreaView pointerEvents='box-none'>
     <View pointerEvents='box-none' style={styles.container}>
         {/* Top content */}
         <View pointerEvents='box-none' style={styles.topContent}>
           <View>
-            <Text style={styles.name}>{user.name}</Text>
-            <Text style={{fontWeight: '500'}}>{user.username}</Text>
+            <Text style={styles.name}>{user?.name}</Text>
+            <Text style={{fontWeight: '500'}}>{user?.username}</Text>
             {/* Stats */}
             <View style={styles.allStatsContainer}>
               <View style={styles.statContainer}>
-                <Text style={styles.statNumber}>{user.numProjects}</Text>
+                <Text style={styles.statNumber}>{user?.numProjects}</Text>
                 <Text style={styles.statLabel}>Projects</Text>
               </View>
               <View style={styles.statContainer}>
-                <Text style={styles.statNumber}>{user.numTeams}</Text>
+                <Text style={styles.statNumber}>{user?.numTeams}</Text>
                 <Text style={styles.statLabel}>Teams</Text>
               </View>
               {/* Connections */}
@@ -64,7 +49,7 @@ const Header = () => {
                   pathname: '/connections',
                 }}>
                 <View style={styles.statContainer}>
-                  <Text style={styles.statNumber}>{user.numConnections}</Text>
+                  <Text style={styles.statNumber}>{user?.numConnections}</Text>
                   <Text style={styles.statLabel}>Connections</Text>
                 </View>
               </Link>
@@ -73,11 +58,11 @@ const Header = () => {
           </View>
           {/* Profile picture */}
           <View style={styles.imageContainer}>
-            <Image style={styles.image} source={user.image}/>
+            <Image style={styles.image} source={{uri: user?.image}}/>
           </View>
         </View>
         {/* Bio */}
-        <Text style={styles.bio}>{user.bio}</Text>
+        <Text style={styles.bio}>{user?.bio}</Text>
         {/* Buttons */}
         <View style={styles.allButtonsContainer}>
           <View style={styles.buttonContainer}>
@@ -206,7 +191,7 @@ export default function ProfileScreen() {
   return (
     // <View style={styles.flatListContainer}>
     <Tabs.Container 
-      renderHeader={Header}
+      renderHeader={() => <Header user={user} />}
     >
       <Tabs.Tab name="About">
         <View>

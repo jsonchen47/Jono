@@ -36,8 +36,6 @@ const ProjectsScreen = ({projects}: any) => {
 
       {/* PAGER PROJECT CARDS */}
       <View style={styles.pagerViewOuterContainer}> 
-      {/* For some reason the catgory view won't render unless this text is here - figure out later */}
-        <Text style={{fontSize: 1}}> </Text>
         <PagerView 
           style={styles.pagerViewContainer} 
           initialPage={0}
