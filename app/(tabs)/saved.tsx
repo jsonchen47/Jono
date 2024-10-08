@@ -29,30 +29,30 @@ export default function SavedScreen() {
           graphqlOperation(getUser, { id: userID })
         );
         const castedUserResult = userResult as GraphQLResult<any>
-        setUser(castedUserResult.data?.getUser);
+        const fetchedUser = castedUserResult.data?.getUser;
+        setUser(fetchedUser);
 
         console.log(user?.savedProjectsIDs)
 
-        // Create a filter that can do an "in" filtration
-        const savedProjectsIDs = user?.savedProjectsIDs
-        console.log(user?.savedProjectsIDs)
-        const filter = {
-          or: savedProjectsIDs?.map((savedProjectID: any) => ({
-            id: { eq: savedProjectID }
-            // id: { eq: "" }
-          }))
-        };
-
-        // Fetch saved projects by filtering for those in the savedProjectsIDs list
-        const savedProjectsData = await API.graphql({
-          query: listProjects,
-          variables: { filter: filter },
-        });
-
-        const castedSavedProjectsData = savedProjectsData as GraphQLResult<any>;
-        console.log(castedSavedProjectsData?.data?.listProjects?.items)
-        setProjects(castedSavedProjectsData?.data?.listProjects?.items);
-
+        if (fetchedUser?.savedProjectsIDs?.length > 0) {
+          // Create a filter that can do an "in" filtration
+          const filter = {
+            or: fetchedUser.savedProjectsIDs.map((savedProjectID: any) => ({
+              id: { eq: savedProjectID },
+            })),
+          };
+  
+          // Fetch saved projects by filtering for those in the savedProjectsIDs list
+          const savedProjectsData = await API.graphql({
+            query: listProjects,
+            variables: { filter: filter },
+          });
+  
+          const castedSavedProjectsData = savedProjectsData as GraphQLResult<any>;
+          setProjects(castedSavedProjectsData?.data?.listProjects?.items);
+        } else {
+          setProjects([]); // No saved projects
+        }
       } catch (err) {
         setError(err);
         console.error("Error fetching projects:", err);
