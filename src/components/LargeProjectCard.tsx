@@ -72,6 +72,7 @@ export default LargeProjectCard
 const styles = StyleSheet.create({
     // Large projects
    largeProjectContainer: {
+    height: '100%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',

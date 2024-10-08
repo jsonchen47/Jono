@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, ImageBackground, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, Image, Pressable, ImageBackground, ScrollView, StyleSheet, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import PagerView from 'react-native-pager-view';
@@ -12,21 +12,21 @@ import LargeProjectCard from '../components/LargeProjectCard';
 import SmallProjectCard from '../components/SmallProjectCard';
 import ProjectGrid from '../components/ProjectsGrid';
 import { listProjects } from '@/src/graphql/queries';
+import Carousel from 'react-native-reanimated-carousel';
 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-
 
 const ProjectsScreen = ({category}: any) => {
 
   const router = useRouter(); 
   const [users, setUsers] = useState<any>("");
   const [currentPage, setCurrentPage] = React.useState(0);
-  const [projects, setProjects] = useState<any>([]);
+  const [projects, setProjects] = useState<[]>([]);
   const [loading, setLoading] = useState<any>(true);
   const [error, setError] = useState<any>(null);
+
 
   useEffect(() => {
 
@@ -52,7 +52,7 @@ const ProjectsScreen = ({category}: any) => {
         const projectData = await API.graphql(graphqlOperation(listProjects));
         const castedProjectData = projectData as GraphQLResult<any>
         setProjects(castedProjectData.data.listProjects.items);
-        console.log(castedProjectData.data.listProjects.items)
+        // console.log(castedProjectData.data.listProjects.items)
       } catch (err) {
         setError(err);
         console.error("Error fetching projects:", err);
@@ -74,8 +74,9 @@ const ProjectsScreen = ({category}: any) => {
       const castedProjectData = projectData as GraphQLResult<any>
       const result = castedProjectData.data.listProjects.items;
 
-      // console.log(result)
+      
       setProjects(result);
+      console.log(result)
     };
 
     if (category != "") {
@@ -84,39 +85,47 @@ const ProjectsScreen = ({category}: any) => {
     else {
       fetchAllProjects();
     }
-    console.log(projects)
+    // console.log(projects)
+    console.log('hi')
     
   }, []);
 
+  
+
+  if (projects.length > 0) {
+    console.log('hii');
+  }
+  
   return (
     <View style={styles.projectsScreenContainer}>
 
       {/* PAGER PROJECT CARDS */}
-      <View style={styles.pagerViewOuterContainer}> 
-        <PagerView 
-          style={styles.pagerViewContainer} 
-          initialPage={0}
-          onPageSelected={(e) => {
-            setCurrentPage(e.nativeEvent.position)
-          }
-          }
-          >
-          {projects?.map((project: any, index: any) => (
-            <View
-              style={styles.largeProjectContainer}
-              key={project.id}
-              >
-              <LargeProjectCard project = {project}/>
-              <PageIndicator 
-                  style={styles.indicator}
-                  current={currentPage}
-                  count={projects.length} // Adjust based on your number of pages
-                  color='white'
-              />
+      <View style={styles.pagerViewOuterContainer}>
+        <Carousel
+          panGestureHandlerProps={{
+            activeOffsetX: [-10, 10],
+          }}
+          loop
+          width={windowWidth}
+          height={windowHeight/2.2}
+          autoPlay={false}
+          data={projects}
+          onSnapToItem={(index) => setCurrentPage(index)}
+          scrollAnimationDuration={300}
+          renderItem={({ item, index }: { item: any, index: any }) => (
+            <View style={styles.page} >
+              <LargeProjectCard project={item} />
             </View>
-          ))}
-        </PagerView>
-      </View>
+          )}
+        />
+        <PageIndicator
+                style={styles.indicator}
+                current={currentPage}
+                count={projects.length} // Adjust based on your number of pages
+                color='white'
+              />
+        </View>
+     
 
       {/* BROWSE PROJECTS TEXT */}
       <View style={styles.browseProjectsHeaderContainer}>
@@ -150,6 +159,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
+    
     // backgroundColor: 'red'
   }, 
   pagerViewContainer: {
@@ -157,7 +167,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-
+    // flex: 1,
   }, 
   page: {
     justifyContent: 'center',
