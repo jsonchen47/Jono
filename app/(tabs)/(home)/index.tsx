@@ -4,7 +4,6 @@ import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Searchbar } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import {listProjects} from '../../../src/backend/queries'
 import { listProjects } from '@/src/graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';

@@ -19,7 +19,6 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   // const [chatRoomForDeletion, setChatRoomForDeletion] = useState<any>();
 
-
   // To remove the ChatRoomUser join table 
   const removeChatRoom = async (chatRoom: any) => {
 

@@ -1,12 +1,14 @@
 import { Link } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser, listProjects } from '../../src/graphql/queries'
 import ProjectsGrid from '@/src/components/ProjectsGrid';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default function SavedScreen() {
   const [projects, setProjects] = useState<any>([]);
@@ -30,27 +32,25 @@ export default function SavedScreen() {
         const castedUserResult = userResult as GraphQLResult<any>
         setUser(castedUserResult.data?.getUser);
 
-        // Fetch the saved projects by ID
-        if (user?.savedProjectsIDs && user?.savedProjectsIDs.length > 0) {  // Check if savedProjectsIDs exist
-          console.log( user?.savedProjectsIDs)
-          const savedProjectsData = await API.graphql(graphqlOperation(listProjects, { // Fetch the projects saved by the user
-            filter: {
-              categories: {
-                in: user?.savedProjectsIDs, // Use 'in' to filter projects based on savedProjectsIDs
-              }
-            }
-          }));
+        console.log(user?.savedProjectsIDs)
 
-          
-          // const castedSavedProjectsData = savedProjectsData as GraphQLResult<any>;
-          // console.log(castedSavedProjectsData?.data)
-          // setProjects(castedSavedProjectsData?.data?.listProjects?.items);
+        // Create a filter that can do an "in" filtration
+        const savedProjectsIDs = user?.savedProjectsIDs
+        const filter = {
+          or: savedProjectsIDs?.map((savedProjectID: any) => ({
+            id: { eq: savedProjectID }
+          }))
+        };
 
-          
-        } else {
-          // If no saved projects, set an empty array or handle accordingly
-          setProjects([]);
-        }
+        // Fetch saved projects by filtering for those in the savedProjectsIDs list
+        const savedProjectsData = await API.graphql({
+          query: listProjects,
+          variables: { filter: filter },
+        });
+
+        const castedSavedProjectsData = savedProjectsData as GraphQLResult<any>;
+        console.log(castedSavedProjectsData?.data?.listProjects?.items)
+        setProjects(castedSavedProjectsData?.data?.listProjects?.items);
 
       } catch (err) {
         setError(err);
@@ -64,17 +64,19 @@ export default function SavedScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <ProjectsGrid projects = {projects}/>
-    </View>
+    </ScrollView>
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    padding: 15,
+    paddingTop: windowWidth*0.05
+    // flex: 1,
+    // justifyContent: 'flex-start',
+    // alignItems: 'flex-start',
+    // padding: 15,
   },
 });

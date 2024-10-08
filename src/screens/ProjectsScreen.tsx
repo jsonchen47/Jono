@@ -44,13 +44,11 @@ const ProjectsScreen = ({projects}: any) => {
           }
           }
           >
-            
           {projects?.map((project: any, index: any) => (
             <View
               style={styles.largeProjectContainer}
               key={project.id}
               >
-                
               <LargeProjectCard project = {project}/>
               <PageIndicator 
                   style={styles.indicator}

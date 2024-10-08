@@ -34,30 +34,25 @@ const SmallProjectCard = ({project}: any) => {
     }, [project.ownerIDs]);
 
     return (
-        // <View>
-        // <Text>SmallProjectCard</Text>
-        // </View>
         <Pressable
-              onPress={() =>
-                router.push({
-                  pathname: '/project/[id]',
-                  params: { id: project.id },
-                })
-              }
-            //   key={index}
-              // style={styles.browseProjectsGridItem}
-              style={{width: '100%'}}
+            onPress={() =>
+            router.push({
+                pathname: '/project/[id]',
+                params: { id: project.id },
+            })
+            }
+            style={{width: '100%'}}
             >
-              <Image style={styles.browseProjectsImage} source={{uri: project.image}}/>
-              <LinearGradient
-                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
-                style={styles.browseProjectsLinearGradient}
-              >
-              <View style={styles.browseProjectsTextContainer}>
-                <Text style={styles.browseProjectsTitle}>{project.title}</Text>
-                <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
-              </View>
-              </LinearGradient>
+            <Image style={styles.browseProjectsImage} source={{uri: project.image}}/>
+            <LinearGradient
+            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
+            style={styles.browseProjectsLinearGradient}
+            >
+            <View style={styles.browseProjectsTextContainer}>
+            <Text style={styles.browseProjectsTitle}>{project.title}</Text>
+            <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
+            </View>
+            </LinearGradient>
         </Pressable>
     )
 }
