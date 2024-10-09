@@ -41,6 +41,7 @@ const SmallProjectCard = ({project}: any) => {
             style={{width: '100%'}}
             >
             <Image style={styles.browseProjectsImage} source={{uri: project.image}}/>
+            {/* Icon */}
             <View style={styles.iconLargeContainer}>
               <View style={styles.iconSmallContainer}>
                 <Icon name="heart" size={27} style={styles.iconFill}/>

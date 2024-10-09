@@ -1,10 +1,7 @@
 import { View, Text, Image, Pressable, ImageBackground, StyleSheet, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import PagerView from 'react-native-pager-view';
-import { PageIndicator } from 'react-native-page-indicator';
 import { useRouter } from 'expo-router';
-import { Link } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from '../graphql/queries'
@@ -40,7 +37,7 @@ const LargeProjectCard = ({project}: any) => {
         onPress={() =>
           router.push({
             pathname: '/project/[id]',
-            params: { id: project.id },
+            params: { id: project.id, projectID: project.id },
           })
         }
         style={styles.largeProjectContainer}
