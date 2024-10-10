@@ -16,20 +16,19 @@ const LargeProjectCard = ({project}: any) => {
     const router = useRouter(); 
     const [user, setUser] = useState<any>(null);
 
+    // FETCH THE OWNER
     const fetchUser = async (ownerID: any) => {
         const result = await API.graphql(
           graphqlOperation(getUser, { id: ownerID })
         );
         const castedResult = result as GraphQLResult<any>
         setUser(castedResult.data?.getUser);
-        // console.log(user.name)
     };
 
     useEffect(() => {
       if (project.ownerIDs?.[0]) {
         fetchUser(project.ownerIDs[0]);
       }
-      // fetchUser(project.ownerIDs?.[0] ?? "")
     }, [project.ownerIDs]);
 
     return (
@@ -53,6 +52,8 @@ const LargeProjectCard = ({project}: any) => {
               
             <LinearGradient
               colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
+              start={{ x: 0.5, y: 0 }} 
+              end={{ x: 0.5, y: 0.5 }} 
               style={styles.largeProjectGradient}
               >
               <View>

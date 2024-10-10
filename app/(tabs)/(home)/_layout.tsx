@@ -7,10 +7,6 @@ export default function HomeLayout() {
         contentStyle:{
           backgroundColor:'#FFFFFF'
         },
-        // headerStyle: {
-        //   backgroundColor: '#f4511e',
-        // },
-        // headerTintColor: '#fff',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
@@ -18,7 +14,6 @@ export default function HomeLayout() {
       <Stack.Screen 
         name="index" 
         options={{
-          // Hide the header for this route
           title: 'Explore',
           headerShown: false,
           headerStyle: {
@@ -30,14 +25,11 @@ export default function HomeLayout() {
       <Stack.Screen 
         name="project/[id]" 
         options={{
-          // Hide the header for this route
-          // headerShown: false,
           title: 'Project',
           headerStyle: {
             backgroundColor: 'white',
           },
           headerTintColor: 'black',
-          // tabBarVisible: false // Hide tab bar for Project page
 
         }}
         

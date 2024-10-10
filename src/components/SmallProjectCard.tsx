@@ -49,7 +49,9 @@ const SmallProjectCard = ({project}: any) => {
               </View>
             </View>
             <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']} 
+              colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} 
+              start={{ x: 0.5, y: 1 }} 
+              end={{ x: 0.5, y: 0.3 }} 
               style={styles.browseProjectsLinearGradient}
               >
               <View style={styles.browseProjectsTextContainer}>
