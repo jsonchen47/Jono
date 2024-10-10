@@ -35,7 +35,7 @@ const SmallProjectCard = ({project}: any) => {
             onPress={() =>
             router.push({
                 pathname: '/project/[id]',
-                params: { id: project.id },
+                params: { id: project.id, projectID: project.id },
             })
             }
             style={{width: '100%'}}

@@ -22,7 +22,7 @@ export default function HomeLayout() {
           headerTintColor: 'black',
         }}
       />
-      <Stack.Screen 
+      {/* <Stack.Screen 
         name="project/[id]" 
         options={{
           title: 'Project',
@@ -33,7 +33,7 @@ export default function HomeLayout() {
 
         }}
         
-      />
+      /> */}
     </Stack>
   );
 }

@@ -76,6 +76,17 @@ useEffect(() => {
               <Stack.Screen
               name="chatScreen/[id]"
               />
+               <Stack.Screen
+              name="project/[id]"
+              options={{
+                title: 'Project',
+                headerStyle: {
+                  backgroundColor: 'white',
+                },
+                headerTintColor: 'black',
+      
+              }}
+              />
               <Stack.Screen
                 name="groupInfoScreen"
                 options={{
