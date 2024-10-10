@@ -313,6 +313,11 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
       __typename
     }
     savedProjectsIDs
+    bio
+    numProjects
+    numTeams
+    numConnections
+    username
     createdAt
     updatedAt
     __typename
@@ -343,6 +348,11 @@ export const listUsers = /* GraphQL */ `query ListUsers(
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -392,6 +402,11 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -434,6 +449,11 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         status
         image
         savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
         createdAt
         updatedAt
         __typename
@@ -487,6 +507,11 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         status
         image
         savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
         createdAt
         updatedAt
         __typename
@@ -540,6 +565,11 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         status
         image
         savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
         createdAt
         updatedAt
         __typename
@@ -606,6 +636,11 @@ export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -644,6 +679,11 @@ export const listUserChatRooms = /* GraphQL */ `query ListUserChatRooms(
         status
         image
         savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
         createdAt
         updatedAt
         __typename
@@ -693,6 +733,11 @@ export const userChatRoomsByChatRoomId = /* GraphQL */ `query UserChatRoomsByCha
         status
         image
         savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
         createdAt
         updatedAt
         __typename
@@ -742,6 +787,11 @@ export const userChatRoomsByUserId = /* GraphQL */ `query UserChatRoomsByUserId(
         status
         image
         savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
         createdAt
         updatedAt
         __typename

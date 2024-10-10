@@ -347,6 +347,11 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
       __typename
     }
     savedProjectsIDs
+    bio
+    numProjects
+    numTeams
+    numConnections
+    username
     createdAt
     updatedAt
     __typename
@@ -401,6 +406,11 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
       __typename
     }
     savedProjectsIDs
+    bio
+    numProjects
+    numTeams
+    numConnections
+    username
     createdAt
     updatedAt
     __typename
@@ -455,6 +465,11 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
       __typename
     }
     savedProjectsIDs
+    bio
+    numProjects
+    numTeams
+    numConnections
+    username
     createdAt
     updatedAt
     __typename
@@ -506,6 +521,11 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -561,6 +581,11 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -616,6 +641,11 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -681,6 +711,11 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -746,6 +781,11 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -811,6 +851,11 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename

@@ -377,6 +377,11 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       __typename
     }
     savedProjectsIDs
+    bio
+    numProjects
+    numTeams
+    numConnections
+    username
     createdAt
     updatedAt
     __typename
@@ -434,6 +439,11 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
       __typename
     }
     savedProjectsIDs
+    bio
+    numProjects
+    numTeams
+    numConnections
+    username
     createdAt
     updatedAt
     __typename
@@ -491,6 +501,11 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
       __typename
     }
     savedProjectsIDs
+    bio
+    numProjects
+    numTeams
+    numConnections
+    username
     createdAt
     updatedAt
     __typename
@@ -543,6 +558,11 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -599,6 +619,11 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -655,6 +680,11 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -721,6 +751,11 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -787,6 +822,11 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename
@@ -853,6 +893,11 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
         __typename
       }
       savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
       createdAt
       updatedAt
       __typename

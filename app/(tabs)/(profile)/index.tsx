@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, Button as Button2 } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, Button as Button2 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Chip, Button as Button3 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6';
@@ -11,6 +11,7 @@ import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser, listProjects } from '../../../src/graphql/queries'
 import { listTeamsByUser } from '@/src/backend/queries';
+import { useRouter } from 'expo-router'; 
 
 import ProjectsGrid from '@/src/components/ProjectsGrid';
 
@@ -25,6 +26,8 @@ const randomColor = () => {
 };
 
 const Header = ({user}: any) => {
+  const router = useRouter();
+
   return (
     <SafeAreaView pointerEvents='box-none'>
     <View pointerEvents='box-none' style={styles.container}>
@@ -36,23 +39,27 @@ const Header = ({user}: any) => {
             {/* Stats */}
             <View style={styles.allStatsContainer}>
               <View style={styles.statContainer}>
-                <Text style={styles.statNumber}>{user?.numProjects}</Text>
+                <Text style={styles.statNumber}>{user?.numProjects?.toString()}</Text>
                 <Text style={styles.statLabel}>Projects</Text>
               </View>
+              <View style={styles.statDivider}/>
               <View style={styles.statContainer}>
                 <Text style={styles.statNumber}>{user?.numTeams}</Text>
                 <Text style={styles.statLabel}>Teams</Text>
               </View>
+              <View style={styles.statDivider}/>
               {/* Connections */}
-              <Link
-                href={{
-                  pathname: '/connections',
-                }}>
+              <Pressable
+                onPress={() => {
+                  router.push('/connections'); // Navigate to 'connections'
+                }}
+              >
                 <View style={styles.statContainer}>
                   <Text style={styles.statNumber}>{user?.numConnections}</Text>
                   <Text style={styles.statLabel}>Connections</Text>
                 </View>
-              </Link>
+              </Pressable>
+             
               
             </View>
           </View>
@@ -124,6 +131,7 @@ export default function ProfileScreen() {
         graphqlOperation(getUser, { id: userID })
       );
       const castedUserResult = userResult as GraphQLResult<any>
+      console.log(castedUserResult.data?.getUser)
       setUser(castedUserResult.data?.getUser);
 
       // Fetch the owned projects
@@ -156,6 +164,7 @@ export default function ProfileScreen() {
   };
   
   useEffect(() => {
+    
     // SET TOP NAVIGATION BAR
     navigation.setOptions({ 
       title: '', 
@@ -237,7 +246,6 @@ const styles = StyleSheet.create({
   },
   topContent: {
     flexDirection: 'row',
-    // padding: 30,
     justifyContent: 'space-between',
     width: '100%',
  
@@ -245,22 +253,29 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: 'bold'
-    // padding: 10,
   },
   allStatsContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    paddingTop: 10
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingTop: 10,
   },
   statContainer: {
-    paddingRight: 10,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    
   },
   statNumber: {
     fontSize: 17,
     fontWeight: '700',
     
   }, 
+  statDivider: {
+    height: '100%',            // Thickness of the line
+    width: 1,        // Full width of the screen
+    backgroundColor: 'black', // Light gray color
+    marginHorizontal: 15,   // Space above and below the divider
+  },
   statLabel: {
 
   },
@@ -276,10 +291,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    // paddingLeft: 5,
-    // paddingRight: 5,
-    // alignSelf: 'stretch',
-    // width: '50%'
   },
   button: {
     alignSelf: 'stretch',

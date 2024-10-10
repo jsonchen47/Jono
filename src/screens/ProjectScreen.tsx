@@ -226,6 +226,6 @@ const styles = StyleSheet.create({
     }, 
     membersList: {
         paddingHorizontal: 10,
-        paddingBottom: 15,
+        paddingBottom: 20,
     }
 })

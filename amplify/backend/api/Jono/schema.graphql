@@ -37,5 +37,10 @@ type User @model @auth(rules: [{allow: public}]) {
   ChatRooms: [ChatRoom] @manyToMany(relationName: "UserChatRoom")
   Projects: [Project] @manyToMany(relationName: "UserProject")
   savedProjectsIDs: [String]
+  bio: String
+  numProjects: Int
+  numTeams: Int
+  numConnections: Int
+  username: String
 }
  
