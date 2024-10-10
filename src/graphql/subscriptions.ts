@@ -352,6 +352,9 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
     numTeams
     numConnections
     username
+    skills
+    resources
+    links
     createdAt
     updatedAt
     __typename
@@ -411,6 +414,9 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
     numTeams
     numConnections
     username
+    skills
+    resources
+    links
     createdAt
     updatedAt
     __typename
@@ -470,6 +476,9 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
     numTeams
     numConnections
     username
+    skills
+    resources
+    links
     createdAt
     updatedAt
     __typename
@@ -526,6 +535,9 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -586,6 +598,9 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -646,6 +661,9 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -716,6 +734,9 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -786,6 +807,9 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -856,6 +880,9 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename

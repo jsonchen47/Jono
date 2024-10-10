@@ -22,18 +22,6 @@ export default function HomeLayout() {
           headerTintColor: 'black',
         }}
       />
-      {/* <Stack.Screen 
-        name="project/[id]" 
-        options={{
-          title: 'Project',
-          headerStyle: {
-            backgroundColor: 'white',
-          },
-          headerTintColor: 'black',
-
-        }}
-        
-      /> */}
     </Stack>
   );
 }

@@ -88,10 +88,7 @@ const index = () => {
           ) })}
           >
           <Tabs.ScrollView>
-            <View>
-              <ProjectsScreen category = ""/>
-            </View>
-            
+            <ProjectsScreen category = ""/>
           </Tabs.ScrollView>
         </Tabs.Tab>
 
@@ -121,6 +118,7 @@ const index = () => {
           ) })}
         >
           <Tabs.ScrollView>
+            <ProjectsScreen category = 'finance'/>
           </Tabs.ScrollView>
         </Tabs.Tab>
 
@@ -133,7 +131,9 @@ const index = () => {
             </View>
           ) })}
         >
-          <View></View>
+          <Tabs.ScrollView>
+            <ProjectsScreen category = 'tech'/>
+          </Tabs.ScrollView>
         </Tabs.Tab>
         <Tabs.Tab 
           name="Politics"
@@ -144,7 +144,9 @@ const index = () => {
             </View>
           ) })}
         >
-          <View></View>
+          <Tabs.ScrollView>
+            <ProjectsScreen category = 'politics'/>
+          </Tabs.ScrollView>
         </Tabs.Tab>
         <Tabs.Tab 
           name="Education"
@@ -155,7 +157,9 @@ const index = () => {
             </View>
           ) })}
         >
-          <View></View>
+          <Tabs.ScrollView>
+            <ProjectsScreen category = 'education'/>
+          </Tabs.ScrollView>
         </Tabs.Tab>
         <Tabs.Tab 
           name="Environment"
@@ -166,7 +170,9 @@ const index = () => {
             </View>
           ) })}
         >
-          <View></View>
+          <Tabs.ScrollView>
+            <ProjectsScreen category = 'environment'/>
+          </Tabs.ScrollView>
         </Tabs.Tab>
         <Tabs.Tab 
           name="Justice"
@@ -177,7 +183,9 @@ const index = () => {
             </View>
           ) })}
         >
-          <View></View>
+          <Tabs.ScrollView>
+            <ProjectsScreen category = 'social justice'/>
+          </Tabs.ScrollView>
         </Tabs.Tab>
       </Tabs.Container>
     </SafeAreaView>

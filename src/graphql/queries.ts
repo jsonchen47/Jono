@@ -318,6 +318,9 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     numTeams
     numConnections
     username
+    skills
+    resources
+    links
     createdAt
     updatedAt
     __typename
@@ -353,6 +356,9 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -407,6 +413,9 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -454,6 +463,9 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         numTeams
         numConnections
         username
+        skills
+        resources
+        links
         createdAt
         updatedAt
         __typename
@@ -512,6 +524,9 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         numTeams
         numConnections
         username
+        skills
+        resources
+        links
         createdAt
         updatedAt
         __typename
@@ -570,6 +585,9 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         numTeams
         numConnections
         username
+        skills
+        resources
+        links
         createdAt
         updatedAt
         __typename
@@ -641,6 +659,9 @@ export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -684,6 +705,9 @@ export const listUserChatRooms = /* GraphQL */ `query ListUserChatRooms(
         numTeams
         numConnections
         username
+        skills
+        resources
+        links
         createdAt
         updatedAt
         __typename
@@ -738,6 +762,9 @@ export const userChatRoomsByChatRoomId = /* GraphQL */ `query UserChatRoomsByCha
         numTeams
         numConnections
         username
+        skills
+        resources
+        links
         createdAt
         updatedAt
         __typename
@@ -792,6 +819,9 @@ export const userChatRoomsByUserId = /* GraphQL */ `query UserChatRoomsByUserId(
         numTeams
         numConnections
         username
+        skills
+        resources
+        links
         createdAt
         updatedAt
         __typename

@@ -1,19 +1,18 @@
 import { Link } from 'expo-router';
 import { View, Text, StyleSheet, Pressable, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, Button as Button2 } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { Chip, Button as Button3 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Button } from '@rneui/themed';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser, listProjects } from '../../../src/graphql/queries'
 import { listTeamsByUser } from '@/src/backend/queries';
 import { useRouter } from 'expo-router'; 
-
 import ProjectsGrid from '@/src/components/ProjectsGrid';
+import ProfileHeader from '@/src/components/ProfileHeader';
+import Emoji from 'react-native-emoji';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -24,91 +23,6 @@ const randomColor = () => {
   let col = color[Math.floor(Math.random() * color.length)];
   return col;
 };
-
-const Header = ({user}: any) => {
-  const router = useRouter();
-
-  return (
-    <SafeAreaView pointerEvents='box-none'>
-    <View pointerEvents='box-none' style={styles.container}>
-        {/* Top content */}
-        <View pointerEvents='box-none' style={styles.topContent}>
-          <View>
-            <Text style={styles.name}>{user?.name}</Text>
-            <Text style={{fontWeight: '500'}}>{user?.username}</Text>
-            {/* Stats */}
-            <View style={styles.allStatsContainer}>
-              <View style={styles.statContainer}>
-                <Text style={styles.statNumber}>{user?.numProjects?.toString()}</Text>
-                <Text style={styles.statLabel}>Projects</Text>
-              </View>
-              <View style={styles.statDivider}/>
-              <View style={styles.statContainer}>
-                <Text style={styles.statNumber}>{user?.numTeams}</Text>
-                <Text style={styles.statLabel}>Teams</Text>
-              </View>
-              <View style={styles.statDivider}/>
-              {/* Connections */}
-              <Pressable
-                onPress={() => {
-                  router.push('/connections'); // Navigate to 'connections'
-                }}
-              >
-                <View style={styles.statContainer}>
-                  <Text style={styles.statNumber}>{user?.numConnections}</Text>
-                  <Text style={styles.statLabel}>Connections</Text>
-                </View>
-              </Pressable>
-             
-              
-            </View>
-          </View>
-          {/* Profile picture */}
-          <View style={styles.imageContainer}>
-            <Image style={styles.image} source={{uri: user?.image}}/>
-          </View>
-        </View>
-        {/* Bio */}
-        <Text style={styles.bio}>{user?.bio}</Text>
-        {/* Buttons */}
-        <View style={styles.allButtonsContainer}>
-          <View style={styles.buttonContainer}>
-            <Button3   
-              style={styles.button} 
-              mode="outlined" 
-              onPress={() => console.log('Pressed')} 
-              textColor="black"
-              contentStyle={{ paddingVertical: 0, paddingHorizontal: 8 }}
-            >
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </Button3>
-
-          </View>
-          <View style={{padding: 5}}></View>
-          <View style={styles.buttonContainer}>
-            <Button3  
-              style={styles.button} 
-              mode="outlined" 
-              onPress={() => console.log('Pressed')} 
-              textColor="black"
-            >
-              <Text style={styles.buttonText}>Share Profile</Text>
-            </Button3>
-          </View>
-        </View>
-        
-      </View>
-      </SafeAreaView>
-  );
-}
-
-function JoinedScreen() {
-  return (
-    <View >
-      <Text>Join!</Text>
-    </View>
-  );
-}
 
 export default function ProfileScreen() {
 
@@ -164,7 +78,6 @@ export default function ProfileScreen() {
   };
   
   useEffect(() => {
-    
     // SET TOP NAVIGATION BAR
     navigation.setOptions({ 
       title: '', 
@@ -180,6 +93,44 @@ export default function ProfileScreen() {
     // FETCH THE USER AND PROJECTS
     fetchUserAndProjects();
   }, []);
+
+  function AboutTab() {
+    return (
+        <View style={styles.aboutContainer}>
+          {/* Skills */}
+          <View style={styles.skillsAndResourcesTopPadding}></View>
+          <View style={styles.skillsAndResourcesTitleContainer}>
+              <Emoji name="rocket" style={styles.emoji} />
+              <Text style={styles.subtitle}> Skills</Text>
+          </View>
+          <View style={styles.skillsAndResourcesChipsContainer}>
+              {user?.skills?.map((skill: any, index: any) => (
+                  <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{skill}</Chip>
+              ))}
+          </View>
+          {/* Resources */}
+          <View style={styles.skillsAndResourcesTitleContainer}>
+              <Emoji name="briefcase" style={styles.emoji} />
+              <Text style={styles.subtitle}> Resources</Text>
+          </View>
+          <View style={styles.skillsAndResourcesChipsContainer}>
+              {user?.resources?.map((resource: any, index: any) => (
+                  <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{resource}</Chip>
+              ))}
+          </View>
+          {/* Links */}
+          <View style={styles.skillsAndResourcesTitleContainer}>
+              <Emoji name="earth_americas" style={styles.emoji} />
+              <Text style={styles.subtitle}> Links</Text>
+          </View>
+          <View style={styles.skillsAndResourcesChipsContainer}>
+              {user?.links?.map((link: any, index: any) => (
+                  <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{link}</Chip>
+              ))}
+          </View>
+        </View>
+    );
+  }
 
   function ProjectsTab() {
     return (
@@ -198,9 +149,8 @@ export default function ProfileScreen() {
   }
 
   return (
-    // <View style={styles.flatListContainer}>
     <Tabs.Container 
-      renderHeader={() => <Header user={user} />}
+      renderHeader={() => <ProfileHeader user={user} />}
       renderTabBar={props => (
         <MaterialTabBar
           {...props}
@@ -209,8 +159,9 @@ export default function ProfileScreen() {
       )}
     >
       <Tabs.Tab name="About">
-        <View>
-        </View>
+        <Tabs.ScrollView>
+          <AboutTab/>
+        </Tabs.ScrollView>
       </Tabs.Tab>
       <Tabs.Tab name="Projects">
         <Tabs.ScrollView>
@@ -222,117 +173,11 @@ export default function ProfileScreen() {
           <TeamsTab/>
         </Tabs.ScrollView>
       </Tabs.Tab>
-      
-      
     </Tabs.Container>
-    // </View>
-
-    
-
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    paddingLeft: 25,
-    paddingRight: 25, 
-    paddingTop: 25,
-    paddingBottom: 5,
-  },
-  image: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
-  },
-  imageContainer: {
- 
-  },
-  topContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
- 
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold'
-  },
-  allStatsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingTop: 10,
-  },
-  statContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    
-  },
-  statNumber: {
-    fontSize: 17,
-    fontWeight: '700',
-    
-  }, 
-  statDivider: {
-    height: '100%',            // Thickness of the line
-    width: 1,        // Full width of the screen
-    backgroundColor: 'black', // Light gray color
-    marginHorizontal: 15,   // Space above and below the divider
-  },
-  statLabel: {
-
-  },
-  bio: {
-    paddingTop: 10,
-  },
-  allButtonsContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingTop: 20,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  buttonContainer: {
-    flex: 1,
-  },
-  button: {
-    alignSelf: 'stretch',
-    width: '100%',
-    borderRadius: 10,
-    height: 45,
-    borderColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }, 
-  buttonText: {
-    fontSize: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  subTitle: {
-    flex: 1,
-    fontSize: 17,
-    fontWeight: '500',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // paddingLeft: 15,
-  },
-  allChipsContainer: {
-    // margin: 5,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    paddingTop: 10,
-  },
-  singleChipContainer: {
-    paddingRight: 10,
-  },
-  chip: {
-    color:'white',
-    fontSize: 12,
-  },
   icon: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -340,92 +185,39 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingRight: 10,
   },
-  subtitleContainer: {
+  // About tab
+  aboutContainer: {
+    paddingHorizontal: 10, 
+  },
+  skillsAndResourcesTopPadding: {
+    paddingTop: 5, 
+},
+skillsAndResourcesTitleContainer: {
     paddingTop: 15,
+    flexDirection: 'row', 
+    alignItems: 'center', 
+}, 
+emoji: {
+    fontSize: 23,
+    fontWeight: 'bold', 
+    paddingHorizontal: 10,
+}, 
+subtitle: {
+    fontWeight: 'bold', 
+    fontSize: 23, 
+}, 
+skillsAndResourcesChipsContainer: {
+    paddingTop: 15, 
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  // Browse styles
-  linearGradientView: {
-    top: 0,  // Set to top of the image
-    left: 0, // Set to the left side
-    right: 0, // Set to the right side
-    bottom: 0, // Set to the bottom side, so it covers the image
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  }, 
-  flatListContent: {
-    paddingHorizontal: (windowWidth-2*(windowWidth/2.5))/3, // Padding on the left and right
-  },
-  browseProjectsView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 5,
-  },
-  browseProjectImages: {
-    width: windowWidth/2.1, 
-    height: windowHeight/5,
-    borderRadius: 15, 
-  },
-  browseProjectsText: {
-    fontWeight: 'bold',
-    fontSize: 15,
+    flexWrap: 'wrap',   
+},
+chip: {
+    alignSelf: 'flex-start',
+    margin: 5, 
+    backgroundColor: 'black'
+},
+chipText: {
     color: 'white',
-    justifyContent: 'flex-end',
-  }, 
-  browseOverImageTextView: {
-    top: 15,  // Set to top of the image
-    left: 15, // Set to the left side
-    right: 15, // Set to the right side
-    bottom: 15, // Set to the bottom side, so it covers the image
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-  },
-  browseLinearGradient: {
-    width: windowWidth/2.2, 
-    height: windowHeight/5/1.5,
-    borderRadius: 15, 
-  },
-  browseAuthorText: {
-    fontSize: 10,
-    color: 'white',
-    justifyContent: 'flex-end',
-    paddingTop: 5,
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  gridItem: {
-    width: windowWidth / 2.2, // Control the size of each grid item
-    height: 150, // Fixed height for each grid item
-    backgroundColor: '#dcdcdc',
-    marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  box: {
-    height: 250,
-    width: '100%',
-  },
-  boxA: {
-    backgroundColor: 'white',
-  },
-  boxB: {
-    backgroundColor: '#D8D8D8',
-  },
-  projectsHeader: {
-    paddingTop: 40, 
-    fontSize: 20,
-    fontWeight: 'bold'
-  },
-  flatListContainer: {
-    // paddingHorizontal: 5,
-  }, 
-  flatListColumnWrapper: {
-    justifyContent: 'space-between', // Evenly space out the columns
-  },
+    fontSize: 15
+}, 
 });

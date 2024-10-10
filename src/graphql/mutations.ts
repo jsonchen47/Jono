@@ -382,6 +382,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     numTeams
     numConnections
     username
+    skills
+    resources
+    links
     createdAt
     updatedAt
     __typename
@@ -444,6 +447,9 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     numTeams
     numConnections
     username
+    skills
+    resources
+    links
     createdAt
     updatedAt
     __typename
@@ -506,6 +512,9 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     numTeams
     numConnections
     username
+    skills
+    resources
+    links
     createdAt
     updatedAt
     __typename
@@ -563,6 +572,9 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -624,6 +636,9 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -685,6 +700,9 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -756,6 +774,9 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -827,6 +848,9 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
@@ -898,6 +922,9 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
       numTeams
       numConnections
       username
+      skills
+      resources
+      links
       createdAt
       updatedAt
       __typename
