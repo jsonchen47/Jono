@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable, ScrollView, Image, Dimensions, SafeA
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Chip, Button as Button3 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import { Tabs } from 'react-native-collapsible-tab-view'
+import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@rneui/themed';
@@ -201,6 +201,12 @@ export default function ProfileScreen() {
     // <View style={styles.flatListContainer}>
     <Tabs.Container 
       renderHeader={() => <Header user={user} />}
+      renderTabBar={props => (
+        <MaterialTabBar
+          {...props}
+          indicatorStyle={{ backgroundColor: 'black', height: 2 }}
+        />
+      )}
     >
       <Tabs.Tab name="About">
         <View>

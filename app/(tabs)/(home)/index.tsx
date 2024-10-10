@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Searchbar } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { listProjects } from '@/src/graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
@@ -11,45 +10,6 @@ import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-const fetchProjectsByCategory = async (category: any) => {
-  try {
-    const projectData = await API.graphql(graphqlOperation(listProjects, {
-      filter: {
-        categories: {
-          contains: category,  // Checks if the category array contains the given string  
-        }
-      }
-    }));
-    const castedProjectData = projectData as GraphQLResult<any>
-    return castedProjectData.data.listProjects.items;
-    
-  } catch (err) {
-    console.log('Error fetching projects', err);
-  }
-};
-
-const ProjectsScreenByCategory = ({ category }: any) => {
-  const [projects, setProjects] = useState<any>([]);
-
-  useEffect(() => {
-    // console.log(category)
-    const getProjects = async () => {
-      const result = await fetchProjectsByCategory(category);
-      // console.log(result)
-      setProjects(result);
-    };
-    getProjects();
-  }, []);
-
-  return (
-    <View>
-      {/* <ProjectsScreen projects = {projects} category = "" /> */}
-    </View>
-    
-  );
-};
-
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -74,7 +34,6 @@ const index = () => {
   const [loading, setLoading] = useState<any>(true);
   const [error, setError] = useState<any>(null);
   
- 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -113,6 +72,7 @@ const index = () => {
             {...props}
             scrollEnabled={true} // Enable scrollable tabs
             tabStyle={{ height: 70 }} // Customize the width of each tab
+            indicatorStyle={{ backgroundColor: 'black', height: 2 }}
           />
         )}
         >
@@ -130,7 +90,6 @@ const index = () => {
           <Tabs.ScrollView>
             <View>
               <ProjectsScreen category = ""/>
-              {/* <ProjectsScreen projects = {projects } category = ""/> */}
             </View>
             
           </Tabs.ScrollView>
@@ -146,11 +105,8 @@ const index = () => {
             </View>
           ) })}
         >
-          {/* <View></View> */}
           <Tabs.ScrollView>
             <ProjectsScreen category = 'health'/>
-            {/* <ProjectsScreenByCategory category = 'health'/> */}
-            {/* <ProjectsScreen projects = {projects} category = ""/> */}
           </Tabs.ScrollView>
         </Tabs.Tab>
 
@@ -165,8 +121,6 @@ const index = () => {
           ) })}
         >
           <Tabs.ScrollView>
-          {/* <View></View> */}
-          {/* <ProjectsScreen projects={projects} category = ""/> */}
           </Tabs.ScrollView>
         </Tabs.Tab>
 
@@ -257,154 +211,6 @@ const styles = StyleSheet.create({
   searchBar: {
     backgroundColor: '#E8E8E8',
     height: 50,
-  },
-  // Pager View
-  pagerViewOuterContainer: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }, 
-  pagerViewContainer: {
-    width: '100%', 
-    height: windowHeight/2.2,
-    marginTop: 20,
-    marginBottom: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }, 
-  page: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%', 
-    height: '100%',
-  },
-   // Large projects
-   largeProjectContainer: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  largeProjectImageBackground: {
-    width: '90%',
-    height: '100%',
-  },
-  largeProjectImage: {
-    // padding: 30,
-    width: '100%',
-    height: '100%', 
-    borderRadius: 15,
-  }, 
-  largeProjectTextContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    padding: 25, 
-    width: windowWidth/1.1,
-    height: '100%',
-  },
-  largeProjectAuthor: {
-    color: 'white',
-    fontSize: 15,
-    textTransform: 'uppercase',
-  }, 
-  largeProjectTitle: {
-    fontWeight: 'bold',
-    color: 'white',
-    fontSize: 25,
-    flexShrink: 1,
-    paddingTop: 10,
-  }, 
-  largeProjectGradient: {
-    flex: 1, 
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute', 
-    width: '100%', 
-    height: '100%',
-    borderRadius: 15, // Match the border radius of the image
-  },
-  // Browse Projects
-  browseProjectsHeaderContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 20, 
-  }, 
-  browseProjectsHeaderText: {
-    fontWeight: 'bold', 
-    fontSize: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  browseProjectsSubtitleText: {
-    fontSize: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'gray',
-  },
-  browseProjectsOuterContainer: {
-    width: '100%', 
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  browseProjectsContainer: {
-    width: '90%',
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  browseProjectsGridItemContainer: {
-    width: '100%',
-    height: '100%',
-  },
-  browseProjectsGridItem: {
-    width: '48%', // Two items per row with spacing
-    marginBottom: 10,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-  browseProjectsImage: {
-    width: '100%', 
-    height: windowHeight/5, 
-    borderRadius: 15,
-    backgroundColor: 'green'
-  },
-  browseProjectsLinearGradient: {
-    position: 'absolute',
-    height: '100%', 
-    width: '100%', 
-    borderRadius: 15,
-    justifyContent: 'flex-end',
-    // backgroundColor: 'red'
-  },
-  browseProjectsTextContainer: {
-    padding: 10, 
-  },
-  browseProjectsTitle: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    fontWeight: 'bold',
-    fontSize: 15, 
-    color: 'white'
-  }, 
-  browseProjectAuthor: {
-    fontSize: 15, 
-    color: 'lightgray',
-    paddingTop: 5,
-  },
-  projectsScreenContainer: {
-    width: "100%", 
-  },
-  outerContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  }, 
-  indicator: {
-    position: 'absolute',
-    height: '100%',
-    // backgroundColor: 'green',
-    // justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-    padding: 25,
   },
 })
 
