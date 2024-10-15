@@ -107,7 +107,7 @@ const ProjectsScreen = ({category}: any) => {
           }}
           loop
           width={windowWidth}
-          height={windowHeight/2.2}
+          height={windowHeight/2.5}
           autoPlay={false}
           data={projects}
           onSnapToItem={(index) => setCurrentPage(index)}
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     // Pager View
   pagerViewOuterContainer: {
     width: '100%',
-    height:  windowHeight/2.2, 
+    height:  windowHeight/2.5, 
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,

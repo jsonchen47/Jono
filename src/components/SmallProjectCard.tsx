@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
   browseProjectsTitle: {
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontSize: 15, 
     color: 'white'
   }, 
   browseProjectAuthor: {
-    fontSize: 15, 
+    fontSize: 13, 
     color: 'lightgray',
     paddingTop: 5,
   },

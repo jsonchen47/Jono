@@ -106,13 +106,13 @@ const styles = StyleSheet.create({
   },
   largeProjectAuthor: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 14,
     textTransform: 'uppercase',
   }, 
   largeProjectTitle: {
     fontWeight: 'bold',
     color: 'white',
-    fontSize: 25,
+    fontSize: 22,
     flexShrink: 1,
     paddingTop: 10,
   }, 

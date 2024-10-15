@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         flexDirection: 'row', 
         alignItems: 'center', 
-        // justifyContent: 'center'
     }, 
     emoji: {
         fontSize: 23,
@@ -218,6 +217,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 15
     }, 
+    // Members 
     membersSubtitle: {
         paddingTop: 15,
         paddingLeft: 10, 

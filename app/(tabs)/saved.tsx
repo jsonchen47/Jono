@@ -6,6 +6,7 @@ import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser, listProjects } from '../../src/graphql/queries'
 import ProjectsGrid from '@/src/components/ProjectsGrid';
+import Emoji from 'react-native-emoji';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -75,9 +76,5 @@ export default function SavedScreen() {
 const styles = StyleSheet.create({
   container: {
     paddingTop: windowWidth*0.05
-    // flex: 1,
-    // justifyContent: 'flex-start',
-    // alignItems: 'flex-start',
-    // padding: 15,
   },
 });

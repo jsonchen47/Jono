@@ -17,7 +17,6 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 import {createUser} from '../src/graphql/mutations';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-
 Amplify.configure({ ...awsconfig, Analytics: {disabled: true}});
 
 function RootLayout() {
@@ -41,7 +40,6 @@ useEffect(() => {
 
     // If userData exists and has data, then exit the syncUser and don't add new user
     if (userData.data && userData.data.getUser) {
-      // console.log("User already exists in DB");
       return;
     }
 
@@ -51,7 +49,6 @@ useEffect(() => {
       name: authUser.attributes.phone_number, 
       status: 'Hey, I am using Jono',
     }
-    // console.log(newUser);
 
     const newUserResponse = await API.graphql(
       graphqlOperation(createUser, {input: newUser})

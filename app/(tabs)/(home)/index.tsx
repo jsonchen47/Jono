@@ -69,10 +69,12 @@ const index = () => {
         renderHeader={Header}  
         renderTabBar={props => (
           <MaterialTabBar
-            {...props}
+            {...props}  
             scrollEnabled={true} // Enable scrollable tabs
             tabStyle={{ height: 70 }} // Customize the width of each tab
             indicatorStyle={{ backgroundColor: 'black', height: 2 }}
+            activeColor="black" // Color for the selected tab
+            inactiveColor="blue" // Color for the unselected tabs
           />
         )}
         >
@@ -204,8 +206,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
-    paddingLeft: 7, 
-    paddingRight: 7,
+    marginHorizontal: 15,
   }, 
   tabLabelText: {
     paddingTop: 5, 
