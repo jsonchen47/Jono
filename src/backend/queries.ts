@@ -69,3 +69,16 @@ export const listTeamsByUser = /* GraphQL */ `
     }
   }
 `
+
+export const searchProjects = /* GraphQL */ `
+  query SearchProjects($filter: SearchableProjectFilterInput) {
+    searchProjects(filter: $filter) {
+      items {
+        id
+        name
+        description
+        createdAt
+      }
+    }
+  }
+`

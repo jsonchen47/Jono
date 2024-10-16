@@ -70,6 +70,64 @@ export const listProjects = /* GraphQL */ `query ListProjects(
   APITypes.ListProjectsQueryVariables,
   APITypes.ListProjectsQuery
 >;
+export const searchProjects = /* GraphQL */ `query SearchProjects(
+  $filter: SearchableProjectFilterInput
+  $sort: [SearchableProjectSortInput]
+  $limit: Int
+  $nextToken: String
+  $from: Int
+  $aggregates: [SearchableProjectAggregationInput]
+) {
+  searchProjects(
+    filter: $filter
+    sort: $sort
+    limit: $limit
+    nextToken: $nextToken
+    from: $from
+    aggregates: $aggregates
+  ) {
+    items {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    total
+    aggregateItems {
+      name
+      result {
+        ... on SearchableAggregateScalarResult {
+          value
+        }
+        ... on SearchableAggregateBucketResult {
+          buckets {
+            key
+            doc_count
+            __typename
+          }
+        }
+      }
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.SearchProjectsQueryVariables,
+  APITypes.SearchProjectsQuery
+>;
 export const getChatRoom = /* GraphQL */ `query GetChatRoom($id: ID!) {
   getChatRoom(id: $id) {
     id
@@ -161,6 +219,74 @@ export const listChatRooms = /* GraphQL */ `query ListChatRooms(
 ` as GeneratedQuery<
   APITypes.ListChatRoomsQueryVariables,
   APITypes.ListChatRoomsQuery
+>;
+export const searchChatRooms = /* GraphQL */ `query SearchChatRooms(
+  $filter: SearchableChatRoomFilterInput
+  $sort: [SearchableChatRoomSortInput]
+  $limit: Int
+  $nextToken: String
+  $from: Int
+  $aggregates: [SearchableChatRoomAggregationInput]
+) {
+  searchChatRooms(
+    filter: $filter
+    sort: $sort
+    limit: $limit
+    nextToken: $nextToken
+    from: $from
+    aggregates: $aggregates
+  ) {
+    items {
+      id
+      name
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      users {
+        nextToken
+        __typename
+      }
+      LastMessage {
+        id
+        createdAt
+        text
+        chatroomID
+        userID
+        images
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      chatRoomLastMessageId
+      __typename
+    }
+    nextToken
+    total
+    aggregateItems {
+      name
+      result {
+        ... on SearchableAggregateScalarResult {
+          value
+        }
+        ... on SearchableAggregateBucketResult {
+          buckets {
+            key
+            doc_count
+            __typename
+          }
+        }
+      }
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.SearchChatRoomsQueryVariables,
+  APITypes.SearchChatRoomsQuery
 >;
 export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
   getMessage(id: $id) {
@@ -268,6 +394,57 @@ export const messagesByUserID = /* GraphQL */ `query MessagesByUserID(
   APITypes.MessagesByUserIDQueryVariables,
   APITypes.MessagesByUserIDQuery
 >;
+export const searchMessages = /* GraphQL */ `query SearchMessages(
+  $filter: SearchableMessageFilterInput
+  $sort: [SearchableMessageSortInput]
+  $limit: Int
+  $nextToken: String
+  $from: Int
+  $aggregates: [SearchableMessageAggregationInput]
+) {
+  searchMessages(
+    filter: $filter
+    sort: $sort
+    limit: $limit
+    nextToken: $nextToken
+    from: $from
+    aggregates: $aggregates
+  ) {
+    items {
+      id
+      createdAt
+      text
+      chatroomID
+      userID
+      images
+      updatedAt
+      __typename
+    }
+    nextToken
+    total
+    aggregateItems {
+      name
+      result {
+        ... on SearchableAggregateScalarResult {
+          value
+        }
+        ... on SearchableAggregateBucketResult {
+          buckets {
+            key
+            doc_count
+            __typename
+          }
+        }
+      }
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.SearchMessagesQueryVariables,
+  APITypes.SearchMessagesQuery
+>;
 export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
   getUser(id: $id) {
     id
@@ -368,6 +545,77 @@ export const listUsers = /* GraphQL */ `query ListUsers(
   }
 }
 ` as GeneratedQuery<APITypes.ListUsersQueryVariables, APITypes.ListUsersQuery>;
+export const searchUsers = /* GraphQL */ `query SearchUsers(
+  $filter: SearchableUserFilterInput
+  $sort: [SearchableUserSortInput]
+  $limit: Int
+  $nextToken: String
+  $from: Int
+  $aggregates: [SearchableUserAggregationInput]
+) {
+  searchUsers(
+    filter: $filter
+    sort: $sort
+    limit: $limit
+    nextToken: $nextToken
+    from: $from
+    aggregates: $aggregates
+  ) {
+    items {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    total
+    aggregateItems {
+      name
+      result {
+        ... on SearchableAggregateScalarResult {
+          value
+        }
+        ... on SearchableAggregateBucketResult {
+          buckets {
+            key
+            doc_count
+            __typename
+          }
+        }
+      }
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.SearchUsersQueryVariables,
+  APITypes.SearchUsersQuery
+>;
 export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
   getUserProject(id: $id) {
     id

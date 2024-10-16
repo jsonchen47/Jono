@@ -100,6 +100,12 @@ useEffect(() => {
               <Stack.Screen
               name="newProject"
               />
+              <Stack.Screen
+              name="search"
+              options={{
+                animation: 'fade', // Enables the fade animation
+              }}
+              />
             </Stack>
             {/* <View>
               <Text>hi</Text>
