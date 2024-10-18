@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const newProject = () => {
+const center = () => {
   return (
     <View>
       <Text>inside tabs</Text>
@@ -9,4 +9,4 @@ const newProject = () => {
   )
 }
 
-export default newProject
+export default center

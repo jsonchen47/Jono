@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
   },
   backArrow: {
     fontSize: 20,
-    color: '#4C4C4C',
+    color: 'black',
+    paddingLeft: 5,
   },
 });
