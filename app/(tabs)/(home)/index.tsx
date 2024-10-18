@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import Icon2 from 'react-native-vector-icons/Ionicons';
+import Icon3 from 'react-native-vector-icons/Fontisto';
+import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon5 from 'react-native-vector-icons/Entypo';
 import { Searchbar } from 'react-native-paper';
 import { listProjects } from '@/src/graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
@@ -98,11 +101,12 @@ const index = () => {
         renderTabBar={props => (
           <MaterialTabBar
             {...props}  
+            activeColor='red' // Color for the selected tab
+            inactiveColor='green' // Color for the unselected tabs
             scrollEnabled={true} // Enable scrollable tabs
             tabStyle={{ height: 70 }} // Customize the width of each tab
             indicatorStyle={{ backgroundColor: 'black', height: 2 }}
-            activeColor="black" // Color for the selected tab
-            inactiveColor="blue" // Color for the unselected tabs
+            
           />
         )}
         >
@@ -110,12 +114,14 @@ const index = () => {
         {/* ALL PROJECTS */}
         <Tabs.Tab 
           name="All Projects" 
-          label={(() => { return (
+          label={() => { 
+            return (
             <View style={styles.tabLabelContainer}>
               <Icon name="star" size={22} />
               <Text style={styles.tabLabelText}>All</Text>
             </View>
-          ) })}
+            )
+          }}
           >
           <Tabs.ScrollView>
             <ProjectsScreen category = ""/>
@@ -127,7 +133,7 @@ const index = () => {
           name="Health"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="user-doctor" size={22} />
+              <Icon3 name="heartbeat" size={22} />
               <Text style={styles.tabLabelText}>Health</Text>
             </View>
           ) })}
@@ -142,7 +148,7 @@ const index = () => {
           name="Finance"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="money-check-dollar" size={22} />
+              <Icon name="sack-dollar" size={22} />
               <Text style={styles.tabLabelText}>Finance</Text>
             </View>
           ) })}
@@ -156,7 +162,7 @@ const index = () => {
           name="Tech"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="gear" size={22} />
+              <Icon4 name="robot-industrial" size={22} />
               <Text style={styles.tabLabelText}>Tech</Text>
             </View>
           ) })}
@@ -169,7 +175,7 @@ const index = () => {
           name="Politics"
           label={(() => { return (
             <View style={styles.tabLabelContainer}>
-              <Icon name="globe" size={22} />
+              <Icon5 name="globe" size={22} />
               <Text style={styles.tabLabelText}>Politics</Text>
             </View>
           ) })}
@@ -234,7 +240,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
-    marginHorizontal: 15,
+    marginHorizontal: 10,
   }, 
   tabLabelText: {
     paddingTop: 5, 
@@ -242,7 +248,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   }, 
   searchBarContainer: {
-    marginHorizontal: 10, 
+    marginHorizontal: windowWidth*0.05, 
     paddingVertical: 10, 
     justifyContent: 'center',
     alignItems: 'center',
@@ -250,7 +256,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green'
   },
   searchButton: {
-    backgroundColor: '#E8E8E8',
+    // backgroundColor: '#E8E8E8',
+    backgroundColor: 'lightgray',
     paddingVertical: 15,
     paddingHorizontal: 20,
     marginHorizontal: 10, 
@@ -264,8 +271,8 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   }, 
   searchButtonText: {
-    color: 'black',
-    fontSize: 15,
+    color: '#4C4C4C',
+    fontSize: 16,
     fontWeight: '500',
     textAlign: 'center',
   },
@@ -277,14 +284,14 @@ const styles = StyleSheet.create({
     // borderColor: 'black',
     // position: 'absolute',
     // borderWidth: 1,
-    margin: 10,
+    // margin: 5,
     position: 'absolute',
-    right: 5,
+    right: 10,
     justifyContent: 'center', 
     alignItems: 'center',
   },
   filterButtonContainer: {
-    width: windowWidth*0.9,
+    width: windowWidth*0.87,
     height: '100%',
     position: 'absolute',
     // backgroundColor: 'red',

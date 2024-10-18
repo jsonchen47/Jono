@@ -56,13 +56,13 @@ const LargeProjectCard = ({project}: any) => {
               end={{ x: 0.5, y: 0.5 }} 
               style={styles.largeProjectGradient}
               >
-              <View>
+              {/* <View> */}
                 <View style={styles.largeProjectTextContainer}>
                   <Text style={styles.largeProjectAuthor}>{user?.name ?? ""}</Text>
                   <Text style={styles.largeProjectTitle}>{project.title}</Text>
                 </View>
                 
-              </View>
+              {/* </View> */}
             </LinearGradient>
              {/* Icon */}
           <View style={styles.iconLargeContainer}>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   largeProjectImageBackground: {
-    width: '90%',
+    width: '87%',
     height: '100%',
   },
   largeProjectImage: {
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     padding: 25, 
-    width: windowWidth/1.1,
+    width: '100%',
     height: '100%',
   },
   largeProjectAuthor: {

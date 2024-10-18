@@ -28,7 +28,6 @@ useEffect(() => {
     const authUser = await Auth.currentAuthenticatedUser({
       bypassCache: true,
     });
-    // console.log(authUser);
 
     // query the database using Auth user id (sub)
     const result = await API.graphql(
@@ -103,6 +102,7 @@ useEffect(() => {
               <Stack.Screen
               name="search"
               options={{
+                headerShown: false,
                 animation: 'fade', // Enables the fade animation
               }}
               />

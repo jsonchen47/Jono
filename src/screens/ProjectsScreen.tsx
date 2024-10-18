@@ -52,7 +52,6 @@ const ProjectsScreen = ({category}: any) => {
         const projectData = await API.graphql(graphqlOperation(listProjects));
         const castedProjectData = projectData as GraphQLResult<any>
         setProjects(castedProjectData.data.listProjects.items);
-        // console.log(castedProjectData.data.listProjects.items)
       } catch (err) {
         setError(err);
         console.error("Error fetching projects:", err);
@@ -76,7 +75,6 @@ const ProjectsScreen = ({category}: any) => {
 
       
       setProjects(result);
-      console.log(result)
     };
 
     if (category != "") {
@@ -85,15 +83,12 @@ const ProjectsScreen = ({category}: any) => {
     else {
       fetchAllProjects();
     }
-    // console.log(projects)
-    console.log('hi')
     
   }, []);
 
   
 
   if (projects.length > 0) {
-    console.log('hii');
   }
   
   return (
@@ -150,6 +145,7 @@ const styles = StyleSheet.create({
     width: "100%", 
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'whitesmoke'
   },
     // Pager View
   pagerViewOuterContainer: {
@@ -240,10 +236,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   browseProjectsSubtitleText: {
-    fontSize: 12,
+    fontSize: 15,
     justifyContent: 'center',
     alignItems: 'center',
     color: 'gray',
+    marginTop: 5, 
   },
   // Browse Projects
   browseProjectsOuterContainer: {

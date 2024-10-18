@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
       browseProjectsContainer: {
-        width: '90%',
+        width: '87%',
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
