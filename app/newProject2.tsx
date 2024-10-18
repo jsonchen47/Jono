@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Feather';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const newProject = () => {
+const newProject2 = () => {
   const router = useRouter();
 
   return (
@@ -15,8 +15,11 @@ const newProject = () => {
       <View style={styles.container}>
         {/* Custom Header */}
         <View style={styles.header}>
-          <Pressable onPress={() => router.back()}>
-            <Text style={styles.cancelButton}>Cancel</Text>
+          <Pressable onPress={() => {
+            router.back()
+            router.back()
+            }}>
+            <Text style={styles.cancelButton}>Done</Text>
           </Pressable>
         </View>
         <View style={styles.divider}></View>
@@ -26,7 +29,7 @@ const newProject = () => {
           {/* Top Content */}
           <View style={styles.contentTop}>
             {/* Title */}
-            <Text style={styles.title}>Show off your new idea</Text>
+            <Text style={styles.title}>Add a little spice</Text>
             {/* Add photo button */}
             <TouchableOpacity style={styles.addPhotoButtonContainer}> 
               <View style={styles.addPhotoButtonContent}>
@@ -57,8 +60,8 @@ const newProject = () => {
               style={styles.nextButton} 
               labelStyle={styles.nextButtonText}
               mode="contained"  
-              onPress={() => router.push('/newProject2')}>
-              Next
+              onPress={() => router.back()}>
+              Back
             </Button>
           </View>
         </View>
@@ -67,7 +70,7 @@ const newProject = () => {
   )
 }
 
-export default newProject
+export default newProject2
 
 
 const styles = StyleSheet.create({
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cancelButton: {
-    marginLeft: 20, 
+    marginRight: 20, 
     // backgroundColor: 'transparent'
     color: 'black',
     fontSize: 17, 
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 40,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
   // Content
   contentContainer: {
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
   }, 
   nextButton: {
     borderRadius: 5, 
-    alignSelf: 'flex-end',
+    alignSelf: 'flex-start',
     backgroundColor: 'black'
   },
   nextButtonText: {
