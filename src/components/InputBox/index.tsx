@@ -10,7 +10,6 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 
 const InputBox = ({chatroom}: any) => {
     const [text, setText] = useState('');
-    // console.log(chatroom)
 
     const onSend = async () => {
       const authUser = await Auth.currentAuthenticatedUser();

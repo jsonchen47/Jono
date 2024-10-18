@@ -44,12 +44,9 @@ const ChatListItem = ({chat}: any) => {
 
     // // Get the users from the chatRoom
     // const chatRoomUsers = chatRoom.users.items.filter((item: any) => !item._deleted);
-    // // console.log(chatRoomUsers)
-    // // console.log(user)
+
     // // Remove the UserChatRoom
     // for (const chatRoomUser of chatRoomUsers) {
-    //   console.log(chatRoomUser.id)
-    //   // console.log(chatRoomUser)
     //   await API.graphql(
     //     graphqlOperation(deleteUserChatRoom, {
     //       input: { id: chatRoomUser.id },

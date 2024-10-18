@@ -65,7 +65,6 @@ const ChatRoomInfo = () => {
   }, [chatroomID]);
 
   const removeChatRoomUser = async (chatRoomUser: any) => {
-    console.log(users)
     // await API.graphql(
     //   graphqlOperation(deleteUserChatRoom, {
     //     input: { _version: chatRoomUser._version, id: chatRoomUser.id },

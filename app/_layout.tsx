@@ -98,6 +98,11 @@ useEffect(() => {
               />
               <Stack.Screen
               name="newProject"
+              options={{
+                animation: 'slide_from_bottom', 
+                // presentation: 'modal'
+                headerShown: false,
+              }}
               />
               <Stack.Screen
               name="search"

@@ -33,8 +33,6 @@ export default function SavedScreen() {
         const fetchedUser = castedUserResult.data?.getUser;
         setUser(fetchedUser);
 
-        console.log(user?.savedProjectsIDs)
-
         if (fetchedUser?.savedProjectsIDs?.length > 0) {
           // Create a filter that can do an "in" filtration
           const filter = {

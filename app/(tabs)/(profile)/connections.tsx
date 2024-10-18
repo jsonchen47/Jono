@@ -39,7 +39,6 @@ const createAChatRoomWithTheUser = async (user: any) => {
     graphqlOperation(createChatRoom, {input: {}})
   )
 
-  console.log(newChatRoomData)
   const castedChatRoomData = newChatRoomData as GraphQLResult<any>; // Casting the chat room data 
   if (!castedChatRoomData.data?.createChatRoom) {
     console.log("Error creating the chat error")

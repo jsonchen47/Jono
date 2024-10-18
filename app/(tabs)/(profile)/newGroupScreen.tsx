@@ -51,13 +51,10 @@ const ContactsScreen = () => {
     const newChatRoom = castedNewChatRoomData.data?.createChatRoom;
 
     // Add the selected users to the ChatRoom
-    // console.log(newChatRoom.id)
-    // console.log(selectedUserIds)
     await Promise.all(
       
       selectedUserIds.map((userID: any) =>
       {
-        console.log('User ID:', userID); // Log the individual userID
         return API.graphql(
           graphqlOperation(createUserChatRoom, {
             input: { chatRoomId: newChatRoom.id, userId: userID },
@@ -69,8 +66,6 @@ const ContactsScreen = () => {
 
     // Add the auth user to the ChatRoom
     const authUser = await Auth.currentAuthenticatedUser();
-    console.log(newChatRoom.id)
-    // console.log(authUser.attributes.sub)
     await API.graphql(
       graphqlOperation(createUserChatRoom, {
         input: { chatRoomId: newChatRoom.id, userId: authUser.attributes.sub },

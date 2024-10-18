@@ -20,9 +20,6 @@ export default function HomeLayout() {
             backgroundColor: 'white',
           },
           headerTintColor: 'black',
-          contentStyle:{
-            backgroundColor:'#gray'
-          },
         }}
       />
     </Stack>

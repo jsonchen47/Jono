@@ -21,24 +21,7 @@ const Header = () => {
   const router = useRouter(); 
   const [searchQuery, setSearchQuery] = React.useState('');
   return (
-    // <SafeAreaView>
-    // <View style={styles.searchBarContainer}>
-    //   <Searchbar
-    //     style={styles.searchBar}
-    //     placeholder="Assemble the perfect team"
-    //     onChangeText={setSearchQuery}
-    //     value={searchQuery}
-    //   />
-    // </View>
-    // </SafeAreaView>
     <View style={styles.searchBarContainer}>
-      {/* <Button 
-        
-        title="Search" 
-        onPress={() => 
-          router.push('/search')
-        } 
-        /> */}
         <TouchableOpacity style={styles.searchButton}
           onPress={() => 
             router.push('/search')
@@ -46,14 +29,10 @@ const Header = () => {
         >
           <Icon2 name='search' style={styles.searchButtonIcon}/>
           <Text style={styles.searchButtonText}>Assemble the perfect team</Text>
-
         </TouchableOpacity>
-        {/* <View style={styles.filterButtonContainer}> */}
           <TouchableOpacity style={styles.filterButton}>
           <Icon name="sliders" size={18} />
-          </TouchableOpacity>
-        {/* </View> */}
-        
+        </TouchableOpacity>
     </View>
   )
 }
@@ -247,16 +226,14 @@ const styles = StyleSheet.create({
     paddingBottom: 0, 
     fontSize: 12,
   }, 
+  // Search Bar
   searchBarContainer: {
     marginHorizontal: windowWidth*0.05, 
     paddingVertical: 10, 
     justifyContent: 'center',
     alignItems: 'center',
-    // width: windowWidth*0.9,
-    // backgroundColor: 'green'
   },
   searchButton: {
-    // backgroundColor: '#E8E8E8',
     backgroundColor: 'lightgray',
     paddingVertical: 15,
     paddingHorizontal: 20,
@@ -281,10 +258,6 @@ const styles = StyleSheet.create({
     width: 35, 
     borderRadius: 20, 
     backgroundColor: 'white', 
-    // borderColor: 'black',
-    // position: 'absolute',
-    // borderWidth: 1,
-    // margin: 5,
     position: 'absolute',
     right: 10,
     justifyContent: 'center', 
@@ -294,10 +267,8 @@ const styles = StyleSheet.create({
     width: windowWidth*0.87,
     height: '100%',
     position: 'absolute',
-    // backgroundColor: 'red',
     justifyContent: 'center', 
     alignItems: 'flex-end',
-    
   }
 })
 

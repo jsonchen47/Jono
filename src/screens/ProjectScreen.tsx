@@ -59,7 +59,6 @@ const ProjectScreen = ( {project}: any ) => {
       if (project?.ownerIDs?.[0]) {
         fetchUser(project?.ownerIDs[0]);
       }
-      console.log(project?.Users?.items)
     }, [project?.ownerIDs]);
 
     // Get all the members of each project 

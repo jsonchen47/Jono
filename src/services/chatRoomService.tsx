@@ -13,9 +13,7 @@ const getCommonChatRoomWithUser = async (userID: any) => {
     const castedResponse = response as GraphQLResult<any>; 
     const chatRooms = castedResponse.data?.getUser?.ChatRooms?.items || [];
 
-    // console.log(chatRooms)
     const chatRoom = chatRooms.find((chatRoomItem: any) => {
-        // console.log(chatRoom);
         return chatRoomItem.chatRoom.users.items.some(
             (userItem: any) => userItem.user.id == userID
             );

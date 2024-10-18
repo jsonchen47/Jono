@@ -45,7 +45,6 @@ export default function ProfileScreen() {
         graphqlOperation(getUser, { id: userID })
       );
       const castedUserResult = userResult as GraphQLResult<any>
-      console.log(castedUserResult.data?.getUser)
       setUser(castedUserResult.data?.getUser);
 
       // Fetch the owned projects

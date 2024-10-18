@@ -80,7 +80,6 @@ export default function Chat() {
     );
     setChatRooms(sortedRooms);
     // setLoading(false);
-    console.log(chatRooms)
   };
 
   useEffect(() => {
