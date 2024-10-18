@@ -1,5 +1,5 @@
-import { View, Text, Button, SafeAreaView, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import React from 'react'
+import { View, Text, TextInput, Button, SafeAreaView, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import Icon2 from 'react-native-vector-icons/Ionicons';
@@ -10,20 +10,30 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const search = () => {
+  const [text, setText] = useState('');
   const router = useRouter();
+
   return (
     <SafeAreaView>
       <View style={styles.searchBarContainer}>
         <TouchableOpacity style={styles.searchButton}
         >
           <Icon2 name='search' style={styles.searchButtonIcon}/>
-          <Text style={styles.searchButtonText}>Assemble the perfect team</Text>
+          {/* <Text style={styles.searchButtonText}>Assemble the perfect team</Text> */}
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.backArrowContainer}
           onPress={() => router.back()}
           >
           <Icon3 name='arrowleft' style={styles.backArrow}/>
+          <TextInput 
+            style={styles.searchButtonText}
+            placeholder="Find projects and dreamers"
+            placeholderTextColor="#4C4C4C"
+            autoFocus={true} 
+            value={text}
+            onChangeText={setText}
+          />
         </TouchableOpacity>
 
     </View>
@@ -100,10 +110,12 @@ const styles = StyleSheet.create({
   backArrowContainer: {
     left: 10,
     position: 'absolute',
+    flexDirection: 'row',
   }, 
   backArrow: {
     fontSize: 20,
     paddingLeft: 10,
+    paddingRight: 10, 
   }, 
 })
 
