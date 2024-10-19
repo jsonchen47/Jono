@@ -30,7 +30,7 @@ const newProject = () => {
             {/* Add photo button */}
             <TouchableOpacity style={styles.addPhotoButtonContainer}> 
               <View style={styles.addPhotoButtonContent}>
-                <Icon name='plus' size={20}></Icon>
+                <Icon name='plus' size={17}></Icon>
                 <Text style={styles.addPhotoButtonText}>Add photo</Text>
               </View>
             </TouchableOpacity>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }, 
   addPhotoButtonText: {
-    fontSize: 20, 
+    fontSize: 17, 
     marginLeft: 10
   }, 
   addPhotoButtonIcon:{
