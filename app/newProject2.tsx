@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import { Button, Chip } from 'react-native-paper';
 import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import Icon from 'react-native-vector-icons/Feather';
@@ -23,8 +23,8 @@ const categories = [
 
 const newProject2 = () => {
   const router = useRouter();
+  const [text, setText] = useState<any>('');
   const [chips, setChips] = useState<any>([]);
-  const [inputText, setInputText] = useState<any>('');
   const [selectedValues, setSelectedValues] = useState<any>([]);
 
   const handleSelectItem = (item: any) => {
@@ -37,19 +37,20 @@ const newProject2 = () => {
     }
   };
 
-   // Handle the addition of chips
-   const handleAddChip = () => {
-    if (inputText.trim()) {
-      setChips([...chips, inputText.trim()]);
-      setInputText(''); // Clear the TextInput after adding a chip
+  const handleAddChip = () => {
+    if (text.trim() && !chips.includes(text.trim())) {
+      setChips([...chips, text.trim()]);
+      setText(''); // Clear the text input after adding the chip
     }
   };
 
-  // Handle backspace key press to remove the last chip
+  const handleRemoveChip = (chipToRemove: any) => {
+    setChips(chips.filter((chip: any) => chip !== chipToRemove));
+  };
+
   const handleKeyPress = ({ nativeEvent }: any) => {
-    if (nativeEvent.key === 'Backspace' && inputText === '' && chips.length > 0) {
-      // Remove the last chip if backspace is pressed and input is empty
-      setChips(chips.slice(0, -1));
+    if (nativeEvent.key === 'Enter') {
+      handleAddChip(); // Add the chip when the Enter key is pressed
     }
   };
 
@@ -112,22 +113,30 @@ const newProject2 = () => {
       </View>
             
 
-            {/* Add project title */}
-            <Text style={styles.subtitle}>Project Title</Text>
-            <TextInput
-              style={styles.projectTitleTextInput}
-              placeholder="Give a name to your dream"
-              multiline={true}
+            {/* Add skills */}
+            <Text style={styles.subtitle}>List your skills</Text>
+            <View style={styles.inputContainer}>
+        <ScrollView horizontal contentContainerStyle={styles.chipsContainer}>
+          {chips.map((chip: any, index: any) => (
+            <Chip
+              key={index}
+              style={styles.chip}
+              textStyle={styles.chipText}
+              onClose={() => handleRemoveChip(chip)}
             >
-            </TextInput>
-            {/* Add description */}
-            <Text style={styles.subtitle}>Description</Text>
-            <TextInput
-              style={styles.projectDescriptionTextInput}
-              placeholder="What does your product do, what are you looking for, etc"
-              multiline={true}
-            >
-            </TextInput>
+              {chip}
+            </Chip>
+          ))}
+          
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+            onKeyPress={handleKeyPress} // Handle Enter key press
+            placeholder="Type and press enter..."
+          />
+        </ScrollView>
+      </View>
           </View>
           {/* Bottom content */}
           <View style={styles.contentBottom}>
@@ -269,4 +278,29 @@ const styles = StyleSheet.create({
   chipCloseIcon: {
 
   }, 
+  inputContainer: {
+    flexDirection: 'row',
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+  },
+  // chipsContainer: {
+  //   flexDirection: 'row',
+  //   flexWrap: 'wrap',
+  //   alignItems: 'center',
+  // },
+  // chip: {
+  //   margin: 4,
+  //   backgroundColor: '#e0e0e0',
+  // },
+  chipText: {
+    color: '#000',
+  },
+  input: {
+    minWidth: 100,
+    fontSize: 16,
+    padding: 0,
+    marginLeft: 10,
+  },
 });
