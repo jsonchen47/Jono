@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
 
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -21,10 +20,88 @@ const categories = [
   { label: 'Social Justice', value: '7' },
 ];
 
+interface ChipInputProps {
+  label: any;
+  placeholder: any;
+  chips: any;
+  setChips: any;
+}
+
+const ChipInput: React.FC<ChipInputProps> = ({ label, placeholder, chips, setChips }) => {
+  const [text, setText] = useState<any>('');
+
+  const handleAddChip = () => {
+    if (text.trim() && !chips.includes(text.trim())) {
+      setChips([...chips, text.trim()]);
+      setText(''); // Clear the text input after adding the chip
+    }
+  };
+
+  const handleRemoveChip = (chipToRemove: any) => {
+    setChips(chips.filter((chip:any) => chip !== chipToRemove));
+  };
+
+  const handleKeyPress = ({ nativeEvent }: any) => {
+    // if (nativeEvent.key === 'Backspace' && text === '' && chips.length > 0) {
+    //   // Remove the last chip ONLY if the input is empty and the user presses Backspace
+    //   const updatedChips = chips.slice(0, -1);
+    //   setChips(updatedChips);
+    // }
+    if (nativeEvent.key === 'Backspace' && text === '') {
+      // Ensure there are chips to remove
+      if (chips.length > 0) {
+        // Only remove the last chip if it's safe
+        const updatedChips = chips.slice(0, -1);
+        setChips(updatedChips);
+      }
+    }
+  };
+
+  const handleBlur = () => {
+    if (text.trim()) {
+      handleAddChip(); // Only add the chip when there's text and the input loses focus
+    }
+  };
+
+  return (
+    <View style={styles.skillsBoxContainer}>
+      <View style={styles.skillsBox}>
+        {chips.map((chip: any, index: any) => (
+          <Chip
+            key={index}
+            style={styles.chip}
+            textStyle={styles.chipTextStyle}
+            onClose={() => handleRemoveChip(chip)}
+            closeIcon={() => (
+              <Icon2 name="close" size={18} color="white" /> // Custom "X" icon color
+            )}
+          >
+            {chip}
+          </Chip>
+        ))}
+        <TextInput
+          style={styles.input}
+          value={text}
+          onChangeText={setText}
+          onSubmitEditing={handleAddChip}
+          onKeyPress={handleKeyPress}
+          placeholder={placeholder}
+          blurOnSubmit={false}
+          onBlur={handleBlur}
+        />
+      </View>
+    </View>
+  );
+};
+
+
+
 const newProject2 = () => {
   const router = useRouter();
-  const [text, setText] = useState<any>('');
-  const [chips, setChips] = useState<any>([]);
+  // const [text, setText] = useState<any>('');
+  // const [chips, setChips] = useState<any>([]);
+  const [skills, setSkills] = useState([]);
+  const [resources, setResources] = useState([]);
   const [selectedValues, setSelectedValues] = useState<any>([]);
 
   const handleSelectItem = (item: any) => {
@@ -37,22 +114,27 @@ const newProject2 = () => {
     }
   };
 
-  const handleAddChip = () => {
-    if (text.trim() && !chips.includes(text.trim())) {
-      setChips([...chips, text.trim()]);
-      setText(''); // Clear the text input after adding the chip
-    }
-  };
+  // const handleAddChip = () => {
+  //   if (text.trim() && !chips.includes(text.trim())) {
+  //     setChips([...chips, text.trim()]);
+  //     setText(''); // Clear the text input after adding the chip
+  //   }
+  // };
 
-  const handleRemoveChip = (chipToRemove: any) => {
-    setChips(chips.filter((chip: any) => chip !== chipToRemove));
-  };
+  // const handleRemoveChip = (chipToRemove: any) => {
+  //   setChips(chips.filter((chip: any) => chip !== chipToRemove));
+  // };
 
-  const handleKeyPress = ({ nativeEvent }: any) => {
-    if (nativeEvent.key === 'Enter') {
-      handleAddChip(); // Add the chip when the Enter key is pressed
-    }
-  };
+  // const handleSubmitEditing = () => {
+  //   handleAddChip(); // Add the chip when the user submits (hits "Done" or "Enter")
+  // };
+
+  // const handleKeyPress = ({ nativeEvent }: any) => {
+  //   if (nativeEvent.key === 'Backspace' && text === '' && chips.length > 0) {
+  //     // If the input is empty and backspace is pressed, remove the last chip
+  //     setChips(chips.slice(0, -1));
+  //   }
+  // };
 
   return (
     
@@ -114,15 +196,38 @@ const newProject2 = () => {
             
 
             {/* Add skills */}
-            <Text style={styles.subtitle}>List your skills</Text>
-            <View style={styles.inputContainer}>
-        <ScrollView horizontal contentContainerStyle={styles.chipsContainer}>
+
+            {/* Skills Input */}
+        <Text style={styles.subtitle}>List your skills</Text>
+        <ChipInput
+          label="Skills"
+          placeholder="Enter a skill"
+          chips={skills}
+          setChips={setSkills}
+        />
+
+        {/* Resources Input */}
+        <Text style={styles.subtitle}>List available resources</Text>
+        <ChipInput
+          label="Resources"
+          placeholder="Enter a resource"
+          chips={resources}
+          setChips={setResources}
+        />
+            {/* <Text style={styles.subtitle}>List your skills</Text> */}
+
+
+            {/* <View style={styles.skillsBoxContainer}>
+        <View style={styles.skillsBox}>
           {chips.map((chip: any, index: any) => (
             <Chip
               key={index}
               style={styles.chip}
-              textStyle={styles.chipText}
+              textStyle={styles.chipTextStyle}
               onClose={() => handleRemoveChip(chip)}
+              closeIcon={() => (
+                <Icon2 name="close" size={18} color="white" /> // Custom "X" icon color (Tomato)
+              )}
             >
               {chip}
             </Chip>
@@ -132,11 +237,13 @@ const newProject2 = () => {
             style={styles.input}
             value={text}
             onChangeText={setText}
-            onKeyPress={handleKeyPress} // Handle Enter key press
-            placeholder="Type and press enter..."
+            onSubmitEditing={handleSubmitEditing} // Handle submit action // Handle Enter key press
+            placeholder="Skills"
+            blurOnSubmit={false}
+            onKeyPress={handleKeyPress}
           />
-        </ScrollView>
-      </View>
+        </View>
+      </View> */}
           </View>
           {/* Bottom content */}
           <View style={styles.contentBottom}>
@@ -278,29 +385,29 @@ const styles = StyleSheet.create({
   chipCloseIcon: {
 
   }, 
-  inputContainer: {
+  skillsBoxContainer: {
     flexDirection: 'row',
-    borderColor: 'gray',
-    borderWidth: 1,
+    borderColor: 'black',
+    borderWidth: 2,
     borderRadius: 8,
     padding: 10,
+    marginTop: 10,
   },
-  // chipsContainer: {
-  //   flexDirection: 'row',
-  //   flexWrap: 'wrap',
-  //   alignItems: 'center',
-  // },
+  skillsBox: {
+    // marginTop: 10, 
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
   // chip: {
   //   margin: 4,
   //   backgroundColor: '#e0e0e0',
   // },
-  chipText: {
-    color: '#000',
-  },
   input: {
     minWidth: 100,
     fontSize: 16,
     padding: 0,
     marginLeft: 10,
+    marginTop: 5, 
   },
 });
