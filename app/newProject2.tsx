@@ -21,13 +21,12 @@ const categories = [
 ];
 
 interface ChipInputProps {
-  label: any;
   placeholder: any;
   chips: any;
   setChips: any;
 }
 
-const ChipInput: React.FC<ChipInputProps> = ({ label, placeholder, chips, setChips }) => {
+const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, setChips }) => {
   const [text, setText] = useState<any>('');
   const isFocused = useRef(false); // Use ref to track focus state
 
@@ -118,28 +117,6 @@ const newProject2 = () => {
     }
   };
 
-  // const handleAddChip = () => {
-  //   if (text.trim() && !chips.includes(text.trim())) {
-  //     setChips([...chips, text.trim()]);
-  //     setText(''); // Clear the text input after adding the chip
-  //   }
-  // };
-
-  // const handleRemoveChip = (chipToRemove: any) => {
-  //   setChips(chips.filter((chip: any) => chip !== chipToRemove));
-  // };
-
-  // const handleSubmitEditing = () => {
-  //   handleAddChip(); // Add the chip when the user submits (hits "Done" or "Enter")
-  // };
-
-  // const handleKeyPress = ({ nativeEvent }: any) => {
-  //   if (nativeEvent.key === 'Backspace' && text === '' && chips.length > 0) {
-  //     // If the input is empty and backspace is pressed, remove the last chip
-  //     setChips(chips.slice(0, -1));
-  //   }
-  // };
-
   return (
     
     <SafeAreaView style={styles.container}> 
@@ -197,15 +174,11 @@ const newProject2 = () => {
           );
         })}
       </View>
-            
 
-            {/* Add skills */}
-
-            {/* Skills Input */}
+        {/* Skills Input */}
         <Text style={styles.subtitle}>List your skills</Text>
         <ChipInput
-          label="Skills"
-          placeholder="Enter a skill"
+          placeholder="Skills"
           chips={skills}
           setChips={setSkills}
         />
@@ -213,41 +186,10 @@ const newProject2 = () => {
         {/* Resources Input */}
         <Text style={styles.subtitle}>List available resources</Text>
         <ChipInput
-          label="Resources"
-          placeholder="Enter a resource"
+          placeholder="Resources"
           chips={resources}
           setChips={setResources}
         />
-            {/* <Text style={styles.subtitle}>List your skills</Text> */}
-
-
-            {/* <View style={styles.skillsBoxContainer}>
-        <View style={styles.skillsBox}>
-          {chips.map((chip: any, index: any) => (
-            <Chip
-              key={index}
-              style={styles.chip}
-              textStyle={styles.chipTextStyle}
-              onClose={() => handleRemoveChip(chip)}
-              closeIcon={() => (
-                <Icon2 name="close" size={18} color="white" /> // Custom "X" icon color (Tomato)
-              )}
-            >
-              {chip}
-            </Chip>
-          ))}
-          
-          <TextInput
-            style={styles.input}
-            value={text}
-            onChangeText={setText}
-            onSubmitEditing={handleSubmitEditing} // Handle submit action // Handle Enter key press
-            placeholder="Skills"
-            blurOnSubmit={false}
-            onKeyPress={handleKeyPress}
-          />
-        </View>
-      </View> */}
           </View>
           {/* Bottom content */}
           <View style={styles.contentBottom}>
@@ -403,10 +345,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
   },
-  // chip: {
-  //   margin: 4,
-  //   backgroundColor: '#e0e0e0',
-  // },
   input: {
     minWidth: 100,
     fontSize: 16,

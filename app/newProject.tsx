@@ -3,12 +3,19 @@ import { View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput,
 import { Button } from 'react-native-paper';
 import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import Icon from 'react-native-vector-icons/Feather';
+import {selectPhoto} from '../src/functions/selectPhoto'
+import React, { useState } from 'react';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const newProject = () => {
+  const [photoUri, setPhotoUri] = useState(null);
   const router = useRouter();
+
+  const handlePhotoSelection = (uri: any) => {
+    setPhotoUri(uri);
+  };
 
   return (
     <SafeAreaView style={styles.container}> 
@@ -28,12 +35,16 @@ const newProject = () => {
             {/* Title */}
             <Text style={styles.title}>Show off your new idea</Text>
             {/* Add photo button */}
-            <TouchableOpacity style={styles.addPhotoButtonContainer}> 
+            <TouchableOpacity 
+            style={styles.addPhotoButtonContainer}
+            onPress={() => selectPhoto(handlePhotoSelection)}
+            > 
               <View style={styles.addPhotoButtonContent}>
                 <Icon name='plus' size={17}></Icon>
                 <Text style={styles.addPhotoButtonText}>Add photo</Text>
               </View>
             </TouchableOpacity>
+            {photoUri && <Text>Selected Photo URI: {photoUri}</Text>}
             {/* Add project title */}
             <Text style={styles.projectTitleHeader}>Project Title</Text>
             <TextInput
