@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, Pressable
 import { Button, Chip } from 'react-native-paper';
 import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import Icon from 'react-native-vector-icons/Feather';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
 
@@ -29,6 +29,7 @@ interface ChipInputProps {
 
 const ChipInput: React.FC<ChipInputProps> = ({ label, placeholder, chips, setChips }) => {
   const [text, setText] = useState<any>('');
+  const isFocused = useRef(false); // Use ref to track focus state
 
   const handleAddChip = () => {
     if (text.trim() && !chips.includes(text.trim())) {
@@ -42,25 +43,26 @@ const ChipInput: React.FC<ChipInputProps> = ({ label, placeholder, chips, setChi
   };
 
   const handleKeyPress = ({ nativeEvent }: any) => {
-    // if (nativeEvent.key === 'Backspace' && text === '' && chips.length > 0) {
-    //   // Remove the last chip ONLY if the input is empty and the user presses Backspace
-    //   const updatedChips = chips.slice(0, -1);
-    //   setChips(updatedChips);
-    // }
-    if (nativeEvent.key === 'Backspace' && text === '') {
-      // Ensure there are chips to remove
-      if (chips.length > 0) {
-        // Only remove the last chip if it's safe
-        const updatedChips = chips.slice(0, -1);
-        setChips(updatedChips);
+   
+    setTimeout(() => {
+      if (nativeEvent.key === 'Backspace' && text === '' && isFocused.current) {
+        // Only delete if input is focused and empty
+        console.log(isFocused.current)
+        if (chips.length > 0) {
+          const updatedChips = chips.slice(0, -1); // Remove the last chip
+          setChips(updatedChips);
+        }
       }
-    }
+    }, 50); 
   };
 
+
   const handleBlur = () => {
-    if (text.trim()) {
-      handleAddChip(); // Only add the chip when there's text and the input loses focus
-    }
+    isFocused.current = false; // Update ref immediately when the input loses focus
+  };
+
+  const handleFocus = () => {
+    isFocused.current = true; // Update ref immediately when the input is focused
   };
 
   return (
@@ -88,6 +90,8 @@ const ChipInput: React.FC<ChipInputProps> = ({ label, placeholder, chips, setChi
           placeholder={placeholder}
           blurOnSubmit={false}
           onBlur={handleBlur}
+          onFocus={handleFocus}
+
         />
       </View>
     </View>
