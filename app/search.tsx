@@ -32,14 +32,32 @@ const Search = () => {
 
   const fetchSearchResults = async (searchTerm: any) => {
     try {
-      const formattedSearchTerm = `*${searchTerm}*`
-      const searchResult = await API.graphql(graphqlOperation(searchProjects, {
-        filter: {
-          title: {
-            wildcard: formattedSearchTerm
-          }
-        }
+      // const formattedSearchTerm = `*${searchTerm}*`
+      // const searchResult = await API.graphql(graphqlOperation(searchProjects, {
+      //   filter: {
+      //     // title: {
+      //     //   wildcard: formattedSearchTerm
+      //     // }
+      //     or: [
+      //       { title: { wildcard: formattedSearchTerm } },
+      //       { description: { wildcard: formattedSearchTerm } },
+      //     ],
+      //   }
+      // }));
+      const searchWords = searchTerm.split(' ').map((word: any) => `*${word}*`);
+      const searchFilters = searchWords.map((word: any) => ({
+        or: [
+          { title: { wildcard: word } },
+          { description: { wildcard: word } },
+        ],
       }));
+
+    const searchResult = await API.graphql(graphqlOperation(searchProjects, {
+      filter: {
+        or: searchFilters,
+      },
+    }));
+
       
       const castedSearchResult = searchResult as GraphQLResult<any>
       console.log(castedSearchResult)
