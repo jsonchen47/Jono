@@ -25,6 +25,8 @@ const SmallProjectCard = ({project}: any) => {
     };
 
     useEffect(() => {
+      // console.log(project?.title)
+      // console.log(project?.description)
       if (project.ownerIDs?.[0]) {
         fetchUser(project.ownerIDs[0]);
       }
@@ -55,7 +57,7 @@ const SmallProjectCard = ({project}: any) => {
               style={styles.browseProjectsLinearGradient}
               >
               <View style={styles.browseProjectsTextContainer}>
-                <Text style={styles.browseProjectsTitle}>{project.title}</Text>
+                <Text style={styles.browseProjectsTitle}>{project?.title}</Text>
                 <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
               </View>
             </LinearGradient>

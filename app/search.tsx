@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TextInput, SafeAreaView, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, FlatList, ScrollView, TextInput, SafeAreaView, StyleSheet, Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon2 from 'react-native-vector-icons/Ionicons';
@@ -77,7 +77,9 @@ const Search = () => {
           />
         </View>
       </View>
-      <ResultsList results={results} isSubmitted={isSubmitted} />
+      <ScrollView>
+        <ResultsList results={results} isSubmitted={isSubmitted} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -126,6 +128,6 @@ const styles = StyleSheet.create({
   },
   resultsContainer: {
     // justifyContent: 'center', 
-    paddingTop: 10, 
+    paddingTop: windowWidth*0.05
   }
 });
