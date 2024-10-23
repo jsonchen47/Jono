@@ -31,7 +31,10 @@ const newProject = () => {
         {/* Screen Content */}
         <View style={styles.contentContainer}>
           {/* Top Content */}
-          <ScrollView style={styles.contentTop}>
+          <ScrollView 
+            style={styles.contentTop}
+            showsVerticalScrollIndicator={false}
+            >
             {/* Title */}
             <Text style={styles.title}>Show off your new idea</Text>
             {/* Add photo button */}
@@ -133,7 +136,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     justifyContent: 'center', 
     alignItems: 'center', 
-    padding: 20,
+    paddingTop: 20,
   },
   divider: {
     height: 1,            

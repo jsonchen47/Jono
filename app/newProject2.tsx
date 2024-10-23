@@ -117,6 +117,9 @@ const newProject2 = () => {
     }
   };
 
+   // Function to handle the selected photo's URI
+   
+
   return (
     
     <SafeAreaView style={styles.container}> 
