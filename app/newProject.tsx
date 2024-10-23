@@ -37,7 +37,7 @@ const newProject = () => {
             {/* Add photo button */}
             <TouchableOpacity 
             style={styles.addPhotoButtonContainer}
-            // onPress={() => selectPhoto(handlePhotoSelection)}
+            onPress={() => selectPhoto(handlePhotoSelection)}
             > 
               <View style={styles.addPhotoButtonContent}>
                 <Icon name='plus' size={17}></Icon>
