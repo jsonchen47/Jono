@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput, TouchableOpacity } from 'react-native';
+import { ScrollView, Image, View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import Icon from 'react-native-vector-icons/Feather';
@@ -31,7 +31,7 @@ const newProject = () => {
         {/* Screen Content */}
         <View style={styles.contentContainer}>
           {/* Top Content */}
-          <View style={styles.contentTop}>
+          <ScrollView style={styles.contentTop}>
             {/* Title */}
             <Text style={styles.title}>Show off your new idea</Text>
             {/* Add photo button */}
@@ -44,7 +44,19 @@ const newProject = () => {
                 <Text style={styles.addPhotoButtonText}>Add photo</Text>
               </View>
             </TouchableOpacity>
-            {photoUri && <Text>Selected Photo URI: {photoUri}</Text>}
+            <View style={styles.imageContainer}>
+              {photoUri && (
+                <>
+                {/* <Text>Selected Photo URI: {photoUri}</Text> */}
+                <Image 
+                    source={{ uri: photoUri }} 
+                    style={styles.image} 
+                />
+                </>
+              )}
+            </View>
+            
+            
             {/* Add project title */}
             <Text style={styles.projectTitleHeader}>Project Title</Text>
             <TextInput
@@ -61,7 +73,9 @@ const newProject = () => {
               multiline={true}
             >
             </TextInput>
-          </View>
+          </ScrollView>
+          {/* Divider */}
+          <View style={styles.divider}></View>
           {/* Bottom content */}
           <View style={styles.contentBottom}>
             <Button 
@@ -107,8 +121,19 @@ const styles = StyleSheet.create({
   },
   contentTop: {
     width: '80%', 
-    justifyContent: 'flex-start'
+    // justifyContent: 'flex-start'
 
+  },
+  image: {
+    // padding: 20, 
+    width: windowWidth*0.7, 
+    height: windowHeight*0.2
+  }, 
+  imageContainer: {
+    width: '100%', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    padding: 20,
   },
   divider: {
     height: 1,            
@@ -167,6 +192,7 @@ const styles = StyleSheet.create({
     width: '80%',
     justifyContent: 'flex-end',
     // backgroundColor: 'red'
+    paddingTop: 20,
   }, 
   nextButton: {
     borderRadius: 5, 
