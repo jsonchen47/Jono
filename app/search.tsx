@@ -6,28 +6,29 @@ import Icon3 from 'react-native-vector-icons/AntDesign';
 import { API, graphqlOperation } from 'aws-amplify';
 import { searchProjects } from '@/src/graphql/queries';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import ProjectsGrid from '@/src/components/ProjectsGrid';
 
 
 const windowWidth = Dimensions.get('window').width;
 
-const ResultsList = ({ results }: any) => {
+const ResultsList = ({ results, isSubmitted }: any) => {
   return (
-    <FlatList
-      data={results}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View>
-          <Text>{item.name}</Text>
-          <Text>{item.description}</Text> {/* Display additional info if needed */}
-        </View>
-      )}
-    />
+
+    <View style={styles.resultsContainer}>
+    {isSubmitted && results.length === 0 ? (
+      <Text style={styles.noResultsText}>No results found</Text> // Message when no results are found
+    ) : (
+      <ProjectsGrid projects = {results}/>
+    )}
+  </View>
+    
   );
 };
 
 const Search = () => {
   const [text, setText] = useState('');
   const [results, setResults] = useState([]); 
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const fetchSearchResults = async (searchTerm: any) => {
     try {
@@ -35,8 +36,7 @@ const Search = () => {
       const searchResult = await API.graphql(graphqlOperation(searchProjects, {
         filter: {
           title: {
-            // wildcard: formattedSearchTerm
-            match: searchTerm
+            wildcard: formattedSearchTerm
           }
         }
       }));
@@ -46,6 +46,7 @@ const Search = () => {
       const items = castedSearchResult?.data?.searchProjects?.items || [] // grab the search results
       console.log(items)
       setResults(items); // store the results in state
+      setIsSubmitted(true); 
     } catch (error) {
       console.error('Error searching: ', error);
     }
@@ -76,7 +77,7 @@ const Search = () => {
           />
         </View>
       </View>
-      <ResultsList results={results} />
+      <ResultsList results={results} isSubmitted={isSubmitted} />
     </SafeAreaView>
   );
 };
@@ -120,4 +121,11 @@ const styles = StyleSheet.create({
     color: 'black',
     paddingLeft: 5,
   },
+  noResultsText: {
+    marginLeft: windowWidth * 0.05,
+  },
+  resultsContainer: {
+    // justifyContent: 'center', 
+    paddingTop: 10, 
+  }
 });
