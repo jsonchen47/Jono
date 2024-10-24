@@ -9,7 +9,7 @@ export default function TabLayout() {
 
   const router = useRouter(); 
   const handleCenterTabPress = () => {
-    router.push('/newProject'); // Replace '/newScreen' with the path to your desired screen
+    router.push('/newProject/newProject1'); // Replace '/newScreen' with the path to your desired screen
     console.log('tabs button pressed')
   };
 

@@ -3,9 +3,10 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, Pressable
 import { Button, Chip } from 'react-native-paper';
 import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import Icon from 'react-native-vector-icons/Feather';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
+import { FormContext } from './_layout';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -100,20 +101,25 @@ const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, setChips }) =
 
 
 const newProject2 = () => {
+  const { formData, setFormData } = useContext(FormContext);
   const router = useRouter();
   // const [text, setText] = useState<any>('');
   // const [chips, setChips] = useState<any>([]);
   const [skills, setSkills] = useState([]);
   const [resources, setResources] = useState([]);
-  const [selectedValues, setSelectedValues] = useState<any>([]);
+  // const [selectedCategories, setSelectedCategories] = useState<any>([]);
 
-  const handleSelectItem = (item: any) => {
-    if (selectedValues.includes(item.value)) {
+  const handleSelectCategory = (item: any) => {
+    // if (selectedCategories.includes(item.value)) {
+    if (formData.categories.includes(item.value)) {
       // Deselect the item if already selected
-      setSelectedValues(selectedValues.filter((value: any) => value !== item.value));
+      // setSelectedCategories(selectedCategories.filter((value: any) => value !== item.value));
+      setFormData({ ...formData, categories: formData.categories.filter((value: any) => value !== item.value)})
+
     } else {
-      // Add the item to selectedValues
-      setSelectedValues([...selectedValues, item.value]);
+      // Add the item to selectedCategories
+      // setSelectedCategories([...selectedCategories, item.value]);
+      setFormData({ ...formData, categories: [...formData.categories, item.value] })
     }
   };
 
@@ -137,7 +143,9 @@ const newProject2 = () => {
         {/* Screen Content */}
         <View style={styles.contentContainer}>
           {/* Top Content */}
-          <View style={styles.contentTop}>
+          <ScrollView 
+          style={styles.contentTop}
+          showsVerticalScrollIndicator={false}>
             {/* Title */}
             <Text style={styles.title}>Add a little spice</Text>
             {/* Choose a category */}
@@ -151,14 +159,15 @@ const newProject2 = () => {
         labelField="label"
         valueField="value"
         placeholder="Select items"
-        value={selectedValues}
-        onChange={handleSelectItem}
+        value={formData.categories}
+        onChange={handleSelectCategory}
         // Customize this if you need a different dropdown behavior
       />
 
       {/* Displaying Selected Chips */}
       <View style={styles.chipsContainer}>
-        {selectedValues.map((value: any) => {
+        {/* {selectedCategories.map((value: any) => { */}
+        {formData.categories.map((value: any) => {
           const item = categories.find((d) => d.value === value);
           return (
             <Chip
@@ -170,7 +179,10 @@ const newProject2 = () => {
               closeIcon={() => (
                 <Icon2 name="close" size={18} color="white" /> // Custom "X" icon color (Tomato)
               )}
-              onClose={() => setSelectedValues(selectedValues.filter((v: any) => v !== value))}
+              onClose={() => 
+                // setSelectedCategories(selectedCategories.filter((v: any) => v !== value))
+                setFormData({ ...formData, categories: formData.categories.filter((v: any) => v !== value) })
+              }
             >
               {item?.label}
             </Chip>
@@ -193,7 +205,9 @@ const newProject2 = () => {
           chips={resources}
           setChips={setResources}
         />
-          </View>
+          </ScrollView>
+          {/* Divider */}
+          <View style={styles.divider}></View>
           {/* Bottom content */}
           <View style={styles.contentBottom}>
             <Button 
@@ -239,7 +253,7 @@ const styles = StyleSheet.create({
   },
   contentTop: {
     width: '80%', 
-    justifyContent: 'flex-start'
+    // justifyContent: 'flex-start'
 
   },
   divider: {
@@ -298,6 +312,7 @@ const styles = StyleSheet.create({
   contentBottom: {
     width: '80%',
     justifyContent: 'flex-end',
+    paddingTop: 20,
     // backgroundColor: 'red'
   }, 
   nextButton: {

@@ -3,13 +3,13 @@ import { ScrollView, Image, View, Text, StyleSheet, SafeAreaView, Dimensions, Pr
 import { Button } from 'react-native-paper';
 import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import Icon from 'react-native-vector-icons/Feather';
-import {selectPhoto} from '../src/functions/selectPhoto'
+import {selectPhoto} from '../../src/functions/selectPhoto'
 import React, { useState } from 'react';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const newProject = () => {
+const newProject1 = () => {
   const [photoUri, setPhotoUri] = useState(null);
   const router = useRouter();
 
@@ -85,7 +85,7 @@ const newProject = () => {
               style={styles.nextButton} 
               labelStyle={styles.nextButtonText}
               mode="contained"  
-              onPress={() => router.push('/newProject2')}>
+              onPress={() => router.push('/newProject/newProject2')}>
               Next
             </Button>
           </View>
@@ -95,7 +95,7 @@ const newProject = () => {
   )
 }
 
-export default newProject
+export default newProject1
 
 
 const styles = StyleSheet.create({
@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
   contentTop: {
     width: '80%', 
     // justifyContent: 'flex-start'
-
   },
   image: {
     // padding: 20, 

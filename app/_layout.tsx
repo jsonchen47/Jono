@@ -97,6 +97,7 @@ useEffect(() => {
                 }}
               />
               <Stack.Screen
+              // name="newProject/newProject1"
               name="newProject"
               options={{
                 animation: 'slide_from_bottom', 
@@ -104,15 +105,15 @@ useEffect(() => {
                 headerShown: false,
               }}
               />
-              <Stack.Screen
-              name="newProject2"
+              {/* <Stack.Screen
+              name="newProject/newProject2"
               options={{
                 headerShown: false,
                 // animation: 'slide_from_bottom', 
                 // presentation: 'modal'
                 
               }}
-              />
+              /> */}
               <Stack.Screen
               name="search"
               options={{
