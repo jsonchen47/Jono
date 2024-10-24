@@ -56,7 +56,6 @@ const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, onChangeChips
     }, 50); 
   };
 
-
   const handleBlur = () => {
     isFocused.current = false; // Update ref immediately when the input loses focus
   };

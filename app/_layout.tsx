@@ -16,6 +16,7 @@ import {getUser} from '../src/graphql/queries'
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import {createUser} from '../src/graphql/mutations';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 
 Amplify.configure({ ...awsconfig, Analytics: {disabled: true}});
 

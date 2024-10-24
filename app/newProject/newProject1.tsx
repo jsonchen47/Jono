@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import {selectPhoto} from '../../src/functions/selectPhoto'
 import React, { useState, useContext } from 'react';
 import { FormContext } from './_layout';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -17,7 +19,32 @@ const newProject1 = () => {
 
   const handlePhotoSelection = (uri: any) => {
     // setPhotoUri(uri);
-    setFormData({ ...formData, imageUri: uri })
+    // setFormData({ ...formData, imageUri: uri })
+    try {
+      // Step 1: Extract the filename from the URI
+      const fileName = `${uuidv4()}.jpg`; // Get the last part of the URI as the filename
+      console.log(fileName)
+  
+      // // Step 2: Fetch the image as a blob
+      // const response = await fetch(uri);
+      // const blob = await response.blob();
+  
+      // // Step 3: Upload the image to S3
+      // const s3Response = await Storage.put(fileName, blob, {
+      //   contentType: 'image/jpeg', // Set the appropriate content type based on your image type
+      // });
+  
+      // // Step 4: Get the image URL from the response
+      // const imageUrl = s3Response.key; // You can also get the full URL using Storage.get(s3Response.key)
+  
+      // // Step 5: Update formData with the image URL
+      // setFormData({ ...formData, imageUri: imageUrl });
+  
+      // console.log('Image uploaded successfully:', imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+
   };
 
   const handleSubmitTitle = () => {
