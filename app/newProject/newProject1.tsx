@@ -4,18 +4,25 @@ import { Button } from 'react-native-paper';
 import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import Icon from 'react-native-vector-icons/Feather';
 import {selectPhoto} from '../../src/functions/selectPhoto'
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { FormContext } from './_layout';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const newProject1 = () => {
-  const [photoUri, setPhotoUri] = useState(null);
+  const { formData, setFormData } = useContext(FormContext);
+  // const [photoUri, setPhotoUri] = useState(null);
   const router = useRouter();
 
   const handlePhotoSelection = (uri: any) => {
-    setPhotoUri(uri);
+    // setPhotoUri(uri);
+    setFormData({ ...formData, imageUri: uri })
   };
+
+  const handleSubmitTitle = () => {
+    
+  }
 
   return (
     <SafeAreaView style={styles.container}> 
@@ -48,11 +55,13 @@ const newProject1 = () => {
               </View>
             </TouchableOpacity>
             <View style={styles.imageContainer}>
-              {photoUri && (
+              {/* {photoUri && ( */}
+              {formData.imageUri && (
                 <>
                 {/* <Text>Selected Photo URI: {photoUri}</Text> */}
                 <Image 
-                    source={{ uri: photoUri }} 
+                    // source={{ uri: photoUri }} 
+                    source={{ uri: formData.imageUri }} 
                     style={styles.image} 
                 />
                 </>
@@ -66,6 +75,11 @@ const newProject1 = () => {
               style={styles.projectTitleTextInput}
               placeholder="Give a name to your dream"
               multiline={true}
+              value={formData.title}
+              onChangeText={(text) => setFormData((prevData) => ({
+                ...prevData,
+                title: text, // Update title while typing
+              }))}
             >
             </TextInput>
             {/* Add description */}
@@ -74,6 +88,10 @@ const newProject1 = () => {
               style={styles.projectDescriptionTextInput}
               placeholder="What does your product do, what are you looking for, etc"
               multiline={true}
+              onChangeText={(text) => setFormData((prevData) => ({
+                ...prevData,
+                description: text, // Update title while typing
+              }))}
             >
             </TextInput>
           </ScrollView>
@@ -85,7 +103,13 @@ const newProject1 = () => {
               style={styles.nextButton} 
               labelStyle={styles.nextButtonText}
               mode="contained"  
-              onPress={() => router.push('/newProject/newProject2')}>
+              onPress={() => {
+                router.push('/newProject/newProject2')
+                console.log(formData)
+              }
+              }
+              
+              >
               Next
             </Button>
           </View>

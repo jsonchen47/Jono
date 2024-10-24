@@ -1,26 +1,3 @@
-// import {launchImageLibrary, ImageLibraryOptions} from 'react-native-image-picker';
-
-// // Function to select photo
-// export const selectPhoto = (callback: any) => {
-//   const options: ImageLibraryOptions = {
-//     mediaType: 'photo', // Use the string literals directly
-//     quality: 1,
-//   };
-
-//   launchImageLibrary(options, (response) => {
-//     if (response.didCancel) {
-//       console.log('User cancelled image picker');
-//     } else if (response.errorMessage) {
-//       console.log('ImagePicker Error: ', response.errorMessage);
-//     } else {
-//       const source = response?.assets?.[0].uri;
-//       console.log('Image URI: ', source);
-//       callback(source);
-//     }
-//   });
-// };
-
-
 import * as ImagePicker from 'expo-image-picker';
 
 export const selectPhoto = async (callback: any) => {

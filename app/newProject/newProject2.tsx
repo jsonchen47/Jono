@@ -24,22 +24,22 @@ const categories = [
 interface ChipInputProps {
   placeholder: any;
   chips: any;
-  setChips: any;
+  onChangeChips: any;
 }
 
-const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, setChips }) => {
+const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, onChangeChips }) => {
   const [text, setText] = useState<any>('');
   const isFocused = useRef(false); // Use ref to track focus state
 
   const handleAddChip = () => {
     if (text.trim() && !chips.includes(text.trim())) {
-      setChips([...chips, text.trim()]);
+      onChangeChips([...chips, text.trim()]);
       setText(''); // Clear the text input after adding the chip
     }
   };
 
   const handleRemoveChip = (chipToRemove: any) => {
-    setChips(chips.filter((chip:any) => chip !== chipToRemove));
+    onChangeChips(chips.filter((chip:any) => chip !== chipToRemove));
   };
 
   const handleKeyPress = ({ nativeEvent }: any) => {
@@ -50,7 +50,7 @@ const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, setChips }) =
         console.log(isFocused.current)
         if (chips.length > 0) {
           const updatedChips = chips.slice(0, -1); // Remove the last chip
-          setChips(updatedChips);
+          onChangeChips(updatedChips);
         }
       }
     }, 50); 
@@ -105,26 +105,40 @@ const newProject2 = () => {
   const router = useRouter();
   // const [text, setText] = useState<any>('');
   // const [chips, setChips] = useState<any>([]);
-  const [skills, setSkills] = useState([]);
-  const [resources, setResources] = useState([]);
-  // const [selectedCategories, setSelectedCategories] = useState<any>([]);
+  // const [skills, setSkills] = useState([]);
+  // const [resources, setResources] = useState([]);
 
   const handleSelectCategory = (item: any) => {
+    const selectedLabel = item.label;
     // if (selectedCategories.includes(item.value)) {
-    if (formData.categories.includes(item.value)) {
+    if (formData.categories.includes(selectedLabel)) {
       // Deselect the item if already selected
-      // setSelectedCategories(selectedCategories.filter((value: any) => value !== item.value));
-      setFormData({ ...formData, categories: formData.categories.filter((value: any) => value !== item.value)})
+      // setFormData({ ...formData, categories: formData.categories.filter((value: any) => value !== item.value)})
+      setFormData({ ...formData, categories: formData.categories.filter((label: any) => label !== selectedLabel) });
 
     } else {
       // Add the item to selectedCategories
-      // setSelectedCategories([...selectedCategories, item.value]);
-      setFormData({ ...formData, categories: [...formData.categories, item.value] })
+      // setFormData({ ...formData, categories: [...formData.categories, item.value] })
+      setFormData({ ...formData, categories: [...formData.categories, selectedLabel] });
+
     }
   };
 
-   // Function to handle the selected photo's URI
-   
+   // Handler for updating skills in formData
+   const handleSkillsChange = (updatedSkills: any) => {
+    setFormData({
+      ...formData,
+      skills: updatedSkills,
+    });
+  };
+
+  // Handler for updating resources in formData
+  const handleResourcesChange = (updatedResources: any) => {
+    setFormData({
+      ...formData,
+      resources: updatedResources,
+    });
+  };
 
   return (
     
@@ -152,39 +166,38 @@ const newProject2 = () => {
             <Text style={styles.subtitle}>Choose your categories</Text>
 
             <Dropdown
-        style={styles.dropdown}
-        // placeholderStyle={styles.placeholderStyle}
-        // selectedTextStyle={styles.selectedTextStyle}
-        data={categories}
-        labelField="label"
-        valueField="value"
-        placeholder="Select items"
-        value={formData.categories}
-        onChange={handleSelectCategory}
-        // Customize this if you need a different dropdown behavior
-      />
+              style={styles.dropdown}
+              data={categories}
+              labelField="label"
+              valueField="value"
+              placeholder="Select items"
+              value={formData.categories}
+              onChange={handleSelectCategory}
+            />
 
       {/* Displaying Selected Chips */}
       <View style={styles.chipsContainer}>
         {/* {selectedCategories.map((value: any) => { */}
-        {formData.categories.map((value: any) => {
-          const item = categories.find((d) => d.value === value);
+        {formData.categories.map((label: any, index: any) => {
+          // const item = categories.find((d) => d.value === value);
           return (
             <Chip
               style={styles.chip}
               theme={{ colors: { primary: '#white' } }}
               textStyle={styles.chipTextStyle}
-              key={value}
+              key={index}
               // style={styles.chip}
               closeIcon={() => (
                 <Icon2 name="close" size={18} color="white" /> // Custom "X" icon color (Tomato)
               )}
               onClose={() => 
                 // setSelectedCategories(selectedCategories.filter((v: any) => v !== value))
-                setFormData({ ...formData, categories: formData.categories.filter((v: any) => v !== value) })
+                // setFormData({ ...formData, categories: formData.categories.filter((v: any) => v !== value) })
+                setFormData({ ...formData, categories: formData.categories.filter((l: any) => l !== label) })
+
               }
             >
-              {item?.label}
+              {label}
             </Chip>
           );
         })}
@@ -194,16 +207,16 @@ const newProject2 = () => {
         <Text style={styles.subtitle}>List your skills</Text>
         <ChipInput
           placeholder="Skills"
-          chips={skills}
-          setChips={setSkills}
+          chips={formData.skills}
+          onChangeChips={handleSkillsChange}
         />
 
         {/* Resources Input */}
         <Text style={styles.subtitle}>List available resources</Text>
         <ChipInput
           placeholder="Resources"
-          chips={resources}
-          setChips={setResources}
+          chips={formData.resources}
+          onChangeChips={handleResourcesChange}
         />
           </ScrollView>
           {/* Divider */}
