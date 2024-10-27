@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 // Define the shape of the form data
 interface FormData {
     imageUri: string,
+    localImageUri: string,
     title: string,
     description: string,
     categories: string[],
@@ -16,6 +17,7 @@ interface FormData {
   const defaultFormData: { formData: FormData; setFormData: React.Dispatch<React.SetStateAction<FormData>> } = {
     formData: { 
         imageUri: '',
+        localImageUri: '', 
         title: '',
         description: '',
         categories: [],
@@ -31,6 +33,7 @@ interface FormData {
 export default function FormLayout() {
   const [formData, setFormData] = useState<FormData>({
     imageUri: '',
+    localImageUri: '', 
     title: '',
     description: '',
     categories: [],

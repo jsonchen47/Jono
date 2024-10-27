@@ -8,6 +8,15 @@ import React, { useState, useContext } from 'react';
 import { FormContext } from './_layout';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import { Storage } from 'aws-amplify';
+import config from "../../src/aws-exports"
+
+Storage.configure({
+  region: config.aws_user_files_s3_bucket_region,
+  bucket: config.aws_user_files_s3_bucket,
+  identityPoolId: config.aws_user_pools_id,
+  level: "public",
+});
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -17,34 +26,9 @@ const newProject1 = () => {
   // const [photoUri, setPhotoUri] = useState(null);
   const router = useRouter();
 
-  const handlePhotoSelection = (uri: any) => {
+  const handlePhotoSelection = async (uri: any) => {
     // setPhotoUri(uri);
-    // setFormData({ ...formData, imageUri: uri })
-    try {
-      // Step 1: Extract the filename from the URI
-      const fileName = `${uuidv4()}.jpg`; // Get the last part of the URI as the filename
-      console.log(fileName)
-  
-      // // Step 2: Fetch the image as a blob
-      // const response = await fetch(uri);
-      // const blob = await response.blob();
-  
-      // // Step 3: Upload the image to S3
-      // const s3Response = await Storage.put(fileName, blob, {
-      //   contentType: 'image/jpeg', // Set the appropriate content type based on your image type
-      // });
-  
-      // // Step 4: Get the image URL from the response
-      // const imageUrl = s3Response.key; // You can also get the full URL using Storage.get(s3Response.key)
-  
-      // // Step 5: Update formData with the image URL
-      // setFormData({ ...formData, imageUri: imageUrl });
-  
-      // console.log('Image uploaded successfully:', imageUrl);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-
+    setFormData({ ...formData, localImageUri: uri })
   };
 
   const handleSubmitTitle = () => {
@@ -83,12 +67,12 @@ const newProject1 = () => {
             </TouchableOpacity>
             <View style={styles.imageContainer}>
               {/* {photoUri && ( */}
-              {formData.imageUri && (
+              {formData.localImageUri && (
                 <>
-                {/* <Text>Selected Photo URI: {photoUri}</Text> */}
+                {/* <Text>Selected Photo URI: {formData.localImageUri}</Text> */}
                 <Image 
                     // source={{ uri: photoUri }} 
-                    source={{ uri: formData.imageUri }} 
+                    source={{ uri: formData.localImageUri }} 
                     style={styles.image} 
                 />
                 </>

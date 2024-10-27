@@ -17,6 +17,9 @@
       },
       "api": {
         "Jono": {}
+      },
+      "storage": {
+        "projectImages": {}
       }
     }
   }
