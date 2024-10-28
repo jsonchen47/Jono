@@ -7,6 +7,7 @@ import React, { useState, useRef, useContext } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
 import { FormContext } from './_layout';
+import { uploadNewProject } from "../../src/functions/uploadNewProject"
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -146,6 +147,7 @@ const newProject2 = () => {
         {/* Custom Header */}
         <View style={styles.header}>
           <Pressable onPress={() => {
+            uploadNewProject(formData, setFormData)
             router.back()
             router.back()
             }}>
