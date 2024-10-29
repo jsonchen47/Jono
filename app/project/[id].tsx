@@ -26,7 +26,7 @@ const ProjectDetails = () => {
   }, [projectID]);
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <ProjectScreen project = { project }  />
     </View>
   )

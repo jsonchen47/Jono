@@ -1,4 +1,4 @@
-import { View, Text, Image, Dimensions, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, Image, Dimensions, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -6,7 +6,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser } from '../graphql/queries'
 import Emoji from 'react-native-emoji';
-import { Chip } from 'react-native-paper';
+import { Chip, Button } from 'react-native-paper';
 
 const formatDate = (dateString: any) => {
     const date = new Date(dateString);
@@ -79,72 +79,110 @@ const ProjectScreen = ( {project}: any ) => {
       }, [project]); // Run effect when the project changes
 
     return (
-        <ScrollView>
-            <Image style={styles.projectImage} source={{uri: project?.image}}/>
-            {/* Details */}
-            <View style={styles.detailsContainer}>
-                <Text style = {styles.title} >{project?.title}</Text>
-                <Text style = {styles.description}>{project?.description}</Text>
-                <View style={styles.divider} />
-                {/* Author details */}
-                <View style={styles.authorSection}>
-                    <Image style={styles.authorImage} source={{uri: user?.image}}/>
-                    <View style={styles.authorDetailsContainer}>
-                        <Text style={styles.authorName}>Authored by {user?.name}</Text>
-                        <Text style={styles.dateAuthored}>{formatDate(project?.createdAt)} </Text>
-                    </View>
-                </View>
-                <View style={styles.divider} /> 
-                {/* Skills */}
-                <View style={styles.skillsAndResourcesTopPadding}></View>
-                <View style={styles.skillsAndResourcesTitleContainer}>
-                    <Emoji name="rocket" style={styles.emoji} />
-                    <Text style={styles.subtitle}> Skills</Text>
-                </View>
-                <View style={styles.skillsAndResourcesChipsContainer}>
-                    {project?.skills?.map((skill: any, index: any) => (
-                        <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{skill}</Chip>
-                    ))}
-                </View>
-                {/* Resources */}
-                <View style={styles.skillsAndResourcesTitleContainer}>
-                    <Emoji name="briefcase" style={styles.emoji} />
-                    <Text style={styles.subtitle}> Resources</Text>
-                </View>
-                <View style={styles.skillsAndResourcesChipsContainer}>
-                    {project?.resources?.map((resource: any, index: any) => (
-                        <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{resource}</Chip>
-                    ))}
-                </View>
-                <View style={styles.divider} /> 
-                {/* Members */}
-                <Text style={styles.membersSubtitle}>Members</Text>
-                <View style={styles.membersList}>
-                    {users?.map((member: any, index: any) => (
-                        <View key={index} style={styles.authorSection}>
-                            <Image style={styles.authorImage} source={{uri: member?.image}}/>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.contentContainer}>
+                <ScrollView style={styles.scrollView}>
+                    <Image style={styles.projectImage} source={{uri: project?.image}}/>
+                    {/* Details */}
+                    <View style={styles.detailsContainer}>
+                        <Text style = {styles.title} >{project?.title}</Text>
+                        <Text style = {styles.description}>{project?.description}</Text>
+                        <View style={styles.divider} />
+                        {/* Author details */}
+                        <View style={styles.authorSection}>
+                            <Image style={styles.authorImage} source={{uri: user?.image}}/>
                             <View style={styles.authorDetailsContainer}>
-                                <Text style={styles.authorName}>{member?.name}</Text>
-                                <Text style={styles.dateAuthored}>Joined {formatDate(joinedDates?.[index])} </Text>
+                                <Text style={styles.authorName}>Authored by {user?.name}</Text>
+                                <Text style={styles.dateAuthored}>{formatDate(project?.createdAt)} </Text>
                             </View>
                         </View>
-                    ))
-                    }
+                        <View style={styles.divider} /> 
+                        {/* Skills */}
+                        <View style={styles.skillsAndResourcesTopPadding}></View>
+                        <View style={styles.skillsAndResourcesTitleContainer}>
+                            <Emoji name="rocket" style={styles.emoji} />
+                            <Text style={styles.subtitle}> Skills</Text>
+                        </View>
+                        <View style={styles.skillsAndResourcesChipsContainer}>
+                            {project?.skills?.map((skill: any, index: any) => (
+                                <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{skill}</Chip>
+                            ))}
+                        </View>
+                        {/* Resources */}
+                        <View style={styles.skillsAndResourcesTitleContainer}>
+                            <Emoji name="briefcase" style={styles.emoji} />
+                            <Text style={styles.subtitle}> Resources</Text>
+                        </View>
+                        <View style={styles.skillsAndResourcesChipsContainer}>
+                            {project?.resources?.map((resource: any, index: any) => (
+                                <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{resource}</Chip>
+                            ))}
+                        </View>
+                        <View style={styles.divider} /> 
+                        {/* Members */}
+                        <Text style={styles.membersSubtitle}>Members</Text>
+                        <View style={styles.membersList}>
+                            {users?.map((member: any, index: any) => (
+                                <View key={index} style={styles.authorSection}>
+                                    <Image style={styles.authorImage} source={{uri: member?.image}}/>
+                                    <View style={styles.authorDetailsContainer}>
+                                        <Text style={styles.authorName}>{member?.name}</Text>
+                                        <Text style={styles.dateAuthored}>Joined {formatDate(joinedDates?.[index])} </Text>
+                                    </View>
+                                </View>
+                            ))
+                            }
+                        </View>
+                    </View>
+                </ScrollView>
+            
+                {/* Divider */}
+                <View style={styles.bottomDivider}></View>
+                {/* Bottom content */}
+                <View style={styles.contentBottom}>
+                    <View style={styles.membersCountTextContainer}>
+                        <Text style={styles.membersCountText}>{users.length}</Text>
+                        <Text style={styles.membersText}>Members</Text>
+                    </View>
+                    <Button 
+                        style={styles.joinButton} 
+                        labelStyle={styles.joinButtonText}
+                        mode="contained"  
+                        onPress={() => console.log('pressed')}>
+                        Request to Join
+                    </Button>
                 </View>
             </View>
-           
-        </ScrollView>
+        </SafeAreaView>
     )
 }
 
 export default ProjectScreen
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        // width: '100%',
+    },
+    contentContainer: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'column',
+    },
+    scrollView: {
+        // flex: 1,
+        // width: '100%',
+    },
     // Project details
     detailsContainer: {
         padding: 15, 
+        // flex: 1,
+        // width: '100%',
     },
     projectImage: {
+        // flex: 1,
         width: windowWidth, 
         height: windowHeight/3
     }, 
@@ -226,5 +264,43 @@ const styles = StyleSheet.create({
     membersList: {
         paddingHorizontal: 10,
         paddingBottom: 20,
-    }
+    }, 
+    bottomDivider: {
+        height: 1,            // Thickness of the line
+        width: '100%',        // Full width of the screen
+        backgroundColor: '#D3D3D3', // Light gray color
+    },
+    // Bottom content
+    contentBottom: {
+        width: '80%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: 20,
+        flexDirection: 'row'
+    }, 
+    membersCountTextContainer: {
+        justifyContent: 'center', 
+        alignItems: 'center',
+        // flex: 1, 
+        paddingLeft: 15,
+        // backgroundColor: 'red'
+    }, 
+    membersCountText: {
+        color: 'black',
+        fontSize: 22,
+        fontWeight: '500'
+    }, 
+    membersText: {
+        color: 'gray'
+    }, 
+    joinButton: {
+        borderRadius: 10, 
+        alignSelf: 'flex-end',
+        backgroundColor: '#4CDFFF'
+    },
+    joinButtonText: {
+        fontSize: 17, 
+        color: 'black',
+        padding: 5,
+    },
 })

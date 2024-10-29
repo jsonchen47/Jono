@@ -7,16 +7,6 @@ import {selectPhoto} from '../../src/functions/selectPhoto'
 import React, { useState, useContext } from 'react';
 import { FormContext } from './_layout';
 import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
-import { Storage } from 'aws-amplify';
-import config from "../../src/aws-exports"
-
-Storage.configure({
-  region: config.aws_user_files_s3_bucket_region,
-  bucket: config.aws_user_files_s3_bucket,
-  identityPoolId: config.aws_user_pools_id,
-  level: "public",
-});
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
