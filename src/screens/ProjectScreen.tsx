@@ -118,6 +118,36 @@ const ProjectScreen = ( {project}: any ) => {
                         >
                         <Icon name="chevron-back" style={styles.icon}/>
                     </TouchableOpacity>
+                    {/* Right side buttons */}
+                    <View style={styles.rightSideButtonsContainer}>
+                        {/* Share button */}
+                        <TouchableOpacity 
+                            style={styles.headerButtonRight}
+                            onPress={() => {
+                                console.log('pressed heart')
+                            }}
+                            >
+                            <Icon name="ellipsis-horizontal" style={styles.icon}/>
+                        </TouchableOpacity>
+                        {/* Share button */}
+                        <TouchableOpacity 
+                            style={styles.headerButtonRight}
+                            onPress={() => {
+                                console.log('pressed heart')
+                            }}
+                            >
+                            <Icon name="share-outline" style={styles.icon}/>
+                        </TouchableOpacity>
+                        {/* Heart button */}
+                        <TouchableOpacity 
+                            style={styles.headerButtonRight}
+                            onPress={() => {
+                                console.log('pressed heart')
+                            }}
+                            >
+                            <Icon name="heart-outline" style={styles.icon}/>
+                        </TouchableOpacity>
+                    </View>
                 </SafeAreaView>
             </View>
             <View style={styles.contentContainer}>
@@ -250,8 +280,19 @@ const styles = StyleSheet.create({
         width: 30,                    // Circle diameter
         height: 30,                   // Circle diameter
         borderRadius: 15, 
-        marginRight: 20, 
         marginLeft: 20, 
+        marginBottom: 10, 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        // opacity: 100
+    }, 
+    headerButtonRight: {
+        // position: 'absolute',
+        backgroundColor: 'white', 
+        width: 30,                    // Circle diameter
+        height: 30,                   // Circle diameter
+        borderRadius: 15, 
+        marginLeft: 15, 
         marginBottom: 10, 
         alignItems: 'center', 
         justifyContent: 'center',
@@ -262,11 +303,18 @@ const styles = StyleSheet.create({
     }, 
     headerOverlaySafeAreaView: {
         backgroundColor: 'transparent', 
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     }, 
     icon: {
         fontSize: 20, 
+        justifyContent: 'center', 
+        alignItems: 'center',
     },
-
+    rightSideButtonsContainer: {
+        flexDirection: 'row',
+        marginRight: 20, 
+    },
     // Project details
     detailsContainer: {
         padding: 15, 
