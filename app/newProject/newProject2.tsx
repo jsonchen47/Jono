@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import { Button, Chip } from 'react-native-paper';
-import { blue } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import Icon from 'react-native-vector-icons/Feather';
 import React, { useState, useRef, useContext } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';

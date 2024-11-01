@@ -86,6 +86,7 @@ useEffect(() => {
                <Stack.Screen
               name="project/[id]"
               options={{
+                headerShown: false,
                 title: 'Project',
                 headerStyle: {
                   backgroundColor: 'white',
@@ -96,9 +97,7 @@ useEffect(() => {
               />
               <Stack.Screen
                 name="groupInfoScreen"
-                options={{
-                  // Hide the header for this route
-                  // headerShown: false,
+                options={{                  
                   title: 'Group Info',
                   headerStyle: {
                     backgroundColor: 'white',

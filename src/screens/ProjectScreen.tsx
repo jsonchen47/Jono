@@ -1,4 +1,4 @@
-import { View, Text, Image, Dimensions, StyleSheet, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, Image, Dimensions, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -7,6 +7,8 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser } from '../graphql/queries'
 import Emoji from 'react-native-emoji';
 import { Chip, Button } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 
 const formatDate = (dateString: any) => {
     const date = new Date(dateString);
@@ -41,11 +43,13 @@ const fetchUsers = async (userIds: any) => {
   };
 
 const ProjectScreen = ( {project}: any ) => {
+    const router = useRouter(); 
     const [user, setUser] = useState<any>(null);
     const [members, setMembers] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState<any>([]);
     const [joinedDates, setJoinedDates] = useState<any>([]);
+    const [headerOpacity, setHeaderOpacity] = useState(0);
 
     const fetchUser = async (ownerID: any) => {
         const result = await API.graphql(
@@ -60,6 +64,13 @@ const ProjectScreen = ( {project}: any ) => {
         fetchUser(project?.ownerIDs[0]);
       }
     }, [project?.ownerIDs]);
+
+     // Scroll event handler
+     const handleScroll = (event: any) => {
+        const scrollY = event.nativeEvent.contentOffset.y;
+        const newOpacity = Math.min(1, scrollY / 100); // Adjust divisor for faster/slower fade
+        setHeaderOpacity(newOpacity); // Update header opacity
+    };
 
     // Get all the members of each project 
     useEffect(() => {
@@ -79,10 +90,41 @@ const ProjectScreen = ( {project}: any ) => {
       }, [project]); // Run effect when the project changes
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+            {/* HEADER */}
+            {/* Header background that changes opacity */}
+            <View style={[styles.headerBackground, { opacity: headerOpacity }]}>
+                <SafeAreaView style={styles.headerBackgroundSafeAreaView}>
+                    {/* Back button icon */}
+                    <TouchableOpacity 
+                        style={styles.headerButton}
+                        onPress={() => {
+                            router.back()
+                        }}
+                        >
+                        <Icon name="chevron-back" style={styles.icon}/>
+                    </TouchableOpacity>
+                </SafeAreaView>
+            </View>
+            {/* Header overlay with buttons */}
+            <View style={styles.headerOverlay}>
+                <SafeAreaView style={styles.headerOverlaySafeAreaView}>
+                    {/* Back button icon */}
+                    <TouchableOpacity 
+                        style={styles.headerButton}
+                        onPress={() => {
+                            router.back()
+                        }}
+                        >
+                        <Icon name="chevron-back" style={styles.icon}/>
+                    </TouchableOpacity>
+                </SafeAreaView>
+            </View>
             <View style={styles.contentContainer}>
-                <ScrollView style={styles.scrollView}>
-                    <Image style={styles.projectImage} source={{uri: project?.image}}/>
+                <ScrollView style={styles.scrollView} onScroll={handleScroll} scrollEventThrottle={16}>
+                    <Image style={styles.projectImage} source={{uri: project?.image}}>
+                        
+                    </Image>
                     {/* Details */}
                     <View style={styles.detailsContainer}>
                         <Text style = {styles.title} >{project?.title}</Text>
@@ -139,27 +181,30 @@ const ProjectScreen = ( {project}: any ) => {
                 {/* Divider */}
                 <View style={styles.bottomDivider}></View>
                 {/* Bottom content */}
-                <View style={styles.contentBottom}>
-                    <View style={styles.membersCountTextContainer}>
-                        <Text style={styles.membersCountText}>{users.length}</Text>
-                        <Text style={styles.membersText}>Members</Text>
+                <SafeAreaView>
+                    <View style={styles.contentBottom}>
+                        <View style={styles.membersCountTextContainer}>
+                            <Text style={styles.membersCountText}>{users.length}</Text>
+                            <Text style={styles.membersText}>Members</Text>
+                        </View>
+                        <Button 
+                            style={styles.joinButton} 
+                            labelStyle={styles.joinButtonText}
+                            mode="contained"  
+                            onPress={() => console.log('pressed')}>
+                            Request to Join
+                        </Button>
                     </View>
-                    <Button 
-                        style={styles.joinButton} 
-                        labelStyle={styles.joinButtonText}
-                        mode="contained"  
-                        onPress={() => console.log('pressed')}>
-                        Request to Join
-                    </Button>
-                </View>
+                </SafeAreaView>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
 export default ProjectScreen
 
 const styles = StyleSheet.create({
+    // Main view
     container: {
         flex: 1,
         // width: '100%',
@@ -175,6 +220,53 @@ const styles = StyleSheet.create({
         // flex: 1,
         // width: '100%',
     },
+    // Header 
+    headerContainer: {
+        
+       
+    },
+    headerBackground: {   
+        // flex: 1,
+        position: 'absolute',
+        backgroundColor: 'green',
+        top: 0, 
+        left: 0,
+        right: 0,
+        height: 60,
+        zIndex: 1,
+    },
+    headerOverlay: {
+        position: 'absolute',
+        backgroundColor: 'transparent',
+        top: 0, 
+        left: 0,
+        right: 0,
+        height: 60,
+        zIndex: 2,
+    },
+    headerButton: {
+        // position: 'absolute',
+        backgroundColor: 'white', 
+        width: 30,                    // Circle diameter
+        height: 30,                   // Circle diameter
+        borderRadius: 15, 
+        marginRight: 20, 
+        marginLeft: 20, 
+        marginBottom: 10, 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        // opacity: 100
+    }, 
+    headerBackgroundSafeAreaView: {
+        backgroundColor: 'white', 
+    }, 
+    headerOverlaySafeAreaView: {
+        backgroundColor: 'transparent', 
+    }, 
+    icon: {
+        fontSize: 20, 
+    },
+
     // Project details
     detailsContainer: {
         padding: 15, 
