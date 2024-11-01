@@ -133,7 +133,8 @@ const ProjectScreen = ( {project}: any ) => {
                         <TouchableOpacity 
                             style={styles.headerButtonRight}
                             onPress={() => {
-                                console.log('pressed heart')
+                                console.log('pressed ellipsis')
+                                router.push('/optionsScreen')
                             }}
                             >
                             <Icon name="ellipsis-horizontal" style={styles.icon}/>
@@ -142,7 +143,7 @@ const ProjectScreen = ( {project}: any ) => {
                         <TouchableOpacity 
                             style={styles.headerButtonRight}
                             onPress={() => {
-                                console.log('pressed heart')
+                                console.log('pressed share')
                             }}
                             >
                             <Icon name="share-outline" style={styles.icon}/>

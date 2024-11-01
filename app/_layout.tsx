@@ -103,7 +103,6 @@ useEffect(() => {
                     backgroundColor: 'white',
                   },
                   headerTintColor: 'black',
-                  // tabBarVisible: false // Hide tab bar for Project page
                 }}
               />
               <Stack.Screen
@@ -115,15 +114,6 @@ useEffect(() => {
                 headerShown: false,
               }}
               />
-              {/* <Stack.Screen
-              name="newProject/newProject2"
-              options={{
-                headerShown: false,
-                // animation: 'slide_from_bottom', 
-                // presentation: 'modal'
-                
-              }}
-              /> */}
               <Stack.Screen
               name="search"
               options={{
@@ -131,10 +121,23 @@ useEffect(() => {
                 animation: 'fade', // Enables the fade animation
               }}
               />
+              <Stack.Screen
+              name="optionsScreen"
+              options={{
+                presentation: 'modal',
+                title: 'Options',
+              }}
+              />
+               <Stack.Screen
+              name="deleteProjectConfirmationScreen"
+              options={{
+                headerShown: false,
+                presentation: 'transparentModal',
+                title: 'Options',
+                animation: 'fade',
+              }}
+              />
             </Stack>
-            {/* <View>
-              <Text>hi</Text>
-            </View> */}
         </PaperProvider>
       </ApplicationProvider>
      </GestureHandlerRootView>
