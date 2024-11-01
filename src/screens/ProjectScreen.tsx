@@ -2,7 +2,7 @@ import { View, Text, Image, Dimensions, StyleSheet, ScrollView, SafeAreaView, To
 import React, { useEffect, useState } from 'react';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser } from '../graphql/queries'
 import Emoji from 'react-native-emoji';
@@ -50,6 +50,7 @@ const ProjectScreen = ( {project}: any ) => {
     const [users, setUsers] = useState<any>([]);
     const [joinedDates, setJoinedDates] = useState<any>([]);
     const [headerOpacity, setHeaderOpacity] = useState(0);
+    const [authUserID, setAuthUserID] = useState<any>(null); 
 
     const fetchUser = async (ownerID: any) => {
         const result = await API.graphql(
@@ -58,6 +59,13 @@ const ProjectScreen = ( {project}: any ) => {
         const castedResult = result as GraphQLResult<any>
         setUser(castedResult.data?.getUser);
     };
+
+    const fetchAuthUserID = async () => { 
+        // Fetch the Auth user and set it 
+        const authUser = await Auth.currentAuthenticatedUser();
+        const userID = authUser.attributes.sub
+        setAuthUserID(userID)
+    }
 
     useEffect(() => {
       if (project?.ownerIDs?.[0]) {
@@ -74,6 +82,7 @@ const ProjectScreen = ( {project}: any ) => {
 
     // Get all the members of each project 
     useEffect(() => {
+        fetchAuthUserID()
         const loadUsers = async () => {
           setLoading(true); // Set loading to true while fetching users
           const userIds = project?.Users?.items.map((item: any) => item.userId) || []; // Extract user IDs
@@ -217,13 +226,31 @@ const ProjectScreen = ( {project}: any ) => {
                             <Text style={styles.membersCountText}>{users.length}</Text>
                             <Text style={styles.membersText}>Members</Text>
                         </View>
-                        <Button 
+                        {/* <Button 
                             style={styles.joinButton} 
                             labelStyle={styles.joinButtonText}
                             mode="contained"  
                             onPress={() => console.log('pressed')}>
                             Request to Join
-                        </Button>
+                        </Button> */}
+                        {/* Conditional Button Rendering */}
+        {users.some((user: any) => user.id === authUserID) ? (
+            <Button 
+                style={styles.joinButton} 
+                labelStyle={styles.joinButtonText}
+                mode="contained"  
+                onPress={() => console.log('Manage/Edit pressed')}>
+                Manage and Edit
+            </Button>
+        ) : (
+            <Button 
+                style={styles.joinButton} 
+                labelStyle={styles.joinButtonText}
+                mode="contained"  
+                onPress={() => console.log({authUserID})}>
+                Request to Join
+            </Button>
+        )}
                     </View>
                 </SafeAreaView>
             </View>
