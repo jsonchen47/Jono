@@ -1,7 +1,5 @@
 import { View, Text, Image, Dimensions, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser } from '../graphql/queries'
@@ -9,6 +7,9 @@ import Emoji from 'react-native-emoji';
 import { Chip, Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const formatDate = (dateString: any) => {
     const date = new Date(dateString);
@@ -134,7 +135,10 @@ const ProjectScreen = ( {project}: any ) => {
                             style={styles.headerButtonRight}
                             onPress={() => {
                                 console.log('pressed ellipsis')
-                                router.push('/optionsScreen')
+                                router.push({
+                                    pathname: '/optionsScreen',
+                                    params: { projectId: project.id },
+                                })
                             }}
                             >
                             <Icon name="ellipsis-horizontal" style={styles.icon}/>

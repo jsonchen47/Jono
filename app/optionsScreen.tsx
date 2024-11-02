@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useRouter } from 'expo-router';
-
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const optionsScreen = () => {
   const router = useRouter(); 
+  const { projectId } = useLocalSearchParams();
 
   return (
     <View style={styles.container}>
@@ -18,7 +18,10 @@ const optionsScreen = () => {
           onPress={() => {
             router.back(); // First go back to the previous screen
             setTimeout(() => {
-              router.push('/deleteProjectConfirmationScreen'); // Then push to the new screen after a short delay
+              router.push({
+                pathname: '/deleteProjectConfirmationScreen',
+                params: { projectId: projectId },
+              }); // Then push to the new screen after a short delay
             }, 10); // A short delay to ensure `back()` completes first
           }}
         >
