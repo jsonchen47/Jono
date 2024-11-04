@@ -102,6 +102,7 @@ const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, onChangeChips
 const newProject2 = () => {
   const { formData, setFormData } = useContext(FormContext);
   const router = useRouter();
+  const [progress, setProgress] = useState(0);
   // const [text, setText] = useState<any>('');
   // const [chips, setChips] = useState<any>([]);
   // const [skills, setSkills] = useState([]);
@@ -146,7 +147,7 @@ const newProject2 = () => {
         {/* Custom Header */}
         <View style={styles.header}>
           <Pressable onPress={() => {
-            uploadNewProject(formData, setFormData)
+            uploadNewProject(formData, setFormData, setProgress)
             router.back()
             router.back()
             }}>

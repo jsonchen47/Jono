@@ -40,10 +40,14 @@ const deleteProjectById = async (projectId: any) => {
   try {
     // Delete the image
     const project = await fetchProject(projectId); // Fetch project to get the image URL
-    const imageKey = project.image.split('jonoa48aa29b26b146de8c05923d59de88cec85f4-dev.s3.us-west-1.amazonaws.com/')[1]; // Extract key after ".com/"
+    const imageKey = project.image.split('jonoa48aa29b26b146de8c05923d59de88cec85f4-dev.s3.us-west-1.amazonaws.com/public/')[1]; // Extract key after ".com/"
+
+    console.log(`Attempting to delete image with key: ${imageKey}`);
 
     if (imageKey) {
-      await Storage.remove(imageKey); // Delete image from S3
+      // await Storage.remove(imageKey); // Delete image from S3
+      const deleteResult = await Storage.remove(imageKey, { level: 'public' }); // Delete image from S3
+      console.log('Image deletion result:', deleteResult); // Log result of deletion
       console.log('Image deleted from S3 successfully');
     }
 

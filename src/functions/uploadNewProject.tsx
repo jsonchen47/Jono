@@ -25,9 +25,11 @@ function getCurrentDateString() {
 }
 
 
-export async function uploadNewProject(formData: any, setFormData: any) {
+export async function uploadNewProject(formData: any, setFormData: any, setProgress: any) {
   
   try {
+    setProgress(0.1); // Initial progress
+
     // GET THE CURRENT USER 
     const currentUser = await Auth.currentAuthenticatedUser();
     const userId = currentUser.attributes.sub; // User's ID
@@ -38,9 +40,10 @@ export async function uploadNewProject(formData: any, setFormData: any) {
 
     // Step 1: Set the filename to the project title and date     
     const unfilteredTitle = formData.title // Get the title from the form data
-    const filteredTitle = unfilteredTitle.replace(/ /g, "_").replace(/[^a-zA-Z0-9]/g, "") // Remove any alphanumeric characters and replace spaces with _
+    const filteredTitle = unfilteredTitle.replace(/[^a-zA-Z0-9 ]/g, "").replace(/ /g, "_"); // Remove any non-alphanumeric characters other than spaces. Then replace spaces with underscores. 
     const dateString = getCurrentDateString(); // Get the formatted date
-    const fileName = `${filteredTitle}_${dateString}.jpg`; // Concatenate title and date
+    const randomString = `${uuidv4()}`
+    const fileName = `${filteredTitle}_${dateString}_${randomString}.jpg`; // Concatenate title and date
 
     console.log('filename ', fileName)
 
@@ -51,11 +54,15 @@ export async function uploadNewProject(formData: any, setFormData: any) {
     // // Step 3: Upload the image to S3
     const s3Response = await Storage.put(fileName, blob, {
       contentType: 'image/jpeg', // Set the appropriate content type based on your image type
-      level: 'public'
+      level: 'public', 
+      progressCallback(progress) {
+        setProgress(progress.loaded / progress.total); // Update progress
+      },
     });
 
     // // Step 4: Get the image URL as the public url available based on the filename
     const imageUrl = 'https://jonoa48aa29b26b146de8c05923d59de88cec85f4-dev.s3.us-west-1.amazonaws.com/public/' + fileName
+    setProgress(0.8); // Indicate progress near completion
 
     // // Step 5: Update formData with the image URL
     setFormData({ ...formData, imageUri: imageUrl });
@@ -94,9 +101,9 @@ export async function uploadNewProject(formData: any, setFormData: any) {
 
     console.log('Project and user relationship created successfully.');
 
+    setProgress(1); // Complete
   } catch (error) {
     console.error('Error uploading projject:', error);
   }
-
   
 }

@@ -21,6 +21,8 @@ import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
+import { ProgressProvider, useProgress } from '@/src/contexts/ProgressContext';
+import { ProgressBar } from 'react-native-paper';
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -29,6 +31,16 @@ configureReanimatedLogger({
 });
 
 Amplify.configure({ ...awsconfig, Analytics: {disabled: true}});
+
+function ProgressBarComponent() {
+  const { isVisible, progress } = useProgress();
+
+  if (!isVisible) return null; // Don't render if not visible
+
+  return (
+    <ProgressBar progress={progress} color="blue" style={styles.progressBar} />
+  );
+}
 
 function RootLayout() {
 
@@ -70,79 +82,117 @@ useEffect(() => {
 }, []);
 
   return (
-    <GestureHandlerRootView>
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <PaperProvider>
-            <Stack>
-              <Stack.Screen 
-                name="(tabs)" 
+    <ProgressProvider>
+      <GestureHandlerRootView>
+        <ApplicationProvider {...eva} theme={eva.light}>
+          <PaperProvider>
+            <View style={styles.container}>
+            {/* Global Progress Bar */}
+            
+           
+              <Stack>
+                <Stack.Screen 
+                  name="(tabs)" 
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                name="chatScreen/[id]"
+                />
+                <Stack.Screen
+                name="project/[id]"
                 options={{
                   headerShown: false,
-                }}
-              />
-              <Stack.Screen
-              name="chatScreen/[id]"
-              />
-               <Stack.Screen
-              name="project/[id]"
-              options={{
-                headerShown: false,
-                title: 'Project',
-                headerStyle: {
-                  backgroundColor: 'white',
-                },
-                headerTintColor: 'black',
-      
-              }}
-              />
-              <Stack.Screen
-                name="groupInfoScreen"
-                options={{                  
-                  title: 'Group Info',
+                  title: 'Project',
                   headerStyle: {
                     backgroundColor: 'white',
                   },
                   headerTintColor: 'black',
+        
                 }}
-              />
-              <Stack.Screen
-              // name="newProject/newProject1"
-              name="newProject"
-              options={{
-                animation: 'slide_from_bottom', 
-                // presentation: 'modal'
-                headerShown: false,
-              }}
-              />
-              <Stack.Screen
-              name="search"
-              options={{
-                headerShown: false,
-                animation: 'fade', // Enables the fade animation
-              }}
-              />
-              <Stack.Screen
-              name="optionsScreen"
-              options={{
-                presentation: 'modal',
-                title: 'Options',
-              }}
-              />
-               <Stack.Screen
-              name="deleteProjectConfirmationScreen"
-              options={{
-                headerShown: false,
-                presentation: 'transparentModal',
-                title: 'Options',
-                animation: 'fade',
-              }}
-              />
-            </Stack>
-        </PaperProvider>
-      </ApplicationProvider>
-     </GestureHandlerRootView>
+                />
+                <Stack.Screen
+                  name="groupInfoScreen"
+                  options={{                  
+                    title: 'Group Info',
+                    headerStyle: {
+                      backgroundColor: 'white',
+                    },
+                    headerTintColor: 'black',
+                  }}
+                />
+                <Stack.Screen
+                // name="newProject/newProject1"
+                name="newProject"
+                options={{
+                  animation: 'slide_from_bottom', 
+                  // presentation: 'modal'
+                  headerShown: false,
+                }}
+                />
+                <Stack.Screen
+                name="search"
+                options={{
+                  headerShown: false,
+                  animation: 'fade', // Enables the fade animation
+                }}
+                />
+                <Stack.Screen
+                name="optionsScreen"
+                options={{
+                  presentation: 'modal',
+                  title: 'Options',
+                }}
+                />
+                <Stack.Screen
+                name="deleteProjectConfirmationScreen"
+                options={{
+                  headerShown: false,
+                  presentation: 'transparentModal',
+                  title: 'Options',
+                  animation: 'fade',
+                }}
+                />
+                <Stack.Screen
+                name="progressBar"
+                options={{
+                  headerShown: false,
+                  presentation: 'modal',
+                  title: 'Options',
+                  animation: 'fade',
+                }}
+                />
+              </Stack>
+              {/* <SafeAreaView> */}
+              <ProgressBarComponent />
+            {/* </SafeAreaView> */}
+              </View>
+          </PaperProvider>
+        </ApplicationProvider>
+      </GestureHandlerRootView>
+     </ProgressProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    
+  },
+  progressBar: {
+    height: 4,
+    position: 'absolute', // Position the progress bar absolutely
+    bottom: 100, // Adjust based on your bottom tab navigator height
+    left: 0,
+    right: 0,
+    zIndex: 10,
+  },
+  stackContainer: {
+    flex: 1, // This will ensure the stack takes the remaining space
+    marginBottom: 300, // Adjust based on the height of your tab navigator
+  },
+});
 
 export default withAuthenticator(RootLayout); 
 

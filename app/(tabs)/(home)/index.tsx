@@ -12,32 +12,56 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 import { useRouter } from 'expo-router';
-
+import { ProgressProvider, useProgress } from '@/src/contexts/ProgressContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Header = () => {
-  const router = useRouter(); 
-  const [searchQuery, setSearchQuery] = React.useState('');
-  return (
-    <View style={styles.searchBarContainer}>
-        <TouchableOpacity style={styles.searchButton}
-          onPress={() => 
-            router.push('/search')
-          } 
-        >
-          <Icon2 name='search' style={styles.searchButtonIcon}/>
-          <Text style={styles.searchButtonText}>Assemble the perfect team</Text>
-        </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}>
-          <Icon name="sliders" size={18} />
-        </TouchableOpacity>
-    </View>
-  )
-}
-
 const index = () => {
+  const { hideProgressBar, showProgressBar, updateProgress } = useProgress();
+
+  const Header = () => {
+    const router = useRouter(); 
+    const [searchQuery, setSearchQuery] = React.useState('');
+    return (
+      <View style={styles.searchBarContainer}>
+          <TouchableOpacity style={styles.searchButton}
+            onPress={() => 
+              router.push('/search')
+            } 
+          >
+            <Icon2 name='search' style={styles.searchButtonIcon}/>
+            <Text style={styles.searchButtonText}>Assemble the perfect team</Text>
+          </TouchableOpacity>
+            <TouchableOpacity 
+            style={styles.filterButton}
+            onPress={() => 
+              // router.push('/progressBar')
+              handleSubmit()
+            } 
+            >
+            <Icon name="sliders" size={18} />
+          </TouchableOpacity>
+      </View>
+    )
+  }
+  
+  const handleSubmit = async () => {
+    
+    
+    showProgressBar();
+    updateProgress(0); // Reset progress
+  
+    // Simulate an async operation
+    for (let i = 0; i <= 100; i += 10) {
+      updateProgress(i / 100); // Update progress value
+      await new Promise((resolve) => setTimeout(resolve, 100)); // Simulate delay
+    }
+  
+    // Hide progress bar after operation
+    hideProgressBar();
+    // Dismiss form or navigate as needed
+  };
 
   const [projects, setProjects] = useState<any>([]);
   const [loading, setLoading] = useState<any>(true);
