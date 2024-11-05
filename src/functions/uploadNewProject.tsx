@@ -7,6 +7,7 @@ import config from "../../src/aws-exports"
 import { Auth } from 'aws-amplify'; // Import Auth module
 import { createUserProject } from '../graphql/mutations';
 
+
 Storage.configure({
   region: config.aws_user_files_s3_bucket_region,
   bucket: config.aws_user_files_s3_bucket,
@@ -25,14 +26,24 @@ function getCurrentDateString() {
 }
 
 
-export async function uploadNewProject(formData: any, setFormData: any, setProgress: any) {
+export async function uploadNewProject(
+  formData: any,
+  setFormData: any,
+  showProgressBar: () => void,
+  hideProgressBar: () => void,
+  updateProgress: (progress: number) => void,
+  isVisible: boolean, 
+  setProjectId: any,
+  ) {
   
   try {
-    setProgress(0.1); // Initial progress
-
+    showProgressBar();
+    updateProgress(0); // Reset progress
+    
     // GET THE CURRENT USER 
     const currentUser = await Auth.currentAuthenticatedUser();
     const userId = currentUser.attributes.sub; // User's ID
+    updateProgress(0.1); // Initial progress
 
     // UPLOAD THE IMAGE TO S3
     // Get the URI
@@ -46,23 +57,26 @@ export async function uploadNewProject(formData: any, setFormData: any, setProgr
     const fileName = `${filteredTitle}_${dateString}_${randomString}.jpg`; // Concatenate title and date
 
     console.log('filename ', fileName)
+    updateProgress(0.3); // Initial progress
 
     // // Step 2: Fetch the image as a blob
     const response = await fetch(uri);
     const blob = await response.blob();
+
+    updateProgress(0.5); 
 
     // // Step 3: Upload the image to S3
     const s3Response = await Storage.put(fileName, blob, {
       contentType: 'image/jpeg', // Set the appropriate content type based on your image type
       level: 'public', 
       progressCallback(progress) {
-        setProgress(progress.loaded / progress.total); // Update progress
+        updateProgress(progress.loaded / progress.total); // Update progress
       },
     });
 
     // // Step 4: Get the image URL as the public url available based on the filename
     const imageUrl = 'https://jonoa48aa29b26b146de8c05923d59de88cec85f4-dev.s3.us-west-1.amazonaws.com/public/' + fileName
-    setProgress(0.8); // Indicate progress near completion
+    updateProgress(0.8); // Indicate progress near completion
 
     // // Step 5: Update formData with the image URL
     setFormData({ ...formData, imageUri: imageUrl });
@@ -100,8 +114,13 @@ export async function uploadNewProject(formData: any, setFormData: any, setProgr
     );
 
     console.log('Project and user relationship created successfully.');
+    
+    // Send project id to the progress context so it can be displayed on the snackbar
+    setProjectId(projectId)
 
-    setProgress(1); // Complete
+    updateProgress(1); // Complete
+    await new Promise((resolve) => setTimeout(resolve, 100)); // Simulate delay
+    hideProgressBar()
   } catch (error) {
     console.error('Error uploading projject:', error);
   }

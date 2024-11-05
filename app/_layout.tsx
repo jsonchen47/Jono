@@ -11,7 +11,7 @@ import { Amplify, Auth, API, graphqlOperation } from "aws-amplify";
 import {withAuthenticator} from "aws-amplify-react-native"; 
 import awsconfig from "../src/aws-exports";
 // import {Picker} from 'react-native';
-import { useEffect } from 'react'; 
+import { useEffect, useState } from 'react'; 
 import {getUser} from '../src/graphql/queries'
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import {createUser} from '../src/graphql/mutations';
@@ -22,8 +22,9 @@ import {
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
 import { ProgressProvider, useProgress } from '@/src/contexts/ProgressContext';
-import { ProgressBar } from 'react-native-paper';
+import { ProgressBar, Snackbar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Octicons'; // Import vector icons
+import { useRouter } from 'expo-router';
 
 
 // This is the default configuration
@@ -34,8 +35,20 @@ configureReanimatedLogger({
 
 Amplify.configure({ ...awsconfig, Analytics: {disabled: true}});
 
-function ProgressBarComponent() {
+// Define the prop types for ProgressBarComponent
+interface ProgressBarComponentProps {
+  snackbarVisible: boolean;
+  setSnackbarVisible: React.Dispatch<React.SetStateAction<boolean>>; // Type for state updater function
+}
+
+function ProgressBarComponent({ snackbarVisible, setSnackbarVisible }: ProgressBarComponentProps) {
   const { isVisible, progress, hideProgressBar } = useProgress();
+
+  useEffect(() => {
+    if (progress >= 1) { // Adjust based on your actual completion condition
+      setSnackbarVisible(true); // Show Snackbar
+    }
+  }, [progress]);
 
   if (!isVisible) return null; // Don't render if not visible
 
@@ -59,44 +72,78 @@ function ProgressBarComponent() {
   );
 }
 
+function SnackBarComponent({ snackbarVisible, setSnackbarVisible }: ProgressBarComponentProps) {
+  const router = useRouter();
+  const { isVisible, progress, hideProgressBar, projectId } = useProgress();
+  return (
+    <Snackbar
+        style={styles.snackBar}
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)} // Dismiss Snackbar
+        duration={5000} // Optional duration for the Snackbar
+        action={{
+          label: 'View',
+          onPress: () => {
+            // Do something
+            if (projectId) {
+              // Navigate only if projectId is valid
+              router.push({
+                pathname: '/project/[id]',
+                params: { id: projectId, projectID: projectId },
+              });
+            } else {
+              // Handle the case when projectId is null (e.g., show an alert or log an error)
+              console.error("Project ID is null, cannot navigate.");
+              // Optionally, show an alert or feedback to the user
+            }
+          },
+        }}
+      >
+        Project uploaded successfully!
+    </Snackbar>
+  )
+}
+
+
 function RootLayout() {
+  const [snackbarVisible, setSnackbarVisible] = useState<any>(false); // Snackbar visibility state
 
-useEffect(() => {
-  
-  const syncUser = async () => {
-    // get Auth user
-    const authUser = await Auth.currentAuthenticatedUser({
-      bypassCache: true,
-    });
+  useEffect(() => {
+    
+    const syncUser = async () => {
+      // get Auth user
+      const authUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      });
 
-    // query the database using Auth user id (sub)
-    const result = await API.graphql(
-      graphqlOperation(getUser, { id: authUser.attributes.sub })
-    );
+      // query the database using Auth user id (sub)
+      const result = await API.graphql(
+        graphqlOperation(getUser, { id: authUser.attributes.sub })
+      );
 
-    // Type assertion to treat result as GraphQLResult
-    const userData = result as GraphQLResult<any>;
+      // Type assertion to treat result as GraphQLResult
+      const userData = result as GraphQLResult<any>;
 
-    // If userData exists and has data, then exit the syncUser and don't add new user
-    if (userData.data && userData.data.getUser) {
-      return;
-    }
+      // If userData exists and has data, then exit the syncUser and don't add new user
+      if (userData.data && userData.data.getUser) {
+        return;
+      }
 
-    // Create a new user
-    const newUser = {
-      id: authUser.attributes.sub, 
-      name: authUser.attributes.phone_number, 
-      status: 'Hey, I am using Jono',
-    }
+      // Create a new user
+      const newUser = {
+        id: authUser.attributes.sub, 
+        name: authUser.attributes.phone_number, 
+        status: 'Hey, I am using Jono',
+      }
 
-    const newUserResponse = await API.graphql(
-      graphqlOperation(createUser, {input: newUser})
-    )
-  };
+      const newUserResponse = await API.graphql(
+        graphqlOperation(createUser, {input: newUser})
+      )
+    };
 
-  syncUser();
-  
-}, []);
+    syncUser();
+    
+  }, []);
 
   return (
     <ProgressProvider>
@@ -181,7 +228,16 @@ useEffect(() => {
                 />
               </Stack>
               {/* <SafeAreaView> */}
-              <ProgressBarComponent />
+              <ProgressBarComponent 
+                snackbarVisible={snackbarVisible} 
+                setSnackbarVisible={setSnackbarVisible} 
+              />
+              {/* Snackbar Component */}
+              
+              <SnackBarComponent
+              snackbarVisible={snackbarVisible} 
+              setSnackbarVisible={setSnackbarVisible} 
+              />
             {/* </SafeAreaView> */}
               </View>
           </PaperProvider>
@@ -225,6 +281,9 @@ const styles = StyleSheet.create({
   },
   progressBarIcon: {
     fontSize: 20, 
+  },
+  snackBar: {
+    bottom: 50, // Adjust based on your bottom tab navigator height
   },
 });
 

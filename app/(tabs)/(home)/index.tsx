@@ -12,13 +12,13 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 import { useRouter } from 'expo-router';
-import { ProgressProvider, useProgress } from '@/src/contexts/ProgressContext';
+import { useProgress } from '@/src/contexts/ProgressContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const index = () => {
-  const { hideProgressBar, showProgressBar, updateProgress, isVisible } = useProgress();
+  const { hideProgressBar, showProgressBar, updateProgress, isVisible, setProjectId } = useProgress();
 
   const Header = () => {
     const router = useRouter(); 
@@ -53,10 +53,11 @@ const index = () => {
     updateProgress(0); // Reset progress
   
     // Simulate an async operation
-    for (let i = 0; i <= 1000; i += 10) {
-      updateProgress(i / 1000); // Update progress value
-      await new Promise((resolve) => setTimeout(resolve, 100)); // Simulate delay
+    for (let i = 0; i <= 100; i += 10) {
+      updateProgress(i / 100); // Update progress value
+      await new Promise((resolve) => setTimeout(resolve, 10)); // Simulate delay
     }
+    setProjectId('11adcbc5-7bdd-4df6-86ee-0deb44e78115')
   
     // Hide progress bar after operation
     hideProgressBar();

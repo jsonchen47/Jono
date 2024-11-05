@@ -7,6 +7,8 @@ import { Dropdown } from 'react-native-element-dropdown';
 import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
 import { FormContext } from './_layout';
 import { uploadNewProject } from "../../src/functions/uploadNewProject"
+import { useProgress } from '@/src/contexts/ProgressContext';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -100,9 +102,10 @@ const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, onChangeChips
 
 
 const newProject2 = () => {
+  const { hideProgressBar, showProgressBar, updateProgress, isVisible, setProjectId } = useProgress();
   const { formData, setFormData } = useContext(FormContext);
   const router = useRouter();
-  const [progress, setProgress] = useState(0);
+  // const [progress, setProgress] = useState(0);
   // const [text, setText] = useState<any>('');
   // const [chips, setChips] = useState<any>([]);
   // const [skills, setSkills] = useState([]);
@@ -147,7 +150,7 @@ const newProject2 = () => {
         {/* Custom Header */}
         <View style={styles.header}>
           <Pressable onPress={() => {
-            uploadNewProject(formData, setFormData, setProgress)
+            uploadNewProject(formData, setFormData, showProgressBar, hideProgressBar, updateProgress, isVisible, setProjectId)
             router.back()
             router.back()
             }}>
