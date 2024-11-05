@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 
 
 export default function TabLayout() {
@@ -14,10 +14,22 @@ export default function TabLayout() {
   };
 
   return (
+    // <SafeAreaView>
     <Tabs
     screenOptions={{
       tabBarActiveTintColor: 'black', // Color of the highlighted (active) tab
       tabBarInactiveTintColor: 'gray', // Color of the inactive tabs
+      tabBarLabelStyle: {
+        // fontSize: 11,
+        // fontWeight: "bold",
+        marginBottom: 10,
+        marginTop: 5, 
+        },
+        tabBarStyle: {
+          height: 90,
+          // borderWidth: 1,
+          // borderRadius: 50,
+          },
     }}
     >
       <Tabs.Screen 
@@ -25,8 +37,8 @@ export default function TabLayout() {
         options={{ 
             title: 'Explore',
             headerTitleAlign: 'left',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="search" color={color} size={size} />
+            tabBarIcon: ({ color, size }) => (  
+              <Ionicons name="search" color={color} size={size} style={{marginTop: 5}}/>
             ),
             headerShown: false,
         }}
@@ -36,7 +48,7 @@ export default function TabLayout() {
         options={{ 
           title: 'Saved',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart-outline" color={color} size={size} />
+              <Ionicons name="heart-outline" color={color} size={size} style={{marginTop: 5}}/>
           ),
         }}
       />
@@ -50,7 +62,7 @@ export default function TabLayout() {
           // ),
           tabBarButton: (props) => (
             <TouchableOpacity style={styles.centerTab} {...props} onPress={handleCenterTabPress}>
-               <Ionicons name="add-circle-outline" size={28} color="gray" />
+               <Ionicons name="add-circle-outline" size={28} color="gray" style={{marginTop: 5}}/>
                <Text style={styles.centerTabText}>New Project</Text>
               {/* <Text style={styles.centerTabText}>+</Text> */}
             </TouchableOpacity>
@@ -70,7 +82,7 @@ export default function TabLayout() {
         options={{ 
           title: 'Chat',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble-outline" color={color} size={size} />
+            <Ionicons name="chatbubble-outline" color={color} size={size} style={{marginTop: 5}}/>
           ),
           // headerShown: false,
         }}
@@ -80,13 +92,14 @@ export default function TabLayout() {
         options={{ 
           title: 'Profile',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" color={color} size={size} />
+            <Ionicons name="person-outline" color={color} size={size} style={{marginTop: 5}}/>
           ),
           headerShown: false,
         }}
       />
 
     </Tabs>
+    // </SafeAreaView>
   );
 }
 
@@ -105,12 +118,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5, // Adds the shadow for Android
+    
   },
   centerTabText: {
     fontSize: 10,
-    marginTop: 4,
-    color: 'gray'
+    marginTop: 5,
+    color: 'gray',
     // backgroundColor: 'red'
     // color: '#fff',
+    marginBottom: 10, 
   },
 });

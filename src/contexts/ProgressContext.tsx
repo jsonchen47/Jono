@@ -27,8 +27,15 @@ export const ProgressProvider = ({ children }: { children: ReactNode }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const showProgressBar = () => setIsVisible(true);
-  const hideProgressBar = () => setIsVisible(false);
+  const showProgressBar = () => {
+    console.log("Showing progress bar");
+    setIsVisible(true);
+  };
+
+  const hideProgressBar = () => {
+    console.log("Hiding progress bar");  // Add this log
+    setIsVisible(false);
+  };
   const updateProgress = (value: any) => setProgress(value);
 
   return (

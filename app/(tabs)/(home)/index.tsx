@@ -18,7 +18,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const index = () => {
-  const { hideProgressBar, showProgressBar, updateProgress } = useProgress();
+  const { hideProgressBar, showProgressBar, updateProgress, isVisible } = useProgress();
 
   const Header = () => {
     const router = useRouter(); 
@@ -53,8 +53,8 @@ const index = () => {
     updateProgress(0); // Reset progress
   
     // Simulate an async operation
-    for (let i = 0; i <= 100; i += 10) {
-      updateProgress(i / 100); // Update progress value
+    for (let i = 0; i <= 1000; i += 10) {
+      updateProgress(i / 1000); // Update progress value
       await new Promise((resolve) => setTimeout(resolve, 100)); // Simulate delay
     }
   

@@ -5,7 +5,7 @@ import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
 import {NavigationContainer} from '@react-navigation/native';
 import Navigator from '../src/navigation'
 import ChatScreen from './ChatScreen'
-import { View, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, TouchableOpacity} from 'react-native';
 import { Amplify, Auth, API, graphqlOperation } from "aws-amplify"; 
 // @ts-ignore
 import {withAuthenticator} from "aws-amplify-react-native"; 
@@ -23,6 +23,8 @@ import {
 } from 'react-native-reanimated';
 import { ProgressProvider, useProgress } from '@/src/contexts/ProgressContext';
 import { ProgressBar } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Octicons'; // Import vector icons
+
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -33,12 +35,27 @@ configureReanimatedLogger({
 Amplify.configure({ ...awsconfig, Analytics: {disabled: true}});
 
 function ProgressBarComponent() {
-  const { isVisible, progress } = useProgress();
+  const { isVisible, progress, hideProgressBar } = useProgress();
 
   if (!isVisible) return null; // Don't render if not visible
 
   return (
-    <ProgressBar progress={progress} color="blue" style={styles.progressBar} />
+    <View style={styles.progressBarContainer}> 
+      {/* <ProgressBar progress={progress} color="#4CDFFF" style={styles.progressBar} /> */}
+      <ProgressBar progress={progress} color="royalblue" style={styles.progressBar} />
+      <View style={styles.progressBarBottomContainer}>
+        <Text style={styles.progressBarBottomText}>
+          Your project uploading! 
+        </Text>
+        <TouchableOpacity
+          onPress={() => {
+            hideProgressBar()
+            }}
+        >
+          <Icon name='x' style={styles.progressBarIcon}/>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -89,14 +106,13 @@ useEffect(() => {
             <View style={styles.container}>
             {/* Global Progress Bar */}
             
-           
               <Stack>
-                <Stack.Screen 
-                  name="(tabs)" 
-                  options={{
-                    headerShown: false,
-                  }}
-                />
+                  <Stack.Screen 
+                    name="(tabs)" 
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
                 <Stack.Screen
                 name="chatScreen/[id]"
                 />
@@ -180,17 +196,35 @@ const styles = StyleSheet.create({
     flex: 1,
     
   },
-  progressBar: {
-    height: 4,
+  progressBarContainer: {
     position: 'absolute', // Position the progress bar absolutely
-    bottom: 100, // Adjust based on your bottom tab navigator height
+    bottom: 90, // Adjust based on your bottom tab navigator height
     left: 0,
     right: 0,
     zIndex: 10,
+  }, 
+  progressBar: {
+    height: 4,
+   
   },
   stackContainer: {
     flex: 1, // This will ensure the stack takes the remaining space
     marginBottom: 300, // Adjust based on the height of your tab navigator
+  },
+  progressBarBottomContainer: {
+    backgroundColor: 'whitesmoke', 
+    paddingVertical: 10, 
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }, 
+  progressBarBottomText: {
+    // paddingHorizontal: 0, 
+    fontWeight: 'bold'
+  },
+  progressBarIcon: {
+    fontSize: 20, 
   },
 });
 
