@@ -1,260 +1,186 @@
-import { Image, View, Pressable, Button, Keyboard, Text, SafeAreaView, TouchableOpacity, ImageBackground, PressableAndroidRippleConfig, StyleProp, TextStyle, ViewStyle, StyleSheet, Dimensions } from 'react-native'
-import React, { useEffect, useState } from 'react';
-import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view'
-import Icon from 'react-native-vector-icons/FontAwesome6';
-import Icon2 from 'react-native-vector-icons/Ionicons';
-import Icon3 from 'react-native-vector-icons/Fontisto';
-import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon5 from 'react-native-vector-icons/Entypo';
-import { Searchbar } from 'react-native-paper';
-import { listProjects } from '@/src/graphql/queries';
-import { API, graphqlOperation } from 'aws-amplify';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
+import * as React from 'react';
+import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 import { useRouter } from 'expo-router';
-import { useProgress } from '@/src/contexts/ProgressContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const index = () => {
-  const { hideProgressBar, showProgressBar, updateProgress, isVisible, setProjectId } = useProgress();
-
-  const Header = () => {
-    const router = useRouter(); 
-    const [searchQuery, setSearchQuery] = React.useState('');
-    return (
-      <View style={styles.searchBarContainer}>
-          <TouchableOpacity style={styles.searchButton}
-            onPress={() => 
-              router.push('/search')
-            } 
-          >
-            <Icon2 name='search' style={styles.searchButtonIcon}/>
-            <Text style={styles.searchButtonText}>Assemble the perfect team</Text>
-          </TouchableOpacity>
-            <TouchableOpacity 
-            style={styles.filterButton}
-            onPress={() => 
-              // router.push('/progressBar')
-              handleSubmit()
-            } 
-            >
-            <Icon name="sliders" size={18} />
-          </TouchableOpacity>
-      </View>
-    )
-  }
-  
-  const handleSubmit = async () => {
-    
-    
-    showProgressBar();
-    updateProgress(0); // Reset progress
-  
-    // Simulate an async operation
-    for (let i = 0; i <= 100; i += 10) {
-      updateProgress(i / 100); // Update progress value
-      await new Promise((resolve) => setTimeout(resolve, 10)); // Simulate delay
-    }
-    setProjectId('11adcbc5-7bdd-4df6-86ee-0deb44e78115')
-  
-    // Hide progress bar after operation
-    hideProgressBar();
-    // Dismiss form or navigate as needed
-  };
-
-  const [projects, setProjects] = useState<any>([]);
-  const [loading, setLoading] = useState<any>(true);
-  const [error, setError] = useState<any>(null);
-  
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const projectData = await API.graphql(graphqlOperation(listProjects));
-        const castedProjectData = projectData as GraphQLResult<any>
-        setProjects(castedProjectData.data.listProjects.items);
-        // console.log(castedProjectData.data.listProjects.items)
-      } catch (err) {
-        setError(err);
-        console.error("Error fetching projects:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (error) {
-    return <Text>Error fetching projects: {error.message}</Text>;
-  }
-
+function FeedScreen() {
   return (
-    <SafeAreaView style={styles.safeAreaViewContainer}>
-      <Header/>
-      <Tabs.Container 
-        pagerProps={{ scrollEnabled: false }}
-        // headerHeight={50}
-        // minHeaderHeight={50}
-        // renderHeader={Header}  
-        renderTabBar={props => (
-          <MaterialTabBar
-            {...props}  
-            activeColor='red' // Color for the selected tab
-            inactiveColor='green' // Color for the unselected tabs
-            scrollEnabled={true} // Enable scrollable tabs
-            tabStyle={{ height: 70 }} // Customize the width of each tab
-            indicatorStyle={{ backgroundColor: 'black', height: 2 }}
-            
-          />
-        )}
-        >
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Feed!</Text>
+    </View>
+  );
+}
 
-        {/* ALL PROJECTS */}
-        <Tabs.Tab 
-          name="All Projects" 
-          label={() => { 
-            return (
-            <View style={styles.tabLabelContainer}>
-              <Icon name="star" size={22} />
-              <Text style={styles.tabLabelText}>All</Text>
-            </View>
-            )
-          }}
+const Header = () => {
+  const router = useRouter(); 
+  return (
+    <View style={styles.searchBarContainer}>
+        <TouchableOpacity style={styles.searchButton}
+          onPress={() => 
+            router.push('/search')
+          } 
+        >
+          <Ionicons name='search' style={styles.searchButtonIcon}/>
+          <Text style={styles.searchButtonText}>Assemble the perfect team</Text>
+        </TouchableOpacity>
+          <TouchableOpacity 
+          style={styles.filterButton}
+          onPress={() => 
+            console.log('Filter button pressed')
+          } 
           >
-          <Tabs.ScrollView>
-            <ProjectsScreen category = ""/>
-          </Tabs.ScrollView>
-        </Tabs.Tab>
-
-        {/* HEALTH PROJECTS */}
-        <Tabs.Tab 
-          name="Health"
-          label={(() => { return (
-            <View style={styles.tabLabelContainer}>
-              <Icon3 name="heartbeat" size={22} />
-              <Text style={styles.tabLabelText}>Health</Text>
-            </View>
-          ) })}
-        >
-          <Tabs.ScrollView>
-            <ProjectsScreen category = 'health'/>
-          </Tabs.ScrollView>
-        </Tabs.Tab>
-
-        {/* FINANCE PROJECTS */}
-        <Tabs.Tab 
-          name="Finance"
-          label={(() => { return (
-            <View style={styles.tabLabelContainer}>
-              <Icon name="sack-dollar" size={22} />
-              <Text style={styles.tabLabelText}>Finance</Text>
-            </View>
-          ) })}
-        >
-          <Tabs.ScrollView>
-            <ProjectsScreen category = 'finance'/>
-          </Tabs.ScrollView>
-        </Tabs.Tab>
-
-        <Tabs.Tab 
-          name="Tech"
-          label={(() => { return (
-            <View style={styles.tabLabelContainer}>
-              <Icon4 name="robot-industrial" size={22} />
-              <Text style={styles.tabLabelText}>Tech</Text>
-            </View>
-          ) })}
-        >
-          <Tabs.ScrollView>
-            <ProjectsScreen category = 'tech'/>
-          </Tabs.ScrollView>
-        </Tabs.Tab>
-        <Tabs.Tab 
-          name="Politics"
-          label={(() => { return (
-            <View style={styles.tabLabelContainer}>
-              <Icon5 name="globe" size={22} />
-              <Text style={styles.tabLabelText}>Politics</Text>
-            </View>
-          ) })}
-        >
-          <Tabs.ScrollView>
-            <ProjectsScreen category = 'politics'/>
-          </Tabs.ScrollView>
-        </Tabs.Tab>
-        <Tabs.Tab 
-          name="Education"
-          label={(() => { return (
-            <View style={styles.tabLabelContainer}>
-              <Icon name="book" size={22} />
-              <Text style={styles.tabLabelText}>Education</Text>
-            </View>
-          ) })}
-        >
-          <Tabs.ScrollView>
-            <ProjectsScreen category = 'education'/>
-          </Tabs.ScrollView>
-        </Tabs.Tab>
-        <Tabs.Tab 
-          name="Environment"
-          label={(() => { return (
-            <View style={styles.tabLabelContainer}>
-              <Icon name="leaf" size={22} />
-              <Text style={styles.tabLabelText}>Environment</Text>
-            </View>
-          ) })}
-        >
-          <Tabs.ScrollView>
-            <ProjectsScreen category = 'environment'/>
-          </Tabs.ScrollView>
-        </Tabs.Tab>
-        <Tabs.Tab 
-          name="Justice"
-          label={(() => { return (
-            <View style={styles.tabLabelContainer}>
-              <Icon name="scale-balanced" size={22} />
-              <Text style={styles.tabLabelText}>Social Justice</Text>
-            </View>
-          ) })}
-        >
-          <Tabs.ScrollView>
-            <ProjectsScreen category = 'social justice'/>
-          </Tabs.ScrollView>
-        </Tabs.Tab>
-      </Tabs.Container>
-    </SafeAreaView>
+          <FontAwesome6 name="sliders" size={18} />
+        </TouchableOpacity>
+    </View>
   )
 }
 
-export default index
+const ScrollableProjectsScreen = ({ category }: any) => {
+    return (
+      <ScrollView>
+        <ProjectsScreen category = {category}/>
+      </ScrollView>
+    );
+  };
+
+const Tab = createMaterialTopTabNavigator();
+
+interface tabBarLabelProps {
+    label: any, 
+    IconComponent: any, 
+    icon: any, 
+    focused: boolean, 
+  }
+
+// Custom tab bar label component
+const TabBarLabel = ({ label, IconComponent, icon, focused }: tabBarLabelProps) => (
+  <View style={styles.tabLabelContainer}>
+    <IconComponent name={icon} size={17} color={focused ? 'black' : 'gray'} /> 
+    <Text style={[styles.tabLabel, { color: focused ? 'black' : 'gray' }]}>
+      {label}
+    </Text>
+  </View>
+);
+
+function MyTabs() {
+  return (
+
+    <SafeAreaView style={{flex: 1}}>
+      <Header/>
+    
+    <Tab.Navigator
+      initialRouteName="Feed"
+      screenOptions={{
+        tabBarActiveTintColor: '#e91e63',
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarStyle: { backgroundColor: 'white' },
+        tabBarScrollEnabled: true,
+        tabBarItemStyle: { width: 'auto' },
+        tabBarIndicatorStyle: { 
+          backgroundColor: 'black', // Set the indicator color here
+          height: 2, // Optional: set the indicator height
+          width: 0.5, 
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Feed"
+        // component={ScrollableProjectsScreen }
+        children={() => <ScrollableProjectsScreen category="" />}
+        options={{
+            tabBarLabel: ({ focused }) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="star" focused={focused} />
+        }} 
+      />
+      <Tab.Screen
+        name="Health"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: ({ focused }) => <TabBarLabel label="Health" IconComponent={Fontisto} icon="heartbeat" focused={focused} />
+      }} 
+      />
+      <Tab.Screen
+        name="Finance"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: ({ focused }) => <TabBarLabel label="Finance" IconComponent={FontAwesome6} icon="sack-dollar" focused={focused} />
+      }} 
+      />
+      <Tab.Screen
+        name="Tech"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: ({ focused }) => <TabBarLabel label="Tech" IconComponent={MaterialCommunityIcons} icon="robot-industrial" focused={focused} />
+      }} 
+      />
+      <Tab.Screen
+        name="Politics"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: ({ focused }) => <TabBarLabel label="Politics" IconComponent={Entypo} icon="globe" focused={focused} />
+      }} 
+      />
+       <Tab.Screen
+        name="Education"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: ({ focused }) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="book" focused={focused} />
+        }} 
+      />
+       <Tab.Screen
+        name="Environment"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: ({ focused }) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="leaf" focused={focused} />
+        }} 
+      />
+       <Tab.Screen
+        name="Social Justice"
+        component={FeedScreen}
+        options={{
+          tabBarLabel: ({ focused }) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="scale-balanced" focused={focused} />
+      }} 
+      />
+    </Tab.Navigator>
+    </SafeAreaView>
+  );
+}
+export default function App() {
+  return (
+      
+      <SafeAreaView style={{flex: 1}}>
+      <MyTabs />
+      </SafeAreaView>
+  )
+}
 
 const styles = StyleSheet.create({
-  tabsContainer: {
-  },
-  safeAreaViewContainer: {
-    flex: 1,
-  },
   tabLabelContainer: {
-    flex: 1,
-    justifyContent: 'center', 
+    // flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 10,
-  }, 
-  tabLabelText: {
-    paddingTop: 5, 
-    paddingBottom: 0, 
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+  },
+  tabLabel: {
+    // marginLeft: 7, // Space between icon and label
+    marginTop: 3, 
     fontSize: 12,
-  }, 
-  // Search Bar
-  searchBarContainer: {
+  },
+   // Search Bar
+   searchBarContainer: {
     marginHorizontal: windowWidth*0.05, 
-    paddingVertical: 10, 
+    marginTop: 10, 
+    marginBottom: 2, 
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -296,4 +222,3 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   }
 })
-

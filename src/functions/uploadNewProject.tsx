@@ -63,7 +63,7 @@ export async function uploadNewProject(
     const response = await fetch(uri);
     const blob = await response.blob();
 
-    updateProgress(0.5); 
+    updateProgress(0.4); 
 
     // // Step 3: Upload the image to S3
     const s3Response = await Storage.put(fileName, blob, {
