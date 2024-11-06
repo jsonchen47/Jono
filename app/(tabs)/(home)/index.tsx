@@ -10,6 +10,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Entypo from 'react-native-vector-icons/Entypo';
 import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 import { useRouter } from 'expo-router';
+import ProjectsScreenNew from '@/src/screens/ProjectsScreenNew';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -92,61 +93,61 @@ function MyTabs() {
           height: 2, // Optional: set the indicator height
           width: 0.5, 
         },
+        swipeEnabled: false, 
       }}
     >
       <Tab.Screen
         name="Feed"
-        // component={ScrollableProjectsScreen }
-        children={() => <ScrollableProjectsScreen category="" />}
+        children={() => <ProjectsScreenNew category="" />}
         options={{
             tabBarLabel: ({ focused }) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="star" focused={focused} />
         }} 
       />
       <Tab.Screen
         name="Health"
-        component={FeedScreen}
+        children={() => <ScrollableProjectsScreen category="health" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Health" IconComponent={Fontisto} icon="heartbeat" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Finance"
-        component={FeedScreen}
+        children={() => <ScrollableProjectsScreen category="finance" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Finance" IconComponent={FontAwesome6} icon="sack-dollar" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Tech"
-        component={FeedScreen}
+        children={() => <ScrollableProjectsScreen category="tech" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Tech" IconComponent={MaterialCommunityIcons} icon="robot-industrial" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Politics"
-        component={FeedScreen}
+        children={() => <ScrollableProjectsScreen category="politics" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Politics" IconComponent={Entypo} icon="globe" focused={focused} />
       }} 
       />
        <Tab.Screen
         name="Education"
-        component={FeedScreen}
+        children={() => <ScrollableProjectsScreen category="education" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="book" focused={focused} />
         }} 
       />
        <Tab.Screen
         name="Environment"
-        component={FeedScreen}
+        children={() => <ScrollableProjectsScreen category="environment" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="leaf" focused={focused} />
         }} 
       />
        <Tab.Screen
         name="Social Justice"
-        component={FeedScreen}
+        children={() => <ScrollableProjectsScreen category="social justice" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="scale-balanced" focused={focused} />
       }} 
