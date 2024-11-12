@@ -18,6 +18,8 @@ interface projectsGridProps {
 const ProjectsGridForProfile = ({ projects, loadMoreProjects, isFetchingMore, listHeaderComponent = null }: projectsGridProps) => {
   return (
     <Tabs.FlatList
+    maintainVisibleContentPosition={{ minIndexForVisible: 1 }}
+    contentContainerStyle={{ paddingTop: 0 }}
     style={styles.flatList}
     data={projects}
     renderItem={({ item }) => 
@@ -37,7 +39,7 @@ const ProjectsGridForProfile = ({ projects, loadMoreProjects, isFetchingMore, li
             <ActivityIndicator size="large" color="gray" />
           </View>
         ) : (
-          <View style={{ paddingVertical: 20 }}>
+          <View style={{ paddingVertical: windowWidth*0.05 }}>
             
           </View>
         )
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
     flatList: {
         // flex: 1,
         // width: '100%',
-        paddingTop: windowWidth*0.05,
+        paddingTop: windowWidth*0.065,
         // backgroundColor: 'green',
     }, 
   columnWrapper: {

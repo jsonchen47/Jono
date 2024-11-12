@@ -244,7 +244,13 @@ const ProjectScreen = ( {project}: any ) => {
                 style={styles.joinButton} 
                 labelStyle={styles.joinButtonText}
                 mode="contained"  
-                onPress={() => console.log('Manage/Edit pressed')}>
+                onPress={() => 
+                    // console.log('Manage/Edit pressed')
+                    router.push({
+                        pathname: '/manageProject',
+                        params: { projectId: project.id },
+                    })
+                }>
                 Manage and Edit
             </Button>
         ) : (

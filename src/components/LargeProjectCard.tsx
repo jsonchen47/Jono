@@ -7,10 +7,8 @@ import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from '../graphql/queries'
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 
 const LargeProjectCard = ({project}: any) => {
     const router = useRouter(); 

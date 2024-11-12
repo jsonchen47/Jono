@@ -1,8 +1,9 @@
 // LazyLoadProjectGrid.js
 import React from 'react';
-import { FlatList, ActivityIndicator, View, StyleSheet, Dimensions } from 'react-native';
+import { FlatList, ActivityIndicator, View, StyleSheet, Dimensions, Text } from 'react-native';
 import SmallProjectCard from './SmallProjectCard';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
+import LargeProjectCard from './LargeProjectCard';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -15,22 +16,22 @@ interface projectsGridProps {
     listHeaderComponent?: any, 
 }
 
-const ProjectsGridNew = ({ projects, loadMoreProjects, isFetchingMore, listHeaderComponent = null }: projectsGridProps) => {
+const LargeProjectCardsFlatList = ({ projects, loadMoreProjects, isFetchingMore, listHeaderComponent = null }: projectsGridProps) => {
   return (
     <FlatList
         style={styles.flatList}
         showsVerticalScrollIndicator={false}
       data={projects}
       renderItem={({ item }) => 
-        <View style={styles.smallProjectCardContainer}>
-            <SmallProjectCard project={item} />
+        <View style={styles.projectCardContainer}>
+            <LargeProjectCard project={item} />
         </View>
         }
       keyExtractor={(item, index) => item.id || index.toString()}
-      numColumns={2} // Use 2 columns for a grid-like layout
-      columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
+      // numColumns={1} // Use 2 columns for a grid-like layout
+      // columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
       onEndReached={loadMoreProjects}
-      onEndReachedThreshold={0}
+      onEndReachedThreshold={0.2}
       ListHeaderComponent={listHeaderComponent || null}
       ListFooterComponent={() =>
         isFetchingMore ? (
@@ -43,7 +44,13 @@ const ProjectsGridNew = ({ projects, loadMoreProjects, isFetchingMore, listHeade
             </View>
           )
       }
+      
     />
+    // <View>
+    //   <Text>hi</Text>
+
+    // </View>
+    
   );
 };
 
@@ -53,16 +60,12 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingTop: windowWidth*0.065,
     }, 
-  columnWrapper: {
-    justifyContent: 'space-between', // Evenly spaces items in each row
-    paddingHorizontal: windowWidth*0.065, // Adds horizontal padding for each row - sets the width total at 87%
-    // backgroundColor: 'yellow',
-  },
-  smallProjectCardContainer: {
-    width: '48%',
-    marginBottom: windowWidth*0.05,
+  projectCardContainer: {
+    width: '100%',
+    marginBottom: windowWidth*0.065,
+    aspectRatio: 1, 
     // backgroundColor: 'green',
   },
 });
 
-export default ProjectsGridNew;
+export default LargeProjectCardsFlatList;

@@ -4,24 +4,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 import { useRouter } from 'expo-router';
-import ProjectsScreenNew from '@/src/screens/ProjectsScreenNew';
+import ProjectsScreenFYP from '@/src/screens/ProjectsScreenFYP';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-function FeedScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Feed!</Text>
-    </View>
-  );
-}
 
 const Header = () => {
   const router = useRouter(); 
@@ -41,7 +34,7 @@ const Header = () => {
             console.log('Filter button pressed')
           } 
           >
-          <FontAwesome6 name="sliders" size={18} />
+          <FontAwesome6 name="sliders" size={15} style={{fontWeight: '100'}}/>
         </TouchableOpacity>
     </View>
   )
@@ -67,8 +60,8 @@ interface tabBarLabelProps {
 // Custom tab bar label component
 const TabBarLabel = ({ label, IconComponent, icon, focused }: tabBarLabelProps) => (
   <View style={styles.tabLabelContainer}>
-    <IconComponent name={icon} size={17} color={focused ? 'black' : 'gray'} /> 
-    <Text style={[styles.tabLabel, { color: focused ? 'black' : 'gray' }]}>
+    <IconComponent name={icon} size={20} color={focused ? 'black' : 'dimgray'} /> 
+    <Text style={[styles.tabLabel, { color: focused ? 'black' : 'dimgray' }]}>
       {label}
     </Text>
   </View>
@@ -77,7 +70,7 @@ const TabBarLabel = ({ label, IconComponent, icon, focused }: tabBarLabelProps) 
 function MyTabs() {
   return (
 
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={styles.safeAreaView}>
       <Header/>
     
     <Tab.Navigator
@@ -98,61 +91,69 @@ function MyTabs() {
     >
       <Tab.Screen
         name="Feed"
-        children={() => <ProjectsScreenNew category="" />}
+        children={() => <ProjectsScreenFYP category="" />}
         options={{
             tabBarLabel: ({ focused }) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="star" focused={focused} />
         }} 
       />
       <Tab.Screen
         name="Health"
-        children={() => <ScrollableProjectsScreen category="health" />}
+        children={() => <ProjectsScreen category="health" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Health" IconComponent={Fontisto} icon="heartbeat" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Finance"
-        children={() => <ScrollableProjectsScreen category="finance" />}
+        children={() => <ProjectsScreen category="finance" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Finance" IconComponent={FontAwesome6} icon="sack-dollar" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Tech"
-        children={() => <ScrollableProjectsScreen category="tech" />}
+        children={() => <ProjectsScreen category="tech" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Tech" IconComponent={MaterialCommunityIcons} icon="robot-industrial" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Politics"
-        children={() => <ScrollableProjectsScreen category="politics" />}
+        children={() => <ProjectsScreen category="politics" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Politics" IconComponent={Entypo} icon="globe" focused={focused} />
       }} 
       />
        <Tab.Screen
         name="Education"
-        children={() => <ScrollableProjectsScreen category="education" />}
+        children={() => <ProjectsScreen category="education" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="book" focused={focused} />
         }} 
       />
        <Tab.Screen
         name="Environment"
-        children={() => <ScrollableProjectsScreen category="environment" />}
+        children={() => <ProjectsScreen category="environment" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="leaf" focused={focused} />
         }} 
       />
        <Tab.Screen
         name="Social Justice"
-        children={() => <ScrollableProjectsScreen category="social justice" />}
+        children={() => <ProjectsScreen category="social justice" />}
         options={{
           tabBarLabel: ({ focused }) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="scale-balanced" focused={focused} />
       }} 
       />
     </Tab.Navigator>
+    {/* <View>  */}
+      <TouchableOpacity style={styles.mapButton}>
+        <Text style={styles.mapButtonText}>
+          Map
+        </Text>
+        <Ionicons name='map' style={styles.mapIcon}/>
+      </TouchableOpacity>
+    {/* </View> */}
     </SafeAreaView>
   );
 }
@@ -166,6 +167,10 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1, 
+    // alignItems: 'center',
+  },
   tabLabelContainer: {
     // flexDirection: 'row',
     alignItems: 'center',
@@ -186,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchButton: {
-    backgroundColor: 'lightgray',
+    backgroundColor: '#E8E8E8',
     paddingVertical: 15,
     paddingHorizontal: 20,
     marginHorizontal: 10, 
@@ -214,6 +219,7 @@ const styles = StyleSheet.create({
     right: 10,
     justifyContent: 'center', 
     alignItems: 'center',
+    // fontWeight: '300'
   },
   filterButtonContainer: {
     width: windowWidth*0.87,
@@ -221,5 +227,30 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center', 
     alignItems: 'flex-end',
-  }
+  },
+  mapButtonContainer: {
+    
+    alignItems: 'center', 
+  },
+  mapButton: {
+    backgroundColor: '#4CDFFF',
+    borderRadius: 25, 
+    padding: 12, 
+    alignSelf: "center",
+    position: 'absolute', 
+    bottom: 15, 
+    flexDirection: 'row',
+    alignItems: 'center', 
+  },
+  mapButtonText: {
+    fontWeight: '500',
+    fontSize: 17,
+    marginLeft: 5, 
+    marginRight: 5, 
+  }, 
+  mapIcon: {
+    fontSize: 17,
+    fontWeight: '500',
+    marginRight: 5,
+  },
 })

@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   textInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'lightgray',
+    backgroundColor: '#E8E8E8',
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 30,

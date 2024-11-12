@@ -95,7 +95,7 @@ export default function SavedScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: windowWidth*0.05, 
+    // paddingTop: windowWidth*0.05, 
     flex: 1,
   },
 });

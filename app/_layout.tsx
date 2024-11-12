@@ -146,8 +146,9 @@ function RootLayout() {
   }, []);
 
   return (
-    <ProgressProvider>
+    
       <GestureHandlerRootView>
+        <ProgressProvider>
         <ApplicationProvider {...eva} theme={eva.light}>
           <PaperProvider>
             <View style={styles.container}>
@@ -226,6 +227,13 @@ function RootLayout() {
                   animation: 'fade',
                 }}
                 />
+                <Stack.Screen
+                name="manageProject"
+                options={{
+                  title: 'Manage Project',
+                  presentation: 'fullScreenModal',
+                }}
+                />
               </Stack>
               {/* <SafeAreaView> */}
               <ProgressBarComponent 
@@ -242,8 +250,9 @@ function RootLayout() {
               </View>
           </PaperProvider>
         </ApplicationProvider>
+        </ProgressProvider>
       </GestureHandlerRootView>
-     </ProgressProvider>
+     
   );
 }
 

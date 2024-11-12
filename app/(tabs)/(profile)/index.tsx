@@ -35,32 +35,52 @@ export default function ProfileScreen() {
 
   const navigation = useNavigation();
 
-  const fetchUserAndProjects = async (nextToken = null, fetchMore = false) => {
+  const fetchUser = async () => {
     try {
       const authUser = await Auth.currentAuthenticatedUser();
       const userID = authUser.attributes.sub;
-
       const userResult = await API.graphql(
         graphqlOperation(getUser, { id: userID })
       );
       const castedUserResult = userResult as GraphQLResult<any>;
       setUser(castedUserResult.data?.getUser);
+    } catch (err) {
+      setError(err);
+      console.error("Error fetching user:", err);
+    }
+  };
 
+  const fetchProjects = async (nextToken = null, fetchMore = false) => {
+    try {
+      const authUser = await Auth.currentAuthenticatedUser();
+      const userID = authUser.attributes.sub;
       const projectsData = await API.graphql(
         graphqlOperation(listProjects, {
           filter: { ownerIDs: { contains: userID } },
           nextToken: nextToken,
+          limit: 18
         })
       );
       const castedProjectsData = projectsData as GraphQLResult<any>;
       const fetchedProjects = castedProjectsData.data.listProjects.items;
-      const newNextToken = castedProjectsData.data.listProjects.nextToken;
+      const newProjectsNextToken = castedProjectsData.data.listProjects.nextToken;
 
       setProjects(fetchMore ? [...projects, ...fetchedProjects] : fetchedProjects);
-      setProjectsNextToken(newNextToken);
+      setProjectsNextToken(newProjectsNextToken);
+    } catch (err) {
+      setError(err);
+      console.error("Error fetching projects:", err);
+    } finally {
+      setIsFetchingMoreProjects(false);
+    }
+  };
 
+  const fetchTeams = async (nextToken = null, fetchMore = false) => {
+    try {
+      const authUser = await Auth.currentAuthenticatedUser();
+      const userID = authUser.attributes.sub;
       const teamsData = await API.graphql(
-        graphqlOperation(listTeamsByUser, { id: userID, nextToken })
+        graphqlOperation(listTeamsByUser, { id: userID, nextToken, limit: 4 })
       );
       const castedTeamsData = teamsData as GraphQLResult<any>;
       const rawTeams = castedTeamsData?.data?.getUser?.Projects?.items;
@@ -68,15 +88,13 @@ export default function ProfileScreen() {
         return !item.project.ownerIDs.includes(userID);
       });
       const transformedTeams = filteredTeams.map((item: any) => item.project);
+
       setTeams(fetchMore ? [...teams, ...transformedTeams] : transformedTeams);
-      setTeamsNextToken(newNextToken);
-      
+      setTeamsNextToken(castedTeamsData.data.getUser?.Projects?.nextToken);
     } catch (err) {
       setError(err);
-      console.error("Error fetching projects:", err);
+      console.error("Error fetching teams:", err);
     } finally {
-      setLoading(false);
-      setIsFetchingMoreProjects(false);
       setIsFetchingMoreTeams(false);
     }
   };
@@ -89,24 +107,30 @@ export default function ProfileScreen() {
         <Icon name='gear' style={styles.icon} />
       </Link>
     });
-    fetchUserAndProjects();
+    // Fetch all data on component mount
+    const fetchData = async () => {
+      setLoading(true);
+      await fetchUser();
+      await fetchProjects();
+      await fetchTeams();
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   const loadMoreProjects = async () => {
     if (projectsNextToken && !isFetchingMoreProjects) {
       setIsFetchingMoreProjects(true);
-      await fetchUserAndProjects(projectsNextToken, true);
+      await fetchProjects(projectsNextToken, true);
     }
   };
 
   const loadMoreTeams = async () => {
     if (teamsNextToken && !isFetchingMoreTeams) {
       setIsFetchingMoreTeams(true);
-      await fetchUserAndProjects(teamsNextToken, true);
+      await fetchTeams(teamsNextToken, true);
     }
   };
-
-  
 
   function AboutTab() {
     return (
@@ -183,14 +207,10 @@ export default function ProfileScreen() {
         </Tabs.ScrollView>
       </Tabs.Tab>
       <Tabs.Tab name="Projects">
-        {/* <Tabs.ScrollView> */}
-          <ProjectsTab />
-        {/* </Tabs.ScrollView> */}
+        <ProjectsTab />
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
-        {/* <Tabs.ScrollView> */}
-          <TeamsTab />
-        {/* </Tabs.ScrollView> */}
+        <TeamsTab />
       </Tabs.Tab>
     </Tabs.Container>
   );
@@ -216,13 +236,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emoji: {
-    fontSize: 23,
+    fontSize: 20,
     fontWeight: 'bold',
     paddingHorizontal: 10,
   },
   subtitle: {
     fontWeight: 'bold',
-    fontSize: 23,
+    fontSize: 20,
   },
   skillsAndResourcesChipsContainer: {
     paddingTop: 15,
