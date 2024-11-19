@@ -114,8 +114,12 @@ const map = () => {
             <MapView
               provider={PROVIDER_GOOGLE}
               style={styles.map}
-              region={region} // Pass region only when it's not undefined
+              initialRegion={region} // Pass region only when it's not undefined
               // onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
+              onRegionChangeComplete={(newRegion) => {
+                // Update the region for fetching data, but don't pass it back to the MapView
+                setRegion(newRegion);
+              }}
             >
           {projects.map((project: any) => (
             <Marker
