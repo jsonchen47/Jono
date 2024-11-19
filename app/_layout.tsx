@@ -234,6 +234,13 @@ function RootLayout() {
                   presentation: 'fullScreenModal',
                 }}
                 />
+                <Stack.Screen
+                name="map"
+                options={{
+                  title: 'Map',
+                  presentation: 'fullScreenModal',
+                }}
+                />
               </Stack>
               {/* <SafeAreaView> */}
               <ProgressBarComponent 

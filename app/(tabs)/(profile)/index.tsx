@@ -58,7 +58,7 @@ export default function ProfileScreen() {
         graphqlOperation(listProjects, {
           filter: { ownerIDs: { contains: userID } },
           nextToken: nextToken,
-          limit: 18
+          limit: 10
         })
       );
       const castedProjectsData = projectsData as GraphQLResult<any>;

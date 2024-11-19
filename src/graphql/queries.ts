@@ -30,6 +30,9 @@ export const getProject = /* GraphQL */ `query GetProject($id: ID!) {
     skills
     resources
     categories
+    longitude
+    latitude
+    city
     createdAt
     updatedAt
     __typename
@@ -58,6 +61,9 @@ export const listProjects = /* GraphQL */ `query ListProjects(
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename
@@ -99,6 +105,9 @@ export const searchProjects = /* GraphQL */ `query SearchProjects(
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename
@@ -634,6 +643,9 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename
@@ -696,6 +708,9 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         skills
         resources
         categories
+        longitude
+        latitude
+        city
         createdAt
         updatedAt
         __typename
@@ -757,6 +772,9 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         skills
         resources
         categories
+        longitude
+        latitude
+        city
         createdAt
         updatedAt
         __typename
@@ -818,6 +836,9 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         skills
         resources
         categories
+        longitude
+        latitude
+        city
         createdAt
         updatedAt
         __typename

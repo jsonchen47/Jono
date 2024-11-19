@@ -5,7 +5,8 @@ import { useRouter } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from '../graphql/queries'
-import Icon from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -43,7 +44,6 @@ const LargeProjectCard = ({project}: any) => {
         <ImageBackground 
             style={styles.largeProjectImageBackground} 
             imageStyle={styles.largeProjectImage}
-            // imageStyle={{ width: 100, height: 100 }}
             source={{uri: project.image}}
             resizeMode="cover"
             >
@@ -56,8 +56,27 @@ const LargeProjectCard = ({project}: any) => {
               >
               {/* <View> */}
                 <View style={styles.largeProjectTextContainer}>
-                  <Text style={styles.largeProjectAuthor}>{user?.name ?? ""}</Text>
-                  <Text style={styles.largeProjectTitle}>{project.title}</Text>
+                  <Text style={styles.largeProjectAuthor} numberOfLines={1}>{user?.name ?? ""}</Text>
+                  <Text style={styles.largeProjectTitle} numberOfLines={3}>{project.title}</Text>
+                  {/* Conditionally render Location */}
+                  {project.city ? (
+                    <View style={styles.detailOverlay}>
+                      <Ionicons name='location-outline' style={styles.detailIcon} />
+                      <Text style={styles.detailText}>
+                        {project.city}
+                      </Text>
+                    </View>
+                  ) : null}  
+                  {/* Conditionally render the description */}
+                  {project.description ? (
+                    <View style={styles.detailOverlay}>
+                      <FontAwesome6 name='quote-left' style={styles.quoteIconStart} />
+                      <Text style={styles.detailText} numberOfLines={4}>
+                        {project.description}
+                      </Text>
+                      <FontAwesome6 name='quote-right' style={styles.quoteIconEnd} />
+                    </View>
+                  ) : null} 
                 </View>
                 
               {/* </View> */}
@@ -65,8 +84,8 @@ const LargeProjectCard = ({project}: any) => {
              {/* Icon */}
           <View style={styles.iconLargeContainer}>
               <View style={styles.iconSmallContainer}>
-                <Icon name="heart" size={27} style={styles.iconFill}/>
-                <Icon name="heart-outline" size={30} style={styles.iconOutline}/>
+                <Ionicons name="heart" size={27} style={styles.iconFill}/>
+                <Ionicons name="heart-outline" size={30} style={styles.iconOutline}/>
               </View>
             </View>
           </ImageBackground>
@@ -160,5 +179,36 @@ const styles = StyleSheet.create({
     height: '100%',
     // backgroundColor: 'green',
     position: 'absolute'
-  }
+  }, 
+  detailOverlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', 
+    marginTop: 20, 
+    padding: 10,
+    borderRadius: 10,
+    flexDirection: 'row', 
+    alignItems: 'center',
+
+  },
+  detailText: { 
+    color: 'white',
+    fontSize: 14,
+    flexShrink: 1,
+  }, 
+  detailIcon: {
+    color: 'white',
+    fontSize: 14,
+    paddingRight: 5, 
+  }, 
+  quoteIconStart: {
+    alignSelf: 'flex-start',
+    color: 'white',
+    fontSize: 17,
+    paddingRight: 5, 
+  },
+  quoteIconEnd: {
+    alignSelf: 'flex-end',
+    color: 'white',
+    fontSize: 17,
+    paddingLeft: 5, 
+  },
 })

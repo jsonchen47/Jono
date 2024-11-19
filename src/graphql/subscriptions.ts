@@ -30,6 +30,9 @@ export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filt
     skills
     resources
     categories
+    longitude
+    latitude
+    city
     createdAt
     updatedAt
     __typename
@@ -61,6 +64,9 @@ export const onUpdateProject = /* GraphQL */ `subscription OnUpdateProject($filt
     skills
     resources
     categories
+    longitude
+    latitude
+    city
     createdAt
     updatedAt
     __typename
@@ -92,6 +98,9 @@ export const onDeleteProject = /* GraphQL */ `subscription OnDeleteProject($filt
     skills
     resources
     categories
+    longitude
+    latitude
+    city
     createdAt
     updatedAt
     __typename
@@ -508,6 +517,9 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename
@@ -571,6 +583,9 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename
@@ -634,6 +649,9 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename

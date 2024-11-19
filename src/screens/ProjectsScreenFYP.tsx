@@ -16,41 +16,11 @@ const windowHeight = Dimensions.get('window').height;
 
 const ProjectsScreenFYP = ({ category }: any) => {
     
-    const [currentPage, setCurrentPage] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(0);
   const [projects, setProjects] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState<any>(false);
-
-  const [startX, setStartX] = useState(0);
-  const [isSwiping, setIsSwiping] = useState(false);
-
-  // Use PanResponder for gesture handling
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (event, gestureState) => {
-      return true;  // Start detecting gestures
-    },
-    onPanResponderGrant: (event, gestureState) => {
-      setStartX(event.nativeEvent.pageX); // Track starting touch point
-    },
-    onPanResponderMove: (event, gestureState) => {
-      // Optional: Detect swipe movement
-      const distance = Math.abs(event.nativeEvent.pageX - startX);
-      if (distance > 20) {
-        setIsSwiping(true);
-      }
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      if (!isSwiping) {
-        handleClick();  // Trigger click if swipe is not detected
-      }
-      setIsSwiping(false);  // Reset after swipe or click
-    },
-  });
-
-  const handleClick = () => {
-    console.log('Item clicked');
-  };
 
   const fetchProjects = async (nextToken = null) => {
     setLoading(true);
@@ -76,7 +46,7 @@ const ProjectsScreenFYP = ({ category }: any) => {
         }
       const castedResult = result as GraphQLResult<any>
       const fetchedProjects = castedResult?.data.listProjects.items;
-      console.log(fetchedProjects)
+      // console.log(fetchedProjects[0].city)
       // Ensure no duplicate projects
       setProjects((prevProjects: any) => {
         const newProjects = fetchedProjects.filter((newProject: any) => 
@@ -104,61 +74,10 @@ const ProjectsScreenFYP = ({ category }: any) => {
     }
   };
 
-  // HEADER FOR PROJECTSGRID
-  const listHeaderComponent = (
-    <View>
-        {/* PAGER PROJECT CARDS */}
-        <View style={styles.pagerViewOuterContainer}>
-          <Carousel
-            panGestureHandlerProps={{
-              activeOffsetX: [-10, 10],
-            }}
-            loop
-            width={windowWidth}
-            height={windowWidth*0.85}
-            autoPlay={false}
-            data={projects} // Display only the first 4 projects
-            onSnapToItem={(index) => setCurrentPage(index)}
-            scrollAnimationDuration={300}
-            renderItem={({ item, index }: { item: any, index: any }) => (
-              <View style={styles.page}>
-                <LargeProjectCard project={item} />
-              </View>
-            //   <View style={styles.page}>
-            //  <TouchableWithoutFeedback onPress={handleClick} style={styles.page}>
-            //     <LargeProjectCard project={item} />
-            //   </TouchableWithoutFeedback>
-            // </View>
-        //     <TouchableWithoutFeedback
-        //         style={styles.page}
-        //         {...panResponder.panHandlers} // Attach PanResponder handlers to the view
-        //         onPress={handleClick}
-        //         >
-        //         <LargeProjectCard project={item} />
-        //   </TouchableWithoutFeedback>
-           
-            )}
-          />
-          <PageIndicator
-            style={styles.indicator}
-            current={currentPage}
-            count={Math.min(projects.length, 4)} // Adjust based on the number of projects
-            color='white'
-          />
-        </View>
-      
-        {/* BROWSE PROJECTS TEXT */}
-        <View style={styles.browseProjectsHeaderContainer}>
-        <Text style={styles.browseProjectsHeaderText}>Browse all projects</Text>
-        <Text style={styles.browseProjectsSubtitleText}>Explore a world of ideas</Text>
-        </View>
-    </View>
-  );
-
   return (
     <View style={styles.projectsScreenContainer}>
       <LargeProjectCardsFlatList
-         projects={projects} // Pass remaining projects after first 4
+          projects={projects} // Pass remaining projects after first 4
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
         />

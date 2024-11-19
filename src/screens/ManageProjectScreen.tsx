@@ -5,7 +5,6 @@ import { useRouter } from 'expo-router';
 import Octicons from 'react-native-vector-icons/Octicons'; // Import vector icons
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import vector icons
 
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 

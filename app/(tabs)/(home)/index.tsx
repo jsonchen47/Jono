@@ -5,13 +5,15 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import ProjectsScreen from '../../../src/screens/ProjectsScreen';
-import { useRouter } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import ProjectsScreenFYP from '@/src/screens/ProjectsScreenFYP';
+import { RouterStore } from 'expo-router/build/global-state/router-store';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -40,14 +42,6 @@ const Header = () => {
   )
 }
 
-const ScrollableProjectsScreen = ({ category }: any) => {
-    return (
-      <ScrollView>
-        <ProjectsScreen category = {category}/>
-      </ScrollView>
-    );
-  };
-
 const Tab = createMaterialTopTabNavigator();
 
 interface tabBarLabelProps {
@@ -74,7 +68,7 @@ function MyTabs() {
       <Header/>
     
     <Tab.Navigator
-      initialRouteName="Feed"
+      initialRouteName="For You"
       screenOptions={{
         tabBarActiveTintColor: '#e91e63',
         tabBarLabelStyle: { fontSize: 12 },
@@ -90,11 +84,18 @@ function MyTabs() {
       }}
     >
       <Tab.Screen
-        name="Feed"
+        name="For You"
         children={() => <ProjectsScreenFYP category="" />}
         options={{
-            tabBarLabel: ({ focused }) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="star" focused={focused} />
+            tabBarLabel: ({ focused }) => <TabBarLabel label="For You" IconComponent={FontAwesome5} icon="home" focused={focused} />
         }} 
+      />
+      <Tab.Screen
+        name="All"
+        children={() => <ProjectsScreen category="" />}
+        options={{
+          tabBarLabel: ({ focused }) => <TabBarLabel label="All" IconComponent={FontAwesome6} icon="star" focused={focused} />
+      }} 
       />
       <Tab.Screen
         name="Health"
@@ -147,7 +148,12 @@ function MyTabs() {
       />
     </Tab.Navigator>
     {/* <View>  */}
-      <TouchableOpacity style={styles.mapButton}>
+      <TouchableOpacity 
+        style={styles.mapButton}
+        onPress={() => 
+          router.push('/map')
+        } 
+      >
         <Text style={styles.mapButtonText}>
           Map
         </Text>

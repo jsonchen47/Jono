@@ -33,6 +33,9 @@ export const createProject = /* GraphQL */ `mutation CreateProject(
     skills
     resources
     categories
+    longitude
+    latitude
+    city
     createdAt
     updatedAt
     __typename
@@ -67,6 +70,9 @@ export const updateProject = /* GraphQL */ `mutation UpdateProject(
     skills
     resources
     categories
+    longitude
+    latitude
+    city
     createdAt
     updatedAt
     __typename
@@ -101,6 +107,9 @@ export const deleteProject = /* GraphQL */ `mutation DeleteProject(
     skills
     resources
     categories
+    longitude
+    latitude
+    city
     createdAt
     updatedAt
     __typename
@@ -545,6 +554,9 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename
@@ -609,6 +621,9 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename
@@ -673,6 +688,9 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
       skills
       resources
       categories
+      longitude
+      latitude
+      city
       createdAt
       updatedAt
       __typename

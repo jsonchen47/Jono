@@ -14,7 +14,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.json47.Jono"
+      "bundleIdentifier": "com.json47.Jono",
+      "config.googleMapsApiKey": "AIzaSyDOLlq--Ecb85NIMlUhnBwdkr3jDxmAkb8"
     },
     "android": {
       "adaptiveIcon": {

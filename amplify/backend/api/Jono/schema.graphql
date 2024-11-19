@@ -8,6 +8,9 @@ type Project @model @searchable @auth(rules: [{allow: public}]) {
   skills: [String]
   resources: [String]
   categories: [String]
+  longitude: Float
+  latitude: Float
+  city: String
 }
 
 type ChatRoom @model @searchable @auth(rules: [{allow: public}]) {
