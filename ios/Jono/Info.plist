@@ -87,5 +87,7 @@
 	<string>Automatic</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is needed to display nearby projects and resources on the map.</string>
 </dict>
 </plist>
