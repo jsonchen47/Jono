@@ -150,9 +150,13 @@ const newProject2 = () => {
         {/* Custom Header */}
         <View style={styles.header}>
           <Pressable onPress={() => {
+            router.replace('/(tabs)/(home)')
             uploadNewProject(formData, setFormData, showProgressBar, hideProgressBar, updateProgress, isVisible, setProjectId)
-            router.back()
-            router.back()
+            // router.back()
+            // console.log('hit first router back')
+            // router.back()
+            // console.log('hit second router back')
+            console.log('went home')
             }}>
             <Text style={styles.cancelButton}>Publish</Text>
           </Pressable>

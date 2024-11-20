@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -14,6 +14,7 @@ import ProjectsScreen from '../../../src/screens/ProjectsScreen';
 import { router, useRouter } from 'expo-router';
 import ProjectsScreenFYP from '@/src/screens/ProjectsScreenFYP';
 import { RouterStore } from 'expo-router/build/global-state/router-store';
+import { useProgress } from '@/src/contexts/ProgressContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -32,9 +33,10 @@ const Header = () => {
         </TouchableOpacity>
           <TouchableOpacity 
           style={styles.filterButton}
-          onPress={() => 
+          onPress={() => {
             console.log('Filter button pressed')
-          } 
+            router.replace('/');
+          }}
           >
           <FontAwesome6 name="sliders" size={15} style={{fontWeight: '100'}}/>
         </TouchableOpacity>
@@ -163,9 +165,20 @@ function MyTabs() {
     </SafeAreaView>
   );
 }
+
+// Main app 
 export default function App() {
+  const router = useRouter();
+  const { progress, setProgress } = useProgress();
+
+  useEffect(() => {
+    if (progress >= 1) { 
+      router.replace('/'); // Reload the current route when the progress of uploading a project is done
+      setProgress(0)
+    }
+  }, [progress >= 1]);  
+
   return (
-      
       <SafeAreaView style={{flex: 1}}>
       <MyTabs />
       </SafeAreaView>

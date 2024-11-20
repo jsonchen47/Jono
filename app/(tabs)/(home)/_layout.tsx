@@ -20,6 +20,7 @@ export default function HomeLayout() {
             backgroundColor: 'white',
           },
           headerTintColor: 'black',
+          animation: 'fade',
         }}
       />
       <Stack.Screen
