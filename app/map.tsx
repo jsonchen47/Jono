@@ -20,7 +20,8 @@ const map = () => {
       latitudeDelta: number;
       longitudeDelta: number;
     } | null>(null); // Start with null
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState<any>([]);
+    const [selectedProject, setSelectedProject] = useState<any>(null); // State for selected project
 
     const mapRef = useRef<MapView>(null);
 
@@ -130,6 +131,16 @@ const map = () => {
       );
     };
 
+    // Handle Marker Press
+    const handleMarkerPress = (project: any) => {
+      setSelectedProject(project); // Show the card with project info
+  };
+
+  // Handle Map Press (dismiss card)
+  const handleMapPress = () => {
+      // setSelectedProject(null); // Dismiss the card when map is pressed
+  };
+
     return (
       <View style={styles.container}>
         {region ? (
@@ -144,6 +155,7 @@ const map = () => {
               setRegion(newRegion);
             }}
             showsPointsOfInterest={false}
+            onPress={handleMapPress} // Dismiss the card on map press
           >
         {projects.map((project: any) => (
           <Marker
@@ -155,6 +167,12 @@ const map = () => {
             title={project.title}
             pinColor='blue'
             description={project.description}
+            onPress={() => {
+              handleMarkerPress(project)
+              console.log({project})
+            }
+            } // Show card when marker is pressed
+            
           />
         ))}
           </MapView>
@@ -164,6 +182,13 @@ const map = () => {
         <TouchableOpacity style={styles.centerButton} onPress={centerMapOnLocation}>
           <MaterialCommunityIcons name="navigation-variant" size={24} color="#015E98" />
         </TouchableOpacity>
+        {/* Display the card if a project is selected */}
+        {selectedProject && (
+          <View style={styles.card}>
+              <Text style={styles.cardTitle}>{selectedProject.title}</Text>
+              <Text style={styles.cardDescription}>{selectedProject.description}</Text>
+          </View>
+        )}
       </View>
     )
 }
@@ -194,4 +219,23 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.3,
       shadowRadius: 3,
     },
+    card: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'white',
+      padding: 20,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      elevation: 5,
+  },
+  cardTitle: {
+      fontWeight: 'bold',
+      fontSize: 18,
+  },
+  cardDescription: {
+      fontSize: 14,
+      color: '#666',
+  },
   });
