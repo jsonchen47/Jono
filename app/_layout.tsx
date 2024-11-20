@@ -234,13 +234,13 @@ function RootLayout() {
                   presentation: 'fullScreenModal',
                 }}
                 />
-                <Stack.Screen
+                {/* <Stack.Screen
                 name="map"
                 options={{
                   title: 'Map',
                   presentation: 'fullScreenModal',
                 }}
-                />
+                /> */}
               </Stack>
               {/* <SafeAreaView> */}
               <ProgressBarComponent 
@@ -259,7 +259,6 @@ function RootLayout() {
         </ApplicationProvider>
         </ProgressProvider>
       </GestureHandlerRootView>
-     
   );
 }
 

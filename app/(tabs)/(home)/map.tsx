@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, PermissionsAndroid, Image, Platform, SafeAreaView } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, PermissionsAndroid, Image, Platform, SafeAreaView, Pressable } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -166,7 +166,7 @@ const map = () => {
               longitude: project.longitude,
             }}
             // title={project.title}
-            pinColor='blue'
+            pinColor={selectedProject && selectedProject.id === project.id ? 'aqua' : 'blue'}
             // description={project.description}
             onSelect={() => {
               handleMarkerSelect(project)
@@ -187,7 +187,20 @@ const map = () => {
         </TouchableOpacity>
         {/* Display the card if a project is selected */}
         {selectedProject && (
-          <View style={styles.card}>
+          <View 
+          style={styles.card}
+          // pointerEvents="box-none"
+          >
+            <TouchableOpacity 
+              style={styles.cardPressable}
+              onPress={() => {
+                router.push({
+                  pathname: '/project/[id]',
+                  params: { id: selectedProject.id, projectID: selectedProject.id },
+                })
+                console.log("card pressed")
+              }}
+              >
               <Image 
                 source={{ uri: selectedProject.image }} // Assuming `selectedProject.imageUrl` holds the image URL
                 style={styles.cardImage}
@@ -198,6 +211,7 @@ const map = () => {
                 <Text style={styles.cardCity}>{selectedProject.city}</Text>
                 <Text numberOfLines={3} style={styles.cardDescription}>{selectedProject.description}</Text>
               </View>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -239,7 +253,10 @@ const styles = StyleSheet.create({
       // padding: 20,
       borderRadius: 20,
       elevation: 5,
-      flexDirection: 'row'
+      // flexDirection: 'row'
+  },
+  cardPressable: {
+    flexDirection: 'row'
   },
   cardText: {
     margin: 20, 

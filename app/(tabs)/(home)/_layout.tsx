@@ -22,6 +22,13 @@ export default function HomeLayout() {
           headerTintColor: 'black',
         }}
       />
+      <Stack.Screen
+        name="map"
+        options={{
+          title: 'Map',
+          // presentation: 'fullScreenModal',
+        }}
+       />
     </Stack>
   );
 }
