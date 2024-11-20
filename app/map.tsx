@@ -193,8 +193,10 @@ const map = () => {
                 style={styles.cardImage}
               />
               <View style={styles.cardText}>
+                
                 <Text numberOfLines={3} style={styles.cardTitle}>{selectedProject.title}</Text>
-                <Text numberOfLines={4} style={styles.cardDescription}>{selectedProject.description}</Text>
+                <Text style={styles.cardCity}>{selectedProject.city}</Text>
+                <Text numberOfLines={3} style={styles.cardDescription}>{selectedProject.description}</Text>
               </View>
           </View>
         )}
@@ -246,14 +248,18 @@ const styles = StyleSheet.create({
   cardTitle: {
       fontWeight: 'bold',
       fontSize: 15,
-      paddingBottom: 10,
+      paddingBottom: 5,
+  },
+  cardCity: {
+    fontSize: 12,
+    color: 'black',
+    paddingBottom: 10, 
   },
   cardDescription: {
-      fontSize: 14,
+      fontSize: 12,
       color: '#777',
   },
   cardImage: {
-    // flex: 1,
     height: '100%', 
     width: '30%',
     resizeMode: 'cover',
