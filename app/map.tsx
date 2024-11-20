@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet, PermissionsAndroid, Platform } from 'react-native'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
@@ -8,17 +8,21 @@ import Geolocation from '@react-native-community/geolocation';
 import { API, graphqlOperation } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { listProjects } from '@/src/graphql/queries';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const map = () => {
     const router = useRouter(); 
     const navigation = useNavigation();
-    const [region, setRegion] = useState({
-      latitude: 37.7749, // Default to San Francisco or another fallback
-      longitude: -122.4194,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
+    const [region, setRegion] = useState<{
+      latitude: number;
+      longitude: number;
+      latitudeDelta: number;
+      longitudeDelta: number;
+    } | null>(null); // Start with null
     const [projects, setProjects] = useState([]);
+
+    const mapRef = useRef<MapView>(null);
 
     // Set the header 
     useEffect(() => {
@@ -108,34 +112,58 @@ const map = () => {
       );
     };
 
+    const centerMapOnLocation = () => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          if (mapRef.current) {
+            mapRef.current.animateToRegion({
+              latitude,
+              longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }, 500); // Smooth animation over 1 second
+          }
+        },
+        (error) => console.log(error),
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      );
+    };
+
     return (
-        <View style={styles.container}>
-          {region ? (
-            <MapView
-              provider={PROVIDER_GOOGLE}
-              style={styles.map}
-              initialRegion={region} // Pass region only when it's not undefined
-              // onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
-              onRegionChangeComplete={(newRegion) => {
-                // Update the region for fetching data, but don't pass it back to the MapView
-                setRegion(newRegion);
-              }}
-            >
-          {projects.map((project: any) => (
-            <Marker
-              key={project.id}
-              coordinate={{
-                latitude: project.latitude,
-                longitude: project.longitude,
-              }}
-              title={project.title}
-              description={project.description}
-            />
-          ))}
-            </MapView>
-            ) : (
-              <Text>Loading...</Text> // Show loading indicator while region is being fetched
-          )}
+      <View style={styles.container}>
+        {region ? (
+          <MapView
+            ref={mapRef}
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            initialRegion={region} // Pass region only when it's not undefined
+            // onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
+            onRegionChangeComplete={(newRegion) => {
+              // Update the region for fetching data, but don't pass it back to the MapView
+              setRegion(newRegion);
+            }}
+            showsPointsOfInterest={false}
+          >
+        {projects.map((project: any) => (
+          <Marker
+            key={project.id}
+            coordinate={{
+              latitude: project.latitude,
+              longitude: project.longitude,
+            }}
+            title={project.title}
+            pinColor='blue'
+            description={project.description}
+          />
+        ))}
+          </MapView>
+          ) : (
+            <Text>Loading...</Text> // Show loading indicator while region is being fetched
+        )}
+        <TouchableOpacity style={styles.centerButton} onPress={centerMapOnLocation}>
+          <MaterialCommunityIcons name="navigation-variant" size={24} color="#015E98" />
+        </TouchableOpacity>
       </View>
     )
 }
@@ -149,5 +177,21 @@ const styles = StyleSheet.create({
     map: {
       width: '100%',
       height: '100%',
+    },
+    centerButton: {
+      position: 'absolute',
+      top: 20,
+      right: 20,
+      width: 45,
+      height: 45,
+      borderRadius: 10,
+      backgroundColor: 'white',
+      justifyContent: 'center',
+      alignItems: 'center',
+      elevation: 5, // For shadow on Android
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 3,
     },
   });
