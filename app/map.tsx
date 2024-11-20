@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, PermissionsAndroid, Platform } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, PermissionsAndroid, Image, Platform, SafeAreaView } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -22,6 +22,7 @@ const map = () => {
     } | null>(null); // Start with null
     const [projects, setProjects] = useState<any>([]);
     const [selectedProject, setSelectedProject] = useState<any>(null); // State for selected project
+    const [markerPressed, setMarkerPressed] = useState(false); // To track marker press
 
     const mapRef = useRef<MapView>(null);
 
@@ -132,14 +133,14 @@ const map = () => {
     };
 
     // Handle Marker Press
-    const handleMarkerPress = (project: any) => {
+    const handleMarkerSelect = (project: any) => {
       setSelectedProject(project); // Show the card with project info
-  };
+    };
 
-  // Handle Map Press (dismiss card)
-  const handleMapPress = () => {
-      // setSelectedProject(null); // Dismiss the card when map is pressed
-  };
+    // Handle Map Press (dismiss card)
+    const handleMarkerDeselect = () => {
+        setSelectedProject(null); // Dismiss the card when map is pressed
+    };
 
     return (
       <View style={styles.container}>
@@ -155,7 +156,7 @@ const map = () => {
               setRegion(newRegion);
             }}
             showsPointsOfInterest={false}
-            onPress={handleMapPress} // Dismiss the card on map press
+            // onPress={handleMapPress} // Dismiss the card on map press
           >
         {projects.map((project: any) => (
           <Marker
@@ -164,15 +165,17 @@ const map = () => {
               latitude: project.latitude,
               longitude: project.longitude,
             }}
-            title={project.title}
+            // title={project.title}
             pinColor='blue'
-            description={project.description}
-            onPress={() => {
-              handleMarkerPress(project)
+            // description={project.description}
+            onSelect={() => {
+              handleMarkerSelect(project)
               console.log({project})
-            }
-            } // Show card when marker is pressed
-            
+            }} // Show card when marker is pressed
+            onDeselect={() => {
+              handleMarkerDeselect()
+              // console.log({project})
+            }}
           />
         ))}
           </MapView>
@@ -185,8 +188,14 @@ const map = () => {
         {/* Display the card if a project is selected */}
         {selectedProject && (
           <View style={styles.card}>
-              <Text style={styles.cardTitle}>{selectedProject.title}</Text>
-              <Text style={styles.cardDescription}>{selectedProject.description}</Text>
+              <Image 
+                source={{ uri: selectedProject.image }} // Assuming `selectedProject.imageUrl` holds the image URL
+                style={styles.cardImage}
+              />
+              <View style={styles.cardText}>
+                <Text numberOfLines={3} style={styles.cardTitle}>{selectedProject.title}</Text>
+                <Text numberOfLines={4} style={styles.cardDescription}>{selectedProject.description}</Text>
+              </View>
           </View>
         )}
       </View>
@@ -221,21 +230,34 @@ const styles = StyleSheet.create({
     },
     card: {
       position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
+      bottom: 30,
+      left: 20,
+      right: 20,
       backgroundColor: 'white',
-      padding: 20,
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
+      // padding: 20,
+      borderRadius: 20,
       elevation: 5,
+      flexDirection: 'row'
+  },
+  cardText: {
+    margin: 20, 
+    flexShrink: 1,
   },
   cardTitle: {
       fontWeight: 'bold',
-      fontSize: 18,
+      fontSize: 15,
+      paddingBottom: 10,
   },
   cardDescription: {
       fontSize: 14,
-      color: '#666',
+      color: '#777',
   },
+  cardImage: {
+    // flex: 1,
+    height: '100%', 
+    width: '30%',
+    resizeMode: 'cover',
+    borderTopLeftRadius: 20, 
+    borderBottomLeftRadius: 20,
+  }
   });
