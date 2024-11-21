@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -15,12 +15,14 @@ import { router, useRouter } from 'expo-router';
 import ProjectsScreenFYP from '@/src/screens/ProjectsScreenFYP';
 import { RouterStore } from 'expo-router/build/global-state/router-store';
 import { useProgress } from '@/src/contexts/ProgressContext';
+import { Snackbar } from 'react-native-paper';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Header = () => {
   const router = useRouter(); 
+  const { deleted, setDeleted } = useProgress();
   return (
     <View style={styles.searchBarContainer}>
         <TouchableOpacity style={styles.searchButton}
@@ -35,7 +37,7 @@ const Header = () => {
           style={styles.filterButton}
           onPress={() => {
             console.log('Filter button pressed')
-            router.replace('/');
+            setDeleted(true)
           }}
           >
           <FontAwesome6 name="sliders" size={15} style={{fontWeight: '100'}}/>
@@ -169,8 +171,10 @@ function MyTabs() {
 // Main app 
 export default function App() {
   const router = useRouter();
-  const { progress, setProgress } = useProgress();
+  const { progress, setProgress, deleted, setDeleted } = useProgress();
+  const [snackbarVisible, setSnackbarVisible] = useState<any>(false); // Snackbar visibility state
 
+  // Check if a project just was uploaded 
   useEffect(() => {
     if (progress >= 1) { 
       router.replace('/'); // Reload the current route when the progress of uploading a project is done
@@ -178,10 +182,29 @@ export default function App() {
     }
   }, [progress >= 1]);  
 
+  // Check if a project was just deleted 
+  useEffect(() => {
+    if (deleted == true) { 
+      setSnackbarVisible(true)
+      setDeleted(false)
+    }
+  }, [deleted == true]);  
+
   return (
-      <SafeAreaView style={{flex: 1}}>
+    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       <MyTabs />
-      </SafeAreaView>
+      
+    </SafeAreaView>
+    <Snackbar
+        style={styles.snackBar}
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)} // Dismiss Snackbar
+        duration={3000} // Optional duration for the Snackbar
+      >
+        Project Deleted
+      </Snackbar>
+    </View>
   )
 }
 
@@ -271,5 +294,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '500',
     marginRight: 5,
+  },
+  snackBar: {
+    bottom: -30, // Adjust based on your bottom tab navigator height
+    // position: 'absolute'
   },
 })

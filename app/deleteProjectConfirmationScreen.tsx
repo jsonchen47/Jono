@@ -6,6 +6,7 @@ import { listUserProjects } from '@/src/graphql/queries'; // Adjust the path as 
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { deleteProject, deleteUserProject } from '@/src/graphql/mutations';
 import { getProject } from '@/src/graphql/queries';
+import { useProgress } from '@/src/contexts/ProgressContext';
 
 // Get the UserProjects
 const fetchProjectLinks = async (projectId: any) => {
@@ -55,6 +56,7 @@ const deleteProjectById = async (projectId: any) => {
     await deleteProjectLinks(links);
     await API.graphql(graphqlOperation(deleteProject, { input: { id: projectId } }));
     console.log('Project deleted successfully');
+
   } catch (error) {
     console.error('Error deleting project:', error);
   }
@@ -63,6 +65,7 @@ const deleteProjectById = async (projectId: any) => {
 const deleteProjectConfirmationScreen = () => {
   const router = useRouter();
   const { projectId } = useLocalSearchParams();
+  const { setDeleted } = useProgress();
 
   return (
     <View style={styles.overlay}>
@@ -75,8 +78,9 @@ const deleteProjectConfirmationScreen = () => {
         onPress={() => {
           // Delete project
           deleteProjectById(projectId)
-          router.back()
-          router.back()
+          router.replace('/(tabs)/(home)')
+          // Set deleted to true so that it shows up on the snackbar at the bottom of the screen
+          setDeleted(true)
         }}
       >
         <Text style={styles.deleteButtonText}>Delete</Text>

@@ -10,6 +10,8 @@ type ProgressContextType = {
   updateProgress: (value: number) => void;
   projectId: string | null; // Add projectId
   setProjectId: (id: string | null) => void; // Function to set projectId
+  deleted: boolean; 
+  setDeleted: (value: boolean) => void;
 };
 
 // Create the context with the defined type
@@ -29,6 +31,7 @@ export const ProgressProvider = ({ children }: { children: ReactNode }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [projectId, setProjectId] = useState<string | null>(null); // Initialize projectId
+  const [deleted, setDeleted] = useState(false);
 
   const showProgressBar = () => {
     console.log("Showing progress bar");
@@ -52,6 +55,8 @@ export const ProgressProvider = ({ children }: { children: ReactNode }) => {
         updateProgress,
         projectId, // Provide projectId
         setProjectId, // Provide setProjectId function
+        deleted,
+        setDeleted
       }}
     >
       {children}
