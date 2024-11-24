@@ -6,7 +6,6 @@ export default function ProfileLayout() {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#f4511e',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -20,11 +19,18 @@ export default function ProfileLayout() {
           // title: 'Explore',
           // headerShown: false,
           headerStyle: {
-            backgroundColor: 'white',
+            backgroundColor: '#00C0D1',
+            // elevation: 0, // Remove shadow on Android
+            // shadowOpacity: 0, // Remove shadow on iOS
+            // borderBottomWidth: 0, // Remove border if any
+            
           },
           headerTintColor: 'black',
+          headerShadowVisible: false,
           // headerRight: () => <Button title="Update count" />,
+          // headerShown: false,
         }}
+
       />
       <Stack.Screen
         name="connections" 

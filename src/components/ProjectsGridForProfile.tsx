@@ -16,6 +16,7 @@ interface projectsGridProps {
 }
 
 const ProjectsGridForProfile = ({ projects, loadMoreProjects, isFetchingMore, listHeaderComponent = null }: projectsGridProps) => {
+
   return (
     <Tabs.FlatList
     maintainVisibleContentPosition={{ minIndexForVisible: 1 }}
@@ -31,7 +32,7 @@ const ProjectsGridForProfile = ({ projects, loadMoreProjects, isFetchingMore, li
     numColumns={2} // Use 2 columns for a grid-like layout
     columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
     onEndReached={loadMoreProjects}
-    onEndReachedThreshold={0}
+    onEndReachedThreshold={0.5}
     ListHeaderComponent={listHeaderComponent || null}
     ListFooterComponent={() =>
       isFetchingMore ? (

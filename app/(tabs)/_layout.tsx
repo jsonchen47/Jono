@@ -55,13 +55,13 @@ export default function TabLayout() {
       <Tabs.Screen 
         name="center" 
         options={{ 
-          tabBarIcon: () => null,
-          title: 'Create',
+          // tabBarIcon: () => null,
+          // title: 'Create',
           // tabBarIcon: ({ color, size }) => (
           //   <Ionicons name="add-circle-outline" color={'blue'} size={32} />
           // ),
           tabBarButton: (props) => (
-            <TouchableOpacity style={styles.centerTab} {...props} onPress={handleCenterTabPress}>
+            <TouchableOpacity style={styles.centerTab} onPress={handleCenterTabPress} delayLongPress={undefined}>
                <Ionicons name="add-circle-outline" size={28} color="gray" style={{marginTop: 5}}/>
                <Text style={styles.centerTabText}>New Project</Text>
               {/* <Text style={styles.centerTabText}>+</Text> */}
@@ -106,23 +106,25 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   centerTab: {
     position: 'absolute',
-    bottom: 20, // Move it up slightly to float above the tab bar
-    height: 70,
+    // bottom: 0, // Move it up slightly to float above the tab bar
+    // height: 70,
     width: 70,
-    borderRadius: 35,
+    // borderRadius: 35,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5, // Adds the shadow for Android
-    
+    // backgroundColor: '#FFF',
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 10 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 5,
+    // elevation: 5, // Adds the shadow for Android
+    left: '50%', // Start at the center of the screen
+    transform: [{ translateX: -35 }],
+    paddingTop: 2,
   },
   centerTabText: {
     fontSize: 10,
-    marginTop: 5,
+    marginTop: 4,
     color: 'gray',
     // backgroundColor: 'red'
     // color: '#fff',

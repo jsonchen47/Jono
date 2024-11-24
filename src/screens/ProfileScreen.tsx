@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
 import { Chip } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
@@ -7,13 +7,23 @@ import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { getUser, listProjects } from '../../../src/graphql/queries';
+import { getUser, listProjects } from '../graphql/queries';
 import { listTeamsByUser } from '@/src/backend/queries';
 import ProjectsGridNew from '@/src/components/ProjectsGridNew';
 import ProfileHeader from '@/src/components/ProfileHeader';
 import Emoji from 'react-native-emoji';
 import ProjectsGridForProfile from '@/src/components/ProjectsGridForProfile';
-import ProfileScreen from '@/src/screens/ProfileScreen';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import ProfileProjectsScreen from './ProfileProjectsScreen';
+
+const Tab = createMaterialTopTabNavigator();
+
+const Header = () => {
+  return (
+    <Text>hi</Text>
+  )
+}
+
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -23,7 +33,7 @@ const randomColor = () => {
   return color[Math.floor(Math.random() * color.length)];
 };
 
-export default function ProfileScreenOld() {
+export default function ProfileScreen() {
   const [projects, setProjects] = useState<any>([]);
   const [teams, setTeams] = useState<any>([]);
   const [user, setUser] = useState<any>(null);
@@ -67,6 +77,8 @@ export default function ProfileScreenOld() {
       const newProjectsNextToken = castedProjectsData.data.listProjects.nextToken;
 
       setProjects(fetchMore ? [...projects, ...fetchedProjects] : fetchedProjects);
+      // setProjects((prevProjects: any) => fetchMore ? [...prevProjects, ...fetchedProjects] : fetchedProjects);
+
       setProjectsNextToken(newProjectsNextToken);
     } catch (err) {
       setError(err);
@@ -174,7 +186,7 @@ export default function ProfileScreenOld() {
   function ProjectsTab() {
     return (
       <View style={styles.tabScreen}>
-        <ProjectsGridForProfile 
+        <ProjectsGridNew 
           projects={projects} 
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMoreProjects}
@@ -186,7 +198,7 @@ export default function ProfileScreenOld() {
   function TeamsTab() {
     return (
       <View style={styles.tabScreen}>
-        <ProjectsGridForProfile 
+        <ProjectsGridNew 
           projects={teams} 
           loadMoreProjects={loadMoreTeams}
           isFetchingMore={isFetchingMoreTeams}
@@ -196,28 +208,43 @@ export default function ProfileScreenOld() {
   }
 
   return (
-    // <Tabs.Container 
-    //   renderHeader={() => <ProfileHeader user={user} />}
-    //   renderTabBar={props => (
-    //     <MaterialTabBar
-    //       {...props}
-    //       indicatorStyle={{ backgroundColor: 'black', height: 2 }}
+    <Tabs.Container 
+      renderHeader={() => <ProfileHeader user={user} />}
+      renderTabBar={props => (
+        <MaterialTabBar
+          {...props}
+          indicatorStyle={{ backgroundColor: 'black', height: 2 }}
+        />
+      )}
+    >
+      <Tabs.Tab name="About">
+        <Tabs.ScrollView>
+          <AboutTab />
+        </Tabs.ScrollView>
+      </Tabs.Tab>
+      <Tabs.Tab name="Projects">
+        <ProfileProjectsScreen category="" />
+      </Tabs.Tab>
+      <Tabs.Tab name="Teams">
+        <TeamsTab />
+      </Tabs.Tab>
+    </Tabs.Container>
+    // <SafeAreaView style={{flex: 1}}>
+    //   <Tab.Navigator>
+    //     <Tab.Screen
+    //       name="About"
+    //       component={AboutTab}
     //     />
-    //   )}
-    // >
-    //   <Tabs.Tab name="About">
-    //     <Tabs.ScrollView>
-    //       <AboutTab />
-    //     </Tabs.ScrollView>
-    //   </Tabs.Tab>
-    //   <Tabs.Tab name="Projects">
-    //     <ProjectsTab />
-    //   </Tabs.Tab>
-    //   <Tabs.Tab name="Teams">
-    //     <TeamsTab />
-    //   </Tabs.Tab>
-    // </Tabs.Container>
-    <ProfileScreen/>
+    //     <Tab.Screen
+    //       name="Projects"
+    //       children={() => <ProfileProjectsScreen category="" />}
+    //     />
+    //     <Tab.Screen
+    //       name="Teams"
+    //       component={TeamsTab}
+    //     />
+    //   </Tab.Navigator>
+    // </SafeAreaView>
   );
 }
 

@@ -158,9 +158,9 @@ function MyTabs() {
           router.push('/map')
         } 
       >
-        <Text style={styles.mapButtonText}>
+        {/* <Text style={styles.mapButtonText}>
           Map
-        </Text>
+        </Text> */}
         <Ionicons name='map' style={styles.mapIcon}/>
       </TouchableOpacity>
     {/* </View> */}
@@ -276,13 +276,19 @@ const styles = StyleSheet.create({
   },
   mapButton: {
     backgroundColor: '#4CDFFF',
-    borderRadius: 25, 
-    padding: 12, 
+    borderRadius: 100, 
     alignSelf: "center",
     position: 'absolute', 
     bottom: 15, 
-    flexDirection: 'row',
+    right: 15,
+    // flexDirection: 'row',
     alignItems: 'center', 
+    shadowColor: '#000', // Black shadow
+    shadowOffset: { width: 0, height: 2 }, // Offset the shadow
+    shadowOpacity: 0.25, // Opacity of the shadow
+    shadowRadius: 3.84, // Blurring effect
+    // Shadow for Android
+    elevation: 5, // Elevation determines the shadow depth
   },
   mapButtonText: {
     fontWeight: '500',
@@ -291,9 +297,10 @@ const styles = StyleSheet.create({
     marginRight: 5, 
   }, 
   mapIcon: {
-    fontSize: 17,
+    fontSize: 25,
     fontWeight: '500',
-    marginRight: 5,
+    // marginTop: 5,
+    margin: 17,
   },
   snackBar: {
     bottom: -30, // Adjust based on your bottom tab navigator height
