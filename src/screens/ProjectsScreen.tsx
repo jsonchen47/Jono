@@ -1,7 +1,7 @@
 // ProjectsScreen.js
 import { View, Text, StyleSheet, Dimensions, PanResponder } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import { listProjects } from '@/src/graphql/queries';
 import ProjectsGridNew from '../components/ProjectsGridNew';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
@@ -26,15 +26,24 @@ const ProjectsScreen = ({ category }: any) => {
     setLoading(true);
     try {
         // If there is a category, filter. Otherwise, don't filter. 
-      const authUser = await Auth.currentAuthenticatedUser();
-      const userID = authUser.attributes.sub;
-      const result = await API.graphql(
-        graphqlOperation(listProjects, {
-          filter: { ownerIDs: { contains: userID } },
-          nextToken: nextToken,
-          limit: 10
-        })
-      );
+        var result 
+        if (category != "") {
+             result = await API.graphql(graphqlOperation(listProjects, {
+                filter: {
+                  categories: {
+                     contains: category 
+                    },
+                },
+                limit: 8,
+                nextToken,
+              }));
+        }
+        else {
+             result = await API.graphql(graphqlOperation(listProjects, {
+                limit: 8,
+                nextToken,
+              }));
+        }
       const castedResult = result as GraphQLResult<any>
       const fetchedProjects = castedResult?.data.listProjects.items;
       console.log(fetchedProjects)
