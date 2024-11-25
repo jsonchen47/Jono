@@ -32,7 +32,7 @@ const ProjectsGridForProfile = ({ projects, loadMoreProjects, isFetchingMore, li
     numColumns={2} // Use 2 columns for a grid-like layout
     columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
     onEndReached={loadMoreProjects}
-    onEndReachedThreshold={0.5}
+    onEndReachedThreshold={0.1}
     ListHeaderComponent={listHeaderComponent || null}
     ListFooterComponent={() =>
       isFetchingMore ? (

@@ -1,7 +1,7 @@
 // ProjectsScreen.js
 import { View, Text, StyleSheet, Dimensions, PanResponder } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { listProjects } from '@/src/graphql/queries';
 import ProjectsGridNew from '../components/ProjectsGridNew';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
@@ -12,10 +12,15 @@ import { TouchableWithoutFeedback } from 'react-native';
 import LargeProjectCardsFlatList from '../components/LargeProjectCardsFlatList';
 import ProjectsGridForProfile from '../components/ProjectsGridForProfile';
 
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const ProfileProjectsScreen = ({ category }: any) => {
+interface ProfileProjectsScreenProps {
+  userID: string; // or any other type that matches the type of userID
+}
+
+const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID }) => {
     
   const [currentPage, setCurrentPage] = React.useState(0);
   const [projects, setProjects] = useState<any>([]);
@@ -26,25 +31,13 @@ const ProfileProjectsScreen = ({ category }: any) => {
   const fetchProjects = async (nextToken = null) => {
     setLoading(true);
     try {
-        // If there is a category, filter. Otherwise, don't filter. 
-        var result 
-        if (category != "") {
-             result = await API.graphql(graphqlOperation(listProjects, {
-                filter: {
-                  categories: {
-                     contains: category 
-                    },
-                },
-                limit: 8,
-                nextToken,
-              }));
-        }
-        else {
-             result = await API.graphql(graphqlOperation(listProjects, {
-                limit: 8,
-                nextToken,
-              }));
-        }
+      const result = await API.graphql(
+        graphqlOperation(listProjects, {
+          filter: { ownerIDs: { contains: userID } },
+          nextToken: nextToken,
+          limit: 10
+        })
+      );
       const castedResult = result as GraphQLResult<any>
       const fetchedProjects = castedResult?.data.listProjects.items;
       console.log(fetchedProjects)
@@ -66,7 +59,7 @@ const ProfileProjectsScreen = ({ category }: any) => {
 
   useEffect(() => {
     fetchProjects();
-  }, [category]);
+  }, [userID]);
 
   const loadMoreProjects = () => {
     if (nextToken && !isFetchingMore) {

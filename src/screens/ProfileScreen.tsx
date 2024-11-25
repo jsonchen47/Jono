@@ -15,6 +15,7 @@ import Emoji from 'react-native-emoji';
 import ProjectsGridForProfile from '@/src/components/ProjectsGridForProfile';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ProfileProjectsScreen from './ProfileProjectsScreen';
+import ProfileTeamsScreen from './ProfileTeamsScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -23,7 +24,6 @@ const Header = () => {
     <Text>hi</Text>
   )
 }
-
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -37,6 +37,7 @@ export default function ProfileScreen() {
   const [projects, setProjects] = useState<any>([]);
   const [teams, setTeams] = useState<any>([]);
   const [user, setUser] = useState<any>(null);
+  const [userID, setUserID] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
   const [projectsNextToken, setProjectsNextToken] = useState<any>(null);
@@ -50,6 +51,7 @@ export default function ProfileScreen() {
     try {
       const authUser = await Auth.currentAuthenticatedUser();
       const userID = authUser.attributes.sub;
+      setUserID(userID)
       const userResult = await API.graphql(
         graphqlOperation(getUser, { id: userID })
       );
@@ -223,10 +225,10 @@ export default function ProfileScreen() {
         </Tabs.ScrollView>
       </Tabs.Tab>
       <Tabs.Tab name="Projects">
-        <ProfileProjectsScreen category="" />
+        <ProfileProjectsScreen userID={userID}/>
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
-        <TeamsTab />
+        <ProfileTeamsScreen userID={userID}/>
       </Tabs.Tab>
     </Tabs.Container>
     // <SafeAreaView style={{flex: 1}}>
