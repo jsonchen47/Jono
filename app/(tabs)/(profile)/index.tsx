@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Chip } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
@@ -14,6 +14,8 @@ import ProfileHeader from '@/src/components/ProfileHeader';
 import Emoji from 'react-native-emoji';
 import ProjectsGridForProfile from '@/src/components/ProjectsGridForProfile';
 import ProfileScreen from '@/src/screens/ProfileScreen';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { Fontisto } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -101,16 +103,6 @@ export default function ProfileScreenOld() {
   };
 
   useEffect(() => {
-    navigation.setOptions({ 
-      title: '', 
-      headerStyle: {
-        backgroundColor: '#00C0D1', // Change the background color of the header
-      },
-      headerRight: () => 
-      <Link href={{ pathname: '/settings' }}>
-        <Icon name='gear' style={styles.icon} />
-      </Link>
-    });
     // Fetch all data on component mount
     const fetchData = async () => {
       setLoading(true);
@@ -120,6 +112,30 @@ export default function ProfileScreenOld() {
       setLoading(false);
     };
     fetchData();
+    
+    navigation.setOptions({ 
+      headerTitle: () => (
+        <View style={styles.headerTitleContainer}> 
+          <Text style={styles.headerTitle}>
+            {user?.username ? `@${user.username}` : ''}
+          </Text>
+        </View>
+      ),
+      headerStyle: {
+        backgroundColor: '#00C0D1', // Change the background color of the header
+      },
+      headerRight: () => 
+      <View style={styles.headerButtonsContainer}>
+        <TouchableOpacity style={styles.headerButton}>
+          <Fontisto name='bell' style={styles.icon}/>
+        </TouchableOpacity>
+        <View style={styles.spacer}/>
+        <TouchableOpacity style={styles.headerButton}>
+          <FontAwesome6 name='bars' style={styles.icon}/>
+        </TouchableOpacity>
+      </View>
+    });
+    
   }, []);
 
   const loadMoreProjects = async () => {
@@ -222,15 +238,40 @@ export default function ProfileScreenOld() {
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    justifyContent: 'center',
+  headerTitleContainer: {
+    backgroundColor: '#2B2B2B',
+    borderRadius: 10, 
+    marginBottom: 10, 
+  },
+  headerTitle: {
+    color: 'white',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    fontWeight: 500,
+  },
+  headerButtonsContainer: {
+    flexDirection: 'row', 
     alignItems: 'center',
-    display: "flex",
-    fontSize: 20,
-    paddingRight: 10,
+    marginBottom: 10,
+  },
+  headerButton: {
+    backgroundColor: '#2B2B2B',
+    borderRadius: 50,
+    width: 35,
+    height: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  spacer: {
+    paddingHorizontal: 5,
+  },
+  icon: {
+    fontSize: 15,
+    color: 'white',
+    borderRadius: 50,
   },
   aboutContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 7,
   },
   skillsAndResourcesTopPadding: {
     paddingTop: 5,
@@ -268,4 +309,5 @@ const styles = StyleSheet.create({
     flex: 1, 
     width: '100%'
   }, 
+  
 });
