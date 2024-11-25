@@ -115,16 +115,6 @@ export default function ProfileScreen() {
   };
 
   useEffect(() => {
-    navigation.setOptions({ 
-      title: '', 
-      headerStyle: {
-        backgroundColor: '#00C0D1', // Change the background color of the header
-      },
-      headerRight: () => 
-      <Link href={{ pathname: '/settings' }}>
-        <Icon name='gear' style={styles.icon} />
-      </Link>
-    });
     // Fetch all data on component mount
     const fetchData = async () => {
       setLoading(true);
@@ -153,6 +143,11 @@ export default function ProfileScreen() {
   function AboutTab() {
     return (
       <View style={styles.aboutContainer}>
+        <View>
+          <Text style={styles.bioText} numberOfLines={4}>
+            {user?.bio}
+          </Text>
+        </View>
         <View style={styles.skillsAndResourcesTopPadding}></View>
         <View style={styles.skillsAndResourcesTitleContainer}>
           <Emoji name="rocket" style={styles.emoji} />
@@ -259,7 +254,13 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   aboutContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  bioText: {
+    fontSize: 21, 
+    fontWeight: 'bold',
+    color: '#003B7B'
   },
   skillsAndResourcesTopPadding: {
     paddingTop: 5,
@@ -270,13 +271,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emoji: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     paddingHorizontal: 10,
   },
   subtitle: {
-    fontWeight: 'bold',
-    fontSize: 20,
+    fontWeight: '700',
+    fontSize: 18,
   },
   skillsAndResourcesChipsContainer: {
     paddingTop: 15,

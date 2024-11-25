@@ -16,27 +16,61 @@ import ProjectsGridForProfile from '@/src/components/ProjectsGridForProfile';
 import ProfileScreen from '@/src/screens/ProfileScreen';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
 
-const color = ['red', '#66CCFF', '#FFCC00', '#1C9379', '#8A7BA7'];
-
-const randomColor = () => {
-  return color[Math.floor(Math.random() * color.length)];
-};
-
-export default function ProfileScreenOld() {
-  const [projects, setProjects] = useState<any>([]);
-  const [teams, setTeams] = useState<any>([]);
+export default function ProfileIndex() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
-  const [projectsNextToken, setProjectsNextToken] = useState<any>(null);
-  const [teamsNextToken, setTeamsNextToken] = useState<any>(null);
-  const [isFetchingMoreProjects, setIsFetchingMoreProjects] = useState(false);
-  const [isFetchingMoreTeams, setIsFetchingMoreTeams] = useState(false);
-
   const navigation = useNavigation();
+
+  useEffect(() => {
+    // Fetch all data on component mount
+    const fetchData = async () => {
+      setLoading(true);
+      await fetchUser();
+      setLoading(false);
+    };
+    fetchData();
+    
+  }, []);
+
+  useEffect(() => {
+    navigation.setOptions({ 
+      headerTitle: () => (
+        <View style={styles.headerTitleContainer}> 
+          <Text style={styles.headerTitle}>
+            {`@${user?.username}`}
+          </Text>
+        </View>
+      ),
+      headerStyle: {
+        backgroundColor: '#00C0D1', // Change the background color of the header
+      },
+      headerRight: () => (
+      <View style={styles.headerButtonsContainer}>
+        <TouchableOpacity style={styles.headerButton}>
+          <Fontisto name='bell' style={styles.icon}/>
+        </TouchableOpacity>
+        <View style={styles.spacer}/>
+        <TouchableOpacity style={styles.headerButton}>
+          <FontAwesome6 name='bars' style={styles.icon}/>
+        </TouchableOpacity>
+      </View>
+      ),
+      headerLeft: () => (
+        <View style={styles.headerButtonsContainer}>
+          <TouchableOpacity style={styles.headerButton}>
+            <Octicons name='info' style={styles.icon}/>
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }, [user]);
+
+  
 
   const fetchUser = async () => {
     try {
@@ -53,186 +87,7 @@ export default function ProfileScreenOld() {
     }
   };
 
-  const fetchProjects = async (nextToken = null, fetchMore = false) => {
-    try {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const userID = authUser.attributes.sub;
-      const projectsData = await API.graphql(
-        graphqlOperation(listProjects, {
-          filter: { ownerIDs: { contains: userID } },
-          nextToken: nextToken,
-          limit: 10
-        })
-      );
-      const castedProjectsData = projectsData as GraphQLResult<any>;
-      const fetchedProjects = castedProjectsData.data.listProjects.items;
-      const newProjectsNextToken = castedProjectsData.data.listProjects.nextToken;
-
-      setProjects(fetchMore ? [...projects, ...fetchedProjects] : fetchedProjects);
-      setProjectsNextToken(newProjectsNextToken);
-    } catch (err) {
-      setError(err);
-      console.error("Error fetching projects:", err);
-    } finally {
-      setIsFetchingMoreProjects(false);
-    }
-  };
-
-  const fetchTeams = async (nextToken = null, fetchMore = false) => {
-    try {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const userID = authUser.attributes.sub;
-      const teamsData = await API.graphql(
-        graphqlOperation(listTeamsByUser, { id: userID, nextToken, limit: 4 })
-      );
-      const castedTeamsData = teamsData as GraphQLResult<any>;
-      const rawTeams = castedTeamsData?.data?.getUser?.Projects?.items;
-      const filteredTeams = rawTeams.filter((item: any) => {
-        return !item.project.ownerIDs.includes(userID);
-      });
-      const transformedTeams = filteredTeams.map((item: any) => item.project);
-
-      setTeams(fetchMore ? [...teams, ...transformedTeams] : transformedTeams);
-      setTeamsNextToken(castedTeamsData.data.getUser?.Projects?.nextToken);
-    } catch (err) {
-      setError(err);
-      console.error("Error fetching teams:", err);
-    } finally {
-      setIsFetchingMoreTeams(false);
-    }
-  };
-
-  useEffect(() => {
-    // Fetch all data on component mount
-    const fetchData = async () => {
-      setLoading(true);
-      await fetchUser();
-      await fetchProjects();
-      await fetchTeams();
-      setLoading(false);
-    };
-    fetchData();
-    
-    navigation.setOptions({ 
-      headerTitle: () => (
-        <View style={styles.headerTitleContainer}> 
-          <Text style={styles.headerTitle}>
-            {user?.username ? `@${user.username}` : ''}
-          </Text>
-        </View>
-      ),
-      headerStyle: {
-        backgroundColor: '#00C0D1', // Change the background color of the header
-      },
-      headerRight: () => 
-      <View style={styles.headerButtonsContainer}>
-        <TouchableOpacity style={styles.headerButton}>
-          <Fontisto name='bell' style={styles.icon}/>
-        </TouchableOpacity>
-        <View style={styles.spacer}/>
-        <TouchableOpacity style={styles.headerButton}>
-          <FontAwesome6 name='bars' style={styles.icon}/>
-        </TouchableOpacity>
-      </View>
-    });
-    
-  }, []);
-
-  const loadMoreProjects = async () => {
-    if (projectsNextToken && !isFetchingMoreProjects) {
-      setIsFetchingMoreProjects(true);
-      await fetchProjects(projectsNextToken, true);
-    }
-  };
-
-  const loadMoreTeams = async () => {
-    if (teamsNextToken && !isFetchingMoreTeams) {
-      setIsFetchingMoreTeams(true);
-      await fetchTeams(teamsNextToken, true);
-    }
-  };
-
-  function AboutTab() {
-    return (
-      <View style={styles.aboutContainer}>
-        <View style={styles.skillsAndResourcesTopPadding}></View>
-        <View style={styles.skillsAndResourcesTitleContainer}>
-          <Emoji name="rocket" style={styles.emoji} />
-          <Text style={styles.subtitle}> Skills</Text>
-        </View>
-        <View style={styles.skillsAndResourcesChipsContainer}>
-          {user?.skills?.map((skill: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{skill}</Chip>
-          ))}
-        </View>
-        <View style={styles.skillsAndResourcesTitleContainer}>
-          <Emoji name="briefcase" style={styles.emoji} />
-          <Text style={styles.subtitle}> Resources</Text>
-        </View>
-        <View style={styles.skillsAndResourcesChipsContainer}>
-          {user?.resources?.map((resource: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{resource}</Chip>
-          ))}
-        </View>
-        <View style={styles.skillsAndResourcesTitleContainer}>
-          <Emoji name="earth_americas" style={styles.emoji} />
-          <Text style={styles.subtitle}> Links</Text>
-        </View>
-        <View style={styles.skillsAndResourcesChipsContainer}>
-          {user?.links?.map((link: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{link}</Chip>
-          ))}
-        </View>
-      </View>
-    );
-  }
-
-  function ProjectsTab() {
-    return (
-      <View style={styles.tabScreen}>
-        <ProjectsGridForProfile 
-          projects={projects} 
-          loadMoreProjects={loadMoreProjects}
-          isFetchingMore={isFetchingMoreProjects}
-        />
-      </View>
-    );
-  }
-
-  function TeamsTab() {
-    return (
-      <View style={styles.tabScreen}>
-        <ProjectsGridForProfile 
-          projects={teams} 
-          loadMoreProjects={loadMoreTeams}
-          isFetchingMore={isFetchingMoreTeams}
-        />
-      </View>
-    );
-  }
-
   return (
-    // <Tabs.Container 
-    //   renderHeader={() => <ProfileHeader user={user} />}
-    //   renderTabBar={props => (
-    //     <MaterialTabBar
-    //       {...props}
-    //       indicatorStyle={{ backgroundColor: 'black', height: 2 }}
-    //     />
-    //   )}
-    // >
-    //   <Tabs.Tab name="About">
-    //     <Tabs.ScrollView>
-    //       <AboutTab />
-    //     </Tabs.ScrollView>
-    //   </Tabs.Tab>
-    //   <Tabs.Tab name="Projects">
-    //     <ProjectsTab />
-    //   </Tabs.Tab>
-    //   <Tabs.Tab name="Teams">
-    //     <TeamsTab />
-    //   </Tabs.Tab>
-    // </Tabs.Container>
     <ProfileScreen/>
   );
 }

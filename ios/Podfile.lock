@@ -11,7 +11,7 @@ PODS:
   - EXJSONUtils (0.14.0)
   - EXManifests (0.15.3):
     - ExpoModulesCore
-  - Expo (52.0.7):
+  - Expo (52.0.11):
     - ExpoModulesCore
   - expo-dev-client (5.0.2):
     - EXManifests
@@ -222,7 +222,7 @@ PODS:
     - Yoga
   - ExpoAsset (11.0.1):
     - ExpoModulesCore
-  - ExpoFileSystem (18.0.3):
+  - ExpoFileSystem (18.0.4):
     - ExpoModulesCore
   - ExpoFont (13.0.1):
     - ExpoModulesCore
@@ -232,9 +232,9 @@ PODS:
     - ExpoModulesCore
   - ExpoKeepAwake (14.0.1):
     - ExpoModulesCore
-  - ExpoLinking (7.0.2):
+  - ExpoLinking (7.0.3):
     - ExpoModulesCore
-  - ExpoModulesCore (2.0.3):
+  - ExpoModulesCore (2.0.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2358,19 +2358,19 @@ SPEC CHECKSUMS:
   EXImageLoader: 759063a65ab016b836f73972d3bb25404888713d
   EXJSONUtils: 01fc7492b66c234e395dcffdd5f53439c5c29c93
   EXManifests: a883468e03b0234d4787e2c0ae4a65726f13cb05
-  Expo: 46cbe74ce0d0f4a4d7b726e90693eb8dfcec6de0
+  Expo: 148aac4ce0da148c63447d09ae41ddb153f35506
   expo-dev-client: 7eb2bb228895757364d5650b3744db4694ee0bf7
   expo-dev-launcher: 3b0d62ad3fa17ddaaa84ae42c1ed59896dc12fc5
   expo-dev-menu: 3c09f402ac39257bf6cd4ed4f48478020b56838e
   expo-dev-menu-interface: 1495ca112a4961f9fbaf586ae952faaafdbd967b
   ExpoAsset: 8138f2a9ec55ae1ad7c3871448379f7d97692d15
-  ExpoFileSystem: cc31b7a48031ab565f9eb5c2b61aa08d774a271a
+  ExpoFileSystem: dc2679a2b5d4c465ca881129074da95faee943d5
   ExpoFont: 7522d869d84ee2ee8093ee997fef5b86f85d856b
   ExpoHead: e18c3b28f8e22de7e1f26c085c346a91ea7f459b
   ExpoImagePicker: a4be622c7081848925519d3329c0ebfac48f0d92
   ExpoKeepAwake: 783e68647b969b210a786047c3daa7b753dcac1f
-  ExpoLinking: 05ab69d3b5b1b0600d6a1a043d8d1ea3bb61a71a
-  ExpoModulesCore: 2d1df04dc27f91d8b383c0ec7f1d121e3d9b7f68
+  ExpoLinking: a8332a219379ba80f8e612d5a5de4a3da446886e
+  ExpoModulesCore: f71914f0725f2f4ca7a8d25dc551263e730d5d7f
   ExpoSplashScreen: 26cee50e9e95572baf87cd3a8ccaf2ffc3856422
   ExpoSystemUI: d8fb1abd91c7283d8ead3df77ed0575b85f1bb42
   ExpoWebBrowser: f08aaf1c8a02af8a768d83793186cb6d2c69f529

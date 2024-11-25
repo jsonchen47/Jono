@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, Button as Button2 } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, Image, Dimensions, SafeAreaView, ListRenderItem, Button as Button2, TouchableOpacity } from 'react-native';
 import { Chip, Button as Button3 } from 'react-native-paper';
 import { useRouter } from 'expo-router'; 
 import Emoji from 'react-native-emoji';
@@ -9,45 +9,48 @@ const windowHeight = Dimensions.get('window').height;
 const ProfileHeader = ({user}: any) => {
     const router = useRouter();
     return (
-      <View style={styles.container}>
+      <View style={styles.container} >
         {/* Profile picture */}
-        <View style={styles.bannerColor}/>
-        <View style={styles.imageContainer}>
-          <View style={styles.imageOutline}>
+        <View style={styles.bannerColor} />
+        <View style={styles.imageContainer} >
+          <View style={styles.imageOutline} >
             <Image style={styles.image} source={{uri: user?.image}}/>
           </View>
         </View>
 
         {/* Name */}
-        <View style={styles.eachRowContainer}>
+        <View style={styles.eachRowContainer} >
           <Text style={styles.nameText}>
               {user?.name}
           </Text>
         </View>
 
         {/* Stats */}
-        <View style={styles.allStatsContainer}>
-          <View style={styles.statsContainer}>
+        <View style={styles.allStatsContainer} >
+          <View style={styles.statsContainer} >
             <Emoji name="bulb" style={styles.emoji} />
             <Text style={styles.statsText}>{user?.numProjects}</Text>
           </View>
-          <View style={styles.statsSpacer}/>
-          <View style={styles.statsContainer}>
+          <View style={styles.statsSpacer} />
+          <View style={styles.statsContainer} >
             <Emoji name="handshake" style={styles.emoji} />
             <Text style={styles.statsText}>{user?.numTeams}</Text>
           </View>
-          <View style={styles.statsSpacer}/>
-          <View style={styles.statsContainer}>
-            <Emoji name="link" style={styles.emoji} />
+          <View style={styles.statsSpacer} />
+          <View style={styles.statsContainer} >
+            <Emoji name="link" style={styles.emoji}/>
             <Text style={styles.statsText}>{user?.numConnections}</Text>
           </View>
         </View>
 
-        {/* Bio */}
-        <View style={styles.eachRowContainer}>
-          <Text style={styles.descriptionText}>{user?.bio}</Text>
-        </View>
-
+        {/* Edit profile button */}
+        {/* <View style={styles.eachRowContainer} >
+          <TouchableOpacity style={styles.editProfileButton}>
+            <Text style={styles.editProfileText}>
+              Edit Profile
+            </Text>
+          </TouchableOpacity>
+        </View> */}
       </View>
     )
 }
@@ -118,4 +121,13 @@ const styles = StyleSheet.create({
       fontSize: 15,
       textAlign: 'center',
     },
+    editProfileButton: {
+      backgroundColor: '#4CDFFF',
+      borderRadius: 10, 
+      paddingHorizontal: 35, 
+      paddingVertical: 10,
+    },
+    editProfileText: {
+      fontWeight: '500'
+    }, 
 })
