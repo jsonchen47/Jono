@@ -11,6 +11,7 @@ type Project @model @searchable @auth(rules: [{allow: public}]) {
   longitude: Float
   latitude: Float
   city: String
+  joinRequestIDs: [String]
 }
 
 type ChatRoom @model @searchable @auth(rules: [{allow: public}]) {

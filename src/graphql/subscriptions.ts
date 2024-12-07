@@ -33,6 +33,7 @@ export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filt
     longitude
     latitude
     city
+    joinRequestIDs
     createdAt
     updatedAt
     __typename
@@ -67,6 +68,7 @@ export const onUpdateProject = /* GraphQL */ `subscription OnUpdateProject($filt
     longitude
     latitude
     city
+    joinRequestIDs
     createdAt
     updatedAt
     __typename
@@ -101,6 +103,7 @@ export const onDeleteProject = /* GraphQL */ `subscription OnDeleteProject($filt
     longitude
     latitude
     city
+    joinRequestIDs
     createdAt
     updatedAt
     __typename
@@ -520,6 +523,7 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename
@@ -586,6 +590,7 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename
@@ -652,6 +657,7 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename

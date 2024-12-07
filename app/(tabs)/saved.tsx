@@ -9,6 +9,7 @@ import { getUser, listProjects } from '../../src/graphql/queries'
 import ProjectsGridNew from '@/src/components/ProjectsGridNew';
 import Emoji from 'react-native-emoji';
 import ProjectsGrid from '@/src/components/ProjectsGrid';
+import { useNavigation } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -20,6 +21,22 @@ export default function SavedScreen() {
   const [user, setUser] = useState<any>(null);
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState<any>(false);
+  const navigation = useNavigation();
+
+
+  // SET THE HEADER
+  useEffect(() => {
+    navigation.setOptions({ 
+      headerTitle: () => (
+        <Text></Text>
+      ),
+      headerStyle: {
+        backgroundColor: 'white', // Change the background color of the header
+      },
+    });
+  }, );
+
+
 
   // FETCH PROJECTS BASED ON FILTERING BY USER'S SAVED PROJECTS
   const fetchProjects = async (nextToken = null) => {
@@ -54,7 +71,14 @@ export default function SavedScreen() {
 
         const castedSavedProjectsData = savedProjectsData as GraphQLResult<any>;
         const fetchedProjects = castedSavedProjectsData?.data?.listProjects?.items
-        setProjects((prevProjects: any) => [...prevProjects, ...fetchedProjects]);
+
+        // Avoid appending the same projects again if it's already fetched
+        setProjects((prevProjects: any) => {
+          const newProjects = fetchedProjects.filter(
+            (newProject: any) => !prevProjects.some((existingProject: any) => existingProject.id === newProject.id)
+          );
+          return [...prevProjects, ...newProjects];
+        });
         setNextToken(castedSavedProjectsData?.data.listProjects.nextToken);
       } else {
         setProjects([]); // No saved projects
@@ -83,6 +107,10 @@ export default function SavedScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.savedContainer}>
+        <Text style={styles.savedText}>Saved</Text>
+      </View>
+      
       <ProjectsGridNew
          projects={projects} // Pass remaining projects after first 4
           loadMoreProjects={loadMoreProjects}
@@ -97,5 +125,13 @@ const styles = StyleSheet.create({
   container: {
     // paddingTop: windowWidth*0.05, 
     flex: 1,
+  },
+  savedContainer: {
+    marginHorizontal: windowWidth*0.1,
+    marginTop: 20
+  },
+  savedText: {
+    fontSize: 27,
+    fontWeight: 'bold',
   },
 });

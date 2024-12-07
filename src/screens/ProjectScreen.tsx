@@ -7,6 +7,8 @@ import Emoji from 'react-native-emoji';
 import { Chip, Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { updateProject } from '../graphql/mutations';
+import { getProject } from '../graphql/queries';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -52,6 +54,8 @@ const ProjectScreen = ( {project}: any ) => {
     const [joinedDates, setJoinedDates] = useState<any>([]);
     const [headerOpacity, setHeaderOpacity] = useState(0);
     const [authUserID, setAuthUserID] = useState<any>(null); 
+    const [hasRequested, setHasRequested] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false); // Optional for async handling
 
     const fetchUser = async (ownerID: any) => {
         const result = await API.graphql(
@@ -69,9 +73,19 @@ const ProjectScreen = ( {project}: any ) => {
     }
 
     useEffect(() => {
+        // Fetch the first owner of the project 
       if (project?.ownerIDs?.[0]) {
         fetchUser(project?.ownerIDs[0]);
       }
+
+      // Check if the Auth user is included in the joinRequestIDs. If so, set hasRequested to true. 
+      if (project?.joinRequestIDs?.includes(authUserID)) {
+        setHasRequested(true)
+      }
+      else {
+        setHasRequested(false)
+      }
+
     }, [project?.ownerIDs]);
 
      // Scroll event handler
@@ -98,6 +112,110 @@ const ProjectScreen = ( {project}: any ) => {
     
         loadUsers(); // Call the function to load users
       }, [project]); // Run effect when the project changes
+
+      // Handle request to join and cancelling request to join
+
+      const handleRequest = async () => {
+        setIsProcessing(true);
+        try {
+            console.log('Sending join request...');
+            // Add logic to send the join request (API call or state update)
+            addUserToJoinRequests()
+
+            setHasRequested(true);
+        } catch (error) {
+            console.error('Failed to send request:', error);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+    
+    const handleCancelRequest = async () => {
+        setIsProcessing(true);
+        try {
+            console.log('Canceling join request...');
+            // Add logic to cancel the join request (API call or state update)
+            removeUserFromJoinRequests()
+            setHasRequested(false);
+        } catch (error) {
+            console.error('Failed to cancel request:', error);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+
+
+    // Function to add user's ID to the join requests array 
+    const addUserToJoinRequests = async () => {
+        try {
+          // Fetch the current project to get existing joinRequestIDs
+          const projectData = await API.graphql(graphqlOperation(getProject, { id: project.id }));
+          const castedProjectData = projectData as GraphQLResult<any>;
+          console.log('castedProjectData?.data?.joinRequestIDs: ', castedProjectData?.data?.getProject?.joinRequestIDs)
+          const currentJoinRequestIDs = castedProjectData?.data?.getProject?.joinRequestIDs || [];
+      
+          // Check if the authUserID is already in the array
+          if (currentJoinRequestIDs?.includes(authUserID)) {
+            console.log("User is already in the joinRequestIDs array.");
+            return;
+          }
+      
+          // Add the authUserID to the array
+          const updatedJoinRequestIDs = [...currentJoinRequestIDs, authUserID];
+      
+          // Update the project with the new joinRequestIDs array
+          const updatedProject = await API.graphql(
+            graphqlOperation(updateProject, {
+              input: {
+                id: project.id,
+                joinRequestIDs: updatedJoinRequestIDs,
+              },
+            })
+          );
+        const castedUpdatedProject = updatedProject as GraphQLResult<any>;
+          console.log("Updated Project:", castedUpdatedProject.data.updateProject);
+        } catch (error) {
+          console.error("Error adding user to joinRequestIDs:", error);
+        }
+    };
+
+    // Function to remove user's ID from the join requests array
+    const removeUserFromJoinRequests = async () => {
+        try {
+        // Fetch the current project to get existing joinRequestIDs
+        const projectData = await API.graphql(graphqlOperation(getProject, { id: project.id }));
+        const castedProjectData = projectData as GraphQLResult<any>;
+        console.log('castedProjectData?.data?.joinRequestIDs: ', castedProjectData?.data?.getProject?.joinRequestIDs)
+        console.log('authID', authUserID)
+        const currentJoinRequestIDs = castedProjectData?.data?.getProject?.joinRequestIDs || [];
+    
+        // Check if the authUserID is in the array
+        if (!currentJoinRequestIDs.includes(authUserID)) {
+            console.log("User is not in the joinRequestIDs array.");
+            return;
+        }
+    
+        // Remove the authUserID from the array
+        const updatedJoinRequestIDs = currentJoinRequestIDs.filter((id: any) => id !== authUserID);
+    
+        // Update the project with the new joinRequestIDs array
+        const updatedProject = await API.graphql(
+            graphqlOperation(updateProject, {
+            input: {
+                id: project.id,
+                joinRequestIDs: updatedJoinRequestIDs,
+            },
+            })
+        );
+        const castedUpdatedProject = updatedProject as GraphQLResult<any>;
+        console.log("Updated Project (after removal):", castedUpdatedProject.data.updateProject);
+        } catch (error) {
+        console.error("Error removing user from joinRequestIDs:", error);
+        }
+    };
+  
+    
 
     return (
         <View style={styles.container}>
@@ -254,13 +372,29 @@ const ProjectScreen = ( {project}: any ) => {
                 Manage and Edit
             </Button>
         ) : (
-            <Button 
-                style={styles.joinButton} 
-                labelStyle={styles.joinButtonText}
-                mode="contained"  
-                onPress={() => console.log({authUserID})}>
-                Request to Join
-            </Button>
+            hasRequested ? (
+                // Requested Button
+                <Button
+                    style={styles.requestedButton}
+                    labelStyle={styles.joinButtonText}
+                    mode="contained"
+                    onPress={handleCancelRequest}
+                    disabled={isProcessing}
+                >
+                    {isProcessing ? 'Canceling...' : 'Requested'}
+                </Button>
+            ) : (
+                // Join Button
+                <Button
+                    style={styles.joinButton}
+                    labelStyle={styles.joinButtonText}
+                    mode="contained"
+                    onPress={handleRequest}
+                    disabled={isProcessing}
+                >
+                    {isProcessing ? 'Requesting...' : 'Request to Join'}
+                </Button>
+            )
         )}
                     </View>
                 </SafeAreaView>
@@ -474,7 +608,14 @@ const styles = StyleSheet.create({
     joinButton: {
         borderRadius: 10, 
         alignSelf: 'flex-end',
-        backgroundColor: '#4CDFFF'
+        width: 200, 
+        backgroundColor: '#4CDFFF', 
+    },
+    requestedButton: {
+        borderRadius: 10, 
+        alignSelf: 'flex-end',
+        width: 200, 
+        backgroundColor: '#BCEAF3', 
     },
     joinButtonText: {
         fontSize: 17, 

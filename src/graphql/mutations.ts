@@ -36,6 +36,7 @@ export const createProject = /* GraphQL */ `mutation CreateProject(
     longitude
     latitude
     city
+    joinRequestIDs
     createdAt
     updatedAt
     __typename
@@ -73,6 +74,7 @@ export const updateProject = /* GraphQL */ `mutation UpdateProject(
     longitude
     latitude
     city
+    joinRequestIDs
     createdAt
     updatedAt
     __typename
@@ -110,6 +112,7 @@ export const deleteProject = /* GraphQL */ `mutation DeleteProject(
     longitude
     latitude
     city
+    joinRequestIDs
     createdAt
     updatedAt
     __typename
@@ -557,6 +560,7 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename
@@ -624,6 +628,7 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename
@@ -691,6 +696,7 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename

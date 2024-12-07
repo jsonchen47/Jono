@@ -41,8 +41,8 @@ const ManageProjectScreen = ({project}: any) => {
     })
 
     useEffect(() => {
-        setTitle(project.title)
-        setDescription(project.description)
+        setTitle(project?.title)
+        setDescription(project?.description)
     }, [project])
 
   return (

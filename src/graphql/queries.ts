@@ -33,6 +33,7 @@ export const getProject = /* GraphQL */ `query GetProject($id: ID!) {
     longitude
     latitude
     city
+    joinRequestIDs
     createdAt
     updatedAt
     __typename
@@ -64,6 +65,7 @@ export const listProjects = /* GraphQL */ `query ListProjects(
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename
@@ -108,6 +110,7 @@ export const searchProjects = /* GraphQL */ `query SearchProjects(
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename
@@ -646,6 +649,7 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
       longitude
       latitude
       city
+      joinRequestIDs
       createdAt
       updatedAt
       __typename
@@ -711,6 +715,7 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         longitude
         latitude
         city
+        joinRequestIDs
         createdAt
         updatedAt
         __typename
@@ -775,6 +780,7 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         longitude
         latitude
         city
+        joinRequestIDs
         createdAt
         updatedAt
         __typename
@@ -839,6 +845,7 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         longitude
         latitude
         city
+        joinRequestIDs
         createdAt
         updatedAt
         __typename

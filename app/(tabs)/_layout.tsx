@@ -52,7 +52,7 @@ export default function TabLayout() {
           ),
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: '#00C0D1',
+            backgroundColor: 'white',
           }
         }}
       />

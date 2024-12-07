@@ -21,7 +21,6 @@ const newProject1 = () => {
   };
 
   const handleSubmitTitle = () => {
-    
   }
 
   return (
