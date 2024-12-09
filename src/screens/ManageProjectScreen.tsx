@@ -14,6 +14,7 @@ import { fetchUsers } from '../functions/fetchUsers';
 import { formatDateShort } from '../functions/formatDateShort';
 import { Dropdown } from 'react-native-element-dropdown';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { selectPhoto } from '../functions/selectPhoto';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -36,8 +37,6 @@ const ManageProjectScreen = ({project}: any) => {
     const router = useRouter(); 
     const navigation = useNavigation();
     const [tempProject, setTempProject] = React.useState( cloneDeep(project) ) // Create a copy of project in tempProject 
-    const [image, setImage] = React.useState("")
-    const imageRef = React.useRef(image);
     const [members, setMembers] = useState<any>([]);
     const [joinDates, setJoinDates] = useState<any>([]);
     const [requestMembers, setRequestMembers] = useState<any>([]);
@@ -56,9 +55,12 @@ const ManageProjectScreen = ({project}: any) => {
                     <View>
                         <Image
                             style={styles.projectImage}
-                            source={{uri: image}}
+                            source={{uri: tempProject?.image}}
                         />
-                        <TouchableOpacity style={styles.editImageButton}>
+                        <TouchableOpacity 
+                            style={styles.editImageButton}
+                            onPress={() => selectPhoto(handlePhotoSelection)}
+                        >
                             <Ionicons name='pencil' style={styles.editImageButtonIcon}/>
                             <Text style={styles.editImageButtonText}>
                                 Edit
@@ -94,15 +96,14 @@ const ManageProjectScreen = ({project}: any) => {
             </Text>
           </TouchableOpacity>
         });
-    })
+    }, [])
 
+    // When the screen first loads, set the tempProject as the project 
     useEffect(() => {
         setTitle(project?.title)
         setDescription(project?.description)
-        setImage(project?.image ? `${project.image}` : "")
         setTempProject(cloneDeep(project))
-        imageRef.current = image; 
-    }, [project])
+    }, [])
 
     // Get all the members of each project 
     useEffect(() => {
@@ -142,7 +143,12 @@ const ManageProjectScreen = ({project}: any) => {
         loadMembers(); // Call the function to load users
         loadRequestMembers(); 
         loadAdmins(); 
-    }, [project, tempProject]); // Run effect when the project changes
+    }, []); // Run effect when the project changes
+
+    const handlePhotoSelection = async (uri: any) => {
+        // setPhotoUri(uri);
+        setTempProject({ ...tempProject, image: uri })
+      };
 
     const handleSelectCategory = (item: any) => {
         const selectedLabel = item.label;
