@@ -25,7 +25,7 @@ const { projectId } = useLocalSearchParams();
     fetchProject(projectId);
   }, [projectId]);
   return (
-    <View>
+    <View style={{flex: 1}}>
       {/* <Text>manageProject</Text> */}
       <ManageProjectScreen project={project}/>
     </View>

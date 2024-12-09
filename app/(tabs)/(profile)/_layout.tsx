@@ -50,7 +50,7 @@ export default function ProfileLayout() {
         options={{
           // Hide the header for this route
           // headerShown: false,
-          title: 'Project',
+          title: 'Settings',
           headerStyle: {
             backgroundColor: 'white',
           },

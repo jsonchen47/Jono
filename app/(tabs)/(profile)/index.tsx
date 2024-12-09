@@ -17,10 +17,13 @@ import ProfileScreen from '@/src/screens/ProfileScreen';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { router, useRouter } from 'expo-router';
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function ProfileIndex() {
+  const router = useRouter(); 
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
@@ -55,7 +58,12 @@ export default function ProfileIndex() {
           <Fontisto name='bell' style={styles.icon}/>
         </TouchableOpacity>
         <View style={styles.spacer}/>
-        <TouchableOpacity style={styles.headerButton}>
+        <TouchableOpacity 
+          style={styles.headerButton}
+          onPress={() => 
+            router.push('/settings')
+          } 
+          >
           <FontAwesome6 name='bars' style={styles.icon}/>
         </TouchableOpacity>
       </View>

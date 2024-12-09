@@ -9,41 +9,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { updateProject } from '../graphql/mutations';
 import { getProject } from '../graphql/queries';
+import { formatDateLong } from '../functions/formatDateLong';
+import { fetchUsers } from '../functions/fetchUsers';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-const formatDate = (dateString: any) => {
-    const date = new Date(dateString);
-    if (!isNaN(date.getTime())) {
-        return new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          }).format(date);
-    }
-    else {
-        return ""
-    }
-  };
-
-// Function to fetch users based on user IDs
-const fetchUsers = async (userIds: any) => {
-    const userPromises = userIds.map(async (userId: any) => {
-      try {
-        const response = await API.graphql(graphqlOperation(getUser, { id: userId }));
-        const castedResponse = response as GraphQLResult<any>
-        return castedResponse.data?.getUser; // Return the fetched user data
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        return null; // Return null if an error occurs
-      }
-    });
-
-    // Wait for all promises to resolve and filter out any null values
-    const fetchedUsers = await Promise.all(userPromises);
-    return fetchedUsers.filter(user => user !== null); // Filter out null users
-  };
 
 const ProjectScreen = ( {project}: any ) => {
     const router = useRouter(); 
@@ -111,11 +81,11 @@ const ProjectScreen = ( {project}: any ) => {
         };
     
         loadUsers(); // Call the function to load users
-      }, [project]); // Run effect when the project changes
+    }, [project]); // Run effect when the project changes
 
       // Handle request to join and cancelling request to join
 
-      const handleRequest = async () => {
+    const handleRequest = async () => {
         setIsProcessing(true);
         try {
             console.log('Sending join request...');
@@ -297,7 +267,7 @@ const ProjectScreen = ( {project}: any ) => {
                             <Image style={styles.authorImage} source={{uri: user?.image}}/>
                             <View style={styles.authorDetailsContainer}>
                                 <Text style={styles.authorName}>Authored by {user?.name}</Text>
-                                <Text style={styles.dateAuthored}>{formatDate(project?.createdAt)} </Text>
+                                <Text style={styles.dateAuthored}>{formatDateLong(project?.createdAt)} </Text>
                             </View>
                         </View>
                         <View style={styles.divider} /> 
@@ -331,7 +301,7 @@ const ProjectScreen = ( {project}: any ) => {
                                     <Image style={styles.authorImage} source={{uri: member?.image}}/>
                                     <View style={styles.authorDetailsContainer}>
                                         <Text style={styles.authorName}>{member?.name}</Text>
-                                        <Text style={styles.dateAuthored}>Joined {formatDate(joinedDates?.[index])} </Text>
+                                        <Text style={styles.dateAuthored}>Joined {formatDateLong(joinedDates?.[index])} </Text>
                                     </View>
                                 </View>
                             ))

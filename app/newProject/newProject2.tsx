@@ -8,7 +8,7 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector ic
 import { FormContext } from './_layout';
 import { uploadNewProject } from "../../src/functions/uploadNewProject"
 import { useProgress } from '@/src/contexts/ProgressContext';
-
+import ChipInput from '@/src/components/ChipInput';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -22,84 +22,6 @@ const categories = [
   { label: 'Environment', value: '6' },
   { label: 'Social Justice', value: '7' },
 ];
-
-interface ChipInputProps {
-  placeholder: any;
-  chips: any;
-  onChangeChips: any;
-}
-
-const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, onChangeChips }) => {
-  const [text, setText] = useState<any>('');
-  const isFocused = useRef(false); // Use ref to track focus state
-
-  const handleAddChip = () => {
-    if (text.trim() && !chips.includes(text.trim())) {
-      onChangeChips([...chips, text.trim()]);
-      setText(''); // Clear the text input after adding the chip
-    }
-  };
-
-  const handleRemoveChip = (chipToRemove: any) => {
-    onChangeChips(chips.filter((chip:any) => chip !== chipToRemove));
-  };
-
-  const handleKeyPress = ({ nativeEvent }: any) => {
-   
-    setTimeout(() => {
-      if (nativeEvent.key === 'Backspace' && text === '' && isFocused.current) {
-        // Only delete if input is focused and empty
-        console.log(isFocused.current)
-        if (chips.length > 0) {
-          const updatedChips = chips.slice(0, -1); // Remove the last chip
-          onChangeChips(updatedChips);
-        }
-      }
-    }, 50); 
-  };
-
-  const handleBlur = () => {
-    isFocused.current = false; // Update ref immediately when the input loses focus
-  };
-
-  const handleFocus = () => {
-    isFocused.current = true; // Update ref immediately when the input is focused
-  };
-
-  return (
-    <View style={styles.skillsBoxContainer}>
-      <View style={styles.skillsBox}>
-        {chips.map((chip: any, index: any) => (
-          <Chip
-            key={index}
-            style={styles.chip}
-            textStyle={styles.chipTextStyle}
-            onClose={() => handleRemoveChip(chip)}
-            closeIcon={() => (
-              <Icon2 name="close" size={18} color="white" /> // Custom "X" icon color
-            )}
-          >
-            {chip}
-          </Chip>
-        ))}
-        <TextInput
-          style={styles.input}
-          value={text}
-          onChangeText={setText}
-          onSubmitEditing={handleAddChip}
-          onKeyPress={handleKeyPress}
-          placeholder={placeholder}
-          blurOnSubmit={false}
-          onBlur={handleBlur}
-          onFocus={handleFocus}
-
-        />
-      </View>
-    </View>
-  );
-};
-
-
 
 const newProject2 = () => {
   const { hideProgressBar, showProgressBar, updateProgress, isVisible, setProjectId } = useProgress();
