@@ -3,10 +3,17 @@ import { Slot } from 'expo-router';
 import { Stack } from 'expo-router';
 import { Float } from 'react-native/Libraries/Types/CodegenTypes';
 
+interface User {
+    userId: string;
+    // other properties
+}
+
 // Define the shape of the form data
 interface FormData {
     ownerIDs: string[],
-    users: any[],
+    users?: {
+        items: User[];
+    };
     image: string, 
     title: string,
     description: string,
@@ -23,7 +30,7 @@ interface FormData {
   const defaultFormData: { formData: FormData; setFormData: React.Dispatch<React.SetStateAction<FormData>> } = {
     formData: { 
         ownerIDs: [],
-        users: [], 
+        users: { items: [] }, 
         image: '', 
         title: '',
         description: '',
@@ -44,17 +51,17 @@ interface FormData {
 export default function FormLayout() {
   const [formData, setFormData] = useState<FormData>({
     ownerIDs: [],
-        users: [], 
-        image: '', 
-        title: '',
-        description: '',
-        categories: [],
-        skills: [], 
-        resources: [], 
-        longitude: 0, 
-        latitude: 0, 
-        city: '', 
-        joinRequestIDs: [], 
+    users: { items: [] },
+    image: '', 
+    title: '',
+    description: '',
+    categories: [],
+    skills: [], 
+    resources: [], 
+    longitude: 0, 
+    latitude: 0, 
+    city: '', 
+    joinRequestIDs: [], 
   });
 
   return (
@@ -70,10 +77,10 @@ export default function FormLayout() {
           }}
         />
         <Stack.Screen
-          name="manageProject2"
+          name="manageMembersScreen"
           options={{
             headerShown: false, // Hide header for this route
-            // animation: 'slide_from_bottom', // Add animation if desired
+            animation: 'slide_from_bottom', // Add animation if desired
           }}
         />
       </Stack>

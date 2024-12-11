@@ -11,13 +11,13 @@ import ChipInput from '../components/ChipInput';
 import cloneDeep from 'lodash.clonedeep';
 import { List, Button } from 'react-native-paper';
 import { fetchUsers } from '../functions/fetchUsers';
-import { formatDateShort } from '../functions/formatDateShort';
 import { Dropdown } from 'react-native-element-dropdown';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { selectPhoto } from '../functions/selectPhoto';
 import { FormContext } from '@/app/manageProject/_layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useHeaderHeight } from '@react-navigation/elements';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // Import vector icons
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -41,13 +41,6 @@ const ManageProjectScreen = ({project}: any) => {
     const [description, setDescription] = React.useState("")
     const router = useRouter(); 
     const navigation = useNavigation();
-    const [members, setMembers] = useState<any>([]);
-    const [joinDates, setJoinDates] = useState<any>([]);
-    const [requestMembers, setRequestMembers] = useState<any>([]);
-    const [requestDates, setRequestDates] = useState<any>([]);
-    const [admins, setAdmins] = useState<any>([]);
-    const [adminJoinDates, setAdminJoinDates] = useState<any>([]);
-    const [loading, setLoading] = useState(true);
 
     // Header with image, title, and project 
     const Header = () => {
@@ -97,52 +90,28 @@ const ManageProjectScreen = ({project}: any) => {
             </Text>
           </TouchableOpacity>
         });
-    }, [title])
+    }, [project])
 
     // When the screen first loads, set the formData as the project 
     useEffect(() => {
-        setFormData((prevFormData) => ({ ...prevFormData, image: project?.image }));
-    }, [title])
+        setFormData((prevFormData) => ({ 
+            ...prevFormData, 
+            ownerIDs: project?.ownerIDs,
+            users: project?.Users, 
+            image: project?.image, 
+            title: project?.title,
+            description: project?.description,
+            categories: project?.categories,
+            skills: project?.skills, 
+            resources: project?.resources, 
+            longitude: project?.longitude, 
+            latitude: project?.latitude, 
+            city: project?.city, 
+            joinRequestIDs: project?.joinRequestIDs, 
+        }));
+    }, [project])
 
-    // Get all the members of each project 
-    useEffect(() => {
-        // Function for getting the project members
-        const loadMembers = async () => {
-          setLoading(true); // Set loading to true while fetching users
-          const userIds = project?.Users?.items.map((item: any) => item.userId) || []; // Extract user IDs
-          const joinedDates = project?.Users?.items.map((item: any) => item.createdAt) || []; 
-          if (userIds.length > 0) {
-            const usersList = await fetchUsers(userIds); // Fetch users
-            setMembers(usersList); // Update state with fetched users
-            setJoinDates(joinedDates);
-          }
-          setLoading(false); // Set loading to false after fetching
-        };    
-
-        // Function for getting the request members
-        const loadRequestMembers = async () => {
-            if (formData?.joinRequestIDs?.length > 0) {
-                const usersList = await fetchUsers(formData?.joinRequestIDs); // Fetch users
-                setRequestMembers(usersList); // Update state with fetched users
-                const joinedDates = usersList?.map((item: any) => item.createdAt) || []; 
-                setRequestDates(joinedDates);
-              }
-        }
-
-        // Function for getting the admins
-        const loadAdmins = async () => {
-            if (formData?.ownerIDs?.length > 0) {
-                const usersList = await fetchUsers(formData?.ownerIDs); // Fetch users
-                setAdmins(usersList); // Update state with fetched users
-                const joinedDates = usersList?.map((item: any) => item.createdAt) || []; 
-                setAdminJoinDates(joinedDates);
-              }
-        }
-        
-        loadMembers(); // Call the function to load users
-        loadRequestMembers(); 
-        loadAdmins(); 
-    }, [title]); // Run effect when the project changes
+    
 
     const handlePhotoSelection = async (uri: any) => {
         // setPhotoUri(uri);
@@ -180,259 +149,6 @@ const ManageProjectScreen = ({project}: any) => {
         resources: updatedResources,
         });
     };
-
-    // Tab with details about project 
-    const DetailsTab = () => {
-        return (
-            <View style={styles.detailsTabContainer}>
-                {/* PROJECT TITLE AND DESCRIPTION */}
-                {/* Project title */}
-                <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="notebook" style={styles.emoji} />
-                    <View style={styles.spacerHorizontal}/>
-                    <Text style={styles.detailsTabHeaderText}>Title</Text>
-                </View>
-                <View style={styles.spacerVerticalSmall}/>
-                <TextInput
-                    onChangeText={setTitle}
-                    value={title}
-                    style={styles.titleTextBox}
-                    numberOfLines={4}
-                    maxLength={40}
-                    multiline={true}
-                />
-                {/* Project description */}
-                <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="scroll" style={styles.emoji} />
-                    <View style={styles.spacerHorizontal}/>
-                    <Text style={styles.detailsTabHeaderText}>Description</Text>
-                </View>
-                <View style={styles.spacerVerticalSmall}/>
-                <TextInput
-                    onChangeText={(text) => setFormData((prevData) => ({
-                        ...prevData,
-                        description: text, // Update title while typing
-                      }))}
-                    // value={formData?.description}
-                    style={styles.descriptionTextBox}
-                    // numberOfLines={4}
-                    // maxLength={40}
-                    multiline={true}
-                />
-                {/* Skills Input */}
-                <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="rocket" style={styles.emoji} />
-                    <View style={styles.spacerHorizontal}/>
-                    <Text style={styles.detailsTabHeaderText}>Skills needed</Text>
-                </View>
-                <ChipInput
-                placeholder="Skills"
-                chips={formData?.skills}
-                onChangeChips={handleSkillsChange}
-                />
-                <View style={styles.spacerVertical}/>
-                {/* Resources Input */}
-                <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="briefcase" style={styles.emoji} />
-                    <View style={styles.spacerHorizontal}/>
-                    <Text style={styles.detailsTabHeaderText}>Resources needed</Text>
-                </View>
-                <ChipInput
-                placeholder="Resources"
-                chips={formData?.resources}
-                onChangeChips={handleResourcesChange}
-                />
-                <View style={styles.spacerVertical}/>
-                {/* Category selection */}
-                <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="label" style={styles.emoji} />
-                    <View style={styles.spacerHorizontal}/>
-                    <Text style={styles.detailsTabHeaderText}>Category selection</Text>
-                </View>
-                <Dropdown
-                    style={styles.dropdown}
-                    data={categories}
-                    labelField="label"
-                    valueField="value"
-                    placeholder="Select items"
-                    value={formData?.categories}
-                    onChange={handleSelectCategory}
-                />
-                <View style={styles.spacerVertical}/>
-                {/* Location reselection */}
-                <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="earth_americas" style={styles.emoji} />
-                    <View style={styles.spacerHorizontal}/>
-                    <Text style={styles.detailsTabHeaderText}>Set location</Text>
-                </View>
-                <View style={styles.spacerVerticalSmall}/>
-                <Text>
-                    Current location: {formData?.city ? formData?.city : "Not set"}
-                </Text>
-
-                <View style={styles.spacerVerticalSmall}/>
-                <Button    
-                    mode="outlined"
-                    onPress={() => 
-                        console.log('Pressed remove')
-                    }
-                    contentStyle={styles.locationButtonContent}
-                    labelStyle={styles.locationButtonText}
-                    style={styles.locationButtonStyle}
-                >
-                    Set location to current location
-                </Button>
-                <View style={styles.spacerVerticalLarge}/>
-            </View>            
-        );
-    }
-
-    // Tab with details about project 
-    function MembersTab() {
-        return (
-            <View>
-                <View style={{marginVertical: 5}}/>
-                {members?.map((member: any, index: any) => (
-                    <List.Item
-                        key={index}
-                        title={member.name}
-                        description={`Joined ${formatDateShort(joinDates?.[index])}`}
-                        left={props =>(
-                            <Image
-                            {...props}
-                            source={{ uri: member.image }}
-                            style={{
-                                width: 40,
-                                height: 40,
-                                borderRadius: 5,
-                                marginLeft: 20, // Optional spacing between image and text
-                            }}
-                        />
-                        )}
-                        right={(props) => (
-                            members.length > 1 ? (
-                                <Button
-                                    {...props}
-                                    mode="text"
-                                    onPress={() => console.log('Pressed demote')}
-                                    contentStyle={styles.removeButtonContent}
-                                    labelStyle={styles.removeButtonText}
-                                    style={styles.removeButtonStyle}
-                                >
-                                    Remove
-                                </Button>
-                            ) : (
-                                <View style={{width: 150, justifyContent: 'center'}}>
-                                    <Text style={{ color: 'gray', textAlign: 'center', marginRight: 10 }}>
-                                        Cannot leave project with 1 member
-                                    </Text>
-                                </View>
-                            )
-                        )}
-                    />
-                ))
-                }
-            </View>
-        );
-    }
-
-    function RequestsTab() {
-        return (
-            <View>
-                <View style={{ marginVertical: 5 }} />
-                {requestMembers && requestMembers.length > 0 ? (
-                    requestMembers.map((requestMember: any, index: any) => (
-                        <List.Item
-                            key={index}
-                            title={requestMember.name}
-                            description={`Joined ${formatDateShort(requestDates?.[index])}`}
-                            left={(props) => (
-                                <Image
-                                    {...props}
-                                    source={{ uri: requestMember.image }}
-                                    style={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: 5,
-                                        marginLeft: 20, // Optional spacing between image and text
-                                    }}
-                                />
-                            )}
-                            right={(props) => (
-                                <Button
-                                    {...props}
-                                    mode="text"
-                                    onPress={() => console.log('Pressed approve')}
-                                    contentStyle={styles.approveButtonContent}
-                                    labelStyle={styles.approveButtonText}
-                                    style={styles.removeButtonStyle}
-                                >
-                                    Approve
-                                </Button>
-                            )}
-                        />
-                    ))
-                ) : (
-                    <Text style={{ textAlign: 'center', marginTop: 20, color: 'gray' }}>
-                        No requests yet
-                    </Text>
-                )}
-            </View>
-        );
-    }
-
-    function AdminsTab() {
-        return (
-            <View>
-                <View style={{ marginVertical: 5 }} />
-                {admins && admins.length > 0 ? (
-                    admins.map((requestMember: any, index: any) => (
-                        <List.Item
-                            key={index}
-                            title={requestMember.name}
-                            description={`Joined ${formatDateShort(adminJoinDates?.[index])}`}
-                            left={(props) => (
-                                <Image
-                                    {...props}
-                                    source={{ uri: requestMember.image }}
-                                    style={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: 5,
-                                        marginLeft: 20, // Optional spacing between image and text
-                                    }}
-                                />
-                            )}
-                            right={(props) => (
-                                admins.length > 1 ? (
-                                    <Button
-                                        {...props}
-                                        mode="text"
-                                        onPress={() => console.log('Pressed demote')}
-                                        contentStyle={styles.removeButtonContent}
-                                        labelStyle={styles.removeButtonText}
-                                        style={styles.removeButtonStyle}
-                                    >
-                                        Demote
-                                    </Button>
-                                ) : (
-                                    <View style={{width: 150, justifyContent: 'center'}}>
-                                        <Text style={{ color: 'gray', textAlign: 'center', marginRight: 10 }}>
-                                            Cannot demote with only 1 admin
-                                        </Text>
-                                    </View>
-                                )
-                            )}
-                        />
-                    ))
-                ) : (
-                    <Text style={{ textAlign: 'center', marginTop: 20, color: 'gray' }}>
-                        No admins set
-                    </Text>
-                )}
-            </View>
-        );
-    }
     
 
   return (
@@ -474,7 +190,9 @@ const ManageProjectScreen = ({project}: any) => {
     <KeyboardAwareScrollView
         extraScrollHeight={headerHeight}
     >
-        <ScrollView>
+        <SafeAreaView
+            edges={['bottom']}
+        >
             <Header/>
             <View style={styles.detailsTabContainer}>
                 {/* PROJECT TITLE AND DESCRIPTION */}
@@ -486,8 +204,11 @@ const ManageProjectScreen = ({project}: any) => {
                 </View>
                 <View style={styles.spacerVerticalSmall}/>
                 <TextInput
-                    onChangeText={setTitle}
-                    value={title}
+                    onChangeText={(text) => setFormData((prevData) => ({
+                        ...prevData,
+                        title: text, // Update title while typing
+                        }))}
+                    value={formData?.title}
                     style={styles.titleTextBox}
                     numberOfLines={4}
                     maxLength={40}
@@ -505,12 +226,41 @@ const ManageProjectScreen = ({project}: any) => {
                         ...prevData,
                         description: text, // Update title while typing
                         }))}
-                    // value={formData?.description}
+                    value={formData?.description}
                     style={styles.descriptionTextBox}
                     // numberOfLines={4}
                     // maxLength={40}
                     multiline={true}
                 />
+                {/* Category selection */}
+                <View style={styles.detailsTabHeaderContainer}>
+                    <Emoji name="label" style={styles.emoji} />
+                    <View style={styles.spacerHorizontal}/>
+                    <Text style={styles.detailsTabHeaderText}>Category selection</Text>
+                </View>
+                <Dropdown
+                    style={styles.dropdown}
+                    data={categories}
+                    labelField="label"
+                    valueField="value"
+                    placeholder="Select items"
+                    value={formData?.categories}
+                    onChange={handleSelectCategory}
+                />
+                <View style={styles.spacerVertical}/>
+                {/* Manage members */}
+                <TouchableOpacity
+                    style={styles.listButton}
+                    onPress={() => {
+                        router.push('/manageProject/manageProject2')
+                      }}
+                >
+                    <Text style={styles.listButtonText}>
+                        Manage members
+                    </Text>
+                    <FontAwesome6 name="chevron-right" style={styles.listButtonChevron} />
+                </TouchableOpacity>
+                <View style={styles.spacerVertical}/>
                 {/* Skills Input */}
                 <View style={styles.detailsTabHeaderContainer}>
                     <Emoji name="rocket" style={styles.emoji} />
@@ -533,22 +283,6 @@ const ManageProjectScreen = ({project}: any) => {
                 placeholder="Resources"
                 chips={formData?.resources}
                 onChangeChips={handleResourcesChange}
-                />
-                <View style={styles.spacerVertical}/>
-                {/* Category selection */}
-                <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="label" style={styles.emoji} />
-                    <View style={styles.spacerHorizontal}/>
-                    <Text style={styles.detailsTabHeaderText}>Category selection</Text>
-                </View>
-                <Dropdown
-                    style={styles.dropdown}
-                    data={categories}
-                    labelField="label"
-                    valueField="value"
-                    placeholder="Select items"
-                    value={formData?.categories}
-                    onChange={handleSelectCategory}
                 />
                 <View style={styles.spacerVertical}/>
                 {/* Location reselection */}
@@ -574,11 +308,11 @@ const ManageProjectScreen = ({project}: any) => {
                 >
                     Set location to current location
                 </Button>
-                <View style={styles.spacerVerticalLarge}/>
-            </View>            
-        </ScrollView>
+                <View style={styles.spacerVerticalSmall}/>
+                {/* <View style={styles.spacerVerticalLarge}/> */}
+            </View>      
+            </SafeAreaView>
         </KeyboardAwareScrollView>
-    // </KeyboardAvoidingView>
   )
 }
 
@@ -721,6 +455,23 @@ const styles = StyleSheet.create({
     approveButtonContent: {
         backgroundColor: '#4CDFFF', 
         paddingHorizontal: 10,     // Horizontal padding for better spacing
+    }, 
+    listButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        marginVertical: 8,
+        borderRadius: 8,
+        borderWidth: 2,
+        justifyContent: 'space-between',
+    },
+    listButtonText: {
+        fontSize: 15, 
+        fontWeight: '500', 
+    }, 
+    listButtonChevron: {
+        fontSize: 15, 
+        fontWeight: '500', 
     }, 
 })
 
