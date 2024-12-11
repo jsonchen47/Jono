@@ -335,7 +335,7 @@ const ProjectScreen = ( {project}: any ) => {
                 onPress={() => 
                     // console.log('Manage/Edit pressed')
                     router.push({
-                        pathname: '/manageProject',
+                        pathname: '/manageProject/manageProject1',
                         params: { projectId: project.id },
                     })
                 }>

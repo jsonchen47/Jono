@@ -231,7 +231,7 @@ function RootLayout() {
                 name="manageProject"
                 options={{
                   title: 'Manage Project',
-                  presentation: 'fullScreenModal',
+                  // presentation: 'fullScreenModal',
                 }}
                 />
                 {/* <Stack.Screen

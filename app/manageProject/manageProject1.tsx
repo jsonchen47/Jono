@@ -6,7 +6,7 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getProject } from '@/src/graphql/queries';
 import ManageProjectScreen from '@/src/screens/ManageProjectScreen';
 
-const manageProject = () => {
+const manageProject1 = () => {
 
 const { projectId } = useLocalSearchParams();
   const [project, setProject] = useState<any>(null);
@@ -32,4 +32,4 @@ const { projectId } = useLocalSearchParams();
   )
 }
 
-export default manageProject
+export default manageProject1

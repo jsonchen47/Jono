@@ -123,6 +123,9 @@ dropdown: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
+    flex: 1, 
+    // backgroundColor: 'green',
+    // width: '100%'
   },
   input: {
     minWidth: 100,
@@ -130,6 +133,9 @@ dropdown: {
     padding: 0,
     marginLeft: 10,
     marginTop: 5, 
+    flexGrow: 1, 
+    flexShrink: 1,
+    // backgroundColor: 'red'
   },
 });
 
