@@ -70,7 +70,7 @@ export default function FormLayout() {
       <Stack>
         {/* Define your stack screens here */}
         <Stack.Screen
-          name="manageProject1"
+          name="mainManageProjectScreen"
           options={{
             headerShown: false, // Hide header for this route
             // animation: 'slide_from_bottom', // Add animation if desired

@@ -65,7 +65,6 @@ const ManageProjectScreen = ({project}: any) => {
             </View>
         );
     };
-    
 
     useEffect(() => {
         // Set the header
@@ -252,7 +251,7 @@ const ManageProjectScreen = ({project}: any) => {
                 <TouchableOpacity
                     style={styles.listButton}
                     onPress={() => {
-                        router.push('/manageProject/manageProject1')
+                        router.push('/manageProject/manageMembersScreen')
                       }}
                 >
                     <Text style={styles.listButtonText}>
