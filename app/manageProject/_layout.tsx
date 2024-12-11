@@ -1,7 +1,11 @@
 import React, { createContext, useState } from 'react';
+import { TouchableOpacity, StyleSheet } from 'react-native'
 import { Slot } from 'expo-router';
 import { Stack } from 'expo-router';
 import { Float } from 'react-native/Libraries/Types/CodegenTypes';
+import { useRouter } from 'expo-router';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // Import vector icons
+
 
 interface User {
     userId: string;
@@ -49,6 +53,7 @@ interface FormData {
   export const FormContext = createContext(defaultFormData);
 
 export default function FormLayout() {
+  const router = useRouter(); 
   const [formData, setFormData] = useState<FormData>({
     ownerIDs: [],
     users: { items: [] },
@@ -70,17 +75,25 @@ export default function FormLayout() {
       <Stack>
         {/* Define your stack screens here */}
         <Stack.Screen
-          name="mainManageProjectScreen"
+          name="manageProject1"
           options={{
-            headerShown: false, // Hide header for this route
+            // headerShown: false, // Hide header for this route
             // animation: 'slide_from_bottom', // Add animation if desired
           }}
         />
         <Stack.Screen
-          name="manageMembersScreen"
+          name="manageProject2"
           options={{
-            headerShown: false, // Hide header for this route
-            animation: 'slide_from_bottom', // Add animation if desired
+          //   headerLeft: () => 
+          // <TouchableOpacity
+          // onPress={() => 
+          //   router.back()
+          // } 
+          // >
+          //   <FontAwesome6 name="chevron-left" style={styles.exitButton} />
+          // </TouchableOpacity>,
+            // headerShown: false, // Hide header for this route
+            // animation: 'slide_from_bottom', // Add animation if desired
           }}
         />
       </Stack>
@@ -92,3 +105,11 @@ export default function FormLayout() {
 export const options = {
   headerShown: false, // This removes the header
 };
+
+
+const styles = StyleSheet.create({
+  exitButton: {
+    fontSize: 25, 
+    marginLeft: 10
+},
+})

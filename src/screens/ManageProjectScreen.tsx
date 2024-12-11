@@ -18,6 +18,8 @@ import { FormContext } from '@/app/manageProject/_layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useHeaderHeight } from '@react-navigation/elements';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // Import vector icons
+import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
+import DropdownWithChipDisplay from '../components/DropdownWithChipDisplay';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -131,6 +133,7 @@ const ManageProjectScreen = ({project}: any) => {
           setFormData({ ...formData, categories: [...formData?.categories, selectedLabel] });
     
         }
+        console.log(formData?.categories)
       };
 
      // Handler for updating skills in formData
@@ -151,41 +154,7 @@ const ManageProjectScreen = ({project}: any) => {
     
 
   return (
-    // <Tabs.Container 
-    //     // renderHeader={() => <Header/>}
-    //     renderTabBar={props => (
-    //         <MaterialTabBar
-    //             {...props}
-    //             scrollEnabled={true}
-    //             indicatorStyle={{ backgroundColor: 'black', height: 2 }}
-    //         />
-    //     )}
-    // >
-    //     <Tabs.Tab name="Details">
-    //         <Tabs.ScrollView>
-    //             <DetailsTab/>
-    //         </Tabs.ScrollView>
-    //     </Tabs.Tab>
-    //     <Tabs.Tab name="Members">
-    //         <Tabs.ScrollView>
-    //             <MembersTab/>
-    //         </Tabs.ScrollView>
-    //     </Tabs.Tab>
-    //     <Tabs.Tab name="Requests to Join">
-    //         <Tabs.ScrollView>
-    //             <RequestsTab/>
-    //         </Tabs.ScrollView>
-    //     </Tabs.Tab>
-    //     <Tabs.Tab name="Admins">
-    //         <Tabs.ScrollView>
-    //             <AdminsTab/>
-    //         </Tabs.ScrollView>
-    //     </Tabs.Tab>
-    // </Tabs.Container>
-    // <KeyboardAvoidingView
-    // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    // // keyboardVerticalOffset={200}
-    // >
+   
     <KeyboardAwareScrollView
         extraScrollHeight={headerHeight}
     >
@@ -237,21 +206,13 @@ const ManageProjectScreen = ({project}: any) => {
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Category selection</Text>
                 </View>
-                <Dropdown
-                    style={styles.dropdown}
-                    data={categories}
-                    labelField="label"
-                    valueField="value"
-                    placeholder="Select items"
-                    value={formData?.categories}
-                    onChange={handleSelectCategory}
-                />
+                <DropdownWithChipDisplay formData={formData} setFormData={setFormData} handleSelectCategory={handleSelectCategory}/>
                 <View style={styles.spacerVertical}/>
                 {/* Manage members */}
                 <TouchableOpacity
                     style={styles.listButton}
                     onPress={() => {
-                        router.push('/manageProject/manageMembersScreen')
+                        router.push('/manageProject/manageProject2')
                       }}
                 >
                     <Text style={styles.listButtonText}>

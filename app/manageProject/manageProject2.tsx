@@ -4,8 +4,13 @@ import { List, Button } from 'react-native-paper';
 import { formatDateShort } from '@/src/functions/formatDateShort';
 import { FormContext } from './_layout';
 import { fetchUsers } from '@/src/functions/fetchUsers';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // Import vector icons
+import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 
-const manageMembersScreen = () => {
+const manageProject2 = () => {
     const [members, setMembers] = useState<any>([]);
     const [joinDates, setJoinDates] = useState<any>([]);
     const [requestMembers, setRequestMembers] = useState<any>([]);
@@ -14,6 +19,23 @@ const manageMembersScreen = () => {
     const [adminJoinDates, setAdminJoinDates] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const { formData, setFormData } = useContext(FormContext);
+    const navigation = useNavigation();
+    const router = useRouter(); 
+
+    useEffect(() => {
+        // Set the header
+        navigation.setOptions({ 
+          title: 'Manage Members', 
+          headerLeft: () => 
+          <TouchableOpacity
+          onPress={() => 
+            router.back()
+          } 
+          >
+            <FontAwesome6 name="chevron-left" style={styles.exitButton} />
+          </TouchableOpacity>
+        });
+    }, [])
 
     // Get all the members of each project 
     useEffect(() => {
@@ -92,7 +114,7 @@ const manageMembersScreen = () => {
                             ) : (
                                 <View style={{width: 150, justifyContent: 'center'}}>
                                     <Text style={{ color: 'gray', textAlign: 'center', marginRight: 10 }}>
-                                        Cannot leave project with 1 member
+                                        Cannot remove sole member of project
                                     </Text>
                                 </View>
                             )
@@ -203,13 +225,37 @@ const manageMembersScreen = () => {
     }
 
   return (
-    <View>
-      <Text>manageProject2</Text>
-    </View>
+     <Tabs.Container 
+        renderTabBar={props => (
+            <MaterialTabBar
+                {...props}
+                scrollEnabled={true}
+                indicatorStyle={{ backgroundColor: 'black', height: 2 }}
+            />
+        )}
+        >
+        <Tabs.Tab name="Members">
+            <Tabs.ScrollView>
+                <MembersTab/>
+            </Tabs.ScrollView>
+        </Tabs.Tab>
+        <Tabs.Tab name="Requests to Join">
+            <Tabs.ScrollView>
+                <RequestsTab/>
+            </Tabs.ScrollView>
+        </Tabs.Tab>
+        <Tabs.Tab name="Admins">
+            <Tabs.ScrollView>
+                <AdminsTab/>
+            </Tabs.ScrollView>
+        </Tabs.Tab>
+    </Tabs.Container>
+
+   
   )
 }
 
-export default manageMembersScreen
+export default manageProject2
 
 
 const styles = StyleSheet.create({
@@ -278,6 +324,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#4CDFFF', 
         paddingHorizontal: 10,     // Horizontal padding for better spacing
     }, 
+    exitButton: {
+        fontSize: 18, 
+    },
 })
 
 

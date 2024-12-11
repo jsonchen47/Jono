@@ -231,7 +231,7 @@ function RootLayout() {
                 name="manageProject"
                 options={{
                   title: 'Manage Project',
-                  // headerShown: false,
+                  headerShown: false,
                   // presentation: 'fullScreenModal',
                 }}
                 />

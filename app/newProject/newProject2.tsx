@@ -9,6 +9,7 @@ import { FormContext } from './_layout';
 import { uploadNewProject } from "../../src/functions/uploadNewProject"
 import { useProgress } from '@/src/contexts/ProgressContext';
 import ChipInput from '@/src/components/ChipInput';
+import DropdownWithChipDisplay from '@/src/components/DropdownWithChipDisplay';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -95,43 +96,7 @@ const newProject2 = () => {
             {/* Choose a category */}
             <Text style={styles.subtitle}>Choose your categories</Text>
 
-            <Dropdown
-              style={styles.dropdown}
-              data={categories}
-              labelField="label"
-              valueField="value"
-              placeholder="Select items"
-              value={formData.categories}
-              onChange={handleSelectCategory}
-            />
-
-      {/* Displaying Selected Chips */}
-      <View style={styles.chipsContainer}>
-        {/* {selectedCategories.map((value: any) => { */}
-        {formData.categories.map((label: any, index: any) => {
-          // const item = categories.find((d) => d.value === value);
-          return (
-            <Chip
-              style={styles.chip}
-              theme={{ colors: { primary: '#white' } }}
-              textStyle={styles.chipTextStyle}
-              key={index}
-              // style={styles.chip}
-              closeIcon={() => (
-                <Icon2 name="close" size={18} color="white" /> // Custom "X" icon color (Tomato)
-              )}
-              onClose={() => 
-                // setSelectedCategories(selectedCategories.filter((v: any) => v !== value))
-                // setFormData({ ...formData, categories: formData.categories.filter((v: any) => v !== value) })
-                setFormData({ ...formData, categories: formData.categories.filter((l: any) => l !== label) })
-
-              }
-            >
-              {label}
-            </Chip>
-          );
-        })}
-      </View>
+           <DropdownWithChipDisplay formData={formData} setFormData={setFormData} handleSelectCategory={handleSelectCategory}/>
 
         {/* Skills Input */}
         <Text style={styles.subtitle}>List your skills</Text>

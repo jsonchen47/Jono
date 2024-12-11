@@ -7,7 +7,7 @@ import { getProject } from '@/src/graphql/queries';
 import ManageProjectScreen from '@/src/screens/ManageProjectScreen';
 import { List, Button } from 'react-native-paper';
 
-const mainManageProjectScreen = () => {
+const manageProject1 = () => {
 
     const router = useRouter(); 
     const { projectId } = useLocalSearchParams();
@@ -29,16 +29,9 @@ const mainManageProjectScreen = () => {
 
     return (
         <View style={{flex: 1}}>
-        {/* <Text>manageProject</Text> */}
-        <ManageProjectScreen project={project}/>
-        <Button
-            onPress={() => router.push('/manageProject/manageMembersScreen')}
-            >
-            Push
-        </Button>
-        <View style={{marginVertical: 300}}></View>
+            <ManageProjectScreen project={project}/>
         </View>
     )
     }
 
-export default mainManageProjectScreen
+export default manageProject1
