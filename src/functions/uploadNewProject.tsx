@@ -69,7 +69,7 @@ export async function uploadNewProject(
     const s3Response = await Storage.put(fileName, blob, {
       contentType: 'image/jpeg', // Set the appropriate content type based on your image type
       level: 'public', 
-      progressCallback(progress) {
+      progressCallback(progress: any) {
         updateProgress(progress.loaded / progress.total); // Update progress
       },
     });

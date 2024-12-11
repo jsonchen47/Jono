@@ -252,7 +252,7 @@ const ManageProjectScreen = ({project}: any) => {
                 <TouchableOpacity
                     style={styles.listButton}
                     onPress={() => {
-                        router.push('/manageProject/manageProject2')
+                        router.push('/manageProject/manageProject1')
                       }}
                 >
                     <Text style={styles.listButtonText}>

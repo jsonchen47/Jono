@@ -105,8 +105,7 @@ const newProject1 = () => {
               onPress={() => {
                 router.push('/newProject/newProject2')
                 console.log(formData)
-              }
-              }
+              }}
               
               >
               Next

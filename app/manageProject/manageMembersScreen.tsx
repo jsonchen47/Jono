@@ -5,7 +5,7 @@ import { formatDateShort } from '@/src/functions/formatDateShort';
 import { FormContext } from './_layout';
 import { fetchUsers } from '@/src/functions/fetchUsers';
 
-const manageProject2 = () => {
+const manageMembersScreen = () => {
     const [members, setMembers] = useState<any>([]);
     const [joinDates, setJoinDates] = useState<any>([]);
     const [requestMembers, setRequestMembers] = useState<any>([]);
@@ -209,8 +209,7 @@ const manageProject2 = () => {
   )
 }
 
-export default manageProject2
-
+export default manageMembersScreen
 
 
 const styles = StyleSheet.create({

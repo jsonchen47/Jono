@@ -274,7 +274,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
     marginTop: 10, 
-
   },
   chip: {
     backgroundColor: 'black',

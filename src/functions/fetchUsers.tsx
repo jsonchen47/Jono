@@ -3,6 +3,7 @@ import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser } from '../graphql/queries'
 
+// Function to fetch users based on user IDs
 export const fetchUsers = async (userIds: any) => {
     const userPromises = userIds.map(async (userId: any) => {
       try {
