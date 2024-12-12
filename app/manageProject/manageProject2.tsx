@@ -41,16 +41,17 @@ const manageProject2 = () => {
     useEffect(() => {
         // Function for getting the project members
         const loadMembers = async () => {
-          setLoading(true); // Set loading to true while fetching users
-          const userIds = formData?.users?.items.map((item: any) => item.userId) || []; // Extract user IDs
-          const joinedDates = formData?.users?.items.map((item: any) => item.createdAt) || []; 
-          if (userIds.length > 0) {
-            const usersList = await fetchUsers(userIds); // Fetch users
-            setMembers(usersList); // Update state with fetched users
-            setJoinDates(joinedDates);
-          }
-          setLoading(false); // Set loading to false after fetching
-        };    
+            const userIds = formData?.users?.items.map((item: any) => item.userId) || []; // Extract user IDs
+            const joinedDates = formData?.users?.items.map((item: any) => item.createdAt) || [];
+    
+            if (userIds.length > 0) {
+                const usersList = await fetchUsers(userIds); // Fetch users
+                setMembers(usersList); // Update members state
+                setJoinDates(joinedDates); // Update join dates state
+                return { usersList, joinedDates }; // Return fetched data
+            }
+            return { usersList: [], joinedDates: [] }; // Return empty arrays if no user IDs
+        };  
 
         // Function for getting the request members
         const loadRequestMembers = async () => {
@@ -63,18 +64,53 @@ const manageProject2 = () => {
         }
 
         // Function for getting the admins
-        const loadAdmins = async () => {
+        // Function for getting the admins based on existing members and ownerIDs
+        const loadAdmins = (usersList: any[], joinedDates: any[]) => {
+            if (!usersList || usersList.length === 0) {
+                console.error("No members loaded to derive admins.");
+                setAdmins([]);
+                setAdminJoinDates([]);
+                return;
+            }
+    
             if (formData?.ownerIDs?.length > 0) {
-                const usersList = await fetchUsers(formData?.ownerIDs); // Fetch users
-                setAdmins(usersList); // Update state with fetched users
-                const joinedDates = usersList?.map((item: any) => item.createdAt) || []; 
-                setAdminJoinDates(joinedDates);
-              }
-        }
+                // Filter members to get the admins based on ownerIDs
+                const filteredAdmins = usersList.filter((member: any) =>
+                    formData.ownerIDs.includes(member.id)
+                );
+    
+                // Collect the join dates for the admins
+                const adminDates = filteredAdmins.map((admin: any) => {
+                    const memberIndex = usersList.findIndex((member: any) => member.id === admin.id);
+                    return joinedDates[memberIndex]; // Map to the corresponding joinDate
+                });
+    
+                // Set admins and their join dates
+                setAdmins(filteredAdmins);
+                setAdminJoinDates(adminDates);
+            } else {
+                // If no ownerIDs, clear admins and adminJoinDates
+                setAdmins([]);
+                setAdminJoinDates([]);
+            }
+        };
         
-        loadMembers(); // Call the function to load users
-        loadRequestMembers(); 
-        loadAdmins(); 
+        const fetchData = async () => {
+            setLoading(true); // Start loading state for all fetches
+    
+            // Step 1: Load members and get their data
+            const { usersList, joinedDates } = await loadMembers();
+    
+            // Step 2: Load admins using the data returned from loadMembers
+            loadAdmins(usersList, joinedDates);
+    
+            // Step 3: Load request members (optional, can run concurrently if not dependent)
+            loadRequestMembers();
+    
+            setLoading(false); // End loading state
+        };
+    
+        fetchData(); // Call the asynchronous fetchData function
     }, [formData]); // Run effect when the project changes
 
     // Tab with details about project 
@@ -130,7 +166,11 @@ const manageProject2 = () => {
                             // Check if the current member is an admin by matching the user ID with the ownerIDs list
                             const isAdmin = formData?.ownerIDs?.includes(member.id);
                         
-                            return isAdmin ? null : (
+                            return isAdmin ? (
+                                <View style={{ justifyContent: 'center'}}>
+                                    <Text style={{fontWeight: '500'}}>Project Admin</Text>
+                                </View>
+                            ) : (
                                 members.length > 1 ? (
                                     <Button
                                         {...props}
@@ -207,76 +247,86 @@ const manageProject2 = () => {
     function AdminsTab() {
         // Function for promoting members
         const handlePromoteMember = (memberId: any) => {
+            console.log(joinDates)
+            console.log(adminJoinDates)
             // Check if the member is already an admin (owner)
             if (formData?.ownerIDs?.includes(memberId)) {
                 return; // If the member is already an admin, do nothing
             }
         
-            // Add member to the ownerIDs in formData (if not already present)
-            setFormData((prevFormData: any) => {
-                // Add the member's ID to the ownerIDs array if not already there
-                const updatedOwnerIDs = prevFormData?.ownerIDs?.includes(memberId)
-                    ? prevFormData?.ownerIDs
-                    : [...(prevFormData?.ownerIDs || []), memberId];
+            // Find the index of the member being promoted
+            const memberIndex = members.findIndex((member: any) => member.id === memberId);
+            if (memberIndex === -1) {
+                console.error("Member not found");
+                return;
+            }
         
-                // Add the member to the admins array and set join date (if not already there)
-                const updatedAdmins = admins.some((admin: any) => admin.id === memberId)
-                    ? admins
-                    : [...admins, members.find((member: any) => member.id === memberId)];
+            // Get the join date of the member being promoted
+            const joinDate = joinDates[memberIndex];
         
-                const updatedAdminJoinDates = adminJoinDates.some((date: any, index: any) => members[index].id === memberId)
-                    ? adminJoinDates
-                    : [
-                          ...adminJoinDates,
-                          joinDates[members.findIndex((member: any) => member.id === memberId)],
-                      ];
-        
-                return {
-                    ...prevFormData,
-                    ownerIDs: updatedOwnerIDs, // Updated ownerIDs list without duplicates
-                };
-            });
-        
-            // Add the promoted member to the admins state if not already present
+            // Promote the member and move the join date to adminJoinDates
             setAdmins((prevAdmins: any) => {
-                return prevAdmins.some((admin: any) => admin.id === memberId)
-                    ? prevAdmins
-                    : [...prevAdmins, members.find((member: any) => member.id === memberId)];
+                const isAlreadyAdmin = prevAdmins.some((admin: any) => admin.id === memberId);
+                if (isAlreadyAdmin) return prevAdmins;
+        
+                const newAdmin = members[memberIndex];
+                setAdminJoinDates((prevAdminJoinDates: any) => [...prevAdminJoinDates, joinDate]);
+        
+                return [...prevAdmins, newAdmin];
             });
         
-            // Add the join date for the promoted member to adminJoinDates state (if not already present)
-            setAdminJoinDates((prevAdminJoinDates: any) => {
-                return prevAdminJoinDates.some((date: any, index: any) => members[index].id === memberId)
-                    ? prevAdminJoinDates
-                    : [
-                          ...prevAdminJoinDates,
-                          joinDates[admins.findIndex((member: any) => member.id === memberId)],
-                      ];
+            // Update joinDates to remove the promoted member's join date
+            setJoinDates((prevJoinDates: any) => {
+                const updatedJoinDates = [...prevJoinDates];
+                updatedJoinDates.splice(memberIndex, 1);
+                return updatedJoinDates;
             });
+        
+            // Update ownerIDs to include the promoted member
+            setFormData((prevFormData: any) => ({
+                ...prevFormData,
+                ownerIDs: [...(prevFormData?.ownerIDs || []), memberId],
+            }));
         };
-
-        // Function for demoting members
+        
         const handleDemoteMember = (memberId: any) => {
-            // Check if the member is already not an admin, if so do nothing
+            // Check if the member is not an admin
             if (!formData?.ownerIDs?.includes(memberId)) {
                 return; // Member is not an admin, so no need to demote
             }
         
-            // Update formData to remove the member from ownerIDs
-            setFormData((prevFormData: any) => {
-                // Remove the member's ID from the ownerIDs array
-                const updatedOwnerIDs = prevFormData?.ownerIDs?.filter((id: any) => id !== memberId);
+            // Find the index of the admin being demoted
+            const adminIndex = admins.findIndex((admin: any) => admin.id === memberId);
+            if (adminIndex === -1) {
+                console.error("Admin not found");
+                return;
+            }
         
-                return {
-                    ...prevFormData,
-                    ownerIDs: updatedOwnerIDs, // Updated ownerIDs list after removal
-                };
+            // Get the join date of the admin being demoted
+            const joinDate = adminJoinDates[adminIndex];
+        
+            // Demote the member and move the join date back to joinDates
+            setAdmins((prevAdmins: any) => {
+                const updatedAdmins = [...prevAdmins];
+                updatedAdmins.splice(adminIndex, 1);
+                return updatedAdmins;
             });
         
-            // Remove the member from the admins list and adminJoinDates list
-            setAdmins((prevAdmins: any) => prevAdmins.filter((admin: any) => admin.id !== memberId));
-            setAdminJoinDates((prevAdminJoinDates: any) => prevAdminJoinDates.filter((date: any, index: any) => members[index].id !== memberId));
+            setAdminJoinDates((prevAdminJoinDates: any) => {
+                const updatedAdminJoinDates = [...prevAdminJoinDates];
+                updatedAdminJoinDates.splice(adminIndex, 1);
+                return updatedAdminJoinDates;
+            });
+        
+            setJoinDates((prevJoinDates: any) => [...prevJoinDates, joinDate]);
+        
+            // Update ownerIDs to remove the demoted member
+            setFormData((prevFormData: any) => ({
+                ...prevFormData,
+                ownerIDs: prevFormData?.ownerIDs?.filter((id: any) => id !== memberId),
+            }));
         };
+        
         
         
         return (
@@ -331,8 +381,12 @@ const manageProject2 = () => {
                 <View style={styles.divider}/>
                 <View style={styles.spacerVerticalSmall}/>
                 <View style={styles.spacerVerticalSmall}/>
-                <Text style={styles.header}>Select members to promote </Text>
-                <View style={styles.spacerVerticalSmall}/>
+                {members?.filter((member: any) => !formData?.ownerIDs?.includes(member.id)).length > 0 && (
+                    <>
+                        <Text style={styles.header}>Select members to promote</Text>
+                        <View style={styles.spacerVerticalSmall} />
+                    </>
+                )}
 
                 {/* List of members to promote */}
                 {members
