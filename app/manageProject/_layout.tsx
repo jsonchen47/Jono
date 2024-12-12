@@ -28,6 +28,8 @@ interface FormData {
     latitude: Float
     city: string
     joinRequestIDs: string[]
+    removeUserIDs: string[]
+    addUserIDs: string[]
   }
   
   // Define a default value for the context
@@ -45,6 +47,8 @@ interface FormData {
         latitude: 0, 
         city: '', 
         joinRequestIDs: [], 
+        removeUserIDs: [],
+        addUserIDs: [],
     },
     setFormData: () => {}, // No-op function
   };
@@ -67,6 +71,8 @@ export default function FormLayout() {
     latitude: 0, 
     city: '', 
     joinRequestIDs: [], 
+    removeUserIDs: [],
+    addUserIDs: [],
   });
 
   return (

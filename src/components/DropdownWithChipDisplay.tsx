@@ -37,7 +37,7 @@ const DropdownWithChipDisplay = ({formData, setFormData, handleSelectCategory}: 
       {/* Displaying Selected Chips */}
       <View style={styles.chipsContainer}>
         {/* {selectedCategories.map((value: any) => { */}
-        {formData.categories.map((label: any, index: any) => {
+        {formData?.categories?.map((label: any, index: any) => {
           // const item = categories.find((d) => d.value === value);
           return (
             <Chip

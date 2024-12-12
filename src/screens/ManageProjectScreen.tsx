@@ -20,6 +20,8 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // Import vector icons
 import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
 import DropdownWithChipDisplay from '../components/DropdownWithChipDisplay';
+import Geolocation from '@react-native-community/geolocation';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -152,6 +154,50 @@ const ManageProjectScreen = ({project}: any) => {
         });
     };
     
+    const handleSetCurrentLocation = () => {
+        // Get user's current location
+        Geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+                console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+    
+                // Fetch city and state using Nominatim API
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Extract city and state from the response
+                        const city =
+                            data.address.city ||
+                            data.address.town ||
+                            data.address.village ||
+                            data.address.hamlet;
+    
+                        const state = data.address.state;
+    
+                        if (city && state) {
+                            console.log(`Fetched location: ${city}, ${state}`);
+                            // Update the formData with the fetched city and state
+                            setFormData(prevFormData => ({
+                                ...prevFormData,
+                                city: `${city}, ${state}`, // Combine city and state
+                                longitude: longitude,
+                                latitude: latitude,
+                            }));
+                        } else {
+                            console.warn("City or state not found in the response.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching location from Nominatim:', error);
+                    });
+            },
+            error => {
+                console.error('Error getting location:', error);
+            },
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
+    };
+    
 
   return (
    
@@ -259,9 +305,7 @@ const ManageProjectScreen = ({project}: any) => {
                 <View style={styles.spacerVerticalSmall}/>
                 <Button    
                     mode="outlined"
-                    onPress={() => 
-                        console.log('Pressed remove')
-                    }
+                    onPress={handleSetCurrentLocation} // Call the handler
                     contentStyle={styles.locationButtonContent}
                     labelStyle={styles.locationButtonText}
                     style={styles.locationButtonStyle}
@@ -375,17 +419,6 @@ const styles = StyleSheet.create({
     spacerVerticalSmall: {
         marginVertical: 5, 
     },
-    removeButtonStyle: {
-        borderRadius: 5,     
-    }, 
-    removeButtonContent: {
-        backgroundColor: '#E7E7E7', // Light gray background
-        paddingHorizontal: 10,     // Horizontal padding for better spacing
-    }, 
-    removeButtonText: {
-        color: '#d32f2f', // Red text color
-        fontWeight: 'bold', // Bold for emphasis
-    },
     dropdown: {
         height: 50,
         borderColor: 'black',
@@ -408,14 +441,6 @@ const styles = StyleSheet.create({
         color: 'darkblue', // Red text color
         fontWeight: 'bold', // Bold for emphasis
     },
-    approveButtonText: {
-        color: 'black', 
-        fontWeight: 'bold', // Bold for emphasis
-    },
-    approveButtonContent: {
-        backgroundColor: '#4CDFFF', 
-        paddingHorizontal: 10,     // Horizontal padding for better spacing
-    }, 
     listButton: {
         flexDirection: 'row',
         alignItems: 'center',
