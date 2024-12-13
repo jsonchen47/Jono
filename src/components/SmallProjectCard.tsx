@@ -12,7 +12,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const SmallProjectCard = ({ project }: any) => {
-  const { updatedProjectID } = useProjectUpdateContext();  // Get the most recently updated project ID
+  const { updatedProjectID, updated } = useProjectUpdateContext();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [currentProject, setCurrentProject] = useState(project);  // Store the current project
@@ -42,10 +42,11 @@ const SmallProjectCard = ({ project }: any) => {
 
   // Run when updatedProjectID changes, refetch project if necessary
   useEffect(() => {
-    if (updatedProjectID === project.id) {
-      fetchProject(project.id);  // Refetch the project if it was updated
+    if (updated && updatedProjectID === currentProject.id) {
+      console.log(`Project ${currentProject.id} was recently updated.`);
+      fetchProject(updatedProjectID);
     }
-  }, [updatedProjectID, project.id]);
+  }, [updated, updatedProjectID, currentProject.id]);
 
   return (
     <Pressable

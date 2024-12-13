@@ -27,6 +27,7 @@ import { deleteUserProject } from '../graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { updateProject } from '../graphql/mutations';
 import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
+import { updateProjectImage } from '../functions/updateProjectImage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -127,6 +128,11 @@ const ManageProjectScreen = ({project}: any) => {
             const result = await API.graphql(
                 graphqlOperation(updateProject, { input })
             );
+
+            // Update the project image if it has changed
+            if (formData?.image != project?.image) {
+                updateProjectImage(project?.id, formData, setFormData, project?.image)
+            }
 
             // Remove the users from the remove list 
             handleRemoveUsers(project.id, formData.removeUserIDs)
