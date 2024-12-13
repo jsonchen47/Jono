@@ -21,7 +21,12 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // Import vec
 import Icon2 from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
 import DropdownWithChipDisplay from '../components/DropdownWithChipDisplay';
 import Geolocation from '@react-native-community/geolocation';
-
+import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { listUserProjects } from '../graphql/queries';
+import { deleteUserProject } from '../graphql/mutations';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { updateProject } from '../graphql/mutations';
+import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -39,12 +44,15 @@ const categories = [
 const Tab = createMaterialTopTabNavigator();
 
 const ManageProjectScreen = ({project}: any) => {
+    const { setProjectID } = useProjectUpdateContext(); // Get setProjectID function from context
     const headerHeight = useHeaderHeight();
     const { formData, setFormData } = useContext(FormContext);
     const [title, setTitle] = React.useState("")
     const [description, setDescription] = React.useState("")
     const router = useRouter(); 
     const navigation = useNavigation();
+    const [loading, setLoading] = React.useState(false)
+    
 
     // Header with image, title, and project 
     const Header = () => {
@@ -70,31 +78,6 @@ const ManageProjectScreen = ({project}: any) => {
         );
     };
 
-    useEffect(() => {
-        // Set the header
-        navigation.setOptions({ 
-          title: 'Manage Project', 
-          headerLeft: () => 
-          <TouchableOpacity
-          onPress={() => 
-            router.back()
-          } 
-          >
-            <Octicons name='x' style={styles.exitButton}/>
-          </TouchableOpacity>,
-          headerRight: () => 
-          <TouchableOpacity
-          onPress={() => 
-            router.back()
-          } 
-          >
-            <Text style={styles.saveButton}>
-                Save
-            </Text>
-          </TouchableOpacity>
-        });
-    }, [project])
-
     // When the screen first loads, set the formData as the project 
     useEffect(() => {
         setFormData((prevFormData) => ({ 
@@ -114,6 +97,128 @@ const ManageProjectScreen = ({project}: any) => {
         }));
     }, [project])
 
+    const handleSave = async () => {
+        try {
+            // Show a loading indicator if needed
+            setLoading(true);
+
+            // console.log(formData);
+             // Clone or snapshot the latest formData
+            const currentFormData = { ...formData };
+            console.log(currentFormData);
+
+            // Prepare the input data for the mutation
+            const input = {
+                id: project.id, // Assuming project.id is the identifier
+                title: formData.title,
+                description: formData.description,
+                image: formData.image,
+                categories: formData.categories,
+                skills: formData.skills,
+                resources: formData.resources,
+                longitude: formData.longitude,
+                latitude: formData.latitude,
+                city: formData.city,
+                joinRequestIDs: formData.joinRequestIDs,
+                ownerIDs: formData.ownerIDs,
+            };
+    
+            // Call the GraphQL mutation to update the project
+            const result = await API.graphql(
+                graphqlOperation(updateProject, { input })
+            );
+
+            // Remove the users from the remove list 
+            handleRemoveUsers(project.id, formData.removeUserIDs)
+
+            const castedResult = result as GraphQLResult<any>
+    
+            if (castedResult?.data?.updateProject) {
+                alert("Project updated successfully!");
+                // After successful update, notify the context with the updated project ID
+                setProjectID(project?.id);
+                router.back(); // Navigate back after saving
+            } else {
+                throw new Error("Failed to update project.");
+            }
+        } catch (error) {
+            console.error("Error saving project:", error);
+            alert("An error occurred while saving the project.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        // Set the header
+        navigation.setOptions({ 
+          title: 'Manage Project', 
+          headerLeft: () => 
+          <TouchableOpacity
+          onPress={() => 
+            router.back()
+          } 
+          >
+            <Octicons name='x' style={styles.exitButton}/>
+          </TouchableOpacity>,
+          headerRight: () => 
+          <TouchableOpacity
+            onPress={() => {
+                handleSave()
+                // router.back()
+            }} 
+          >
+            <Text style={styles.saveButton}>
+                Save
+            </Text>
+          </TouchableOpacity>
+        });
+    }, [navigation, router, handleSave, project])
+
+    const handleRemoveUsers = async (projectId: string, userIds: string[]) => {
+        try {
+          // If there are no users to remove, skip the operation
+          if (userIds.length === 0) {
+            console.log('No users to remove.');
+            return;
+          }
+      
+          // Fetch the UserProject IDs for the specified project and userIds
+          const userProjects = await API.graphql(graphqlOperation(listUserProjects, { 
+            filter: { projectId: { eq: projectId }, userId: { in: userIds } } 
+          }));
+      
+          // Extract the UserProject IDs from the query results
+          const castedUserProjects = userProjects as GraphQLResult<any>;
+          const userProjectIds = castedUserProjects.data.listUserProjects.items.map((item: any) => item.id);
+      
+          // If no UserProjects are found, skip the deletion
+          if (userProjectIds.length === 0) {
+            console.log('No users found to remove.');
+            return;
+          }
+      
+          // Create an array of deletion promises for each user
+          const deletionPromises = userProjectIds.map(async (userProjectId: any) => {
+            // Now you can directly delete the UserProject relationship by its ID
+            return API.graphql(graphqlOperation(deleteUserProject, { 
+              input: { id: userProjectId }
+            }));
+          });
+      
+          // Wait for all deletions to finish
+          await Promise.all(deletionPromises);
+      
+          console.log('All specified users removed from the project.');
+          
+          // Optionally, update the UI or state after all users are removed
+      
+        } catch (error) {
+          console.error('Error removing users from project:', error);
+        }
+      };
+      
+      
     
 
     const handlePhotoSelection = async (uri: any) => {
@@ -144,6 +249,7 @@ const ManageProjectScreen = ({project}: any) => {
         ...formData,
         skills: updatedSkills,
         });
+        console.log(formData)
     };
 
     // Handler for updating resources in formData
@@ -152,6 +258,7 @@ const ManageProjectScreen = ({project}: any) => {
         ...formData,
         resources: updatedResources,
         });
+        console.log(formData)
     };
     
     const handleSetCurrentLocation = () => {

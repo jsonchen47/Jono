@@ -25,7 +25,7 @@ import { ProgressProvider, useProgress } from '@/src/contexts/ProgressContext';
 import { ProgressBar, Snackbar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Octicons'; // Import vector icons
 import { useRouter } from 'expo-router';
-
+import { ProjectUpdateProvider } from '@/src/contexts/ProjectUpdateContext';
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -151,6 +151,7 @@ function RootLayout() {
         <ProgressProvider>
         <ApplicationProvider {...eva} theme={eva.light}>
           <PaperProvider>
+          <ProjectUpdateProvider>
             <View style={styles.container}>
             {/* Global Progress Bar */}
             
@@ -256,6 +257,7 @@ function RootLayout() {
               />
             {/* </SafeAreaView> */}
               </View>
+              </ProjectUpdateProvider>
           </PaperProvider>
         </ApplicationProvider>
         </ProgressProvider>

@@ -1,10 +1,11 @@
 import { View, Text } from 'react-native'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import ProjectScreen from '@/src/screens/ProjectScreen'
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { API, graphqlOperation } from "aws-amplify";
 import { getProject } from '@/src/graphql/queries';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProjectDetails = () => {
   const router = useRouter();
@@ -21,9 +22,14 @@ const ProjectDetails = () => {
       console.log(castedResult.data?.getProject)
   };
 
-  useEffect(() => {
-    fetchProject(projectID);
-  }, [projectID]);
+   // UseFocusEffect to fetch project when screen regains focus
+   useFocusEffect(
+    useCallback(() => {
+      if (projectID) {
+        fetchProject(projectID);
+      }
+    }, [projectID]) // Dependencies: Only re-create the callback if projectID changes
+  );
 
   return (
     <View style={{flex: 1}}>
