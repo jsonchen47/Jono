@@ -34,13 +34,16 @@ const Header = () => {
           <Text style={styles.searchButtonText}>Assemble the perfect team</Text>
         </TouchableOpacity>
           <TouchableOpacity 
-          style={styles.filterButton}
+          style={styles.filterButtonContainer}
           onPress={() => {
             console.log('Filter button pressed')
             setDeleted(true)
           }}
           >
-          <FontAwesome6 name="sliders" size={15} style={{fontWeight: '100'}}/>
+            <View style={styles.filterButton}>
+              <FontAwesome6 name="sliders" size={15} style={{fontWeight: '100'}}/>
+            </View>
+          
         </TouchableOpacity>
     </View>
   )
@@ -257,18 +260,22 @@ const styles = StyleSheet.create({
     width: 35, 
     borderRadius: 20, 
     backgroundColor: 'white', 
-    position: 'absolute',
-    right: 10,
     justifyContent: 'center', 
     alignItems: 'center',
+     
     // fontWeight: '300'
   },
   filterButtonContainer: {
-    width: windowWidth*0.87,
-    height: '100%',
+    // width: windowWidth*0.87,
+    // height: '100%',
+    // position: 'absolute',
+    // justifyContent: 'center', 
+    // alignItems: 'flex-end',
+    // backgroundColor: 'green',
     position: 'absolute',
-    justifyContent: 'center', 
-    alignItems: 'flex-end',
+    right: 0,
+    padding: 10,
+
   },
   mapButtonContainer: {
     
