@@ -166,7 +166,7 @@ const map = () => {
               longitude: project.longitude,
             }}
             // title={project.title}
-            pinColor={selectedProject && selectedProject.id === project.id ? 'aqua' : 'blue'}
+            pinColor={selectedProject && selectedProject.id === project.id ? 'red' : 'blue'}
             // description={project.description}
             onSelect={() => {
               handleMarkerSelect(project)
