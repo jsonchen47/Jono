@@ -20,8 +20,19 @@ const UsersList = ({ users, loadMoreUsers, isFetchingMore }: UsersListProps) => 
       <List.Item
         style={styles.listItem}
         title={item.name}
+        titleStyle={styles.userName}
         description={item.bio}
-        left={props => <List.Image {...props} source={{ uri: item.image }} />}
+        left={
+            props => 
+                <List.Image {...props} 
+                    source={{ uri: item.image }} 
+                    style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 5,
+                        marginLeft: 20, // Optional spacing between image and text
+                    }}
+                />}
         onPress={() => {
             // navigation.navigate('UserProfile', { userId: item.id })
             console.log('navigate to the user profile')
@@ -57,12 +68,15 @@ const styles = StyleSheet.create({
   flatList: {
     flex: 1,
     width: '100%',
-    paddingTop: windowWidth * 0.065,
+    // paddingTop: windowWidth * 0.065,
   },
   listItem: {
     width: '100%',
-    marginBottom: windowWidth * 0.05,
+    // marginBottom: windowWidth * 0.05,
   },
+  userName: {
+    fontWeight: '500'
+  }
 });
 
 export default UsersList;
