@@ -9,6 +9,8 @@ import ProjectsGridNew from '@/src/components/ProjectsGridNew';
 import UsersList from '@/src/components/UsersList';  // Assuming UsersList is similar to ProjectsGridNew
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+
 
 const windowWidth = Dimensions.get('window').width;
 const Tab = createMaterialTopTabNavigator();
@@ -25,6 +27,18 @@ const Search = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const router = useRouter();
+  const navigation = useNavigation();
+
+  const handleDoubleBack = () => {
+    if (navigation.canGoBack()) {
+      router.back(); // First back
+      setTimeout(() => {
+        if (navigation.canGoBack()) {
+          router.back(); // Second back, only if stack can go back
+        }
+      }, 0); // Optional delay to ensure the stack updates
+    }
+  };
 
   // Fetch Projects data
   const fetchProjects = async (searchTerm: string, isLoadMore = false) => {
@@ -156,7 +170,13 @@ const Search = () => {
     >
       <View style={styles.searchBarContainer}>
         <View style={styles.textInputContainer}>
-          <Icon3 name="arrowleft" style={styles.backArrow} onPress={() => router.back()} />
+          <Icon3 name="arrowleft" 
+            style={styles.backArrow} 
+            onPress={() => 
+              {
+                handleDoubleBack()
+              }
+            } />
           <TextInput
             style={styles.searchInput}
             placeholder="Find projects and dreamers"
@@ -204,7 +224,7 @@ const Search = () => {
           )}
         />
         <Tab.Screen
-          name="Users"
+          name="People"
           children={() => (
             <View style={styles.tabContent}>
               <UsersList
