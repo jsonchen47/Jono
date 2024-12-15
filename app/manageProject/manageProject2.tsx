@@ -18,6 +18,7 @@ const manageProject2 = () => {
     const [admins, setAdmins] = useState<any>([]);
     const [adminJoinDates, setAdminJoinDates] = useState<any>([]);
     const [loading, setLoading] = useState(true);
+    const [approvedMembers, setApprovedMembers] = useState<any>([]); // Track approved members
     const { formData, setFormData } = useContext(FormContext);
     const navigation = useNavigation();
     const router = useRouter(); 
@@ -200,41 +201,70 @@ const manageProject2 = () => {
     }
 
     function RequestsTab() {
+        const handleApprove = (requestId: any) => {
+            setFormData((prevFormData: any) => {
+                const isAlreadyApproved = prevFormData?.addUserIDs?.includes(requestId);
+    
+                return {
+                    ...prevFormData,
+                    addUserIDs: isAlreadyApproved
+                        ? prevFormData.addUserIDs.filter((id: any) => id !== requestId) // Remove the requestId if already approved
+                        : [...(prevFormData?.addUserIDs || []), requestId], // Add the requestId if not already approved
+                };
+            });
+    
+            setApprovedMembers((prevApprovedMembers: any) => {
+                const isAlreadyApproved = prevApprovedMembers.includes(requestId);
+    
+                return isAlreadyApproved
+                    ? prevApprovedMembers.filter((id: any) => id !== requestId) // Remove from approved list
+                    : [...prevApprovedMembers, requestId]; // Add to approved list
+            });
+        };
+    
         return (
             <View>
                 <View style={{ marginVertical: 5 }} />
                 {requestMembers && requestMembers.length > 0 ? (
-                    requestMembers.map((requestMember: any, index: any) => (
-                        <List.Item
-                            key={index}
-                            title={requestMember.name}
-                            description={`Joined ${formatDateShort(requestDates?.[index])}`}
-                            left={(props) => (
-                                <Image
-                                    {...props}
-                                    source={{ uri: requestMember.image }}
-                                    style={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: 5,
-                                        marginLeft: 20, // Optional spacing between image and text
-                                    }}
-                                />
-                            )}
-                            right={(props) => (
-                                <Button
-                                    {...props}
-                                    mode="text"
-                                    onPress={() => console.log('Pressed approve')}
-                                    contentStyle={styles.approveButtonContent}
-                                    labelStyle={styles.approveButtonText}
-                                    style={styles.removeButtonStyle}
-                                >
-                                    Approve
-                                </Button>
-                            )}
-                        />
-                    ))
+                    requestMembers.map((requestMember: any, index: any) => {
+                        const isApproved = approvedMembers.includes(requestMember.id);
+                        return (
+                            <List.Item
+                                key={index}
+                                title={requestMember.name}
+                                description={`Joined ${formatDateShort(requestDates?.[index])}`}
+                                left={(props) => (
+                                    <Image
+                                        {...props}
+                                        source={{ uri: requestMember.image }}
+                                        style={{
+                                            width: 40,
+                                            height: 40,
+                                            borderRadius: 5,
+                                            marginLeft: 20, // Optional spacing between image and text
+                                        }}
+                                    />
+                                )}
+                                right={(props) => (
+                                    <Button
+                                        {...props}
+                                        mode="text"
+                                        onPress={() => handleApprove(requestMember.id)}
+                                        contentStyle={styles.approveButtonContent}
+                                        labelStyle={styles.approveButtonText}
+                                        style={[
+                                            styles.removeButtonStyle,
+                                            {
+                                                backgroundColor: isApproved ? '#E7E7E7' : '#4CDFFF', // Change background color on approval
+                                            },
+                                        ]}
+                                    >
+                                        {isApproved ? 'Approved' : 'Approve'} {/* Change text based on approval status */}
+                                    </Button>
+                                )}
+                            />
+                        );
+                    })
                 ) : (
                     <Text style={{ textAlign: 'center', marginTop: 20, color: 'gray' }}>
                         No requests yet
@@ -243,6 +273,8 @@ const manageProject2 = () => {
             </View>
         );
     }
+    
+    
 
     function AdminsTab() {
         // Function for promoting members
@@ -488,7 +520,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold', // Bold for emphasis
     },
     approveButtonContent: {
-        backgroundColor: '#4CDFFF', 
+        // backgroundColor: '#4CDFFF', 
         paddingHorizontal: 10,     // Horizontal padding for better spacing
     }, 
     exitButton: {

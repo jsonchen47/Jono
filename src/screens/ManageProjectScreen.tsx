@@ -23,11 +23,12 @@ import DropdownWithChipDisplay from '../components/DropdownWithChipDisplay';
 import Geolocation from '@react-native-community/geolocation';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { listUserProjects } from '../graphql/queries';
-import { deleteUserProject } from '../graphql/mutations';
+import { deleteUserProject, createUserProject } from '../graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { updateProject } from '../graphql/mutations';
 import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
 import { updateProjectImage } from '../functions/updateProjectImage';
+import { Alert } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -98,6 +99,25 @@ const ManageProjectScreen = ({project}: any) => {
         }));
     }, [project])
 
+    // Confirmation after clicking on save 
+    const handleSaveConfirmation = () => {
+        Alert.alert(
+            "Confirm Changes",
+            "Are you sure you want to make these changes?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                {
+                    text: "Save",
+                    onPress: handleSave
+                }
+            ]
+        );
+    };
+
     const handleSave = async () => {
         try {
             // Show a loading indicator if needed
@@ -134,9 +154,12 @@ const ManageProjectScreen = ({project}: any) => {
                 updateProjectImage(project?.id, formData, setFormData, project?.image)
             }
 
-            // Remove the users from the remove list 
-            handleRemoveUsers(project.id, formData.removeUserIDs)
-
+            // // Add any users that were approved and remove the users from the remove list 
+            await Promise.all([
+                handleAddUsers(),
+                handleRemoveUsers(project.id, formData.removeUserIDs)
+            ]);
+            
             const castedResult = result as GraphQLResult<any>
     
             if (castedResult?.data?.updateProject) {
@@ -170,8 +193,7 @@ const ManageProjectScreen = ({project}: any) => {
           headerRight: () => 
           <TouchableOpacity
             onPress={() => {
-                handleSave()
-                // router.back()
+                handleSaveConfirmation()
             }} 
           >
             <Text style={styles.saveButton}>
@@ -179,20 +201,84 @@ const ManageProjectScreen = ({project}: any) => {
             </Text>
           </TouchableOpacity>
         });
-    }, [navigation, router, handleSave, project])
+    }, [navigation, router, handleSaveConfirmation, project])
+
+    const handleAddUsers = async () => {
+        try {
+            const { addUserIDs, joinRequestIDs } = formData;
+    
+            // If there are no users to add, skip
+            if (addUserIDs.length === 0) {
+                console.log('No users to add.');
+                return;
+            }
+    
+            // For each user in the addUserIDs list, create a user-project relationship
+            const addUserPromises = addUserIDs.map(async (userId) => {
+                const input = {
+                    userId,
+                    projectId: project.id,
+                    // You can add additional fields like role, status, etc. here
+                };
+    
+                // Call the createUserProject mutation
+                await API.graphql(graphqlOperation(createUserProject, { input }));
+                console.log(`User ${userId} added to the project.`);
+            });
+    
+            // Wait for all user-project relationships to be created
+            await Promise.all(addUserPromises);
+    
+            // Remove added users from the joinRequestIDs list
+            const updatedJoinRequestIDs = joinRequestIDs.filter(
+                (id) => !addUserIDs.includes(id)
+            );
+    
+            // Update the project with the new joinRequestIDs
+            setFormData({ ...formData, joinRequestIDs: updatedJoinRequestIDs });
+    
+            // Now, update the project with the new joinRequestIDs
+            const input = {
+                id: project.id,
+                joinRequestIDs: updatedJoinRequestIDs,
+                // Other project fields here as needed
+            };
+            await API.graphql(graphqlOperation(updateProject, { input }));
+    
+            console.log('Users successfully added and join requests updated.');
+        } catch (error) {
+            console.error('Error adding users:', error);
+            alert('An error occurred while adding users.');
+        }
+    };
+    
 
     const handleRemoveUsers = async (projectId: string, userIds: string[]) => {
         try {
+
+        console.log('just started')
           // If there are no users to remove, skip the operation
           if (userIds.length === 0) {
             console.log('No users to remove.');
             return;
           }
+
+          console.log('step 1')
       
-          // Fetch the UserProject IDs for the specified project and userIds
-          const userProjects = await API.graphql(graphqlOperation(listUserProjects, { 
-            filter: { projectId: { eq: projectId }, userId: { in: userIds } } 
-          }));
+          // Create an array of conditions for userId using 'eq'
+        const userIdConditions = userIds.map(userId => ({
+            userId: { eq: userId }
+        }));
+        
+        // Fetch the UserProject IDs for the specified project and userIds
+        const userProjects = await API.graphql(graphqlOperation(listUserProjects, { 
+            filter: { 
+            projectId: { eq: projectId },
+            or: userIdConditions  // Combine the conditions using 'or'
+            }
+        }));
+  
+          console.log("got to the user projects part")
       
           // Extract the UserProject IDs from the query results
           const castedUserProjects = userProjects as GraphQLResult<any>;
@@ -203,6 +289,8 @@ const ManageProjectScreen = ({project}: any) => {
             console.log('No users found to remove.');
             return;
           }
+
+          console.log("wow got so far")
       
           // Create an array of deletion promises for each user
           const deletionPromises = userProjectIds.map(async (userProjectId: any) => {
@@ -211,6 +299,7 @@ const ManageProjectScreen = ({project}: any) => {
               input: { id: userProjectId }
             }));
           });
+          console.log("basically end")
       
           // Wait for all deletions to finish
           await Promise.all(deletionPromises);
