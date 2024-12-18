@@ -10,6 +10,7 @@ import ProjectsGridNew from '@/src/components/ProjectsGridNew';
 import Emoji from 'react-native-emoji';
 import ProjectsGrid from '@/src/components/ProjectsGrid';
 import { useNavigation } from '@react-navigation/native';
+import SampleComponent from '@/src/components/SampleComponent';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -115,7 +116,7 @@ export default function SavedScreen() {
          projects={projects} // Pass remaining projects after first 4
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
-        />
+      />
     </View>
 
   );
@@ -134,4 +135,8 @@ const styles = StyleSheet.create({
     fontSize: 27,
     fontWeight: 'bold',
   },
+  sampleComponent: {
+    // fontWeight: 'bold', 
+    // backgroundColor: 'red'
+  }
 });

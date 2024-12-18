@@ -36,8 +36,9 @@ const Header = () => {
           <TouchableOpacity 
           style={styles.filterButtonContainer}
           onPress={() => {
-            console.log('Filter button pressed')
-            setDeleted(true)
+            // console.log('Filter button pressed')
+            // setDeleted(true)
+            router.push('/filter')
           }}
           >
             <View style={styles.filterButton}>

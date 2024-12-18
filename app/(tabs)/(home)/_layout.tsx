@@ -2,34 +2,34 @@ import { Stack } from 'expo-router';
 
 export default function HomeLayout() {
   return (
-    <Stack
-      screenOptions={{
-        contentStyle:{
-          backgroundColor:'#FFFFFF'
-        },
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}>
-      <Stack.Screen 
-        name="index" 
-        options={{
-          title: 'Explore',
-          headerShown: false,
-          headerStyle: {
-            backgroundColor: 'white',
+      <Stack
+        screenOptions={{
+          contentStyle:{
+            backgroundColor:'#FFFFFF'
           },
-          headerTintColor: 'black',
-          animation: 'fade',
-        }}
-      />
-      <Stack.Screen
-        name="map"
-        options={{
-          title: 'Map',
-          // presentation: 'fullScreenModal',
-        }}
-       />
-    </Stack>
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}>
+        <Stack.Screen 
+          name="index" 
+          options={{
+            title: 'Explore',
+            headerShown: false,
+            headerStyle: {
+              backgroundColor: 'white',
+            },
+            headerTintColor: 'black',
+            animation: 'fade',
+          }}
+        />
+        <Stack.Screen
+          name="map"
+          options={{
+            title: 'Map',
+            // presentation: 'fullScreenModal',
+          }}
+        />
+      </Stack>
   );
 }

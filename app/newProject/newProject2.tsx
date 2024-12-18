@@ -95,7 +95,6 @@ const newProject2 = () => {
             <Text style={styles.title}>Add a little spice</Text>
             {/* Choose a category */}
             <Text style={styles.subtitle}>Choose your categories</Text>
-
            <DropdownWithChipDisplay formData={formData} setFormData={setFormData} handleSelectCategory={handleSelectCategory}/>
 
         {/* Skills Input */}

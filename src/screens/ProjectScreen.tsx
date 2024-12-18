@@ -11,6 +11,7 @@ import { updateProject } from '../graphql/mutations';
 import { getProject } from '../graphql/queries';
 import { formatDateLong } from '../functions/formatDateLong';
 import { fetchUsers } from '../functions/fetchUsers';
+import { useFocusEffect } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
