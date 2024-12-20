@@ -15,7 +15,7 @@ const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [filter, setFilter] = useState<Filter>({
-    sortBy: 'bestMatch', // Default value for sorting
+    sortBy: 'newest', // Default value for sorting
   });
 
   return (

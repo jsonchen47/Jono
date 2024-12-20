@@ -23,6 +23,7 @@
     "@react-native-community/cli": "latest",
     "@react-native-community/geolocation": "^3.4.0",
     "@react-native-community/netinfo": "11.4.1",
+    "@react-native-community/slider": "^4.5.5",
     "@react-native-picker/picker": "2.9.0",
     "@react-navigation/bottom-tabs": "^7.0.0",
     "@react-navigation/drawer": "^7.0.19",

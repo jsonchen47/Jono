@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import Slider from '@react-native-community/slider';
 import { useFilter } from '@/src/contexts/FilterContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const FilterScreen = () => {
   const { filter, setFilter } = useFilter();
   const router = useRouter();
+  const [distance, setDistance] = useState(1); // Local state for the slider
 
-  const updateSort = (sortOption: any) => {
+  const updateSort = (sortOption: string) => {
     setFilter((prev) => ({ ...prev, sortBy: sortOption }));
+  };
+
+  const updateDistance = (value: number) => {
+    setDistance(value);
+    setFilter((prev) => ({ ...prev, distance: value === 100 ? '100+' : value }));
   };
 
   return (
@@ -18,18 +25,14 @@ const FilterScreen = () => {
       <View style={styles.container}>
         <Text style={styles.header}>Sort</Text>
         <View style={styles.optionContainer}>
-          {['bestMatch', 'distance', 'newest', 'oldest'].map((option) => (
+          {['newest', 'oldest'].map((option) => (
             <TouchableOpacity
               key={option}
               style={styles.option}
               onPress={() => updateSort(option)}
             >
               <Text style={styles.optionText}>
-                {option === 'bestMatch'
-                  ? 'Best match'
-                  : option === 'distance'
-                  ? 'Distance'
-                  : option === 'newest'
+                {option === 'newest'
                   ? 'Date added (newest)'
                   : 'Date added (oldest)'}
               </Text>
@@ -40,6 +43,24 @@ const FilterScreen = () => {
               />
             </TouchableOpacity>
           ))}
+        </View>
+
+        <Text style={styles.header}>Distance</Text>
+        <View style={styles.sliderContainer}>
+          <Text style={styles.distanceLabel}>
+            {distance === 100 ? '100+ miles' : `${distance} miles`}
+          </Text>
+          <Slider
+            style={styles.slider}
+            minimumValue={1}
+            maximumValue={100}
+            step={1}
+            value={distance}
+            onValueChange={updateDistance}
+            minimumTrackTintColor="#000"
+            maximumTrackTintColor="#ddd"
+            thumbTintColor="#000"
+          />
         </View>
       </View>
 
@@ -59,14 +80,10 @@ const FilterScreen = () => {
   );
 };
 
-// Add your existing styles
-export default FilterScreen;
-
-
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-  }, 
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -75,8 +92,7 @@ const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
     backgroundColor: 'white',
-    // paddingHorizontal: 20, 
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   header: {
     fontSize: 20,
@@ -84,7 +100,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   optionContainer: {
-    flex: 1,
+    marginBottom: 20,
   },
   option: {
     flexDirection: 'row',
@@ -95,19 +111,22 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
   },
+  sliderContainer: {
+    marginVertical: 5,
+  },
+  distanceLabel: {
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  slider: {
+    width: '100%',
+    height: 40,
+  },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20, 
-  },
-  clearButton: {
-    paddingVertical: 10,
+    justifyContent: 'flex-end',
     paddingHorizontal: 20,
-  },
-  clearText: {
-    fontSize: 16,
-    color: 'black',
   },
   resultsButton: {
     backgroundColor: 'black',
@@ -121,9 +140,11 @@ const styles = StyleSheet.create({
   },
   divider: {
     backgroundColor: 'lightgray',
-    height: 1, 
+    height: 1,
   },
   spacerVertical: {
-    marginVertical: 10, 
-  }
+    marginVertical: 10,
+  },
 });
+
+export default FilterScreen;

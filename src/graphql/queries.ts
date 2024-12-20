@@ -47,8 +47,11 @@ export const listProjects = /* GraphQL */ `query ListProjects(
   $filter: ModelProjectFilterInput
   $limit: Int
   $nextToken: String
+  $userLatitude: Float
+  $userLongitude: Float
+  $sortBy: String
 ) {
-  listProjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listProjects(filter: $filter, limit: $limit, nextToken: $nextToken, userLatitude: $userLatitude, userLongitude: $userLongitude, sortBy: $sortBy) {
     items {
       id
       ownerIDs
@@ -74,6 +77,7 @@ export const listProjects = /* GraphQL */ `query ListProjects(
     __typename
   }
 }
+
 ` as GeneratedQuery<
   APITypes.ListProjectsQueryVariables,
   APITypes.ListProjectsQuery
