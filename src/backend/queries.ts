@@ -82,3 +82,37 @@ export const searchProjects = /* GraphQL */ `
     }
   }
 `
+
+export const listProjectsWithSort = /* GraphQL */ `query ListProjectsWithSort(
+  $filter: ModelProjectFilterInput
+  $limit: Int
+  $nextToken: String
+  $sortDirection: ModelSortDirection
+) {
+  listProjects(filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
+    items {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      longitude
+      latitude
+      city
+      joinRequestIDs
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+`;

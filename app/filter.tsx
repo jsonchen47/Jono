@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { RadioButton } from 'react-native-paper';
-import { useRouter } from 'expo-router';
 import Slider from '@react-native-community/slider';
+import { useRouter } from 'expo-router';
 import { useFilter } from '@/src/contexts/FilterContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const FilterScreen = () => {
-  const { filter, setFilter } = useFilter();
+  const { filter, setFilter, onFilterApply } = useFilter();
   const router = useRouter();
-  const [distance, setDistance] = useState(1); // Local state for the slider
 
-  const updateSort = (sortOption: string) => {
-    setFilter((prev) => ({ ...prev, sortBy: sortOption }));
-  };
+  const [localSortBy, setLocalSortBy] = useState(filter.sortBy);
+  const [localDistance, setLocalDistance] = useState(
+    typeof filter.distance === 'string' ? 100 : filter.distance
+  );
 
-  const updateDistance = (value: number) => {
-    setDistance(value);
-    setFilter((prev) => ({ ...prev, distance: value === 100 ? '100+' : value }));
+  const applyFilters = () => {
+    setFilter((prev) => ({
+      ...prev,
+      sortBy: localSortBy,
+      distance: localDistance === 100 ? '100+' : localDistance,
+    }));
+
+    if (onFilterApply) onFilterApply(); // Trigger the callback to fetch projects
+
+    router.back();
   };
 
   return (
@@ -29,7 +36,7 @@ const FilterScreen = () => {
             <TouchableOpacity
               key={option}
               style={styles.option}
-              onPress={() => updateSort(option)}
+              onPress={() => setLocalSortBy(option)}
             >
               <Text style={styles.optionText}>
                 {option === 'newest'
@@ -38,8 +45,8 @@ const FilterScreen = () => {
               </Text>
               <RadioButton
                 value={option}
-                status={filter.sortBy === option ? 'checked' : 'unchecked'}
-                onPress={() => updateSort(option)}
+                status={localSortBy === option ? 'checked' : 'unchecked'}
+                onPress={() => setLocalSortBy(option)}
               />
             </TouchableOpacity>
           ))}
@@ -48,15 +55,15 @@ const FilterScreen = () => {
         <Text style={styles.header}>Distance</Text>
         <View style={styles.sliderContainer}>
           <Text style={styles.distanceLabel}>
-            {distance === 100 ? '100+ miles' : `${distance} miles`}
+            {localDistance === 100 ? '100+ miles' : `${localDistance} miles`}
           </Text>
           <Slider
             style={styles.slider}
             minimumValue={1}
             maximumValue={100}
             step={1}
-            value={distance}
-            onValueChange={updateDistance}
+            value={localDistance}
+            onValueChange={setLocalDistance}
             minimumTrackTintColor="#000"
             maximumTrackTintColor="#ddd"
             thumbTintColor="#000"
@@ -68,10 +75,7 @@ const FilterScreen = () => {
         <View style={styles.divider} />
         <View style={styles.spacerVertical} />
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.resultsButton}
-            onPress={() => router.back()}
-          >
+          <TouchableOpacity style={styles.resultsButton} onPress={applyFilters}>
             <Text style={styles.resultsText}>Show Results</Text>
           </TouchableOpacity>
         </View>
@@ -80,6 +84,7 @@ const FilterScreen = () => {
   );
 };
 
+export default FilterScreen;
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   sliderContainer: {
-    marginVertical: 5,
+    marginVertical: 20,
   },
   distanceLabel: {
     fontSize: 16,
@@ -125,7 +130,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     paddingHorizontal: 20,
   },
   resultsButton: {
@@ -146,5 +151,3 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
-
-export default FilterScreen;
