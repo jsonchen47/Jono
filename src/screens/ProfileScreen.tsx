@@ -17,22 +17,6 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import ProfileProjectsScreen from './ProfileProjectsScreen';
 import ProfileTeamsScreen from './ProfileTeamsScreen';
 
-const Tab = createMaterialTopTabNavigator();
-
-const Header = () => {
-  return (
-    <Text>hi</Text>
-  )
-}
-
-const windowWidth = Dimensions.get('window').width;
-
-const color = ['red', '#66CCFF', '#FFCC00', '#1C9379', '#8A7BA7'];
-
-const randomColor = () => {
-  return color[Math.floor(Math.random() * color.length)];
-};
-
 export default function ProfileScreen() {
   const [projects, setProjects] = useState<any>([]);
   const [teams, setTeams] = useState<any>([]);
@@ -176,30 +160,6 @@ export default function ProfileScreen() {
             <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{link}</Chip>
           ))}
         </View>
-      </View>
-    );
-  }
-
-  function ProjectsTab() {
-    return (
-      <View style={styles.tabScreen}>
-        <ProjectsGridNew 
-          projects={projects} 
-          loadMoreProjects={loadMoreProjects}
-          isFetchingMore={isFetchingMoreProjects}
-        />
-      </View>
-    );
-  }
-
-  function TeamsTab() {
-    return (
-      <View style={styles.tabScreen}>
-        <ProjectsGridNew 
-          projects={teams} 
-          loadMoreProjects={loadMoreTeams}
-          isFetchingMore={isFetchingMoreTeams}
-        />
       </View>
     );
   }

@@ -63,7 +63,7 @@ const ProjectsScreenFYP = ({ category }: any) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchProjects();
   }, [category]);
 
@@ -94,105 +94,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'whitesmoke',
-  },
-  browseProjectsHeaderContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 20,
-  },
-  browseProjectsHeaderText: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  browseProjectsSubtitleText: {
-    fontSize: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'gray',
-    marginTop: 5,
-  },
-   // Pager View
-   pagerViewOuterContainer: {
-    width: '100%',
-    height:  windowWidth*0.85, 
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 20,
-    
-    // backgroundColor: 'red'
-  }, 
-  pagerViewContainer: {
-    width: '100%', 
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // flex: 1,
-  }, 
-  page: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%', 
-    height: '100%',
-  },
-   // Large projects
-   largeProjectContainer: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  largeProjectImageBackground: {
-    width: '90%',
-    height: '100%',
-  },
-  largeProjectImage: {
-    // padding: 30,
-    width: '100%',
-    height: '100%', 
-    borderRadius: 15,
-    padding: 20
-  }, 
-  largeProjectTextContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    padding: 25, 
-    width: windowWidth/1.1,
-    height: '100%',
-  },
-  largeProjectAuthor: {
-    color: 'white',
-    fontSize: 15,
-    textTransform: 'uppercase',
-  }, 
-  largeProjectTitle: {
-    fontWeight: 'bold',
-    color: 'white',
-    fontSize: 25,
-    flexShrink: 1,
-    paddingTop: 10,
-  }, 
-  largeProjectGradient: {
-    flex: 1, 
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute', 
-    width: '100%', 
-    height: '100%',
-    borderRadius: 15, // Match the border radius of the image
-  },
-  indicator: {
-    position: 'absolute',
-    height: '100%',
-    alignItems: 'flex-end',
-    padding: 25,
-  },
-  noProjectsText: {
-    textAlign: 'center',
-    fontSize: 18,
-    color: 'gray',
-    paddingTop: 20,
   },
 });

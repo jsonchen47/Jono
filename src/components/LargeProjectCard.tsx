@@ -1,226 +1,152 @@
-import { View, Text, Image, Pressable, ImageBackground, StyleSheet, Dimensions } from 'react-native'
-import React, { useEffect, useState } from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-import { useRouter } from 'expo-router';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { API, graphqlOperation } from "aws-amplify";
-import { getUser, getProject } from '../graphql/queries' // Make sure getProject query is imported
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
-import HeartButton from './HeartButton';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-const LargeProjectCard = ({project}: any) => {
-    const { updatedProjectID, updated } = useProjectUpdateContext();
-    const router = useRouter(); 
+import {
+    View,
+    Text,
+    Image,
+    Pressable,
+    ImageBackground,
+    StyleSheet,
+    Dimensions,
+  } from 'react-native';
+  import React, { useEffect, useState } from 'react';
+  import { useRouter } from 'expo-router';
+  import { GraphQLResult } from '@aws-amplify/api-graphql';
+  import { API, graphqlOperation } from 'aws-amplify';
+  import { getUser } from '../graphql/queries';
+  import HeartButton from './HeartButton';
+  
+  const windowWidth = Dimensions.get('window').width;
+  
+  const LargeProjectCard = ({ project }: any) => {
+    const router = useRouter();
     const [user, setUser] = useState<any>(null);
-    const [currentProject, setCurrentProject] = useState(project);  // Local state to hold the current project data
-
-    // Fetch the owner information for the project
+  
     const fetchUser = async (ownerID: any) => {
+      try {
         const result = await API.graphql(
           graphqlOperation(getUser, { id: ownerID })
         );
-        const castedResult = result as GraphQLResult<any>
+        const castedResult = result as GraphQLResult<any>;
         setUser(castedResult.data?.getUser);
-    };
-
-    // Fetch the updated project data if the project ID matches the updatedProjectID
-    const fetchProject = async (projectID: string) => {
-        try {
-            const result = await API.graphql(
-                graphqlOperation(getProject, { id: projectID })
-            );
-            const castedResult = result as GraphQLResult<any>;
-            setCurrentProject(castedResult.data?.getProject);  // Update the current project with the fetched data
-        } catch (error) {
-            console.error('Error fetching updated project:', error);
-        }
-    };
-
-    useEffect(() => {
-        // Fetch the user only when project ownerID changes
-        if (currentProject?.ownerIDs?.[0]) {
-            fetchUser(currentProject.ownerIDs[0]);
-        }
-    }, [currentProject?.ownerIDs]);
-
-    // Run when updatedProjectID changes, refetch project if necessary
-    useEffect(() => {
-      if (updated && updatedProjectID === currentProject.id) {
-        console.log(`Project ${currentProject.id} was recently updated.`);
-        fetchProject(updatedProjectID);
+      } catch (error) {
+        console.error('Error fetching user:', error);
       }
-    }, [updated, updatedProjectID, currentProject.id]);
-
+    };
+  
+    useEffect(() => {
+      if (project?.ownerIDs?.[0]) {
+        fetchUser(project.ownerIDs[0]);
+      }
+    }, [project?.ownerIDs]);
+  
     return (
-        <Pressable
-            onPress={() =>
-                router.push({
-                    pathname: '/project/[id]',
-                    params: { id: currentProject.id, projectID: currentProject.id },
-                })
-            }
-            style={styles.largeProjectContainer}
-        >
-            <ImageBackground 
-                style={styles.largeProjectImageBackground} 
-                imageStyle={styles.largeProjectImage}
-                source={{uri: currentProject.image}}
-                resizeMode="cover"
+      <Pressable
+        onPress={() =>
+          router.push({
+            pathname: '/project/[id]',
+            params: { id: project.id },
+          })
+        }
+        style={styles.cardContainer}
+      >
+        <View style={styles.cardContent}>
+            <ImageBackground
+            style={styles.imageBackground}
+            imageStyle={styles.image}
+            source={{ uri: project.image }}
             >
-                
-                <LinearGradient
-                    colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
-                    start={{ x: 0.5, y: 0 }} 
-                    end={{ x: 0.5, y: 0.5 }} 
-                    style={styles.largeProjectGradient}
-                    
-                >
-                     
-                    <View style={styles.largeProjectTextContainer}>
-                        
-                        <View style={styles.authorTextContainer}>
-                            <Text style={styles.largeProjectAuthor} numberOfLines={1}>{user?.name ?? ""}</Text>
-                            <HeartButton projectID={project.id} user={user}/>
-                        </View>
-                        
-                        <Text style={styles.largeProjectTitle} numberOfLines={3}>{currentProject.title}</Text>
-                        
-                        {currentProject.city ? (
-                            <View style={styles.detailOverlay}>
-                                <Ionicons name='location-outline' style={styles.detailIcon} />
-                                <Text style={styles.detailText}>
-                                    {currentProject.city}
-                                </Text>
-                            </View>
-                        ) : null}  
-                        
-                        {currentProject.description ? (
-                            <View style={styles.detailOverlay}>
-                                <FontAwesome6 name='quote-left' style={styles.quoteIconStart} />
-                                <Text style={styles.detailText} numberOfLines={4}>
-                                    {currentProject.description}
-                                </Text>
-                                <FontAwesome6 name='quote-right' style={styles.quoteIconEnd} />
-                            </View>
-                        ) : null} 
-                    </View>
-                </LinearGradient>
+            <View style={styles.heartButtonContainer}>
+                <HeartButton projectID={project.id} user={user} />
+            </View>
             </ImageBackground>
-        </Pressable>
+    
+            <View style={styles.detailsContainer}>
+            <Text style={styles.title} numberOfLines={3}>
+                {project.title}
+            </Text>
+    
+            <View style={styles.authorContainer}>
+                <Image source={{ uri: user?.image }} style={styles.authorImage} />
+                <View>
+                <Text style={styles.authorName}>{user?.name}</Text>
+                <Text style={styles.location}>{project.city}</Text>
+                </View>
+            </View>
+    
+            <Text style={styles.description} numberOfLines={3}>
+                {project.description}
+            </Text>
+            </View>
+        </View>
+      </Pressable>
     );
-};
-
-export default LargeProjectCard;
-
-const styles = StyleSheet.create({
-    // Styles remain unchanged
-    largeProjectContainer: {
-        height: '100%',
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
+  };
+  
+  export default LargeProjectCard;
+  
+  const styles = StyleSheet.create({
+    cardContainer: {
+      width: '87%',
+      marginBottom: 10,
+    //   backgroundColor: 'white',
+    //   borderRadius: 10,
+    //   overflow: 'hidden',
+    //   shadowColor: '#000',
+    //   shadowOffset: { width: 0, height: 2 },
+    //   shadowOpacity: 0.2,
+    //   shadowRadius: 4,
+    //   elevation: 3,
+      alignSelf: 'center'
     },
-    largeProjectImageBackground: {
-        width: '87%',
-        height: '100%',
+    cardContent: {
+        width: '100%'
     },
-    largeProjectImage: {
-        width: '100%',
-        height: '100%', 
-        borderRadius: 15,
-        padding: 20
-    }, 
-    largeProjectTextContainer: {
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        padding: 25, 
-        width: '100%',
-        height: '100%',
+    imageBackground: {
+      width: '100%',
+      aspectRatio: 1.5,
+      
     },
-    authorTextContainer: {
-        flexDirection: 'row', 
-        justifyContent: 'space-between',
-        width: '100%',
-        // backgroundColor: 'red'
-    }, 
-    largeProjectAuthor: {
-        color: 'white',
-        fontSize: 14,
-        textTransform: 'uppercase',
-    }, 
-    largeProjectTitle: {
-        fontWeight: 'bold',
-        color: 'white',
-        fontSize: 22,
-        flexShrink: 1,
-        paddingTop: 10,
-    }, 
-    largeProjectGradient: {
-        flex: 1, 
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute', 
-        width: '100%', 
-        height: '100%',
-        borderRadius: 15, 
+    image: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 10,
     },
-    indicator: {
-        position: 'absolute',
-        height: '100%',
-        alignItems: 'flex-end',
-        padding: 25,
+    heartButtonContainer: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
     },
-    iconOutline: {
-        color: 'white',
-        position: 'absolute',
-        padding: 12,
+    detailsContainer: {
+      paddingVertical: 15,
     },
-    iconFill: {
-        color: 'black',
-        position: 'absolute', 
-        padding: 12,
-        opacity: 0.7 
+    title: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      color: '#000',
     },
-    iconSmallContainer: {
-        padding: 32,
+    authorContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 10,
     },
-    iconLargeContainer: {
-        position: 'absolute',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-end',
-    }, 
-    detailOverlay: {
-        backgroundColor: 'rgba(0, 0, 0, 0.7)', 
-        marginTop: 20, 
-        padding: 10,
-        borderRadius: 10,
-        flexDirection: 'row', 
-        alignItems: 'center',
+    authorImage: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      marginRight: 10,
     },
-    detailText: { 
-        color: 'white',
-        fontSize: 14,
-    }, 
-    detailIcon: {
-        color: 'white',
-        fontSize: 14,
-        paddingRight: 5, 
-    }, 
-    quoteIconStart: {
-        alignSelf: 'flex-start',
-        color: 'white',
-        fontSize: 17,
-        paddingRight: 5, 
+    authorName: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: '#333',
     },
-    quoteIconEnd: {
-        alignSelf: 'flex-end',
-        color: 'white',
-        fontSize: 17,
-        paddingLeft: 5, 
+    location: {
+      fontSize: 14,
+      color: '#888',
     },
-});
+    description: {
+      fontSize: 14,
+      color: '#555',
+    },
+  });
+  

@@ -50,7 +50,7 @@ export default function ProfileIndex() {
         </View>
       ),
       headerStyle: {
-        backgroundColor: '#00C0D1', // Change the background color of the header
+        // backgroundColor: '#00C0D1', // Change the background color of the header
       },
       headerRight: () => (
       <View style={styles.headerButtonsContainer}>

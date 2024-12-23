@@ -63,8 +63,9 @@ const styles = StyleSheet.create({
   projectCardContainer: {
     width: '100%',
     marginBottom: windowWidth*0.065,
-    aspectRatio: 1, 
+    // aspectRatio: 1, 
     // backgroundColor: 'green',
+    // height: '50%'
   },
 });
 
