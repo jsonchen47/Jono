@@ -142,6 +142,7 @@ export type User = {
   skills?: Array< string | null > | null,
   resources?: Array< string | null > | null,
   links?: Array< string | null > | null,
+  premium?: boolean | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -305,6 +306,7 @@ export type CreateUserInput = {
   skills?: Array< string | null > | null,
   resources?: Array< string | null > | null,
   links?: Array< string | null > | null,
+  premium?: boolean | null,
 };
 
 export type ModelUserConditionInput = {
@@ -320,6 +322,7 @@ export type ModelUserConditionInput = {
   skills?: ModelStringInput | null,
   resources?: ModelStringInput | null,
   links?: ModelStringInput | null,
+  premium?: ModelBooleanInput | null,
   and?: Array< ModelUserConditionInput | null > | null,
   or?: Array< ModelUserConditionInput | null > | null,
   not?: ModelUserConditionInput | null,
@@ -339,6 +342,13 @@ export type ModelIntInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type UpdateUserInput = {
   id: string,
   name?: string | null,
@@ -353,6 +363,7 @@ export type UpdateUserInput = {
   skills?: Array< string | null > | null,
   resources?: Array< string | null > | null,
   links?: Array< string | null > | null,
+  premium?: boolean | null,
 };
 
 export type DeleteUserInput = {
@@ -763,6 +774,7 @@ export type ModelUserFilterInput = {
   skills?: ModelStringInput | null,
   resources?: ModelStringInput | null,
   links?: ModelStringInput | null,
+  premium?: ModelBooleanInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
@@ -790,6 +802,7 @@ export type SearchableUserFilterInput = {
   skills?: SearchableStringFilterInput | null,
   resources?: SearchableStringFilterInput | null,
   links?: SearchableStringFilterInput | null,
+  premium?: SearchableBooleanFilterInput | null,
   createdAt?: SearchableStringFilterInput | null,
   updatedAt?: SearchableStringFilterInput | null,
   and?: Array< SearchableUserFilterInput | null > | null,
@@ -805,6 +818,11 @@ export type SearchableIntFilterInput = {
   lte?: number | null,
   eq?: number | null,
   range?: Array< number | null > | null,
+};
+
+export type SearchableBooleanFilterInput = {
+  eq?: boolean | null,
+  ne?: boolean | null,
 };
 
 export type SearchableUserSortInput = {
@@ -826,6 +844,7 @@ export enum SearchableUserSortableFields {
   skills = "skills",
   resources = "resources",
   links = "links",
+  premium = "premium",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
 }
@@ -851,6 +870,7 @@ export enum SearchableUserAggregateField {
   skills = "skills",
   resources = "resources",
   links = "links",
+  premium = "premium",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
 }
@@ -984,6 +1004,7 @@ export type ModelSubscriptionUserFilterInput = {
   skills?: ModelSubscriptionStringInput | null,
   resources?: ModelSubscriptionStringInput | null,
   links?: ModelSubscriptionStringInput | null,
+  premium?: ModelSubscriptionBooleanInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserFilterInput | null > | null,
@@ -1000,6 +1021,11 @@ export type ModelSubscriptionIntInput = {
   between?: Array< number | null > | null,
   in?: Array< number | null > | null,
   notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
 };
 
 export type ModelSubscriptionUserProjectFilterInput = {
@@ -1405,6 +1431,7 @@ export type CreateUserMutation = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
+    premium?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1469,6 +1496,7 @@ export type UpdateUserMutation = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
+    premium?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1533,6 +1561,7 @@ export type DeleteUserMutation = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
+    premium?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1597,6 +1626,7 @@ export type CreateUserProjectMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -1664,6 +1694,7 @@ export type UpdateUserProjectMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -1731,6 +1762,7 @@ export type DeleteUserProjectMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -1804,6 +1836,7 @@ export type CreateUserChatRoomMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -1877,6 +1910,7 @@ export type UpdateUserChatRoomMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -1950,6 +1984,7 @@ export type DeleteUserChatRoomMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2426,6 +2461,7 @@ export type GetUserQuery = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
+    premium?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2467,6 +2503,7 @@ export type ListUsersQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -2513,6 +2550,7 @@ export type SearchUsersQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -2595,6 +2633,7 @@ export type GetUserProjectQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2649,6 +2688,7 @@ export type ListUserProjectsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
+        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -2707,6 +2747,7 @@ export type UserProjectsByProjectIdQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
+        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -2765,6 +2806,7 @@ export type UserProjectsByUserIdQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
+        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -2839,6 +2881,7 @@ export type GetUserChatRoomQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2885,6 +2928,7 @@ export type ListUserChatRoomsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
+        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -2935,6 +2979,7 @@ export type UserChatRoomsByChatRoomIdQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
+        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -2985,6 +3030,7 @@ export type UserChatRoomsByUserIdQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
+        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -3368,6 +3414,7 @@ export type OnCreateUserSubscription = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
+    premium?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3431,6 +3478,7 @@ export type OnUpdateUserSubscription = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
+    premium?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3494,6 +3542,7 @@ export type OnDeleteUserSubscription = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
+    premium?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3557,6 +3606,7 @@ export type OnCreateUserProjectSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -3623,6 +3673,7 @@ export type OnUpdateUserProjectSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -3689,6 +3740,7 @@ export type OnDeleteUserProjectSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -3761,6 +3813,7 @@ export type OnCreateUserChatRoomSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -3833,6 +3886,7 @@ export type OnUpdateUserChatRoomSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -3905,6 +3959,7 @@ export type OnDeleteUserChatRoomSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
+      premium?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },

@@ -8,6 +8,7 @@ import { getUser, getProject } from '../graphql/queries' // Make sure getProject
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
+import HeartButton from './HeartButton';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -71,14 +72,22 @@ const LargeProjectCard = ({project}: any) => {
                 source={{uri: currentProject.image}}
                 resizeMode="cover"
             >
+                
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']} // Darker at the top, lighter at the bottom
                     start={{ x: 0.5, y: 0 }} 
                     end={{ x: 0.5, y: 0.5 }} 
                     style={styles.largeProjectGradient}
+                    
                 >
+                     
                     <View style={styles.largeProjectTextContainer}>
-                        <Text style={styles.largeProjectAuthor} numberOfLines={1}>{user?.name ?? ""}</Text>
+                        
+                        <View style={styles.authorTextContainer}>
+                            <Text style={styles.largeProjectAuthor} numberOfLines={1}>{user?.name ?? ""}</Text>
+                            <HeartButton/>
+                        </View>
+                        
                         <Text style={styles.largeProjectTitle} numberOfLines={3}>{currentProject.title}</Text>
                         
                         {currentProject.city ? (
@@ -133,6 +142,12 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
+    authorTextContainer: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+        width: '100%',
+        // backgroundColor: 'red'
+    }, 
     largeProjectAuthor: {
         color: 'white',
         fontSize: 14,

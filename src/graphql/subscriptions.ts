@@ -367,6 +367,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
     skills
     resources
     links
+    premium
     createdAt
     updatedAt
     __typename
@@ -429,6 +430,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
     skills
     resources
     links
+    premium
     createdAt
     updatedAt
     __typename
@@ -491,6 +493,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
     skills
     resources
     links
+    premium
     createdAt
     updatedAt
     __typename
@@ -554,6 +557,7 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -621,6 +625,7 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -688,6 +693,7 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -761,6 +767,7 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -834,6 +841,7 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -907,6 +915,7 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename

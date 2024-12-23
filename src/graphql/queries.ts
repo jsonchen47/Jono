@@ -47,9 +47,8 @@ export const listProjects = /* GraphQL */ `query ListProjects(
   $filter: ModelProjectFilterInput
   $limit: Int
   $nextToken: String
-  $sortDirection: ModelSortDirection
 ) {
-  listProjects(filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
+  listProjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       ownerIDs
@@ -511,6 +510,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     skills
     resources
     links
+    premium
     createdAt
     updatedAt
     __typename
@@ -549,6 +549,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -600,6 +601,7 @@ export const searchUsers = /* GraphQL */ `query SearchUsers(
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -681,6 +683,7 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -735,6 +738,7 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -800,6 +804,7 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -865,6 +870,7 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -939,6 +945,7 @@ export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -985,6 +992,7 @@ export const listUserChatRooms = /* GraphQL */ `query ListUserChatRooms(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1042,6 +1050,7 @@ export const userChatRoomsByChatRoomId = /* GraphQL */ `query UserChatRoomsByCha
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1099,6 +1108,7 @@ export const userChatRoomsByUserId = /* GraphQL */ `query UserChatRoomsByUserId(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename

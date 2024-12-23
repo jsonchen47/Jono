@@ -7,6 +7,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { getUser, getProject } from '../graphql/queries';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
+import HeartButton from './HeartButton';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -60,18 +61,16 @@ const SmallProjectCard = ({ project }: any) => {
     >
       <Image style={styles.browseProjectsImage} source={{ uri: currentProject.image }} />
       {/* Icon */}
-      <View style={styles.iconLargeContainer}>
-        <View style={styles.iconSmallContainer}>
-          <Icon name="heart" size={27} style={styles.iconFill} />
-          <Icon name="heart-outline" size={30} style={styles.iconOutline} />
-        </View>
-      </View>
+      
       <LinearGradient
         colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']}
         start={{ x: 0.5, y: 1 }}
         end={{ x: 0.5, y: 0.3 }}
         style={styles.browseProjectsLinearGradient}
       >
+        <View style={styles.browseProjectsHeartContainer}>
+          <HeartButton/>
+        </View>
         <View style={styles.browseProjectsTextContainer}>
           <Text style={styles.browseProjectsTitle}>{currentProject?.title}</Text>
           <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
@@ -94,7 +93,11 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     borderRadius: 15,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  browseProjectsHeartContainer: {
+    padding: 10,
+    alignItems: 'flex-end'
   },
   browseProjectsTextContainer: {
     padding: 10,

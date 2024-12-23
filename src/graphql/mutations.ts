@@ -397,6 +397,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     skills
     resources
     links
+    premium
     createdAt
     updatedAt
     __typename
@@ -462,6 +463,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     skills
     resources
     links
+    premium
     createdAt
     updatedAt
     __typename
@@ -527,6 +529,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     skills
     resources
     links
+    premium
     createdAt
     updatedAt
     __typename
@@ -591,6 +594,7 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -659,6 +663,7 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -727,6 +732,7 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -801,6 +807,7 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -875,6 +882,7 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
@@ -949,6 +957,7 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
       skills
       resources
       links
+      premium
       createdAt
       updatedAt
       __typename
