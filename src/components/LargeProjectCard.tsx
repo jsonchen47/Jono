@@ -85,7 +85,7 @@ const LargeProjectCard = ({project}: any) => {
                         
                         <View style={styles.authorTextContainer}>
                             <Text style={styles.largeProjectAuthor} numberOfLines={1}>{user?.name ?? ""}</Text>
-                            <HeartButton/>
+                            <HeartButton projectID={project.id} user={user}/>
                         </View>
                         
                         <Text style={styles.largeProjectTitle} numberOfLines={3}>{currentProject.title}</Text>

@@ -69,7 +69,7 @@ const SmallProjectCard = ({ project }: any) => {
         style={styles.browseProjectsLinearGradient}
       >
         <View style={styles.browseProjectsHeartContainer}>
-          <HeartButton/>
+        <HeartButton projectID={project.id} user={user}/>
         </View>
         <View style={styles.browseProjectsTextContainer}>
           <Text style={styles.browseProjectsTitle}>{currentProject?.title}</Text>
