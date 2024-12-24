@@ -180,6 +180,18 @@ function RootLayout() {
                     }}
                     />
                     <Stack.Screen
+                    name="otherProfile"
+                    options={{
+                      // headerShown: false,
+                      title: 'Profile',
+                      headerStyle: {
+                        backgroundColor: 'white',
+                      },
+                      headerTintColor: 'black',
+            
+                    }}
+                    />
+                    <Stack.Screen
                       name="groupInfoScreen"
                       options={{                  
                         title: 'Group Info',

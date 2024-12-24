@@ -145,7 +145,7 @@ const ProjectScreen = ( {project}: any ) => {
             })
           );
         const castedUpdatedProject = updatedProject as GraphQLResult<any>;
-          console.log("Updated Project:", castedUpdatedProject.data.updateProject);
+          console.log("Updated Project:", castedUpdatedProject?.data?.updateProject);
         } catch (error) {
           console.error("Error adding user to joinRequestIDs:", error);
         }
@@ -180,7 +180,7 @@ const ProjectScreen = ( {project}: any ) => {
             })
         );
         const castedUpdatedProject = updatedProject as GraphQLResult<any>;
-        console.log("Updated Project (after removal):", castedUpdatedProject.data.updateProject);
+        console.log("Updated Project (after removal):", castedUpdatedProject?.data?.updateProject);
         } catch (error) {
         console.error("Error removing user from joinRequestIDs:", error);
         }

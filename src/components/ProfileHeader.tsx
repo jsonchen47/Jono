@@ -1,169 +1,154 @@
 import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  Image,
-  Dimensions,
-  SafeAreaView,
-  Button as Button2,
-  TouchableOpacity,
-} from 'react-native';
-import { Chip, Button as Button3 } from 'react-native-paper';
-import { useRouter } from 'expo-router';
-import Emoji from 'react-native-emoji';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-const ProfileHeader = ({ user }: any) => {
-  const router = useRouter();
-  return (
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+  } from 'react-native';
+  import Emoji from 'react-native-emoji';
+  
+  const ProfileHeader = ({ user, otherProfile = false }: any) => {
+    return (
       <View style={styles.container}>
         <View style={styles.headerContent}>
           <View style={styles.topItemsContainer}>
-              {/* Profile picture */}
-              <View style={styles.imageContainer}>
-                  <View style={styles.imageOutline}>
-                      <Image style={styles.image} source={{ uri: user?.image }} />
-                  </View>
+            {/* Profile picture */}
+            <View style={styles.imageContainer}>
+              <View style={styles.imageOutline}>
+                <Image style={styles.image} source={{ uri: user?.image }} />
               </View>
-
-              {/* Right of Image Info Box */}
-              <View style={styles.rightOfImageInfoBox}>
-                  {/* Name */}
-                  <View style={styles.eachRowContainer}>
-                      <Text style={styles.nameText}>
-                          {user?.name}
-                      </Text>
-                  </View>
-
-                  {/* Username */}
-                  <View style={styles.eachRowContainer}>
-                      <Text style={styles.usernameText}>
-                          {user?.username ? `@${user.username}` : '@Anonymous'}
-                      </Text>
-                  </View>
-
-                  {/* Stats */}
-                  <View style={styles.allStatsContainer}>
-                      <View style={styles.statsContainer}>
-                          <Emoji name="bulb" style={styles.emoji} />
-                          <Text style={styles.statsText}>{user?.numProjects}</Text>
-                      </View>
-                      <View style={styles.statsSpacer} />
-                      <View style={styles.statsContainer}>
-                          <Emoji name="handshake" style={styles.emoji} />
-                          <Text style={styles.statsText}>{user?.numTeams}</Text>
-                      </View>
-                      <View style={styles.statsSpacer} />
-                      <View style={styles.statsContainer}>
-                          <Emoji name="link" style={styles.emoji} />
-                          <Text style={styles.statsText}>{user?.numConnections}</Text>
-                      </View>
-                  </View>
+            </View>
+  
+            {/* Right of Image Info Box */}
+            <View style={styles.rightOfImageInfoBox}>
+              {/* Name */}
+              <View style={styles.eachRowContainer}>
+                <Text style={styles.nameText}>{user?.name}</Text>
               </View>
-              {/* Edit Profile Button */}
-              
+  
+              {/* Username */}
+              <View style={styles.eachRowContainer}>
+                <Text style={styles.usernameText}>
+                  {user?.username ? `@${user.username}` : '@Anonymous'}
+                </Text>
+              </View>
+  
+              {/* Stats */}
+              <View style={styles.allStatsContainer}>
+                <View style={styles.statsContainer}>
+                  <Emoji name="bulb" style={styles.emoji} />
+                  <Text style={styles.statsText}>{user?.numProjects}</Text>
+                </View>
+                <View style={styles.statsSpacer} />
+                <View style={styles.statsContainer}>
+                  <Emoji name="handshake" style={styles.emoji} />
+                  <Text style={styles.statsText}>{user?.numTeams}</Text>
+                </View>
+                <View style={styles.statsSpacer} />
+                <View style={styles.statsContainer}>
+                  <Emoji name="link" style={styles.emoji} />
+                  <Text style={styles.statsText}>{user?.numConnections}</Text>
+                </View>
+              </View>
+            </View>
           </View>
-
+  
+          {/* Button */}
           <TouchableOpacity
-              style={styles.editProfileButton}
-              onPress={() => {
-                // router.push('/edit-profile')
-                console.log('edit profile button pressed')
-              }} // Adjust the route based on your app's navigation
+            style={styles.editProfileButton}
+            onPress={() => {
+              if (otherProfile) {
+                console.log('connect button pressed');
+              } else {
+                console.log('edit profile button pressed');
+              }
+            }}
           >
-              <Text style={styles.editProfileText}>Edit Profile</Text>
+            <Text style={styles.editProfileText}>
+              {otherProfile ? 'Connect' : 'Edit Profile'}
+            </Text>
           </TouchableOpacity>
-          </View>
+        </View>
       </View>
-  );
-};
-
-export default ProfileHeader;
-
-const styles = StyleSheet.create({
-  container: {
+    );
+  };
+  
+  export default ProfileHeader;
+  
+  const styles = StyleSheet.create({
+    container: {
       flex: 1,
-  },
-  headerContent: {
+    },
+    headerContent: {
       width: '90%',
       alignSelf: 'center',
-  },
-  topItemsContainer: {
+    },
+    topItemsContainer: {
       flexDirection: 'row',
-      
-  },
-  image: {
+    },
+    image: {
       height: 80,
       width: 80,
       borderRadius: 40,
-  },
-  imageOutline: {
-      borderWidth: 10, // Thickness of the outline
-      borderColor: 'white', // Outline color
-      borderRadius: 50, // Slightly larger than the image's radius
-  },
-  imageContainer: {
+    },
+    imageOutline: {
+      borderWidth: 10,
+      borderColor: 'white',
+      borderRadius: 50,
+    },
+    imageContainer: {
       justifyContent: 'center',
       alignItems: 'center',
-  },
-  rightOfImageInfoBox: {
+    },
+    rightOfImageInfoBox: {
       alignItems: 'flex-start',
       padding: 10,
-  },
-  nameText: {
+    },
+    nameText: {
       fontWeight: 'bold',
       fontSize: 21,
-  },
-  usernameText: {
+    },
+    usernameText: {
       fontWeight: 'bold',
       fontSize: 18,
-  },
-  eachRowContainer: {
+    },
+    eachRowContainer: {
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
       marginBottom: 7,
-  },
-  allStatsContainer: {
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
+    },
+    allStatsContainer: {
       flexDirection: 'row',
-  },
-  statsContainer: {
+    },
+    statsContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: 7,
-  },
-  emoji: {
+    },
+    emoji: {
       fontSize: 18,
-  },
-  statsText: {
+    },
+    statsText: {
       fontSize: 15,
       fontWeight: 'bold',
-  },
-  statsSpacer: {
+    },
+    statsSpacer: {
       marginHorizontal: 7,
-  },
-  descriptionText: {
-      fontSize: 15,
-      textAlign: 'center',
-  },
-  editProfileButton: {
+    },
+    editProfileButton: {
       width: '100%',
       backgroundColor: '#004068',
       borderRadius: 10,
       paddingHorizontal: 20,
       paddingVertical: 10,
-      alignSelf: 'center', // Centers the button horizontally
-      // marginTop: 20, // Adds spacing from the topItemsContainer
-  },
-  editProfileText: {
+      alignSelf: 'center',
+    },
+    editProfileText: {
       color: 'white',
       fontWeight: 'bold',
       textAlign: 'center',
-  },
-});
+      fontSize: 15,
+    },
+  });
+  

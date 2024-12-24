@@ -17,7 +17,11 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import ProfileProjectsScreen from './ProfileProjectsScreen';
 import ProfileTeamsScreen from './ProfileTeamsScreen';
 
-export default function ProfileScreen() {
+interface ProfileScreenProps {
+  userID?: any;
+}
+
+export default function ProfileScreen({ userID: passedUserID }: ProfileScreenProps) {
   const [projects, setProjects] = useState<any>([]);
   const [teams, setTeams] = useState<any>([]);
   const [user, setUser] = useState<any>(null);
@@ -31,13 +35,10 @@ export default function ProfileScreen() {
 
   const navigation = useNavigation();
 
-  const fetchUser = async () => {
+  const fetchUser = async (id: any) => {
     try {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const userID = authUser.attributes.sub;
-      setUserID(userID)
       const userResult = await API.graphql(
-        graphqlOperation(getUser, { id: userID })
+        graphqlOperation(getUser, { id })
       );
       const castedUserResult = userResult as GraphQLResult<any>;
       setUser(castedUserResult.data?.getUser);
@@ -47,13 +48,11 @@ export default function ProfileScreen() {
     }
   };
 
-  const fetchProjects = async (nextToken = null, fetchMore = false) => {
+  const fetchProjects = async (id: any, nextToken = null, fetchMore = false) => {
     try {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const userID = authUser.attributes.sub;
       const projectsData = await API.graphql(
         graphqlOperation(listProjects, {
-          filter: { ownerIDs: { contains: userID } },
+          filter: { ownerIDs: { contains: id } },
           nextToken: nextToken,
           limit: 10
         })
@@ -63,8 +62,6 @@ export default function ProfileScreen() {
       const newProjectsNextToken = castedProjectsData.data.listProjects.nextToken;
 
       setProjects(fetchMore ? [...projects, ...fetchedProjects] : fetchedProjects);
-      // setProjects((prevProjects: any) => fetchMore ? [...prevProjects, ...fetchedProjects] : fetchedProjects);
-
       setProjectsNextToken(newProjectsNextToken);
     } catch (err) {
       setError(err);
@@ -74,17 +71,15 @@ export default function ProfileScreen() {
     }
   };
 
-  const fetchTeams = async (nextToken = null, fetchMore = false) => {
+  const fetchTeams = async (id: any, nextToken = null, fetchMore = false) => {
     try {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const userID = authUser.attributes.sub;
       const teamsData = await API.graphql(
-        graphqlOperation(listTeamsByUser, { id: userID, nextToken, limit: 4 })
+        graphqlOperation(listTeamsByUser, { id, nextToken, limit: 4 })
       );
       const castedTeamsData = teamsData as GraphQLResult<any>;
       const rawTeams = castedTeamsData?.data?.getUser?.Projects?.items;
       const filteredTeams = rawTeams.filter((item: any) => {
-        return !item.project.ownerIDs.includes(userID);
+        return !item.project.ownerIDs.includes(id);
       });
       const transformedTeams = filteredTeams.map((item: any) => item.project);
 
@@ -99,30 +94,22 @@ export default function ProfileScreen() {
   };
 
   useEffect(() => {
-    // Fetch all data on component mount
     const fetchData = async () => {
       setLoading(true);
-      await fetchUser();
-      await fetchProjects();
-      await fetchTeams();
+      let id = passedUserID;
+      if (!id) {
+        const authUser = await Auth.currentAuthenticatedUser();
+        id = authUser.attributes.sub;
+      }
+      console.log(id)
+      setUserID(id);
+      await fetchUser(id);
+      await fetchProjects(id);
+      await fetchTeams(id);
       setLoading(false);
     };
     fetchData();
-  }, []);
-
-  const loadMoreProjects = async () => {
-    if (projectsNextToken && !isFetchingMoreProjects) {
-      setIsFetchingMoreProjects(true);
-      await fetchProjects(projectsNextToken, true);
-    }
-  };
-
-  const loadMoreTeams = async () => {
-    if (teamsNextToken && !isFetchingMoreTeams) {
-      setIsFetchingMoreTeams(true);
-      await fetchTeams(teamsNextToken, true);
-    }
-  };
+  }, [passedUserID]);
 
   function AboutTab() {
     return (
@@ -165,8 +152,8 @@ export default function ProfileScreen() {
   }
 
   return (
-    <Tabs.Container 
-      renderHeader={() => <ProfileHeader user={user} />}
+    <Tabs.Container
+      renderHeader={() => <ProfileHeader user={user} otherProfile={!!userID}/>}
       renderTabBar={props => (
         <MaterialTabBar
           {...props}
@@ -186,22 +173,6 @@ export default function ProfileScreen() {
         <ProfileTeamsScreen userID={userID}/>
       </Tabs.Tab>
     </Tabs.Container>
-    // <SafeAreaView style={{flex: 1}}>
-    //   <Tab.Navigator>
-    //     <Tab.Screen
-    //       name="About"
-    //       component={AboutTab}
-    //     />
-    //     <Tab.Screen
-    //       name="Projects"
-    //       children={() => <ProfileProjectsScreen category="" />}
-    //     />
-    //     <Tab.Screen
-    //       name="Teams"
-    //       component={TeamsTab}
-    //     />
-    //   </Tab.Navigator>
-    // </SafeAreaView>
   );
 }
 

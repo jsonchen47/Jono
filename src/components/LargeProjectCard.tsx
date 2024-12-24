@@ -6,6 +6,7 @@ import {
     ImageBackground,
     StyleSheet,
     Dimensions,
+    TouchableOpacity,
   } from 'react-native';
   import React, { useEffect, useState } from 'react';
   import { useRouter } from 'expo-router';
@@ -43,12 +44,28 @@ import {
         onPress={() =>
           router.push({
             pathname: '/project/[id]',
-            params: { id: project.id },
+            params: { id: project.id, projectID: project.id },
           })
         }
         style={styles.cardContainer}
       >
         <View style={styles.cardContent}>
+            {/* Author block */}
+            <TouchableOpacity style={styles.authorContainer}
+                onPress={() => {
+                    router.push({
+                        pathname: '/otherProfile', 
+                        params: { id: user.id }
+                    })
+                }
+                }
+            >
+                <Image source={{ uri: user?.image }} style={styles.authorImage} />
+                <View>
+                <Text style={styles.authorName}>{user?.name}</Text>
+                <Text style={styles.location}>{project.city}</Text>
+                </View>
+            </TouchableOpacity>
             <ImageBackground
             style={styles.imageBackground}
             imageStyle={styles.image}
@@ -63,14 +80,8 @@ import {
             <Text style={styles.title} numberOfLines={3}>
                 {project.title}
             </Text>
-    
-            <View style={styles.authorContainer}>
-                <Image source={{ uri: user?.image }} style={styles.authorImage} />
-                <View>
-                <Text style={styles.authorName}>{user?.name}</Text>
-                <Text style={styles.location}>{project.city}</Text>
-                </View>
-            </View>
+
+            
     
             <Text style={styles.description} numberOfLines={3}>
                 {project.description}
@@ -86,15 +97,6 @@ import {
   const styles = StyleSheet.create({
     cardContainer: {
       width: '87%',
-      marginBottom: 10,
-    //   backgroundColor: 'white',
-    //   borderRadius: 10,
-    //   overflow: 'hidden',
-    //   shadowColor: '#000',
-    //   shadowOffset: { width: 0, height: 2 },
-    //   shadowOpacity: 0.2,
-    //   shadowRadius: 4,
-    //   elevation: 3,
       alignSelf: 'center'
     },
     cardContent: {
