@@ -50,5 +50,6 @@ type User @model @searchable @auth(rules: [{allow: public}]) {
   resources: [String]
   links: [String]
   premium: Boolean
+  connectRequestIDs: [String]
 }
  

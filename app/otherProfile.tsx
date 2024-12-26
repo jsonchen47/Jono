@@ -12,7 +12,7 @@ const otherProfile = () => {
   
     return (
       <View style={{flex: 1}}>
-        <ProfileScreen userID={id} />
+        <ProfileScreen passedUserID={id} />
       </View>
     );
 }

@@ -96,7 +96,7 @@ export default function ProfileIndex() {
   };
 
   return (
-    <ProfileScreen/>
+    <ProfileScreen passedUserID={null}/>
   );
 }
 

@@ -18,10 +18,10 @@ import ProfileProjectsScreen from './ProfileProjectsScreen';
 import ProfileTeamsScreen from './ProfileTeamsScreen';
 
 interface ProfileScreenProps {
-  userID?: any;
+  passedUserID?: any;
 }
 
-export default function ProfileScreen({ userID: passedUserID }: ProfileScreenProps) {
+export default function ProfileScreen({ passedUserID: passedUserID }: ProfileScreenProps) {
   const [projects, setProjects] = useState<any>([]);
   const [teams, setTeams] = useState<any>([]);
   const [user, setUser] = useState<any>(null);
@@ -153,7 +153,7 @@ export default function ProfileScreen({ userID: passedUserID }: ProfileScreenPro
 
   return (
     <Tabs.Container
-      renderHeader={() => <ProfileHeader user={user} otherProfile={!!userID}/>}
+      renderHeader={() => <ProfileHeader user={user} otherProfile={!!passedUserID}/>}
       renderTabBar={props => (
         <MaterialTabBar
           {...props}
