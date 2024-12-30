@@ -398,6 +398,19 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     resources
     links
     premium
+    connections {
+      items {
+        id
+        userID
+        connectedUserID
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -464,6 +477,19 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     resources
     links
     premium
+    connections {
+      items {
+        id
+        userID
+        connectedUserID
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -530,6 +556,19 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     resources
     links
     premium
+    connections {
+      items {
+        id
+        userID
+        connectedUserID
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -538,6 +577,270 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
 ` as GeneratedMutation<
   APITypes.DeleteUserMutationVariables,
   APITypes.DeleteUserMutation
+>;
+export const createConnection = /* GraphQL */ `mutation CreateConnection(
+  $input: CreateConnectionInput!
+  $condition: ModelConnectionConditionInput
+) {
+  createConnection(input: $input, condition: $condition) {
+    id
+    userID
+    connectedUserID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    connectedUser {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateConnectionMutationVariables,
+  APITypes.CreateConnectionMutation
+>;
+export const updateConnection = /* GraphQL */ `mutation UpdateConnection(
+  $input: UpdateConnectionInput!
+  $condition: ModelConnectionConditionInput
+) {
+  updateConnection(input: $input, condition: $condition) {
+    id
+    userID
+    connectedUserID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    connectedUser {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateConnectionMutationVariables,
+  APITypes.UpdateConnectionMutation
+>;
+export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
+  $input: DeleteConnectionInput!
+  $condition: ModelConnectionConditionInput
+) {
+  deleteConnection(input: $input, condition: $condition) {
+    id
+    userID
+    connectedUserID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    connectedUser {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteConnectionMutationVariables,
+  APITypes.DeleteConnectionMutation
 >;
 export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
   $input: CreateUserProjectInput!
@@ -595,6 +898,10 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -664,6 +971,10 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -733,6 +1044,10 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -808,6 +1123,10 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -883,6 +1202,10 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -958,6 +1281,10 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename

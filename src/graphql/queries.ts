@@ -511,6 +511,19 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     resources
     links
     premium
+    connections {
+      items {
+        id
+        userID
+        connectedUserID
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -550,6 +563,10 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -602,6 +619,10 @@ export const searchUsers = /* GraphQL */ `query SearchUsers(
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -630,6 +651,294 @@ export const searchUsers = /* GraphQL */ `query SearchUsers(
 ` as GeneratedQuery<
   APITypes.SearchUsersQueryVariables,
   APITypes.SearchUsersQuery
+>;
+export const getConnection = /* GraphQL */ `query GetConnection($id: ID!) {
+  getConnection(id: $id) {
+    id
+    userID
+    connectedUserID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    connectedUser {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetConnectionQueryVariables,
+  APITypes.GetConnectionQuery
+>;
+export const listConnections = /* GraphQL */ `query ListConnections(
+  $filter: ModelConnectionFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listConnections(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      userID
+      connectedUserID
+      user {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      connectedUser {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListConnectionsQueryVariables,
+  APITypes.ListConnectionsQuery
+>;
+export const connectionsByUserIDAndCreatedAt = /* GraphQL */ `query ConnectionsByUserIDAndCreatedAt(
+  $userID: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelConnectionFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  connectionsByUserIDAndCreatedAt(
+    userID: $userID
+    createdAt: $createdAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userID
+      connectedUserID
+      user {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      connectedUser {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ConnectionsByUserIDAndCreatedAtQueryVariables,
+  APITypes.ConnectionsByUserIDAndCreatedAtQuery
+>;
+export const connectionsByConnectedUserIDAndCreatedAt = /* GraphQL */ `query ConnectionsByConnectedUserIDAndCreatedAt(
+  $connectedUserID: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelConnectionFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  connectionsByConnectedUserIDAndCreatedAt(
+    connectedUserID: $connectedUserID
+    createdAt: $createdAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userID
+      connectedUserID
+      user {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      connectedUser {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ConnectionsByConnectedUserIDAndCreatedAtQueryVariables,
+  APITypes.ConnectionsByConnectedUserIDAndCreatedAtQuery
 >;
 export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
   getUserProject(id: $id) {
@@ -684,6 +993,10 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -946,6 +1259,10 @@ export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename

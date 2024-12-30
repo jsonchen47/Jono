@@ -368,6 +368,19 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
     resources
     links
     premium
+    connections {
+      items {
+        id
+        userID
+        connectedUserID
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -431,6 +444,19 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
     resources
     links
     premium
+    connections {
+      items {
+        id
+        userID
+        connectedUserID
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -494,6 +520,19 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
     resources
     links
     premium
+    connections {
+      items {
+        id
+        userID
+        connectedUserID
+        status
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -502,6 +541,267 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
 ` as GeneratedSubscription<
   APITypes.OnDeleteUserSubscriptionVariables,
   APITypes.OnDeleteUserSubscription
+>;
+export const onCreateConnection = /* GraphQL */ `subscription OnCreateConnection(
+  $filter: ModelSubscriptionConnectionFilterInput
+) {
+  onCreateConnection(filter: $filter) {
+    id
+    userID
+    connectedUserID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    connectedUser {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateConnectionSubscriptionVariables,
+  APITypes.OnCreateConnectionSubscription
+>;
+export const onUpdateConnection = /* GraphQL */ `subscription OnUpdateConnection(
+  $filter: ModelSubscriptionConnectionFilterInput
+) {
+  onUpdateConnection(filter: $filter) {
+    id
+    userID
+    connectedUserID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    connectedUser {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateConnectionSubscriptionVariables,
+  APITypes.OnUpdateConnectionSubscription
+>;
+export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection(
+  $filter: ModelSubscriptionConnectionFilterInput
+) {
+  onDeleteConnection(filter: $filter) {
+    id
+    userID
+    connectedUserID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    connectedUser {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteConnectionSubscriptionVariables,
+  APITypes.OnDeleteConnectionSubscription
 >;
 export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProject(
   $filter: ModelSubscriptionUserProjectFilterInput
@@ -558,6 +858,10 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -626,6 +930,10 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -694,6 +1002,10 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -768,6 +1080,10 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -842,6 +1158,10 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -916,6 +1236,10 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
       resources
       links
       premium
+      connections {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
