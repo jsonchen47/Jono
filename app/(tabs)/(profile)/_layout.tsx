@@ -60,6 +60,19 @@ export default function ProfileLayout() {
         }}
         
       />
+      <Stack.Screen 
+        name="notifications" 
+        options={{
+          // Hide the header for this route
+          // headerShown: false,
+          title: 'Notifications',
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTintColor: 'black',
+        }}
+        
+      />
       <Stack.Screen
         name="newGroupScreen"
         options={{

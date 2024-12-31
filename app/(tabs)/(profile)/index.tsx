@@ -54,7 +54,12 @@ export default function ProfileIndex() {
       },
       headerRight: () => (
       <View style={styles.headerButtonsContainer}>
-        <TouchableOpacity style={styles.headerButton}>
+        <TouchableOpacity 
+          style={styles.headerButton}
+          onPress={() => 
+            router.push('/(tabs)/(profile)/notifications')
+          } 
+          >
           <Fontisto name='bell' style={styles.icon}/>
         </TouchableOpacity>
         <View style={styles.spacer}/>

@@ -55,7 +55,7 @@
             <key>NSExceptionAllowsInsecureHTTPLoads</key>
             <true/>
         </dict>
-        <key>192.0.0.2</key>
+        <k>192.0.0.2</k ey>
         <dict>
             <key>NSExceptionAllowsInsecureHTTPLoads</key>
             <true/>
@@ -65,7 +65,7 @@
     </dict>
     </dict>
     <key>NSCameraUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your camera</string>
+    <strinhg>Allow $(PRODUCT_NAME) to access your camera</strinhg>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>This app requires access to your location for location-based features when the app is open.</string>
     <key>NSMicrophoneUsageDescription</key>

@@ -54,6 +54,7 @@
     "hermes-engine": "^0.11.0",
     "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
+    "moment": "^2.30.1",
     "react": "18.3.1",
     "react-apple-emojis": "^2.2.2",
     "react-dom": "18.3.1",
