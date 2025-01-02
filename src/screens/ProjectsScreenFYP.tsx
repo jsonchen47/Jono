@@ -1,60 +1,103 @@
-// ProjectsScreen.js
-import { View, Text, StyleSheet, Dimensions, PanResponder } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listProjects } from '@/src/graphql/queries';
-import ProjectsGridNew from '../components/ProjectsGridNew';
+import { searchProjects } from '@/src/graphql/queries';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import Carousel from 'react-native-reanimated-carousel';
-import LargeProjectCard from '../components/LargeProjectCard';
-import { PageIndicator } from 'react-native-page-indicator';
-import { TouchableWithoutFeedback } from 'react-native';
+import { useFilter } from '@/src/contexts/FilterContext';
 import LargeProjectCardsFlatList from '../components/LargeProjectCardsFlatList';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const ProjectsScreenFYP = ({ category }: any) => {
-    
-  const [currentPage, setCurrentPage] = React.useState(0);
-  const [projects, setProjects] = useState<any>([]);
-  const [loading, setLoading] = useState<any>(false);
+  const { filter, setOnFilterApply } = useFilter();
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [nextToken, setNextToken] = useState<any>(null);
-  const [isFetchingMore, setIsFetchingMore] = useState<any>(false);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  const fetchProjects = async (nextToken = null) => {
+  const fetchProjects = async (nextToken = null, reset = false) => {
+    if (reset) {
+      setProjects([]);
+      setNextToken(null);
+    }
+
     setLoading(true);
     try {
-        // If there is a category, filter. Otherwise, don't filter. 
-        var result 
-        if (category != "") {
-             result = await API.graphql(graphqlOperation(listProjects, {
-                filter: {
-                  categories: {
-                     contains: category 
-                    },
-                },
-                limit: 8,
-                nextToken,
-              }));
+      const { sortBy, distance } = filter;
+
+      // Define filter conditions
+      let filterConditions: any = {};
+
+      // Add category filter
+      if (category) {
+        filterConditions = {
+          ...filterConditions,
+          categories: { eq: category },
+        };
+      }
+
+      // Add distance filter
+      if (distance !== '100+') {
+        const parsedDistance = parseFloat(distance as string);
+
+        if (isNaN(parsedDistance)) {
+          throw new Error('Invalid distance value');
         }
-        else {
-             result = await API.graphql(graphqlOperation(listProjects, {
-                limit: 8,
-                nextToken,
-              }));
-        }
-      const castedResult = result as GraphQLResult<any>
-      const fetchedProjects = castedResult?.data.listProjects.items;
-      // console.log(fetchedProjects[0].city)
-      // Ensure no duplicate projects
-      setProjects((prevProjects: any) => {
-        const newProjects = fetchedProjects.filter((newProject: any) => 
-            !prevProjects.some((existingProject: any) => existingProject.id === newProject.id)
-        );
-        return [...prevProjects, ...newProjects];  // Add only new projects
-    });
-      setNextToken(castedResult?.data.listProjects.nextToken);
+
+        // Define the center coordinates (replace with actual user values)
+        const centerLatitude = 33.158092; // Replace with user's latitude
+        const centerLongitude = -117.350594; // Replace with user's longitude
+
+        // Calculate bounding box
+        const latAdjustment = parsedDistance / 69; // Approx adjustment for latitude
+        const lonAdjustment =
+          parsedDistance / (69 * Math.cos((centerLatitude * Math.PI) / 180)); // Longitude adjustment
+
+        filterConditions = {
+          ...filterConditions,
+          and: [
+            {
+              latitude: {
+                gte: centerLatitude - latAdjustment,
+                lte: centerLatitude + latAdjustment,
+              },
+            },
+            {
+              longitude: {
+                gte: centerLongitude - lonAdjustment,
+                lte: centerLongitude + lonAdjustment,
+              },
+            },
+          ],
+        };
+      }
+
+      // Add sorting criteria
+      const sortCriteria: any = [
+        {
+          field: 'createdAt',
+          direction: sortBy === 'newest' ? 'desc' : 'asc',
+        },
+      ];
+
+      const result = await API.graphql(
+        graphqlOperation(searchProjects, {
+          filter: filterConditions,
+          limit: 8,
+          nextToken,
+          sort: sortCriteria,
+        })
+      );
+
+      const castedResult = result as GraphQLResult<any>;
+      const fetchedProjects = castedResult?.data.searchProjects.items;
+
+      setProjects((prevProjects) =>
+        reset ? fetchedProjects : [...prevProjects, ...fetchedProjects]
+      );
+
+      setNextToken(castedResult?.data.searchProjects.nextToken);
     } catch (error) {
       console.error('Error fetching projects:', error);
     } finally {
@@ -63,10 +106,7 @@ const ProjectsScreenFYP = ({ category }: any) => {
     }
   };
 
-  useEffect(() => { 
-    fetchProjects();
-  }, [category]);
-
+  // Load more projects for pagination
   const loadMoreProjects = () => {
     if (nextToken && !isFetchingMore) {
       setIsFetchingMore(true);
@@ -74,13 +114,23 @@ const ProjectsScreenFYP = ({ category }: any) => {
     }
   };
 
+  // Set the filter apply handler to fetch projects with a reset
+  useEffect(() => {
+    setOnFilterApply(() => () => fetchProjects(null, true));
+  }, []);
+
+  // Fetch projects initially and when the filter or category changes
+  useEffect(() => {
+    fetchProjects(null, true);
+  }, [filter, category]);
+
   return (
     <View style={styles.projectsScreenContainer}>
       <LargeProjectCardsFlatList
-          projects={projects} // Pass remaining projects after first 4
-          loadMoreProjects={loadMoreProjects}
-          isFetchingMore={isFetchingMore}
-        />
+        projects={projects}
+        loadMoreProjects={loadMoreProjects}
+        isFetchingMore={isFetchingMore}
+      />
     </View>
   );
 };
