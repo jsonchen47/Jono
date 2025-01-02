@@ -19,10 +19,12 @@ import { Fontisto } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { router, useRouter } from 'expo-router';
+// import { useNotifications } from '@/src/contexts/NotificationContext';
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function ProfileIndex() {
+  // const { hasNotifications } = useNotifications();
   const router = useRouter(); 
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -56,17 +58,21 @@ export default function ProfileIndex() {
       <View style={styles.headerButtonsContainer}>
         <TouchableOpacity 
           style={styles.headerButton}
-          onPress={() => 
+          onPress={() => {
+            // console.log(hasNotifications)
             router.push('/(tabs)/(profile)/notifications')
+          }
           } 
           >
           <Fontisto name='bell' style={styles.icon}/>
+          {/* {hasNotifications && <View style={styles.notificationDot} />} */}
         </TouchableOpacity>
         <View style={styles.spacer}/>
         <TouchableOpacity 
           style={styles.headerButton}
-          onPress={() => 
+          onPress={() => {
             router.push('/settings')
+          }
           } 
           >
           <FontAwesome6 name='bars' style={styles.icon}/>
@@ -81,7 +87,8 @@ export default function ProfileIndex() {
         </View>
       ),
     });
-  }, [user]);
+  // }, [user, hasNotifications]);
+}, [user]);
 
   
 
@@ -177,5 +184,15 @@ const styles = StyleSheet.create({
     flex: 1, 
     width: '100%'
   }, 
-  
+  notificationDot: {
+    position: 'absolute', // Allows positioning relative to the parent container
+    top: 0, // Adjust to position the dot at the top
+    right: 0, // Adjust to position the dot on the right
+    width: 10, // Size of the dot
+    height: 10, // Keep the height and width the same for a circular shape
+    borderRadius: 5, // Half of the width/height for a perfect circle
+    backgroundColor: 'red', // The red color for the notification dot
+    borderWidth: 1, // Optional border for a cleaner look
+    borderColor: 'white', // Matches the parent background for separation
+  },
 });

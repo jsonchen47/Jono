@@ -3,10 +3,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-
+// import { useNotifications } from '@/src/contexts/NotificationContext';
 
 export default function TabLayout() {
-
+  // const { hasNotifications } = useNotifications();
   const router = useRouter(); 
   const handleCenterTabPress = () => {
     router.push('/newProject/newProject1'); // Replace '/newScreen' with the path to your desired screen
@@ -96,7 +96,10 @@ export default function TabLayout() {
         options={{ 
           title: 'Profile',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" color={color} size={size} style={{marginTop: 5}}/>
+            <View>
+              <Ionicons name="person-outline" color={color} size={size} style={{marginTop: 5}}/>
+              {/* {hasNotifications && <View style={styles.notificationDot} />} */}
+            </View>
           ),
           headerShown: false,
         }}
@@ -132,5 +135,16 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red'
     // color: '#fff',
     marginBottom: 10, 
+  },
+  notificationDot: {
+    position: 'absolute', // Allows positioning relative to the parent container
+    top: 0, // Adjust to position the dot at the top
+    right: 0, // Adjust to position the dot on the right
+    width: 10, // Size of the dot
+    height: 10, // Keep the height and width the same for a circular shape
+    borderRadius: 5, // Half of the width/height for a perfect circle
+    backgroundColor: 'red', // The red color for the notification dot
+    borderWidth: 1, // Optional border for a cleaner look
+    borderColor: 'white', // Matches the parent background for separation
   },
 });

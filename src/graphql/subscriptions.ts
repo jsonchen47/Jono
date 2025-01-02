@@ -375,6 +375,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
         connectedUserID
         status
         createdAt
+        viewed
         updatedAt
         __typename
       }
@@ -451,6 +452,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
         connectedUserID
         status
         createdAt
+        viewed
         updatedAt
         __typename
       }
@@ -527,6 +529,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
         connectedUserID
         status
         createdAt
+        viewed
         updatedAt
         __typename
       }
@@ -621,6 +624,7 @@ export const onCreateConnection = /* GraphQL */ `subscription OnCreateConnection
     }
     status
     createdAt
+    viewed
     updatedAt
     __typename
   }
@@ -708,6 +712,7 @@ export const onUpdateConnection = /* GraphQL */ `subscription OnUpdateConnection
     }
     status
     createdAt
+    viewed
     updatedAt
     __typename
   }
@@ -795,6 +800,7 @@ export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection
     }
     status
     createdAt
+    viewed
     updatedAt
     __typename
   }

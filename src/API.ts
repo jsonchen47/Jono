@@ -210,6 +210,7 @@ export type Connection = {
   connectedUser?: User | null,
   status?: string | null,
   createdAt?: string | null,
+  viewed?: boolean | null,
   updatedAt: string,
 };
 
@@ -395,6 +396,7 @@ export type CreateConnectionInput = {
   connectedUserID: string,
   status?: string | null,
   createdAt?: string | null,
+  viewed?: boolean | null,
 };
 
 export type ModelConnectionConditionInput = {
@@ -402,6 +404,7 @@ export type ModelConnectionConditionInput = {
   connectedUserID?: ModelIDInput | null,
   status?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
+  viewed?: ModelBooleanInput | null,
   and?: Array< ModelConnectionConditionInput | null > | null,
   or?: Array< ModelConnectionConditionInput | null > | null,
   not?: ModelConnectionConditionInput | null,
@@ -414,6 +417,7 @@ export type UpdateConnectionInput = {
   connectedUserID?: string | null,
   status?: string | null,
   createdAt?: string | null,
+  viewed?: boolean | null,
 };
 
 export type DeleteConnectionInput = {
@@ -940,6 +944,7 @@ export type ModelConnectionFilterInput = {
   connectedUserID?: ModelIDInput | null,
   status?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
+  viewed?: ModelBooleanInput | null,
   updatedAt?: ModelStringInput | null,
   and?: Array< ModelConnectionFilterInput | null > | null,
   or?: Array< ModelConnectionFilterInput | null > | null,
@@ -1096,6 +1101,7 @@ export type ModelSubscriptionConnectionFilterInput = {
   connectedUserID?: ModelSubscriptionIDInput | null,
   status?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
+  viewed?: ModelSubscriptionBooleanInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionConnectionFilterInput | null > | null,
   or?: Array< ModelSubscriptionConnectionFilterInput | null > | null,
@@ -1514,6 +1520,7 @@ export type CreateUserMutation = {
         connectedUserID: string,
         status?: string | null,
         createdAt?: string | null,
+        viewed?: boolean | null,
         updatedAt: string,
       } | null >,
       nextToken?: string | null,
@@ -1592,6 +1599,7 @@ export type UpdateUserMutation = {
         connectedUserID: string,
         status?: string | null,
         createdAt?: string | null,
+        viewed?: boolean | null,
         updatedAt: string,
       } | null >,
       nextToken?: string | null,
@@ -1670,6 +1678,7 @@ export type DeleteUserMutation = {
         connectedUserID: string,
         status?: string | null,
         createdAt?: string | null,
+        viewed?: boolean | null,
         updatedAt: string,
       } | null >,
       nextToken?: string | null,
@@ -1762,6 +1771,7 @@ export type CreateConnectionMutation = {
     } | null,
     status?: string | null,
     createdAt?: string | null,
+    viewed?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -1849,6 +1859,7 @@ export type UpdateConnectionMutation = {
     } | null,
     status?: string | null,
     createdAt?: string | null,
+    viewed?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -1936,6 +1947,7 @@ export type DeleteConnectionMutation = {
     } | null,
     status?: string | null,
     createdAt?: string | null,
+    viewed?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -2868,6 +2880,7 @@ export type GetUserQuery = {
         connectedUserID: string,
         status?: string | null,
         createdAt?: string | null,
+        viewed?: boolean | null,
         updatedAt: string,
       } | null >,
       nextToken?: string | null,
@@ -3075,6 +3088,7 @@ export type GetConnectionQuery = {
     } | null,
     status?: string | null,
     createdAt?: string | null,
+    viewed?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -3133,6 +3147,7 @@ export type ListConnectionsQuery = {
       } | null,
       status?: string | null,
       createdAt?: string | null,
+      viewed?: boolean | null,
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
@@ -3196,6 +3211,7 @@ export type ConnectionsByUserIDAndCreatedAtQuery = {
       } | null,
       status?: string | null,
       createdAt?: string | null,
+      viewed?: boolean | null,
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
@@ -3259,6 +3275,7 @@ export type ConnectionsByConnectedUserIDAndCreatedAtQuery = {
       } | null,
       status?: string | null,
       createdAt?: string | null,
+      viewed?: boolean | null,
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
@@ -4122,6 +4139,7 @@ export type OnCreateUserSubscription = {
         connectedUserID: string,
         status?: string | null,
         createdAt?: string | null,
+        viewed?: boolean | null,
         updatedAt: string,
       } | null >,
       nextToken?: string | null,
@@ -4199,6 +4217,7 @@ export type OnUpdateUserSubscription = {
         connectedUserID: string,
         status?: string | null,
         createdAt?: string | null,
+        viewed?: boolean | null,
         updatedAt: string,
       } | null >,
       nextToken?: string | null,
@@ -4276,6 +4295,7 @@ export type OnDeleteUserSubscription = {
         connectedUserID: string,
         status?: string | null,
         createdAt?: string | null,
+        viewed?: boolean | null,
         updatedAt: string,
       } | null >,
       nextToken?: string | null,
@@ -4367,6 +4387,7 @@ export type OnCreateConnectionSubscription = {
     } | null,
     status?: string | null,
     createdAt?: string | null,
+    viewed?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -4453,6 +4474,7 @@ export type OnUpdateConnectionSubscription = {
     } | null,
     status?: string | null,
     createdAt?: string | null,
+    viewed?: boolean | null,
     updatedAt: string,
   } | null,
 };
@@ -4539,6 +4561,7 @@ export type OnDeleteConnectionSubscription = {
     } | null,
     status?: string | null,
     createdAt?: string | null,
+    viewed?: boolean | null,
     updatedAt: string,
   } | null,
 };

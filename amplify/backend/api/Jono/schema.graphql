@@ -61,4 +61,5 @@ type Connection @model @auth(rules: [{ allow: public }]) {
   connectedUser: User @belongsTo(fields: ["connectedUserID"])
   status: String
   createdAt: AWSDateTime
+  viewed: Boolean @default(value: "false") 
 }

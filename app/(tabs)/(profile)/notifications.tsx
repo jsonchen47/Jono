@@ -1,104 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, FlatList, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
-import { List, Button } from 'react-native-paper';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { listConnections } from '@/src/graphql/queries';
-import { updateConnection, deleteConnection } from '@/src/graphql/mutations';
+import { List } from 'react-native-paper';
 import moment from 'moment';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { useNotifications } from '@/src/contexts/NotificationContext';
 
 const NotificationsPage = () => {
-  const [notifications, setNotifications] = useState<any>([]);
-  const [loading, setLoading] = useState<any>(false);
+  const { notifications, markNotificationsAsRead } = useNotifications();
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      setLoading(true);
+    const markAsRead = async () => {
       try {
-        const authUser = await Auth.currentAuthenticatedUser();
-        const authUserID = authUser.attributes.sub;
-
-        // Fetch connection requests with status 'requested'
-        const result = await API.graphql(
-          graphqlOperation(listConnections, {
-            filter: {
-              connectedUserID: { eq: authUserID },
-              status: { eq: 'requested' },
-            },
-          })
-        );
-        const castedResult = result as GraphQLResult<any>
-        const fetchedNotifications = castedResult?.data?.listConnections?.items || [];
-        setNotifications(fetchedNotifications);
+        await markNotificationsAsRead(); // Mark notifications as read when page is viewed
       } catch (error) {
-        console.error('Error fetching notifications:', error);
-      } finally {
-        setLoading(false);
+        console.error('Error marking notifications as read:', error);
       }
     };
 
-    fetchNotifications();
+    // markAsRead();
   }, []);
-
-  const handleApprove = async (connectionId: any) => {
-    try {
-      // Update the connection status to 'approved'
-      await API.graphql(
-        graphqlOperation(updateConnection, {
-          input: { id: connectionId, status: 'approved' },
-        })
-      );
-
-      // Update the local state
-      setNotifications((prev: any) =>
-        prev.map((item: any) =>
-          item.id === connectionId ? { ...item, status: 'approved' } : item
-        )
-      );
-    } catch (error) {
-      console.error('Error approving connection:', error);
-    }
-  };
-
-  const handleRemove = async (connectionId: any) => {
-    try {
-      // Delete the connection
-      await API.graphql(graphqlOperation(deleteConnection, { input: { id: connectionId } }));
-
-      // Update the local state
-      setNotifications((prev: any) => prev.filter((item: any) => item.id !== connectionId));
-    } catch (error) {
-      console.error('Error removing connection:', error);
-    }
-  };
 
   const renderItem = ({ item }: any) => {
     const isApproved = item.status === 'approved';
+    const daysAgo = moment(item.updatedAt).fromNow();
 
     return (
       <List.Item
-      style={{paddingRight: 0}}
-        title={`${item.user.username}`}
-        description={
+        style={{ paddingRight: 0 }}
+        title={
           isApproved
-            ? `${item.user.username} has connected with you.`
-            : `${item.user.username} requested to connect with you.`
+            ? `@${item.user.username} connected with you.`
+            : `@${item.user.username} requested to connect with you`
         }
+        titleStyle={styles.listItemTitle}
+        titleNumberOfLines={2}
+        description={daysAgo}
+        descriptionStyle={styles.listItemDescription}
         left={() => (
-          <Image
-            source={{ uri: item.user.image }}
-            style={styles.profileImage}
-          />
+          <Image source={{ uri: item.user.image }} style={styles.profileImage} />
         )}
         right={() => (
-          
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={() => (isApproved ? handleRemove(item.id) : handleApprove(item.id))}
+              onPress={() => console.log('Handle approve or remove here')}
               style={isApproved ? styles.removeButton : styles.approveButton}
             >
-              <Text style={isApproved ? styles.buttonText : styles.buttonText}>
-                {isApproved ? 'Remove' : 'Approve'}
+              <Text style={styles.buttonText}>
+                {isApproved ? 'Unfollow' : 'Approve'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -110,8 +57,8 @@ const NotificationsPage = () => {
 
   return (
     <View style={styles.container}>
-      {loading ? (
-        <Text style={styles.loadingText}>Loading notifications...</Text>
+      {notifications.length === 0 ? (
+        <Text style={styles.loadingText}>No notifications available.</Text>
       ) : (
         <FlatList
           data={notifications}
@@ -136,8 +83,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   buttonContainer: {
-    flexDirection: 'row', // Ensure children are arranged horizontally
-    justifyContent: 'flex-end', // Push the button to the right
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   approveButton: {
     backgroundColor: '#1ABFFB',
@@ -149,10 +96,11 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     backgroundColor: 'lightgray',
-    marginLeft: 5,
+    marginHorizontal: 10,
     borderRadius: 10,
-    alignSelf: 'center'
-    
+    alignSelf: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
   loadingText: {
     fontSize: 16,
@@ -162,5 +110,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-  }
+  },
+  listItemTitle: {
+    fontSize: 15,
+  },
+  listItemDescription: {
+    fontSize: 12,
+  },
 });

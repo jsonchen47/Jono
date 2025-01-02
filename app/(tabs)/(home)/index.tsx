@@ -89,6 +89,8 @@ function MyTabs() {
           width: 0.5, 
         },
         swipeEnabled: false, 
+        lazy: true, // Enables lazy loading
+        lazyPreloadDistance: 0, // Preload the next tab when swiping close to it (set 0 for no preloading)
       }}
     >
       <Tab.Screen

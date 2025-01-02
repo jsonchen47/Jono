@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { API, graphqlOperation } from 'aws-amplify';
 import { getUser, getProject } from '../graphql/queries';
+import { getUserWithoutConnections } from '../backend/queries';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
 import HeartButton from './HeartButton';
@@ -20,7 +21,7 @@ const SmallProjectCard = ({ project }: any) => {
 
   // FETCH THE PROJECT OWNER
   const fetchUser = async (ownerID: any) => {
-    const result = await API.graphql(graphqlOperation(getUser, { id: ownerID }));
+    const result = await API.graphql(graphqlOperation(getUserWithoutConnections, { id: ownerID }));
     const castedResult = result as GraphQLResult<any>;
     setUser(castedResult.data?.getUser);
   };
@@ -35,11 +36,18 @@ const SmallProjectCard = ({ project }: any) => {
   };
 
   // Run on component mount or when project changes
+  // useEffect(() => {
+  //   console.log('Owner IDs changed:', project.ownerIDs);
+  //   if (project.ownerIDs?.[0]) {
+  //     fetchUser(project.ownerIDs[0]);
+  //   }
+  // }, [project.ownerIDs]);
   useEffect(() => {
+    console.log('Owner IDs changed:', currentProject.id);
     if (project.ownerIDs?.[0]) {
       fetchUser(project.ownerIDs[0]);
     }
-  }, [project.ownerIDs]);
+  }, [currentProject.ownerIDs]);
 
   // Run when updatedProjectID changes, refetch project if necessary
   useEffect(() => {

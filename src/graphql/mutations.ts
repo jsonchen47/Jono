@@ -405,6 +405,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         connectedUserID
         status
         createdAt
+        viewed
         updatedAt
         __typename
       }
@@ -484,6 +485,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
         connectedUserID
         status
         createdAt
+        viewed
         updatedAt
         __typename
       }
@@ -563,6 +565,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
         connectedUserID
         status
         createdAt
+        viewed
         updatedAt
         __typename
       }
@@ -658,6 +661,7 @@ export const createConnection = /* GraphQL */ `mutation CreateConnection(
     }
     status
     createdAt
+    viewed
     updatedAt
     __typename
   }
@@ -746,6 +750,7 @@ export const updateConnection = /* GraphQL */ `mutation UpdateConnection(
     }
     status
     createdAt
+    viewed
     updatedAt
     __typename
   }
@@ -834,6 +839,7 @@ export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
     }
     status
     createdAt
+    viewed
     updatedAt
     __typename
   }

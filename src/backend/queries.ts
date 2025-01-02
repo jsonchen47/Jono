@@ -116,3 +116,37 @@ export const listProjectsWithSort = /* GraphQL */ `query ListProjectsWithSort(
   }
 }
 `;
+
+export const getUserWithoutConnections = /* GraphQL */ `
+  query GetUserWithoutConnections($id: ID!) {
+    getUser(id: $id) {
+      id
+      name
+      status
+      image
+      Projects {
+        items {
+          id
+          projectId
+          userId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+    }
+  }
+`;
+

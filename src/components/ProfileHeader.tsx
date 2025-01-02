@@ -11,10 +11,13 @@ import { createConnection, deleteConnection } from '../graphql/mutations';
 import { listConnections } from '@/src/graphql/queries';
 import { useState, useEffect } from 'react';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { router } from 'expo-router';
+// import { useNotifications } from '@/src/contexts/NotificationContext';
 
 const ProfileHeader = ({ user, otherProfile = false }: any) => {
   const [isRequested, setIsRequested] = useState(false);
   const [connectionID, setConnectionID] = useState<string | null>(null);
+  // const { hasNotifications } = useNotifications();
 
   useEffect(() => {
     const checkConnectionStatus = async () => {
@@ -132,17 +135,28 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
                 <Text style={styles.statsText}>{user?.numTeams}</Text>
               </View>
               <View style={styles.statsSpacer} />
-              <View style={styles.statsContainer}>
+              <TouchableOpacity 
+                style={styles.statsContainer}
+                onPress={() => 
+                  router.push('/(tabs)/(profile)/connections')
+                }
+
+              >
                 <Emoji name="link" style={styles.emoji} />
                 <Text style={styles.statsText}>{user?.numConnections}</Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
         {/* Button */}
         <TouchableOpacity
-          style={styles.editProfileButton}
+          style={otherProfile
+            ? isRequested
+              ? styles.removeRequestButton
+              : styles.editProfileButton
+            : styles.editProfileButton
+          }
           onPress={() => {
             if (otherProfile) {
               if (isRequested) {
@@ -155,10 +169,17 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
             }
           }}
         >
-          <Text style={styles.editProfileText}>
+          <Text 
+            style={otherProfile
+              ? isRequested
+                ? styles.editProfileText
+                : styles.editProfileText
+              : styles.editProfileText
+            }
+          >
             {otherProfile
               ? isRequested
-                ? 'Remove Request'
+                ? 'Requested'
                 : 'Request to Connect'
               : 'Edit Profile'}
           </Text>
@@ -239,10 +260,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignSelf: 'center',
   },
+  removeRequestButton: {
+    width: '100%',
+    backgroundColor: 'lightgray',
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignSelf: 'center',
+  },
   editProfileText: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 15,
   },
+  removeRequestButtonText: {
+
+  }, 
+  
 });

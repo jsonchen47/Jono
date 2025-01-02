@@ -27,6 +27,15 @@ const ProjectsScreen = ({ category }: any) => {
       // Define filter conditions
       let filterConditions: any = {};
   
+      // Add category filter
+      if (category) {
+        filterConditions = {
+          ...filterConditions,
+          categories: { eq: category },
+        };
+      }
+  
+      // Add distance filter
       if (distance !== '100+') {
         const parsedDistance = parseFloat(distance as string);
   
@@ -44,6 +53,7 @@ const ProjectsScreen = ({ category }: any) => {
           parsedDistance / (69 * Math.cos((centerLatitude * Math.PI) / 180)); // Adjustment for longitude
   
         filterConditions = {
+          ...filterConditions,
           and: [
             {
               latitude: {
@@ -92,6 +102,7 @@ const ProjectsScreen = ({ category }: any) => {
       setIsFetchingMore(false);
     }
   };
+  
   
   
 

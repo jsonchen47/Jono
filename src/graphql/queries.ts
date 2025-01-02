@@ -518,6 +518,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
         connectedUserID
         status
         createdAt
+        viewed
         updatedAt
         __typename
       }
@@ -729,6 +730,7 @@ export const getConnection = /* GraphQL */ `query GetConnection($id: ID!) {
     }
     status
     createdAt
+    viewed
     updatedAt
     __typename
   }
@@ -787,6 +789,7 @@ export const listConnections = /* GraphQL */ `query ListConnections(
       }
       status
       createdAt
+      viewed
       updatedAt
       __typename
     }
@@ -858,6 +861,7 @@ export const connectionsByUserIDAndCreatedAt = /* GraphQL */ `query ConnectionsB
       }
       status
       createdAt
+      viewed
       updatedAt
       __typename
     }
@@ -929,6 +933,7 @@ export const connectionsByConnectedUserIDAndCreatedAt = /* GraphQL */ `query Con
       }
       status
       createdAt
+      viewed
       updatedAt
       __typename
     }
