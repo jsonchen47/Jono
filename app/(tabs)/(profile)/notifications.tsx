@@ -16,7 +16,7 @@ const NotificationsPage = () => {
       }
     };
 
-    // markAsRead();
+    markAsRead();
   }, []);
 
   const renderItem = ({ item }: any) => {

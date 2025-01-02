@@ -19,12 +19,12 @@ import { Fontisto } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { router, useRouter } from 'expo-router';
-// import { useNotifications } from '@/src/contexts/NotificationContext';
+import { useNotifications } from '@/src/contexts/NotificationContext';
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function ProfileIndex() {
-  // const { hasNotifications } = useNotifications();
+  const { hasNotifications } = useNotifications();
   const router = useRouter(); 
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -65,7 +65,7 @@ export default function ProfileIndex() {
           } 
           >
           <Fontisto name='bell' style={styles.icon}/>
-          {/* {hasNotifications && <View style={styles.notificationDot} />} */}
+          {hasNotifications && <View style={styles.notificationDot} />}
         </TouchableOpacity>
         <View style={styles.spacer}/>
         <TouchableOpacity 
@@ -87,8 +87,8 @@ export default function ProfileIndex() {
         </View>
       ),
     });
-  // }, [user, hasNotifications]);
-}, [user]);
+  }, [user, hasNotifications]);
+// }, [user]);
 
   
 

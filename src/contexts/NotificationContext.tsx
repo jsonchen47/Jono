@@ -34,8 +34,8 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       setNotifications(fetchedNotifications);
 
       // Determine if there are unread notifications
-      // const unreadExists = fetchedNotifications.some((notification: any) => !notification.viewed);
-      // setHasNotifications(unreadExists);
+      const unreadExists = fetchedNotifications.some((notification: any) => !notification.viewed);
+      setHasNotifications(unreadExists);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
@@ -73,15 +73,15 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       if (unreadNotifications.length === 0) return; // Prevent unnecessary state updates
   
       // Mark all unread notifications as read
-      // await Promise.all(
-      //   unreadNotifications.map((notification) =>
-      //     API.graphql(
-      //       graphqlOperation(updateConnection, {
-      //         input: { id: notification.id, viewed: true },
-      //       })
-      //     )
-      //   )
-      // );
+      await Promise.all(
+        unreadNotifications.map((notification) =>
+          API.graphql(
+            graphqlOperation(updateConnection, {
+              input: { id: notification.id, viewed: true },
+            })
+          )
+        )
+      );
   
       // Update local state
       const updatedNotifications = notifications.map((notification) =>

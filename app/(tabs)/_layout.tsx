@@ -3,10 +3,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-// import { useNotifications } from '@/src/contexts/NotificationContext';
+import { useNotifications } from '@/src/contexts/NotificationContext';
 
 export default function TabLayout() {
-  // const { hasNotifications } = useNotifications();
+  const { hasNotifications } = useNotifications();
   const router = useRouter(); 
   const handleCenterTabPress = () => {
     router.push('/newProject/newProject1'); // Replace '/newScreen' with the path to your desired screen
@@ -98,7 +98,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <View>
               <Ionicons name="person-outline" color={color} size={size} style={{marginTop: 5}}/>
-              {/* {hasNotifications && <View style={styles.notificationDot} />} */}
+              {hasNotifications && <View style={styles.notificationDot} />}
             </View>
           ),
           headerShown: false,

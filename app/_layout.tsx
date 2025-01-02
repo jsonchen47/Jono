@@ -153,7 +153,7 @@ function RootLayout() {
         <ProgressProvider>
         <ApplicationProvider {...eva} theme={eva.light}>
           <PaperProvider>
-          {/* <NotificationProvider> */}
+          <NotificationProvider>
             <ProjectUpdateProvider>
             
                 <FilterProvider>
@@ -284,7 +284,7 @@ function RootLayout() {
                   </FilterProvider>
                 
               </ProjectUpdateProvider>
-              {/* </NotificationProvider> */}
+              </NotificationProvider>
           </PaperProvider>
         </ApplicationProvider>
         </ProgressProvider>
