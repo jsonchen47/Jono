@@ -11,7 +11,7 @@ import { Amplify, Auth, API, graphqlOperation } from "aws-amplify";
 import {withAuthenticator} from "aws-amplify-react-native"; 
 import awsconfig from "../src/aws-exports";
 // import {Picker} from 'react-native';
-import { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import {getUser} from '../src/graphql/queries'
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import {createUser} from '../src/graphql/mutations';
@@ -28,6 +28,57 @@ import { useRouter } from 'expo-router';
 import { ProjectUpdateProvider } from '@/src/contexts/ProjectUpdateContext';
 import { FilterProvider } from '@/src/contexts/FilterContext';
 import { NotificationProvider } from '@/src/contexts/NotificationContext';
+
+// SENDBIRD IMPORTS
+import {
+  createExpoClipboardService,
+  createExpoFileService,
+  createExpoMediaService,
+  createExpoNotificationService,
+  createExpoPlayerService,
+  createExpoRecorderService,
+  SendbirdUIKitContainerProps
+} from "@sendbird/uikit-react-native";
+
+import * as ExpoClipboard from 'expo-clipboard';
+import * as ExpoDocumentPicker from 'expo-document-picker';
+import * as ExpoFS from 'expo-file-system';
+import * as ExpoImagePicker from 'expo-image-picker';
+import * as ExpoMediaLibrary from 'expo-media-library';
+import * as ExpoNotifications from 'expo-notifications';
+import * as ExpoAV from 'expo-av';
+import * as ExpoVideoThumbnail from 'expo-video-thumbnails';
+import * as ExpoImageManipulator from 'expo-image-manipulator';
+
+import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
+import { MMKV } from 'react-native-mmkv';
+
+// SENDBIRD PLATFORM SERVICES
+const platformServices: SendbirdUIKitContainerProps['platformServices'] = {
+  clipboard: createExpoClipboardService(ExpoClipboard),
+  notification: createExpoNotificationService(ExpoNotifications),
+  file: createExpoFileService({
+    fsModule: ExpoFS,
+    imagePickerModule: ExpoImagePicker,
+    mediaLibraryModule: ExpoMediaLibrary,
+    documentPickerModule: ExpoDocumentPicker,
+  }),
+  media: createExpoMediaService({
+    avModule: ExpoAV,
+    thumbnailModule: ExpoVideoThumbnail,
+    imageManipulator: ExpoImageManipulator,
+    fsModule: ExpoFS,
+  }),
+  player: createExpoPlayerService({
+    avModule: ExpoAV,
+  }),
+  recorder: createExpoRecorderService({
+    avModule: ExpoAV,
+  }),
+};
+
+// https://github.com/mrousavy/react-native-mmkv
+const mmkv = new MMKV();
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -148,147 +199,152 @@ function RootLayout() {
   }, []);
 
   return (
-    
-      <GestureHandlerRootView>
-        <ProgressProvider>
-        <ApplicationProvider {...eva} theme={eva.light}>
-          <PaperProvider>
-          <NotificationProvider>
-            <ProjectUpdateProvider>
-            
-                <FilterProvider>
-                  <View style={styles.container}>
-                  {/* Global Progress Bar */}
-                  
-                    <Stack>
-                        <Stack.Screen 
-                          name="(tabs)" 
-                          options={{
-                            headerShown: false,
-                          }}
+    <SendbirdUIKitContainer
+      appId={'APP_ID'}
+      chatOptions={{ localCacheStorage: mmkv }}
+      platformServices={platformServices}
+    >
+        <GestureHandlerRootView>
+          <ProgressProvider>
+          <ApplicationProvider {...eva} theme={eva.light}>
+            <PaperProvider>
+            <NotificationProvider>
+              <ProjectUpdateProvider>
+              
+                  <FilterProvider>
+                    <View style={styles.container}>
+                    {/* Global Progress Bar */}
+                    
+                      <Stack>
+                          <Stack.Screen 
+                            name="(tabs)" 
+                            options={{
+                              headerShown: false,
+                            }}
+                          />
+                        <Stack.Screen
+                        name="chatScreen/[id]"
                         />
-                      <Stack.Screen
-                      name="chatScreen/[id]"
-                      />
-                      <Stack.Screen
-                      name="project/[id]"
-                      options={{
-                        headerShown: false,
-                        title: 'Project',
-                        headerStyle: {
-                          backgroundColor: 'white',
-                        },
-                        headerTintColor: 'black',
-              
-                      }}
-                      />
-                      <Stack.Screen
-                      name="otherProfile"
-                      options={{
-                        // headerShown: false,
-                        title: 'Profile',
-                        headerStyle: {
-                          backgroundColor: 'white',
-                        },
-                        headerTintColor: 'black',
-              
-                      }}
-                      />
-                      <Stack.Screen
-                        name="groupInfoScreen"
-                        options={{                  
-                          title: 'Group Info',
+                        <Stack.Screen
+                        name="project/[id]"
+                        options={{
+                          headerShown: false,
+                          title: 'Project',
                           headerStyle: {
                             backgroundColor: 'white',
                           },
                           headerTintColor: 'black',
+                
                         }}
+                        />
+                        <Stack.Screen
+                        name="otherProfile"
+                        options={{
+                          // headerShown: false,
+                          title: 'Profile',
+                          headerStyle: {
+                            backgroundColor: 'white',
+                          },
+                          headerTintColor: 'black',
+                
+                        }}
+                        />
+                        <Stack.Screen
+                          name="groupInfoScreen"
+                          options={{                  
+                            title: 'Group Info',
+                            headerStyle: {
+                              backgroundColor: 'white',
+                            },
+                            headerTintColor: 'black',
+                          }}
+                        />
+                        <Stack.Screen
+                        // name="newProject/newProject1"
+                        name="newProject"
+                        options={{
+                          animation: 'slide_from_bottom', 
+                          // presentation: 'modal'
+                          headerShown: false,
+                        }}
+                        />
+                        <Stack.Screen
+                        name="search"
+                        options={{
+                          headerShown: false,
+                          animation: 'fade', // Enables the fade animation
+                        }}
+                        />
+                        <Stack.Screen
+                        name="filter"
+                        options={{
+                          presentation: 'modal',
+                          title: 'Filter',
+                        }}
+                        />
+                        <Stack.Screen
+                        name="optionsScreen"
+                        options={{
+                          presentation: 'modal',
+                          title: 'Options',
+                        }}
+                        />
+                        <Stack.Screen
+                        name="deleteProjectConfirmationScreen"
+                        options={{
+                          headerShown: false,
+                          presentation: 'transparentModal',
+                          title: 'Options',
+                          animation: 'fade',
+                        }}
+                        />
+                        <Stack.Screen
+                        name="progressBar"
+                        options={{
+                          headerShown: false,
+                          presentation: 'modal',
+                          title: 'Options',
+                          animation: 'fade',
+                        }}
+                        />
+                        <Stack.Screen
+                        name="manageProject"
+                        options={{
+                          title: 'Manage Project',
+                          headerShown: false,
+                          // presentation: 'fullScreenModal',
+                        }}
+                        />
+                        {/* <Stack.Screen
+                        name="map"
+                        options={{
+                          title: 'Map',
+                          presentation: 'fullScreenModal',
+                        }}
+                        /> */}
+                      </Stack>
+                      {/* <SafeAreaView> */}
+                      <ProgressBarComponent 
+                        snackbarVisible={snackbarVisible} 
+                        setSnackbarVisible={setSnackbarVisible} 
                       />
-                      <Stack.Screen
-                      // name="newProject/newProject1"
-                      name="newProject"
-                      options={{
-                        animation: 'slide_from_bottom', 
-                        // presentation: 'modal'
-                        headerShown: false,
-                      }}
-                      />
-                      <Stack.Screen
-                      name="search"
-                      options={{
-                        headerShown: false,
-                        animation: 'fade', // Enables the fade animation
-                      }}
-                      />
-                      <Stack.Screen
-                      name="filter"
-                      options={{
-                        presentation: 'modal',
-                        title: 'Filter',
-                      }}
-                      />
-                      <Stack.Screen
-                      name="optionsScreen"
-                      options={{
-                        presentation: 'modal',
-                        title: 'Options',
-                      }}
-                      />
-                      <Stack.Screen
-                      name="deleteProjectConfirmationScreen"
-                      options={{
-                        headerShown: false,
-                        presentation: 'transparentModal',
-                        title: 'Options',
-                        animation: 'fade',
-                      }}
-                      />
-                      <Stack.Screen
-                      name="progressBar"
-                      options={{
-                        headerShown: false,
-                        presentation: 'modal',
-                        title: 'Options',
-                        animation: 'fade',
-                      }}
-                      />
-                      <Stack.Screen
-                      name="manageProject"
-                      options={{
-                        title: 'Manage Project',
-                        headerShown: false,
-                        // presentation: 'fullScreenModal',
-                      }}
-                      />
-                      {/* <Stack.Screen
-                      name="map"
-                      options={{
-                        title: 'Map',
-                        presentation: 'fullScreenModal',
-                      }}
-                      /> */}
-                    </Stack>
-                    {/* <SafeAreaView> */}
-                    <ProgressBarComponent 
+                      {/* Snackbar Component */}
+                      
+                      <SnackBarComponent
                       snackbarVisible={snackbarVisible} 
                       setSnackbarVisible={setSnackbarVisible} 
-                    />
-                    {/* Snackbar Component */}
-                    
-                    <SnackBarComponent
-                    snackbarVisible={snackbarVisible} 
-                    setSnackbarVisible={setSnackbarVisible} 
-                    />
-                    {/* </SafeAreaView> */}
-                    </View>
-                  </FilterProvider>
-                
-              </ProjectUpdateProvider>
-              </NotificationProvider>
-          </PaperProvider>
-        </ApplicationProvider>
-        </ProgressProvider>
-      </GestureHandlerRootView>
+                      />
+                      {/* </SafeAreaView> */}
+                      </View>
+                    </FilterProvider>
+                  
+                </ProjectUpdateProvider>
+                </NotificationProvider>
+            </PaperProvider>
+          </ApplicationProvider>
+          </ProgressProvider>
+        </GestureHandlerRootView>
+      </SendbirdUIKitContainer>
   );
 }
 
