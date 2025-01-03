@@ -28,6 +28,7 @@ import { useRouter } from 'expo-router';
 import { ProjectUpdateProvider } from '@/src/contexts/ProjectUpdateContext';
 import { FilterProvider } from '@/src/contexts/FilterContext';
 import { NotificationProvider } from '@/src/contexts/NotificationContext';
+import { useConnection } from '@sendbird/uikit-react-native';
 
 // SENDBIRD IMPORTS
 import {
@@ -200,7 +201,7 @@ function RootLayout() {
 
   return (
     <SendbirdUIKitContainer
-      appId={'APP_ID'}
+      appId={'01E73A75-F4D1-4564-957C-FA30C79A0FCE'}
       chatOptions={{ localCacheStorage: mmkv }}
       platformServices={platformServices}
     >

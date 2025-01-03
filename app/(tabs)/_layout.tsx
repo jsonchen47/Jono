@@ -4,6 +4,12 @@ import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { useNotifications } from '@/src/contexts/NotificationContext';
+import { useConnection } from '@sendbird/uikit-react-native';
+import { useEffect } from 'react';
+import { Amplify, Auth, API, graphqlOperation } from "aws-amplify"; 
+import { getUser } from '@/src/graphql/queries';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+
 
 export default function TabLayout() {
   const { hasNotifications } = useNotifications();
@@ -12,6 +18,38 @@ export default function TabLayout() {
     router.push('/newProject/newProject1'); // Replace '/newScreen' with the path to your desired screen
     console.log('tabs button pressed')
   };
+  const { connect } = useConnection();
+
+  // Connect user to sendbird 
+  useEffect(() => {
+    const connectUser = async () => {
+
+      // get Auth user
+      const authUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      });
+
+      // query the database using Auth user id (sub)
+      const result = await API.graphql(
+        graphqlOperation(getUser, { id: authUser.attributes.sub })
+      );
+
+      // Type assertion to treat result as GraphQLResult
+      const userData = result as GraphQLResult<any>;
+
+      const userID = userData?.data?.getUser?.id
+      const username = userData?.data?.getUser?.name
+
+      console.log(userID)
+      console.log(username)
+
+      connect(userID, { nickname: username})
+
+    }
+
+    connectUser();
+
+  }, []);
 
   return (
     // <SafeAreaView>
