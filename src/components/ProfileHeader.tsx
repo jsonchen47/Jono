@@ -164,8 +164,9 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
               } else {
                 handleRequestConnection();
               }
+              // Edit Profile Button
             } else {
-              console.log('edit profile button pressed');
+              router.push('/editProfile')
             }
           }}
         >

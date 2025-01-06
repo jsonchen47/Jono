@@ -126,7 +126,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbubble-outline" color={color} size={size} style={{marginTop: 5}}/>
           ),
-          // headerShown: false,
+          headerShown: false,
         }}
       />
       <Tabs.Screen 

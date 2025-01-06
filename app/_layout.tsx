@@ -316,6 +316,14 @@ function RootLayout() {
                           // presentation: 'fullScreenModal',
                         }}
                         />
+                        <Stack.Screen
+                        name="editProfile"
+                        options={{
+                          title: 'Edit Profile',
+                          // headerShown: false,
+                          presentation: 'fullScreenModal',
+                        }}
+                        />
                         {/* <Stack.Screen
                         name="map"
                         options={{

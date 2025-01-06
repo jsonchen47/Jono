@@ -16,9 +16,8 @@ const chat = () => {
   }, [sdk]);
 
   return (
-    <View>
+    // <View>
       <ChatNavigator/>
-    </View>
   )
 }
 

@@ -12,17 +12,26 @@ const ChatNavigator = () => {
       <Stack.Screen
         name="GroupChannelList"
         component={GroupChannelListScreen}
-        options={{ title: 'Channels' }}
+        options={{ 
+          title: 'Channels',
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="GroupChannelCreate"
         component={GroupChannelCreateScreen}
-        options={{ title: 'Create Channel' }}
+        options={{ 
+          title: 'Create Channel',
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="GroupChannel"
         component={GroupChannelScreen}
-        options={{ title: 'Chat' }}
+        options={{ 
+          title: 'Chat',
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );
