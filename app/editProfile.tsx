@@ -13,13 +13,14 @@ import { selectPhoto } from '@/src/functions/selectPhoto';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
 import { getUser } from '@/src/graphql/queries';
+import { updateUser } from '@/src/graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import ChipInput from '@/src/components/ChipInput';
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
 
-  const [profileImage, setProfileImage] = useState(null);
+  const [image, setImage] = useState(null);
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
@@ -38,7 +39,7 @@ const EditProfileScreen = () => {
         const castedResult = userResult as GraphQLResult<any>;
         const userData = castedResult.data?.getUser;
         if (userData) {
-          setProfileImage(userData.profileImage);
+          setImage(userData.image);
           setName(userData.name);
           setUsername(userData.username);
           setBio(userData.bio);
@@ -54,6 +55,33 @@ const EditProfileScreen = () => {
     fetchUserData();
   }, []);
 
+  // Save the updated user data
+  const handleSave = async () => {
+    try {
+      const authUser = await Auth.currentAuthenticatedUser();
+      const userID = authUser.attributes.sub;
+
+      const updatedUser = {
+        id: userID,
+        image,
+        name,
+        username,
+        bio,
+        resources,
+        skills,
+        links,
+      };
+
+      await API.graphql(
+        graphqlOperation(updateUser, { input: updatedUser })
+      );
+
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    }
+  };
+
   // Set navigation options for the header
   React.useEffect(() => {
     navigation.setOptions({
@@ -66,15 +94,15 @@ const EditProfileScreen = () => {
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity onPress={() => console.log('Save changes')}>
+        <TouchableOpacity onPress={handleSave}>
           <Text style={styles.headerButton}>Save</Text>
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, image, name, username, bio, resources, skills, links]);
 
   const handleImagePicker = async () => {
-    await selectPhoto((uri: any) => setProfileImage(uri));
+    await selectPhoto((uri: any) => setImage(uri));
   };
 
   return (
@@ -82,7 +110,7 @@ const EditProfileScreen = () => {
       <SafeAreaView edges={['bottom']}>
         <TouchableOpacity style={styles.imageContainer} onPress={handleImagePicker}>
           <Image
-            source={profileImage ? { uri: profileImage } : require('../assets/images/default-profile.png')}
+            source={image ? { uri: image } : require('../assets/images/default-profile.png')}
             style={styles.profileImage}
           />
           <Text style={styles.imageText}>Change Profile Image</Text>

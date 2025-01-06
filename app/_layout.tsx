@@ -29,6 +29,7 @@ import { ProjectUpdateProvider } from '@/src/contexts/ProjectUpdateContext';
 import { FilterProvider } from '@/src/contexts/FilterContext';
 import { NotificationProvider } from '@/src/contexts/NotificationContext';
 import { useConnection } from '@sendbird/uikit-react-native';
+import { UserProvider } from '@/src/contexts/UserContext';
 
 // SENDBIRD IMPORTS
 import {
@@ -210,6 +211,7 @@ function RootLayout() {
           <ApplicationProvider {...eva} theme={eva.light}>
             <PaperProvider>
             <NotificationProvider>
+              <UserProvider>
               <ProjectUpdateProvider>
               
                   <FilterProvider>
@@ -348,6 +350,7 @@ function RootLayout() {
                     </FilterProvider>
                   
                 </ProjectUpdateProvider>
+                </UserProvider>
                 </NotificationProvider>
             </PaperProvider>
           </ApplicationProvider>

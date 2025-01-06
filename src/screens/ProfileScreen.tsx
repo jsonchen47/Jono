@@ -1,62 +1,106 @@
-import { Link } from 'expo-router';
-import { View, Text, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { Chip } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
-import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { getUser, listProjects } from '../graphql/queries';
-import { listTeamsByUser } from '@/src/backend/queries';
-import ProjectsGridNew from '@/src/components/ProjectsGridNew';
-import ProfileHeader from '@/src/components/ProfileHeader';
 import Emoji from 'react-native-emoji';
-import ProjectsGridForProfile from '@/src/components/ProjectsGridForProfile';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import ProfileHeader from '@/src/components/ProfileHeader';
 import ProfileProjectsScreen from './ProfileProjectsScreen';
 import ProfileTeamsScreen from './ProfileTeamsScreen';
+// import { useUser } from '@/path-to/UserContext';
+import { useUser } from '../contexts/UserContext';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { getUser, listProjects } from '@/src/graphql/queries';
+import { listTeamsByUser } from '@/src/backend/queries';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 interface ProfileScreenProps {
   passedUserID?: any;
 }
 
-export default function ProfileScreen({ passedUserID: passedUserID }: ProfileScreenProps) {
-  const [projects, setProjects] = useState<any>([]);
-  const [teams, setTeams] = useState<any>([]);
-  const [user, setUser] = useState<any>(null);
+export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
+  const { user: contextUser, setUser } = useUser();
   const [userID, setUserID] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<any>(null);
+  const [user, setUserData] = useState<any>(contextUser);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [teams, setTeams] = useState<any[]>([]);
   const [projectsNextToken, setProjectsNextToken] = useState<any>(null);
-  const [teamsNextToken, setTeamsNextToken] = useState<any>(null);
+  const [teamsNextToken, setTeamsNextToken] = useState<string | null>(null);
   const [isFetchingMoreProjects, setIsFetchingMoreProjects] = useState(false);
   const [isFetchingMoreTeams, setIsFetchingMoreTeams] = useState(false);
 
-  const navigation = useNavigation();
 
-  const fetchUser = async (id: any) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        if (userID) {
+          await fetchUser(userID);
+          await fetchProjects(userID);
+          await fetchTeams(userID);
+        }
+      };
+      fetchData();
+    }, [userID])
+  );
+  
+  useEffect(() => {
+    if (contextUser && !passedUserID) {
+      setUserData(contextUser); // Sync with context if it's the authenticated user
+    }
+  }, [contextUser, passedUserID]);
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let currentUserID = passedUserID;
+
+      if (!currentUserID) {
+        const authUser = await Auth.currentAuthenticatedUser();
+        currentUserID = authUser.attributes.sub;
+        setUserID(currentUserID);
+      } else {
+        setUserID(passedUserID);
+      }
+
+      // Fetch user data
+      if (!contextUser || passedUserID) {
+        await fetchUser(currentUserID);
+      }
+
+      // Fetch projects and teams
+      await fetchProjects(currentUserID);
+      await fetchTeams(currentUserID);
+    };
+
+    fetchData();
+  }, [passedUserID, contextUser]);
+
+  const fetchUser = async (id: string) => {
     try {
-      const userResult = await API.graphql(
-        graphqlOperation(getUser, { id })
-      );
+      const userResult = await API.graphql(graphqlOperation(getUser, { id }));
       const castedUserResult = userResult as GraphQLResult<any>;
-      setUser(castedUserResult.data?.getUser);
+      const fetchedUser = castedUserResult.data?.getUser;
+
+      if (!passedUserID) {
+        setUser(fetchedUser); // Set user in context if this is the current user
+      }
+      setUserData(fetchedUser); // Update local user state
     } catch (err) {
-      setError(err);
-      console.error("Error fetching user:", err);
+      console.error('Error fetching user:', err);
     }
   };
 
-  const fetchProjects = async (id: any, nextToken = null, fetchMore = false) => {
+  const fetchProjects = async (id: string, nextToken: string | null = null, fetchMore = false) => {
     try {
       const projectsData = await API.graphql(
         graphqlOperation(listProjects, {
           filter: { ownerIDs: { contains: id } },
           nextToken: nextToken,
-          limit: 10
+          limit: 10,
         })
       );
+
       const castedProjectsData = projectsData as GraphQLResult<any>;
       const fetchedProjects = castedProjectsData.data.listProjects.items;
       const newProjectsNextToken = castedProjectsData.data.listProjects.nextToken;
@@ -64,61 +108,42 @@ export default function ProfileScreen({ passedUserID: passedUserID }: ProfileScr
       setProjects(fetchMore ? [...projects, ...fetchedProjects] : fetchedProjects);
       setProjectsNextToken(newProjectsNextToken);
     } catch (err) {
-      setError(err);
-      console.error("Error fetching projects:", err);
+      console.error('Error fetching projects:', err);
     } finally {
       setIsFetchingMoreProjects(false);
     }
   };
 
-  const fetchTeams = async (id: any, nextToken = null, fetchMore = false) => {
+  const fetchTeams = async (id: string, nextToken: string | null = null, fetchMore = false) => {
     try {
       const teamsData = await API.graphql(
-        graphqlOperation(listTeamsByUser, { id, nextToken, limit: 4 })
+        graphqlOperation(listTeamsByUser, {
+          id,
+          nextToken,
+          limit: 10,
+        })
       );
+
       const castedTeamsData = teamsData as GraphQLResult<any>;
-      const rawTeams = castedTeamsData?.data?.getUser?.Projects?.items;
-      const filteredTeams = rawTeams.filter((item: any) => {
-        return !item.project.ownerIDs.includes(id);
-      });
+      const rawTeams = castedTeamsData?.data?.getUser?.Projects?.items || [];
+      const filteredTeams = rawTeams.filter((item: any) => !item.project.ownerIDs.includes(id));
       const transformedTeams = filteredTeams.map((item: any) => item.project);
 
       setTeams(fetchMore ? [...teams, ...transformedTeams] : transformedTeams);
-      setTeamsNextToken(castedTeamsData.data.getUser?.Projects?.nextToken);
+      setTeamsNextToken(castedTeamsData?.data?.getUser?.Projects?.nextToken);
     } catch (err) {
-      setError(err);
-      console.error("Error fetching teams:", err);
+      console.error('Error fetching teams:', err);
     } finally {
       setIsFetchingMoreTeams(false);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      let id = passedUserID;
-      if (!id) {
-        const authUser = await Auth.currentAuthenticatedUser();
-        id = authUser.attributes.sub;
-      }
-      console.log(id)
-      setUserID(id);
-      await fetchUser(id);
-      await fetchProjects(id);
-      await fetchTeams(id);
-      setLoading(false);
-    };
-    fetchData();
-  }, [passedUserID]);
-
   function AboutTab() {
     return (
       <View style={styles.aboutContainer}>
-        <View>
-          <Text style={styles.bioText} numberOfLines={4}>
-            {user?.bio}
-          </Text>
-        </View>
+        <Text style={styles.bioText} numberOfLines={4}>
+          {user?.bio}
+        </Text>
         <View style={styles.skillsAndResourcesTopPadding}></View>
         <View style={styles.skillsAndResourcesTitleContainer}>
           <Emoji name="rocket" style={styles.emoji} />
@@ -126,7 +151,9 @@ export default function ProfileScreen({ passedUserID: passedUserID }: ProfileScr
         </View>
         <View style={styles.skillsAndResourcesChipsContainer}>
           {user?.skills?.map((skill: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{skill}</Chip>
+            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
+              {skill}
+            </Chip>
           ))}
         </View>
         <View style={styles.skillsAndResourcesTitleContainer}>
@@ -135,7 +162,9 @@ export default function ProfileScreen({ passedUserID: passedUserID }: ProfileScr
         </View>
         <View style={styles.skillsAndResourcesChipsContainer}>
           {user?.resources?.map((resource: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{resource}</Chip>
+            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
+              {resource}
+            </Chip>
           ))}
         </View>
         <View style={styles.skillsAndResourcesTitleContainer}>
@@ -144,7 +173,9 @@ export default function ProfileScreen({ passedUserID: passedUserID }: ProfileScr
         </View>
         <View style={styles.skillsAndResourcesChipsContainer}>
           {user?.links?.map((link: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{link}</Chip>
+            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
+              {link}
+            </Chip>
           ))}
         </View>
       </View>
@@ -153,8 +184,8 @@ export default function ProfileScreen({ passedUserID: passedUserID }: ProfileScr
 
   return (
     <Tabs.Container
-      renderHeader={() => <ProfileHeader user={user} otherProfile={!!passedUserID}/>}
-      renderTabBar={props => (
+      renderHeader={() => <ProfileHeader user={user} otherProfile={!!passedUserID} />}
+      renderTabBar={(props) => (
         <MaterialTabBar
           {...props}
           indicatorStyle={{ backgroundColor: 'black', height: 2 }}
@@ -167,31 +198,30 @@ export default function ProfileScreen({ passedUserID: passedUserID }: ProfileScr
         </Tabs.ScrollView>
       </Tabs.Tab>
       <Tabs.Tab name="Projects">
-        <ProfileProjectsScreen userID={userID}/>
+        <ProfileProjectsScreen
+          userID={userID}
+          
+        />
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
-        <ProfileTeamsScreen userID={userID}/>
+        <ProfileTeamsScreen
+          userID={userID}
+          
+        />
       </Tabs.Tab>
     </Tabs.Container>
   );
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: "flex",
-    fontSize: 20,
-    paddingRight: 10,
-  },
   aboutContainer: {
     paddingHorizontal: 20,
     paddingTop: 20,
   },
   bioText: {
-    fontSize: 21, 
+    fontSize: 21,
     fontWeight: 'bold',
-    color: '#003B7B'
+    color: '#003B7B',
   },
   skillsAndResourcesTopPadding: {
     paddingTop: 5,
@@ -218,15 +248,10 @@ const styles = StyleSheet.create({
   chip: {
     alignSelf: 'flex-start',
     margin: 5,
-    backgroundColor: 'black'
+    backgroundColor: 'black',
   },
   chipText: {
     color: 'white',
-    fontSize: 13
+    fontSize: 13,
   },
-  tabScreen: {
-    // marginTop: windowWidth * 0.67,
-    flex: 1, 
-    width: '100%'
-  }, 
 });

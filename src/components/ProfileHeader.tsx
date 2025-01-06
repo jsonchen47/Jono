@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,21 +10,19 @@ import Emoji from 'react-native-emoji';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { createConnection, deleteConnection } from '../graphql/mutations';
 import { listConnections } from '@/src/graphql/queries';
-import { useState, useEffect } from 'react';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { router } from 'expo-router';
-// import { useNotifications } from '@/src/contexts/NotificationContext';
+import { useUser } from '../contexts/UserContext';
 
 const ProfileHeader = ({ user, otherProfile = false }: any) => {
   const [isRequested, setIsRequested] = useState(false);
   const [connectionID, setConnectionID] = useState<string | null>(null);
-  // const { hasNotifications } = useNotifications();
+  const { user: loggedInUser, setUser } = useUser(); // Access UserContext
 
   useEffect(() => {
     const checkConnectionStatus = async () => {
       try {
-        const authUser = await Auth?.currentAuthenticatedUser();
-        const authUserID = authUser?.attributes?.sub;
+        const authUserID = loggedInUser?.id;
 
         if (!authUserID || !user?.id) {
           console.warn('Skipping connection status check: Missing user data.');
@@ -61,12 +60,16 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
     if (otherProfile && user) {
       checkConnectionStatus();
     }
-  }, [user, otherProfile]);
+  }, [user, otherProfile, loggedInUser]);
 
   const handleRequestConnection = async () => {
     try {
-      const authUser = await Auth?.currentAuthenticatedUser();
-      const authUserID = authUser?.attributes?.sub;
+      const authUserID = loggedInUser?.id;
+
+      if (!authUserID || !user?.id) {
+        console.warn('Missing user data for connection request.');
+        return;
+      }
 
       const input = {
         userID: authUserID,
@@ -135,12 +138,11 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
                 <Text style={styles.statsText}>{user?.numTeams}</Text>
               </View>
               <View style={styles.statsSpacer} />
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.statsContainer}
-                onPress={() => 
+                onPress={() =>
                   router.push('/(tabs)/(profile)/connections')
                 }
-
               >
                 <Emoji name="link" style={styles.emoji} />
                 <Text style={styles.statsText}>{user?.numConnections}</Text>
@@ -151,11 +153,12 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
 
         {/* Button */}
         <TouchableOpacity
-          style={otherProfile
-            ? isRequested
-              ? styles.removeRequestButton
+          style={
+            otherProfile
+              ? isRequested
+                ? styles.removeRequestButton
+                : styles.editProfileButton
               : styles.editProfileButton
-            : styles.editProfileButton
           }
           onPress={() => {
             if (otherProfile) {
@@ -164,18 +167,18 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
               } else {
                 handleRequestConnection();
               }
-              // Edit Profile Button
             } else {
-              router.push('/editProfile')
+              router.push('/editProfile');
             }
           }}
         >
-          <Text 
-            style={otherProfile
-              ? isRequested
-                ? styles.editProfileText
+          <Text
+            style={
+              otherProfile
+                ? isRequested
+                  ? styles.editProfileText
+                  : styles.editProfileText
                 : styles.editProfileText
-              : styles.editProfileText
             }
           >
             {otherProfile
@@ -275,8 +278,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
   },
-  removeRequestButtonText: {
-
-  }, 
-  
 });
