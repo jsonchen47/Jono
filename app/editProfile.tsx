@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,11 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { selectPhoto } from '@/src/functions/selectPhoto';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { getUser } from '@/src/graphql/queries';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import ChipInput from '@/src/components/ChipInput';
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -18,9 +23,36 @@ const EditProfileScreen = () => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
-  const [resources, setResources] = useState('');
-  const [skills, setSkills] = useState('');
-  const [links, setLinks] = useState('');
+  const [resources, setResources] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [links, setLinks] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const authUser = await Auth.currentAuthenticatedUser();
+        const userID = authUser.attributes.sub;
+        const userResult = await API.graphql(
+          graphqlOperation(getUser, { id: userID })
+        );
+        const castedResult = userResult as GraphQLResult<any>;
+        const userData = castedResult.data?.getUser;
+        if (userData) {
+          setProfileImage(userData.profileImage);
+          setName(userData.name);
+          setUsername(userData.username);
+          setBio(userData.bio);
+          setResources(userData.resources || []);
+          setSkills(userData.skills || []);
+          setLinks(userData.links || []);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // Set navigation options for the header
   React.useEffect(() => {
@@ -47,64 +79,63 @@ const EditProfileScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity style={styles.imageContainer} onPress={handleImagePicker}>
-        <Image
-          source={profileImage ? { uri: profileImage } : require('../assets/images/default-profile.png')}
-          style={styles.profileImage}
-        />
-        <Text style={styles.imageText}>Change Profile Image</Text>
-      </TouchableOpacity>
+      <SafeAreaView edges={['bottom']}>
+        <TouchableOpacity style={styles.imageContainer} onPress={handleImagePicker}>
+          <Image
+            source={profileImage ? { uri: profileImage } : require('../assets/images/default-profile.png')}
+            style={styles.profileImage}
+          />
+          <Text style={styles.imageText}>Change Profile Image</Text>
+        </TouchableOpacity>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="Enter your name"
-        />
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter your name"
+          />
 
-        <Text style={styles.label}>Username</Text>
-        <TextInput
-          style={styles.input}
-          value={username}
-          onChangeText={setUsername}
-          placeholder="Enter your username"
-        />
+          <Text style={styles.label}>Username</Text>
+          <TextInput
+            style={styles.input}
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Enter your username"
+          />
 
-        <Text style={styles.label}>Bio</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          value={bio}
-          onChangeText={setBio}
-          placeholder="Tell us about yourself"
-          multiline
-        />
+          <Text style={styles.label}>Bio</Text>
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            value={bio}
+            onChangeText={setBio}
+            placeholder="Tell us about yourself"
+            multiline
+          />
 
-        <Text style={styles.label}>Resources</Text>
-        <TextInput
-          style={styles.input}
-          value={resources}
-          onChangeText={setResources}
-          placeholder="Add your resources"
-        />
+          <Text style={styles.label}>Resources</Text>
+          <ChipInput
+            placeholder="Add a resource"
+            chips={resources}
+            onChangeChips={setResources}
+          />
 
-        <Text style={styles.label}>Skills</Text>
-        <TextInput
-          style={styles.input}
-          value={skills}
-          onChangeText={setSkills}
-          placeholder="List your skills"
-        />
+          <Text style={styles.label}>Skills</Text>
+          <ChipInput
+            placeholder="Add a skill"
+            chips={skills}
+            onChangeChips={setSkills}
+          />
 
-        <Text style={styles.label}>Links</Text>
-        <TextInput
-          style={styles.input}
-          value={links}
-          onChangeText={setLinks}
-          placeholder="Add your links"
-        />
-      </View>
+          <Text style={styles.label}>Links</Text>
+          <ChipInput
+            placeholder="Add a link"
+            chips={links}
+            onChangeChips={setLinks}
+          />
+        </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
@@ -145,6 +176,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     backgroundColor: '#f9f9f9',
+    flex: 1,
   },
   textArea: {
     height: 100,
