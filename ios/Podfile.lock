@@ -1,4 +1,6 @@
 PODS:
+  - AmplifyRTNCore (1.1.6):
+    - React-Core
   - boost (1.84.0)
   - BVLinearGradient (2.8.3):
     - React-Core
@@ -14,22 +16,22 @@ PODS:
     - ExpoModulesCore
     - React-Core
   - EXJSONUtils (0.14.0)
-  - EXManifests (0.15.3):
+  - EXManifests (0.15.4):
     - ExpoModulesCore
   - EXNotifications (0.29.11):
     - ExpoModulesCore
-  - Expo (52.0.11):
+  - Expo (52.0.23):
     - ExpoModulesCore
-  - expo-dev-client (5.0.2):
+  - expo-dev-client (5.0.8):
     - EXManifests
     - expo-dev-launcher
     - expo-dev-menu
     - expo-dev-menu-interface
     - EXUpdatesInterface
-  - expo-dev-launcher (5.0.14):
+  - expo-dev-launcher (5.0.21):
     - DoubleConversion
     - EXManifests
-    - expo-dev-launcher/Main (= 5.0.14)
+    - expo-dev-launcher/Main (= 5.0.21)
     - expo-dev-menu
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -55,7 +57,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-launcher/Main (5.0.14):
+  - expo-dev-launcher/Main (5.0.21):
     - DoubleConversion
     - EXManifests
     - expo-dev-launcher/Unsafe
@@ -84,7 +86,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-launcher/Unsafe (5.0.14):
+  - expo-dev-launcher/Unsafe (5.0.21):
     - DoubleConversion
     - EXManifests
     - expo-dev-menu
@@ -112,10 +114,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu (6.0.10):
+  - expo-dev-menu (6.0.15):
     - DoubleConversion
-    - expo-dev-menu/Main (= 6.0.10)
-    - expo-dev-menu/ReactNativeCompatibles (= 6.0.10)
+    - expo-dev-menu/Main (= 6.0.15)
+    - expo-dev-menu/ReactNativeCompatibles (= 6.0.15)
     - glog
     - hermes-engine
     - RCT-Folly (= 2024.01.01.00)
@@ -135,8 +137,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu-interface (1.9.1)
-  - expo-dev-menu/Main (6.0.10):
+  - expo-dev-menu-interface (1.9.2)
+  - expo-dev-menu/Main (6.0.15):
     - DoubleConversion
     - EXManifests
     - expo-dev-menu-interface
@@ -162,7 +164,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/ReactNativeCompatibles (6.0.10):
+  - expo-dev-menu/ReactNativeCompatibles (6.0.15):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -183,7 +185,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/SafeAreaView (6.0.10):
+  - expo-dev-menu/SafeAreaView (6.0.15):
     - DoubleConversion
     - ExpoModulesCore
     - glog
@@ -205,7 +207,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/Vendored (6.0.10):
+  - expo-dev-menu/Vendored (6.0.15):
     - DoubleConversion
     - expo-dev-menu/SafeAreaView
     - glog
@@ -235,9 +237,9 @@ PODS:
     - ExpoModulesCore
   - ExpoFileSystem (18.0.6):
     - ExpoModulesCore
-  - ExpoFont (13.0.1):
+  - ExpoFont (13.0.2):
     - ExpoModulesCore
-  - ExpoHead (4.0.6):
+  - ExpoHead (4.0.15):
     - ExpoModulesCore
   - ExpoImageManipulator (13.0.5):
     - EXImageLoader
@@ -252,7 +254,7 @@ PODS:
   - ExpoMediaLibrary (17.0.4):
     - ExpoModulesCore
     - React-Core
-  - ExpoModulesCore (2.0.6):
+  - ExpoModulesCore (2.1.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -275,9 +277,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - ExpoSplashScreen (0.29.11):
+  - ExpoSplashScreen (0.29.18):
     - ExpoModulesCore
-  - ExpoSystemUI (4.0.3):
+  - ExpoSystemUI (4.0.6):
     - ExpoModulesCore
   - ExpoVideoThumbnails (9.0.2):
     - ExpoModulesCore
@@ -288,30 +290,6 @@ PODS:
   - FBLazyVector (0.76.2)
   - fmt (9.1.0)
   - glog (0.3.5)
-  - Google-Maps-iOS-Utils (4.2.2):
-    - Google-Maps-iOS-Utils/Clustering (= 4.2.2)
-    - Google-Maps-iOS-Utils/Geometry (= 4.2.2)
-    - Google-Maps-iOS-Utils/GeometryUtils (= 4.2.2)
-    - Google-Maps-iOS-Utils/Heatmap (= 4.2.2)
-    - Google-Maps-iOS-Utils/QuadTree (= 4.2.2)
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Clustering (4.2.2):
-    - Google-Maps-iOS-Utils/QuadTree
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Geometry (4.2.2):
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/GeometryUtils (4.2.2):
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Heatmap (4.2.2):
-    - Google-Maps-iOS-Utils/QuadTree
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/QuadTree (4.2.2):
-    - GoogleMaps (~> 7.3)
-  - GoogleMaps (7.4.0):
-    - GoogleMaps/Maps (= 7.4.0)
-  - GoogleMaps/Base (7.4.0)
-  - GoogleMaps/Maps (7.4.0):
-    - GoogleMaps/Base
   - hermes-engine (0.76.2):
     - hermes-engine/Pre-built (= 0.76.2)
   - hermes-engine/Pre-built (0.76.2)
@@ -1588,11 +1566,7 @@ PODS:
     - Yoga
   - react-native-get-random-values (1.11.0):
     - React-Core
-  - react-native-google-maps (1.18.0):
-    - Google-Maps-iOS-Utils (= 4.2.2)
-    - GoogleMaps (= 7.4.0)
-    - React-Core
-  - react-native-image-picker (7.1.2):
+  - react-native-image-picker (7.2.3):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1660,7 +1634,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context (5.0.0):
+  - react-native-safe-area-context (4.14.1):
     - React-Core
   - react-native-slider (4.5.5):
     - DoubleConversion
@@ -1977,7 +1951,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated (3.16.1):
+  - RNReanimated (3.16.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1997,10 +1971,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.16.1)
-    - RNReanimated/worklets (= 3.16.1)
+    - RNReanimated/reanimated (= 3.16.6)
+    - RNReanimated/worklets (= 3.16.6)
     - Yoga
-  - RNReanimated/reanimated (3.16.1):
+  - RNReanimated/reanimated (3.16.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2020,9 +1994,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated/apple (= 3.16.1)
+    - RNReanimated/reanimated/apple (= 3.16.6)
     - Yoga
-  - RNReanimated/reanimated/apple (3.16.1):
+  - RNReanimated/reanimated/apple (3.16.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2043,7 +2017,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.16.1):
+  - RNReanimated/worklets (3.16.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2114,11 +2088,12 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
   - SocketRocket (0.7.1)
-  - stream-chat-react-native (6.0.1):
+  - stream-chat-react-native (6.1.0):
     - React-Core
   - Yoga (0.0.0)
 
 DEPENDENCIES:
+  - "AmplifyRTNCore (from `../node_modules/@aws-amplify/react-native`)"
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -2188,7 +2163,6 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
-  - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
@@ -2236,8 +2210,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Google-Maps-iOS-Utils
-    - GoogleMaps
     - libwebp
     - MMKV
     - MMKVCore
@@ -2246,6 +2218,8 @@ SPEC REPOS:
     - SocketRocket
 
 EXTERNAL SOURCES:
+  AmplifyRTNCore:
+    :path: "../node_modules/@aws-amplify/react-native"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BVLinearGradient:
@@ -2381,8 +2355,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
-  react-native-google-maps:
-    :path: "../node_modules/react-native-maps"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-maps:
@@ -2473,6 +2445,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AmplifyRTNCore: fed43e0ab4504c7ae49291204c3c704da4963255
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
@@ -2481,35 +2454,33 @@ SPEC CHECKSUMS:
   EXConstants: dd2fe64c6cdb1383b694c309a63028a8e9f2be6d
   EXImageLoader: 759063a65ab016b836f73972d3bb25404888713d
   EXJSONUtils: 01fc7492b66c234e395dcffdd5f53439c5c29c93
-  EXManifests: a883468e03b0234d4787e2c0ae4a65726f13cb05
+  EXManifests: f30a0c5d3d6cad8db9c01bab579e0aa0df5d3cb2
   EXNotifications: e27ed9ad086026ef0cdd5ddbf9be60abd18232c8
-  Expo: 148aac4ce0da148c63447d09ae41ddb153f35506
-  expo-dev-client: 7eb2bb228895757364d5650b3744db4694ee0bf7
-  expo-dev-launcher: 3b0d62ad3fa17ddaaa84ae42c1ed59896dc12fc5
-  expo-dev-menu: 3c09f402ac39257bf6cd4ed4f48478020b56838e
-  expo-dev-menu-interface: 1495ca112a4961f9fbaf586ae952faaafdbd967b
+  Expo: 37cea4167605a3a1b88fa0caf8349ae76c0d389c
+  expo-dev-client: ec22c0535228bbf784a4fa7c40f90d3944d7724e
+  expo-dev-launcher: 86ceac1075791a6d02583e527ab6c9fd05d40717
+  expo-dev-menu: 8084cbc405bdc880fff334fee8bb1c40d5ccd880
+  expo-dev-menu-interface: 4baf2f8b3b79ce37cf4b900e4b3ba6df3384f0a1
   ExpoAsset: 8138f2a9ec55ae1ad7c3871448379f7d97692d15
   ExpoClipboard: 166ca8c13ca1041f5ba619a211f59427ab5da8a7
   ExpoDocumentPicker: 4a89fd8a0cb90010214a416c858d7dece1c1eb10
   ExpoFileSystem: 179a0661fd6d3c4e5d7e500a99a9cd8b295d9566
-  ExpoFont: 7522d869d84ee2ee8093ee997fef5b86f85d856b
-  ExpoHead: e18c3b28f8e22de7e1f26c085c346a91ea7f459b
+  ExpoFont: 260fb85279912421894060d9aea453cee4ffc01c
+  ExpoHead: 83465614d1af3df77a0db724a24a43648e3daefa
   ExpoImageManipulator: 774eb1a17c5db07944d6f9000650d422ebb3ce47
   ExpoImagePicker: 440a560c9bfc63edae854d08b9f12f75bd11c112
   ExpoKeepAwake: 783e68647b969b210a786047c3daa7b753dcac1f
   ExpoLinking: a8332a219379ba80f8e612d5a5de4a3da446886e
   ExpoMediaLibrary: 634d8bc2ddb2f6e0f6fd2045ce5ebbc253007114
-  ExpoModulesCore: f71914f0725f2f4ca7a8d25dc551263e730d5d7f
-  ExpoSplashScreen: 26cee50e9e95572baf87cd3a8ccaf2ffc3856422
-  ExpoSystemUI: d8fb1abd91c7283d8ead3df77ed0575b85f1bb42
+  ExpoModulesCore: 7ca0054f09a5205c1dac65fa98c2430472db50e6
+  ExpoSplashScreen: aa5c5eba706a5686b91861b53ced2996f1dd080d
+  ExpoSystemUI: 2d729aea8219f03af1b1996c1d14488a01fea94a
   ExpoVideoThumbnails: 8b6bbe3cb76dd2225910667b896b27855bbda694
   ExpoWebBrowser: f08aaf1c8a02af8a768d83793186cb6d2c69f529
   EXUpdatesInterface: 1dcebac98ac5dad4289e6ff2bd5616822e894397
   FBLazyVector: bc70dcb22ad30ce734a7cce7210791dc737e230f
   fmt: 10c6e61f4be25dc963c36bd73fc7b1705fe975be
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
-  Google-Maps-iOS-Utils: f77eab4c4326d7e6a277f8e23a0232402731913a
-  GoogleMaps: 032f676450ba0779bd8ce16840690915f84e57ac
   hermes-engine: 3852e37f6158a2fcfad23e31215ed495da3a6a40
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   MMKV: 3eacda84cd1c4fc95cf848d3ecb69d85ed56006c
@@ -2545,13 +2516,12 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: bc55596cbf40957f5099bc495f1a06f459d0be88
   react-native-geolocation: 0c7a8496962d3268ac5b28f22a8e5d7a04c43f1a
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
-  react-native-google-maps: ee48410bb3f1390abfa20592a44db5d6ada83e4d
-  react-native-image-picker: 2fbbafdae7a7c6db9d25df2f2b1db4442d2ca2ad
+  react-native-image-picker: df4f6aefbc662b0a5f991065650662c9731977a3
   react-native-maps: 2e6e9896195781327ee15b33e3e84bf73c08207a
   react-native-mmkv: 7d0b6c2a79e73100b933f2947a9c8741d664e18b
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-pager-view: c476f76d54f946df5147645e902d3d7173688187
-  react-native-safe-area-context: ab7beb734b0f9f79f55ae144a6c946a6422f55d6
+  react-native-safe-area-context: 141eca0fd4e4191288dfc8b96a7c7e1c2983447a
   react-native-slider: 4a0f3386a38fc3d2d955efc515aef7096f7d1ee4
   React-nativeconfig: 470fce6d871c02dc5eff250a362d56391b7f52d6
   React-NativeModulesApple: 6297fc3136c1fd42884795c51d7207de6312b606
@@ -2584,16 +2554,16 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNCPicker: f963e01f78e546a93b98aa201501713dbda14e94
   RNGestureHandler: 511250b190a284388f9dd0d2e56c1df76f14cfb8
-  RNReanimated: 3e6072b3d49d4fc687b8f1ba3022f0fdc0b43969
+  RNReanimated: ac21443586c889b6eae9e50d9011ced1a64eb548
   RNScreens: e52d2e7e5fa29266d6f8f68e8229452e5b2f4236
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d
   RNVectorIcons: 6382277afab3c54658e9d555ee0faa7a37827136
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  stream-chat-react-native: b3d91e26c917a8a96d342b8ab19aff4fd1e5dcce
+  stream-chat-react-native: 53268aa0cf032da06f4ba2a13235c2ea55ef1c58
   Yoga: 96872ee462cfc43866ad013c8160d4ff6b85709b
 
-PODFILE CHECKSUM: 37efaf61d491619aae655300663e64285db16640
+PODFILE CHECKSUM: 7feac20ef52ef2f840488e04324e107868a594c3
 
 COCOAPODS: 1.16.2

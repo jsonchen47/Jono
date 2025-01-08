@@ -1,30 +1,35 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { API, graphqlOperation } from "aws-amplify";
-import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { generateClient } from 'aws-amplify/api';
 import { getProject } from '@/src/graphql/queries';
 import ManageProjectScreen from '@/src/screens/ManageProjectScreen';
-import { List, Button } from 'react-native-paper';
 
-const manageProject1 = () => {
+const client = generateClient();
 
+const ManageProject1 = () => {
     const router = useRouter(); 
     const { projectId } = useLocalSearchParams();
     const [project, setProject] = useState<any>(null);
 
     // FETCH THE PROJECT 
-    const fetchProject = async (projectID: any) => {
-        const result = await API.graphql(
-            graphqlOperation(getProject, { id: projectID })
-        );
-        const castedResult = result as GraphQLResult<any>
-        setProject(castedResult.data?.getProject);
-        console.log(castedResult.data?.getProject)
+    const fetchProject = async (projectID: string) => {
+        try {
+            const result = await client.graphql({
+                query: getProject,
+                variables: { id: projectID }
+            });
+            setProject(result.data?.getProject);
+            console.log(result.data?.getProject);
+        } catch (error) {
+            console.error("Error fetching project:", error);
+        }
     };
 
     useEffect(() => {
-        fetchProject(projectId);
+        if (projectId) {
+            fetchProject(projectId as string);
+        }
     }, [projectId]);
 
     return (
@@ -32,6 +37,6 @@ const manageProject1 = () => {
             <ManageProjectScreen project={project}/>
         </View>
     )
-    }
+}
 
-export default manageProject1
+export default ManageProject1;

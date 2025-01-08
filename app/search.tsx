@@ -1,28 +1,27 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, TextInput, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
+import { View, TextInput, StyleSheet, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useRouter } from 'expo-router';
 import Icon3 from 'react-native-vector-icons/AntDesign';
-import { API, graphqlOperation } from 'aws-amplify';
-import { searchProjects, searchUsers } from '@/src/graphql/queries';  // Your GraphQL queries
+import { generateClient } from 'aws-amplify/api';
+import { searchProjects, searchUsers } from '@/src/graphql/queries';
 import ProjectsGridNew from '@/src/components/ProjectsGridNew';
-import UsersList from '@/src/components/UsersList';  // Assuming UsersList is similar to ProjectsGridNew
-import { GraphQLResult } from '@aws-amplify/api-graphql';
+import UsersList from '@/src/components/UsersList';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
-
 const windowWidth = Dimensions.get('window').width;
 const Tab = createMaterialTopTabNavigator();
+const client = generateClient();
 
 const Search = () => {
   const [text, setText] = useState('');
-  const [projectsResults, setProjectsResults] = useState([]);
-  const [usersResults, setUsersResults] = useState([]);
+  const [projectsResults, setProjectsResults] = useState<any>([]);
+  const [usersResults, setUsersResults] = useState<any>([]);
   const [isFetchingMoreProjects, setIsFetchingMoreProjects] = useState(false);
   const [isFetchingMoreUsers, setIsFetchingMoreUsers] = useState(false);
-  const [nextTokenProjects, setNextTokenProjects] = useState(null);
-  const [nextTokenUsers, setNextTokenUsers] = useState(null);
+  const [nextTokenProjects, setNextTokenProjects] = useState<any>(null);
+  const [nextTokenUsers, setNextTokenUsers] = useState<any>(null);
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -31,16 +30,15 @@ const Search = () => {
 
   const handleDoubleBack = () => {
     if (navigation.canGoBack()) {
-      router.back(); // First back
+      router.back();
       setTimeout(() => {
         if (navigation.canGoBack()) {
-          router.back(); // Second back, only if stack can go back
+          router.back();
         }
-      }, 0); // Optional delay to ensure the stack updates
+      }, 0);
     }
   };
 
-  // Fetch Projects data
   const fetchProjects = async (searchTerm: string, isLoadMore = false) => {
     try {
       setIsFetchingMoreProjects(true);
@@ -60,15 +58,16 @@ const Search = () => {
         ],
       }));
 
-      const result = await API.graphql(graphqlOperation(searchProjects, {
-        filter: { or: searchFilters },
-        nextToken: isLoadMore ? nextTokenProjects : null,
-      }));
+      const result = await client.graphql({
+        query: searchProjects,
+        variables: {
+          filter: { or: searchFilters },
+          nextToken: isLoadMore ? nextTokenProjects : null,
+        },
+      });
 
-      const castedResult = result as GraphQLResult<any>
-
-      const items = castedResult?.data?.searchProjects?.items || [];
-      const newNextToken = castedResult?.data?.searchProjects?.nextToken || null;
+      const items = result.data?.searchProjects?.items || [];
+      const newNextToken = result.data?.searchProjects?.nextToken || null;
 
       setProjectsResults(isLoadMore ? [...projectsResults, ...items] : items);
       setNextTokenProjects(newNextToken);
@@ -80,7 +79,6 @@ const Search = () => {
     }
   };
 
-  // Fetch Users data
   const fetchUsers = async (searchTerm: string, isLoadMore = false) => {
     try {
       setIsFetchingMoreUsers(true);
@@ -102,15 +100,16 @@ const Search = () => {
         ],
       }));
 
-      const result = await API.graphql(graphqlOperation(searchUsers, {
-        filter: { or: searchFilters },
-        nextToken: isLoadMore ? nextTokenUsers : null,
-      }));
+      const result = await client.graphql({
+        query: searchUsers,
+        variables: {
+          filter: { or: searchFilters },
+          nextToken: isLoadMore ? nextTokenUsers : null,
+        },
+      });
 
-      const castedResult = result as GraphQLResult<any>
-
-      const items = castedResult?.data?.searchUsers?.items || [];
-      const newNextToken = castedResult?.data?.searchUsers?.nextToken || null;
+      const items = result.data?.searchUsers?.items || [];
+      const newNextToken = result.data?.searchUsers?.nextToken || null;
 
       setUsersResults(isLoadMore ? [...usersResults, ...items] : items);
       setNextTokenUsers(newNextToken);
@@ -164,19 +163,10 @@ const Search = () => {
   }, [text, nextTokenUsers, isFetchingMoreUsers]);
 
   return (
-    <SafeAreaView 
-      style={styles.container}
-      edges={['top']}
-    >
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.searchBarContainer}>
         <View style={styles.textInputContainer}>
-          <Icon3 name="arrowleft" 
-            style={styles.backArrow} 
-            onPress={() => 
-              {
-                handleDoubleBack()
-              }
-            } />
+          <Icon3 name="arrowleft" style={styles.backArrow} onPress={handleDoubleBack} />
           <TextInput
             style={styles.searchInput}
             placeholder="Find projects and dreamers"
@@ -194,18 +184,11 @@ const Search = () => {
       <Tab.Navigator
         initialRouteName="Projects"
         screenOptions={{
-          tabBarStyle: {
-            backgroundColor: 'transparent', // Makes the background transparent
-          },
-          tabBarActiveTintColor: 'black', // Sets the active tab text color to black
-          tabBarInactiveTintColor: 'gray', // Sets the inactive tab text color to gray
-          tabBarIndicatorStyle: {
-            backgroundColor: 'black', // Sets the indicator color to black
-          },
-          tabBarLabelStyle: {
-            fontWeight: 'bold', // Optional: Makes tab text bold
-            fontSize: 15,
-          },
+          tabBarStyle: { backgroundColor: 'transparent' },
+          tabBarActiveTintColor: 'black',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIndicatorStyle: { backgroundColor: 'black' },
+          tabBarLabelStyle: { fontWeight: 'bold', fontSize: 15 },
         }}
       >
         <Tab.Screen
@@ -217,9 +200,6 @@ const Search = () => {
                 loadMoreProjects={loadMoreProjects}
                 isFetchingMore={isFetchingMoreProjects}
               />
-              {/* {isFetchingMoreProjects && (
-                <ActivityIndicator size="large" color="gray" style={styles.loader} />
-              )} */}
             </View>
           )}
         />
@@ -232,22 +212,16 @@ const Search = () => {
                 loadMoreUsers={loadMoreUsers}
                 isFetchingMore={isFetchingMoreUsers}
               />
-              {/* {isFetchingMoreUsers && (
-                <ActivityIndicator size="large" color="gray" style={styles.loader} />
-              )} */}
             </View>
           )}
         />
       </Tab.Navigator>
-
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   searchBarContainer: {
     marginHorizontal: windowWidth * 0.05,
     paddingTop: 10,
@@ -282,13 +256,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  tabContent: {
-    flex: 1,
-    // paddingHorizontal: windowWidth * 0.05,
-  },
-  loader: {
-    marginTop: windowWidth * 0.1,
-  },
+  tabContent: { flex: 1 },
+  loader: { marginTop: windowWidth * 0.1 },
 });
 
 export default Search;

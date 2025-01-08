@@ -1,128 +1,130 @@
-import { API, graphqlOperation } from 'aws-amplify';
-import { createProject } from '../graphql/mutations';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { v4 as uuidv4 } from 'uuid';
-import { Storage } from 'aws-amplify';
-import config from "../../src/aws-exports"
-import { Auth } from 'aws-amplify'; // Import Auth module
-import { createUserProject } from '../graphql/mutations';
+// import { Amplify } from 'aws-amplify';
+// import { generateClient } from 'aws-amplify/api';
+// import { createProject, createUserProject } from '../graphql/mutations';
+// import { v4 as uuidv4 } from 'uuid';
+// import { uploadData } from 'aws-amplify/storage';
+// import config from "../../src/aws-exports";
+// import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 
 
-Storage.configure({
-  region: config.aws_user_files_s3_bucket_region,
-  bucket: config.aws_user_files_s3_bucket,
-  identityPoolId: config.aws_user_pools_id,
-  level: "public",
-});
+// const client = generateClient();
 
-// Function for getting current date as a string 
-function getCurrentDateString() {
-  const date = new Date();
-  const year = date.getFullYear(); // Get the full year (YYYY)
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Get the month (01-12)
-  const day = String(date.getDate()).padStart(2, '0'); // Get the day of the month (01-31)
+// (async () => {
+//   try {
+//     const { credentials } = await fetchAuthSession();
+//     console.log('AWS Credentials:', {
+//       accessKeyId: credentials?.accessKeyId,
+//       secretAccessKey: credentials?.secretAccessKey,
+//       sessionToken: credentials?.sessionToken
+//     });
 
-  return `${year}_${month}_${day}`; // Format as YYYY-MM-DD
-}
+//   } catch (error) {
+//     console.error('Error fetching AWS credentials:', error);
+//   }
+// })();
 
+// // Storage configuration is now done globally in your app's entry point
 
-export async function uploadNewProject(
-  formData: any,
-  setFormData: any,
-  showProgressBar: () => void,
-  hideProgressBar: () => void,
-  updateProgress: (progress: number) => void,
-  isVisible: boolean, 
-  setProjectId: any,
-  ) {
-  
-  try {
-    showProgressBar();
-    updateProgress(0); // Reset progress
+// function getCurrentDateString() {
+//   const date = new Date();
+//   const year = date.getFullYear();
+//   const month = String(date.getMonth() + 1).padStart(2, '0');
+//   const day = String(date.getDate()).padStart(2, '0');
+//   return `${year}_${month}_${day}`;
+// }
+
+// export async function uploadNewProject(
+//   formData: any,
+//   setFormData: any,
+//   showProgressBar: () => void,
+//   hideProgressBar: () => void,
+//   updateProgress: (progress: number) => void,
+//   isVisible: boolean, 
+//   setProjectId: any,
+// ) {
+//   try {
+//     showProgressBar();
+//     updateProgress(0);
+
+//     console.log('just started');
     
-    // GET THE CURRENT USER 
-    const currentUser = await Auth.currentAuthenticatedUser();
-    const userId = currentUser.attributes.sub; // User's ID
-    updateProgress(0.1); // Initial progress
+//     const currentUser = await getCurrentUser();
+//     const userId = currentUser.userId;
+//     updateProgress(0.1);
 
-    // UPLOAD THE IMAGE TO S3
-    // Get the URI
-    const uri = formData.localImageUri
+//     console.log('just got the auth user');
 
-    // Step 1: Set the filename to the project title and date     
-    const unfilteredTitle = formData.title // Get the title from the form data
-    const filteredTitle = unfilteredTitle.replace(/[^a-zA-Z0-9 ]/g, "").replace(/ /g, "_"); // Remove any non-alphanumeric characters other than spaces. Then replace spaces with underscores. 
-    const dateString = getCurrentDateString(); // Get the formatted date
-    const randomString = `${uuidv4()}`
-    const fileName = `${filteredTitle}_${dateString}_${randomString}.jpg`; // Concatenate title and date
+//     const uri = formData.localImageUri;
+//     const unfilteredTitle = formData.title;
+//     const filteredTitle = unfilteredTitle.replace(/[^a-zA-Z0-9 ]/g, "").replace(/ /g, "_");
+//     const dateString = getCurrentDateString();
+//     const randomString = `${uuidv4()}`;
+//     const fileName = `${filteredTitle}_${dateString}_${randomString}.jpg`;
 
-    console.log('filename ', fileName)
-    updateProgress(0.3); // Initial progress
+//     console.log('filename ', fileName);
+//     updateProgress(0.3);
 
-    // // Step 2: Fetch the image as a blob
-    const response = await fetch(uri);
-    const blob = await response.blob();
+//     const response = await fetch(uri);
+//     const blob = await response.blob();
 
-    updateProgress(0.4); 
+//     updateProgress(0.4);
 
-    // // Step 3: Upload the image to S3
-    const s3Response = await Storage.put(fileName, blob, {
-      contentType: 'image/jpeg', // Set the appropriate content type based on your image type
-      level: 'public', 
-      progressCallback(progress: any) {
-        updateProgress(progress.loaded / progress.total); // Update progress
-      },
-    });
+//     const uploadResult = await uploadData({
+//       key: fileName,
+//       data: blob,
+//       options: {
+//         contentType: 'image/jpeg',
+//         accessLevel: 'guest',
+//         onProgress: ({ transferredBytes, totalBytes }) => {
+//           updateProgress(transferredBytes / (totalBytes ?? 1));
+//         },        
+//       }
+//     }).result;
 
-    // // Step 4: Get the image URL as the public url available based on the filename
-    const imageUrl = 'https://jonoa48aa29b26b146de8c05923d59de88cec85f4-dev.s3.us-west-1.amazonaws.com/public/' + fileName
-    updateProgress(0.8); // Indicate progress near completion
+//     const imageUrl = `https://${config.aws_user_files_s3_bucket}.s3.${config.aws_user_files_s3_bucket_region}.amazonaws.com/public/${fileName}`;
+//     updateProgress(0.8);
 
-    // // Step 5: Update formData with the image URL
-    setFormData({ ...formData, imageUri: imageUrl });
-    console.log('imageUrl: ', imageUrl)
+//     setFormData({ ...formData, imageUri: imageUrl });
+//     console.log('imageUrl: ', imageUrl);
 
-    console.log('Image uploaded successfully:', imageUrl);
+//     console.log('Image uploaded successfully:', imageUrl);
 
-    // CREATE THE PROJECT 
-    const projectData = {
-      title: formData.title,
-      image: imageUrl,
-      description: formData.description,
-      categories: formData.categories,
-      skills: formData.skills,
-      resources: formData.resources,
-      ownerIDs: [userId], 
-    };
+//     const projectData = {
+//       title: formData.title,
+//       image: imageUrl,
+//       description: formData.description,
+//       categories: formData.categories,
+//       skills: formData.skills,
+//       resources: formData.resources,
+//       ownerIDs: [userId], 
+//     };
 
-    // UPLOAD THE PROJECT 
-    const projectResult = await API.graphql(
-      graphqlOperation(createProject, { input: projectData })
-    );
-    const castedProjectResult = projectResult as GraphQLResult<any>
-    console.log('Project created successfully:', castedProjectResult?.data?.createProject);
+//     const projectResult = await client.graphql({
+//       query: createProject,
+//       variables: { input: projectData }
+//     });
 
-    // CREATE USER-PROJECT RELATIONSHIP
-    const projectId = castedProjectResult?.data?.createProject.id;
-    const userProjectData = {
-      userId: userId,     // Current user's ID
-      projectId: projectId, // Newly created project's ID
-    };
+//     console.log('Project created successfully:', projectResult.data?.createProject);
 
-    await API.graphql(
-      graphqlOperation(createUserProject, { input: userProjectData })
-    );
+//     const projectId = projectResult.data?.createProject.id;
+//     const userProjectData = {
+//       userId: userId,
+//       projectId: projectId,
+//     };
 
-    console.log('Project and user relationship created successfully.');
+//     await client.graphql({
+//       query: createUserProject,
+//       variables: { input: userProjectData }
+//     });
+
+//     console.log('Project and user relationship created successfully.');
     
-    // Send project id to the progress context so it can be displayed on the snackbar
-    setProjectId(projectId)
+//     setProjectId(projectId);
 
-    updateProgress(1); // Complete
-    await new Promise((resolve) => setTimeout(resolve, 100)); // Simulate delay
-    hideProgressBar()
-  } catch (error) {
-    console.error('Error uploading projject:', error);
-  }
-  
-}
+//     updateProgress(1);
+//     await new Promise((resolve) => setTimeout(resolve, 100));
+//     hideProgressBar();
+//   } catch (error) {
+//     console.error('Error uploading project:', error);
+//   }
+// }

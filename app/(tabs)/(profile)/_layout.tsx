@@ -87,6 +87,20 @@ export default function ProfileLayout() {
 
         }}
       />
+      <Stack.Screen
+        name="deleteAccount"
+        options={{
+          // Hide the header for this route
+          // headerShown: false,
+          title: 'Delete Account',
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTintColor: 'black',
+          // tabBarVisible: false // Hide tab bar for Project page
+
+        }}
+      />
     </Stack>
   );
 }

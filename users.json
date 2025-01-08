@@ -1,0 +1,120 @@
+{
+    "Users": [
+        {
+            "Username": "0989292e-d0b1-7091-2af2-7c4c4efd4fca",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "chen.jason.w@gmail.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "phone_number",
+                    "Value": "+19043158352"
+                },
+                {
+                    "Name": "phone_number_verified",
+                    "Value": "false"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "0989292e-d0b1-7091-2af2-7c4c4efd4fca"
+                }
+            ],
+            "UserCreateDate": "2024-09-17T09:45:28.067000-07:00",
+            "UserLastModifiedDate": "2024-09-17T09:47:07.778000-07:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "09f909ee-70a1-70d6-a3de-083615263aa5",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "emailadress470@gmail.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "phone_number",
+                    "Value": "+19043158352"
+                },
+                {
+                    "Name": "phone_number_verified",
+                    "Value": "false"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "09f909ee-70a1-70d6-a3de-083615263aa5"
+                }
+            ],
+            "UserCreateDate": "2024-12-14T18:04:23.714000-08:00",
+            "UserLastModifiedDate": "2024-12-14T18:05:22.380000-08:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "c92919ee-8091-70a2-f53c-ab2f61783f0e",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "cj.brianchu@gmail.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "phone_number",
+                    "Value": "+15106762715"
+                },
+                {
+                    "Name": "phone_number_verified",
+                    "Value": "false"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "c92919ee-8091-70a2-f53c-ab2f61783f0e"
+                }
+            ],
+            "UserCreateDate": "2024-12-12T12:02:13.663000-08:00",
+            "UserLastModifiedDate": "2024-12-12T12:02:28.755000-08:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "f929995e-80d1-705a-64fc-1fc28723043e",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "jwc297@cornell.edu"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "phone_number",
+                    "Value": "+19043158352"
+                },
+                {
+                    "Name": "phone_number_verified",
+                    "Value": "false"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "f929995e-80d1-705a-64fc-1fc28723043e"
+                }
+            ],
+            "UserCreateDate": "2024-12-07T14:00:13.437000-08:00",
+            "UserLastModifiedDate": "2024-12-07T14:01:36.444000-08:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        }
+    ]
+}

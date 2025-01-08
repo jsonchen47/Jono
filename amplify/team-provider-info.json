@@ -12,14 +12,14 @@
       "AmplifyAppId": "d3u6pjfwz6ed9z"
     },
     "categories": {
-      "auth": {
-        "Jono": {}
-      },
       "api": {
         "Jono": {}
       },
       "storage": {
         "projectImages": {}
+      },
+      "auth": {
+        "jono39992195": {}
       }
     }
   }
