@@ -6,11 +6,14 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { deleteUser } from '@/src/graphql/mutations';
+import { deleteUser } from 'aws-amplify/auth';
+import { generateClient } from 'aws-amplify/api';
+import { deleteUser as deleteUserMutation } from '@/src/graphql/mutations';
 import { listProjects } from '@/src/graphql/queries';
 import { deleteProject } from '@/src/graphql/mutations';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { getCurrentUser } from 'aws-amplify/auth';
+
+const client = generateClient();
 
 export default function DeleteAccountScreen() {
     const handleDeleteAccount = async () => {
@@ -28,35 +31,33 @@ export default function DeleteAccountScreen() {
               onPress: async () => {
                 try {
                   // Fetch the authenticated user
-                  const authUser = await Auth.currentAuthenticatedUser();
-                  const userID = authUser.attributes.sub;
+                  const authUser = await getCurrentUser();
+                  const userID = authUser.userId;
       
                   // 1. Delete all projects associated with the user
-                //   const projectResults = await API.graphql(
-                //     graphqlOperation(listProjects, { filter: { ownerID: { eq: userID } } })
-                //   );
-                    const projectResults = await API.graphql(
-                    graphqlOperation(listProjects, { filter: { ownerIDs: { contains: userID } } })
-                  );
+                  const projectResults = await client.graphql({
+                    query: listProjects,
+                    variables: { filter: { ownerIDs: { contains: userID } } }
+                  });
                   
-      
-                  const castedProjectResults = projectResults as GraphQLResult<any>;
-                  const projects = castedProjectResults?.data?.listProjects?.items || [];
+                  const projects = projectResults.data?.listProjects?.items || [];
       
                   if (projects.length > 0) {
                     for (const project of projects) {
                       if (project?.id) {
-                        await API.graphql(
-                          graphqlOperation(deleteProject, { input: { id: project.id } })
-                        );
+                        await client.graphql({
+                          query: deleteProject,
+                          variables: { input: { id: project.id } }
+                        });
                       }
                     }
                   }
       
                   // 2. Delete the user from the database (User model)
-                  await API.graphql(
-                    graphqlOperation(deleteUser, { input: { id: userID } })
-                  );
+                  await client.graphql({
+                    query: deleteUserMutation,
+                    variables: { input: { id: userID } }
+                  });
       
                   // 3. Delete the user's Sendbird account
                   const sendbirdAppId = '01E73A75-F4D1-4564-957C-FA30C79A0FCE';
@@ -74,7 +75,7 @@ export default function DeleteAccountScreen() {
                   );
       
                   // 4. Delete the user's Cognito account
-                  await Auth.deleteUser();
+                  await deleteUser();
       
                   // Notify the user and navigate away
                   Alert.alert('Account Deleted', 'Your account has been deleted.');
@@ -90,7 +91,6 @@ export default function DeleteAccountScreen() {
           ]
         );
       };
-      
 
   return (
     <View style={styles.container}>
