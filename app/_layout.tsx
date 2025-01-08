@@ -42,9 +42,12 @@ function RootLayout() {
     <ThemeProvider theme={theme}>
       <Authenticator.Provider>
         <Authenticator
-          Header={CustomHeader} 
+          
           components={{
-            
+            SignIn: (props) => (
+              // will render only on the SignIn subcomponent
+              <Authenticator.SignIn {...props}  Header={CustomHeader} />
+            ),
             SignUp: ({ fields, ...props }) => (
               <Authenticator.SignUp
                 // Use the custom header here
