@@ -1,7 +1,7 @@
 // AppEntrance.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/api';
 import { createUser } from '../graphql/mutations';
@@ -10,10 +10,13 @@ import { uploadData } from 'aws-amplify/storage';
 import config from '../../src/aws-exports';
 import * as FileSystem from 'expo-file-system';
 import { Image } from 'react-native';
+import { ProgressProvider, useProgress } from '@/src/contexts/ProgressContext';
+import { ProgressBar, Snackbar } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Octicons'; // Import vector icons
+import { useRouter } from 'expo-router';
 
-// PROVIDER IMPORTS
+// OTHER PROVIDER IMPORTS
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ProgressProvider } from '@/src/contexts/ProgressContext';
 import { ProjectUpdateProvider } from '@/src/contexts/ProjectUpdateContext';
 import { FilterProvider } from '@/src/contexts/FilterContext';
 import { NotificationProvider } from '@/src/contexts/NotificationContext';
@@ -104,10 +107,79 @@ const uploadDefaultProfilePicture = async (username: string) => {
 };
 
 
+// Define the prop types for ProgressBarComponent
+interface ProgressBarComponentProps {
+  snackbarVisible: boolean;
+  setSnackbarVisible: React.Dispatch<React.SetStateAction<boolean>>; // Type for state updater function
+}
 
+function ProgressBarComponent({ snackbarVisible, setSnackbarVisible }: ProgressBarComponentProps) {
+  const { isVisible, progress, hideProgressBar } = useProgress();
+
+  useEffect(() => {
+    if (progress >= 1) { // Adjust based on your actual completion condition
+      setSnackbarVisible(true); // Show Snackbar
+    }
+  }, [progress]);
+
+  if (!isVisible) return null; // Don't render if not visible
+
+  return (
+    <View style={styles.progressBarContainer}> 
+      {/* <ProgressBar progress={progress} color="#4CDFFF" style={styles.progressBar} /> */}
+      <ProgressBar progress={progress} color="royalblue" style={styles.progressBar} />
+      <View style={styles.progressBarBottomContainer}>
+        <Text style={styles.progressBarBottomText}>
+          Your project uploading! 
+        </Text>
+        <TouchableOpacity
+          onPress={() => {
+            hideProgressBar()
+            }}
+        >
+          <Icon name='x' style={styles.progressBarIcon}/>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+function SnackBarComponent({ snackbarVisible, setSnackbarVisible }: ProgressBarComponentProps) {
+  const router = useRouter();
+  const { isVisible, progress, hideProgressBar, projectId } = useProgress();
+  return (
+    <Snackbar
+        style={styles.snackBar}
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)} // Dismiss Snackbar
+        duration={5000} // Optional duration for the Snackbar
+        action={{
+          label: 'View',
+          onPress: () => {
+            // Do something
+            if (projectId) {
+              // Navigate only if projectId is valid
+              router.push({
+                pathname: '/project/[id]',
+                params: { id: projectId, projectID: projectId },
+              });
+            } else {
+              // Handle the case when projectId is null (e.g., show an alert or log an error)
+              console.error("Project ID is null, cannot navigate.");
+              // Optionally, show an alert or feedback to the user
+            }
+          },
+        }}
+      >
+        Project uploaded successfully!
+    </Snackbar>
+  )
+}
 
 
 const AppEntrance = () => {
+  const [snackbarVisible, setSnackbarVisible] = useState<any>(false); // Snackbar visibility state
+
 
   useEffect(() => {
     const syncUser = async () => {
@@ -267,6 +339,16 @@ const AppEntrance = () => {
                         }}
                       />
                     </Stack>
+                    <ProgressBarComponent 
+                        snackbarVisible={snackbarVisible} 
+                        setSnackbarVisible={setSnackbarVisible} 
+                      />
+                      {/* Snackbar Component */}
+                      
+                      <SnackBarComponent
+                      snackbarVisible={snackbarVisible} 
+                      setSnackbarVisible={setSnackbarVisible} 
+                      />
                   </View>
                 </FilterProvider>
               </ProjectUpdateProvider>
@@ -281,6 +363,39 @@ const AppEntrance = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  progressBarContainer: {
+    position: 'absolute', // Position the progress bar absolutely
+    bottom: 90, // Adjust based on your bottom tab navigator height
+    left: 0,
+    right: 0,
+    zIndex: 10,
+  }, 
+  progressBar: {
+    height: 4,
+   
+  },
+  stackContainer: {
+    flex: 1, // This will ensure the stack takes the remaining space
+    marginBottom: 300, // Adjust based on the height of your tab navigator
+  },
+  progressBarBottomContainer: {
+    backgroundColor: 'whitesmoke', 
+    paddingVertical: 10, 
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }, 
+  progressBarBottomText: {
+    // paddingHorizontal: 0, 
+    fontWeight: 'bold'
+  },
+  progressBarIcon: {
+    fontSize: 20, 
+  },
+  snackBar: {
+    bottom: 50, // Adjust based on your bottom tab navigator height
   },
 });
 

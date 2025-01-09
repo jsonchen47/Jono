@@ -1,39 +1,42 @@
-import { View, Text } from 'react-native'
-import React, { useEffect, useState, useCallback } from 'react';
+import { View } from 'react-native'
+import React, { useState, useCallback } from 'react';
 import ProjectScreen from '@/src/screens/ProjectScreen'
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { API, graphqlOperation } from "aws-amplify";
+import { generateClient } from 'aws-amplify/api';
 import { getProject } from '@/src/graphql/queries';
 import { useFocusEffect } from '@react-navigation/native';
 
+const client = generateClient();
+
 const ProjectDetails = () => {
-  const router = useRouter();
   const { projectID } = useLocalSearchParams();
   const [project, setProject] = useState<any>(null);
 
-  // FETCH THE PROJECT 
   const fetchProject = async (projectID: any) => {
-      const result = await API.graphql(
-        graphqlOperation(getProject, { id: projectID })
-      );
-      const castedResult = result as GraphQLResult<any>
-      setProject(castedResult.data?.getProject);
-      console.log(castedResult.data?.getProject)
+    try {
+      const result = await client.graphql({
+        query: getProject,
+        variables: { id: projectID }
+      }) as GraphQLResult<any>;
+      setProject(result.data?.getProject);
+      console.log(result.data?.getProject);
+    } catch (error) {
+      console.error('Error fetching project:', error);
+    }
   };
 
-   // UseFocusEffect to fetch project when screen regains focus
-   useFocusEffect(
+  useFocusEffect(
     useCallback(() => {
       if (projectID) {
         fetchProject(projectID);
       }
-    }, [projectID]) // Dependencies: Only re-create the callback if projectID changes
+    }, [projectID])
   );
 
   return (
     <View style={{flex: 1}}>
-      <ProjectScreen project = { project }  />
+      <ProjectScreen project={project} />
     </View>
   )
 }

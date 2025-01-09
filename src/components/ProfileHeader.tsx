@@ -5,124 +5,89 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Emoji from 'react-native-emoji';
 import { generateClient } from 'aws-amplify/api';
-import { createConnection, deleteConnection } from '../graphql/mutations';
-import { listConnections } from '@/src/graphql/queries';
+import { searchConnections, listProjects } from '@/src/graphql/queries';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { router } from 'expo-router';
 import { useUser } from '../contexts/UserContext';
-import { getCurrentUser } from '@aws-amplify/auth';
+import { listTeamsByUser } from '../backend/queries';
+import { router } from 'expo-router';
 
 const client = generateClient();
 
 const ProfileHeader = ({ user, otherProfile = false }: any) => {
   const [isRequested, setIsRequested] = useState(false);
   const [connectionID, setConnectionID] = useState<string | null>(null);
-  const { user: loggedInUser, setUser } = useUser();
+  const [counts, setCounts] = useState({ numConnections: 0, numProjects: 0, numTeams: 0 });
+  const [loading, setLoading] = useState(true);
+  const { user: loggedInUser } = useUser();
 
-  useEffect(() => {
-    const checkConnectionStatus = async () => {
-      try {
-        const authUserID = loggedInUser?.id;
-
-        if (!authUserID || !user?.id) {
-          console.warn('Skipping connection status check: Missing user data.');
-          return;
-        }
-
-        const result = await client.graphql({
-          query: listConnections,
-          variables: {
-            filter: {
-              or: [
-                { userID: { eq: authUserID }, connectedUserID: { eq: user?.id } },
-                { userID: { eq: user?.id }, connectedUserID: { eq: authUserID } },
-              ],
-            },
-          },
-        }) as GraphQLResult<any>;
-
-        const connections = result.data?.listConnections?.items || [];
-        const existingConnection = connections.length > 0;
-
-        if (existingConnection) {
-          setIsRequested(true);
-          setConnectionID(connections[0]?.id);
-        } else {
-          setIsRequested(false);
-          setConnectionID(null);
-        }
-      } catch (error) {
-        console.error('Error checking connection status:', error);
-      }
-    };
-
-    if (otherProfile && user) {
-      checkConnectionStatus();
-    }
-  }, [user, otherProfile, loggedInUser]);
-
-  const handleRequestConnection = async () => {
+  const fetchCounts = async (userID: string) => {
     try {
-      const authUserID = loggedInUser?.id;
-
-      if (!authUserID || !user?.id) {
-        console.warn('Missing user data for connection request.');
-        return;
-      }
-
-      const result = await client.graphql({
-        query: createConnection,
+      // Fetch connections using searchable
+      const connectionsResult = await client.graphql({
+        query: searchConnections,
         variables: {
-          input: {
-            userID: authUserID,
-            connectedUserID: user?.id,
-            status: 'requested',
+          filter: {
+            or: [
+              { userID: { eq: userID } },
+              { connectedUserID: { eq: userID } },
+            ],
           },
         },
       }) as GraphQLResult<any>;
 
-      const newConnection = result.data.createConnection;
-      setIsRequested(true);
-      setConnectionID(newConnection.id);
-      console.log('Connection request sent.');
+      const numConnections = connectionsResult?.data?.searchConnections?.total || 0;
+
+      // Fetch projects
+      const projectsResult = await client.graphql({
+        query: listProjects,
+        variables: {
+          filter: { ownerIDs: { contains: userID } },
+        },
+      }) as GraphQLResult<any>;
+
+      const numProjects = projectsResult?.data?.listProjects?.items?.length || 0;
+
+      // Fetch teams
+      const teamsResult = await client.graphql({
+        query: listTeamsByUser,
+        variables: {
+          id: userID,
+        },
+      }) as GraphQLResult<any>;
+
+      const numTeams = teamsResult?.data?.listTeamsByUser?.items?.length || 0;
+
+      setCounts({ numConnections, numProjects, numTeams });
     } catch (error) {
-      console.error('Error requesting connection:', error);
+      console.error('Error fetching counts:', error);
+      setCounts({ numConnections: 0, numProjects: 0, numTeams: 0 });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleRemoveConnection = async () => {
-    try {
-      if (!connectionID) {
-        console.warn('No connection ID found to remove.');
-        return;
-      }
-
-      await client.graphql({
-        query: deleteConnection,
-        variables: { input: { id: connectionID } },
-      });
-
-      setIsRequested(false);
-      setConnectionID(null);
-      console.log('Connection request removed.');
-    } catch (error) {
-      console.error('Error removing connection:', error);
+  useEffect(() => {
+    if (user?.id) {
+      fetchCounts(user.id);
     }
-  };
+  }, [user]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#003B7B" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContent}>
         <View style={styles.topItemsContainer}>
-          {/* Profile picture */}
-          {/* <View style={styles.imageContainer}>
-            <View style={styles.imageOutline}>
-              <Image style={styles.image} source={{ uri: user?.image }} />
-            </View>
-          </View> */}
           <View style={styles.imageContainer}>
             <View style={styles.imageOutline}>
               <Image
@@ -136,77 +101,31 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
             </View>
           </View>
 
-          {/* Right of Image Info Box */}
           <View style={styles.rightOfImageInfoBox}>
-            <View style={styles.eachRowContainer}>
-              <Text style={styles.nameText}>{user?.name}</Text>
-            </View>
-            <View style={styles.eachRowContainer}>
-              <Text style={styles.usernameText}>
-                {user?.username ? `@${user.username}` : '@Anonymous'}
-              </Text>
-            </View>
+            <Text style={styles.nameText}>{user?.name}</Text>
+            <Text style={styles.usernameText}>{user?.username ? `@${user.username}` : '@Anonymous'}</Text>
             <View style={styles.allStatsContainer}>
               <View style={styles.statsContainer}>
                 <Emoji name="bulb" style={styles.emoji} />
-                <Text style={styles.statsText}>{user?.numProjects}</Text>
+                <Text style={styles.statsText}>{counts.numProjects}</Text>
               </View>
               <View style={styles.statsSpacer} />
               <View style={styles.statsContainer}>
                 <Emoji name="handshake" style={styles.emoji} />
-                <Text style={styles.statsText}>{user?.numTeams}</Text>
+                <Text style={styles.statsText}>{counts.numTeams}</Text>
               </View>
               <View style={styles.statsSpacer} />
-              <TouchableOpacity
-                style={styles.statsContainer}
+              <TouchableOpacity style={styles.statsContainer}
                 onPress={() =>
                   router.push('/(tabs)/(profile)/connections')
                 }
               >
                 <Emoji name="link" style={styles.emoji} />
-                <Text style={styles.statsText}>{user?.numConnections}</Text>
+                <Text style={styles.statsText}>{counts.numConnections}</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
-
-        {/* Button */}
-        <TouchableOpacity
-          style={
-            otherProfile
-              ? isRequested
-                ? styles.removeRequestButton
-                : styles.editProfileButton
-              : styles.editProfileButton
-          }
-          onPress={() => {
-            if (otherProfile) {
-              if (isRequested) {
-                handleRemoveConnection();
-              } else {
-                handleRequestConnection();
-              }
-            } else {
-              router.push('/editProfile');
-            }
-          }}
-        >
-          <Text
-            style={
-              otherProfile
-                ? isRequested
-                  ? styles.editProfileText
-                  : styles.editProfileText
-                : styles.editProfileText
-            }
-          >
-            {otherProfile
-              ? isRequested
-                ? 'Requested'
-                : 'Request to Connect'
-              : 'Edit Profile'}
-          </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -248,14 +167,11 @@ const styles = StyleSheet.create({
   usernameText: {
     fontWeight: 'bold',
     fontSize: 18,
-  },
-  eachRowContainer: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    marginBottom: 7,
+    marginTop: 5,
   },
   allStatsContainer: {
     flexDirection: 'row',
+    marginTop: 10,
   },
   statsContainer: {
     flexDirection: 'row',
@@ -263,38 +179,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 7,
   },
-  emoji: {
-    fontSize: 18,
-  },
   statsText: {
     fontSize: 15,
     fontWeight: 'bold',
+    marginLeft: 3, 
   },
   statsSpacer: {
     marginHorizontal: 7,
   },
-  editProfileButton: {
-    width: '100%',
-    backgroundColor: '#004068',
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    alignSelf: 'center',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  removeRequestButton: {
-    width: '100%',
-    backgroundColor: 'lightgray',
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    alignSelf: 'center',
-  },
-  editProfileText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+  emoji: {
     fontSize: 15,
-  },
+  }
 });
 
 export default ProfileHeader;

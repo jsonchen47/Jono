@@ -53,7 +53,7 @@ type User @model @searchable @auth(rules: [{allow: public}]) {
   connections: [Connection] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
-type Connection @model @auth(rules: [{ allow: public }]) {
+type Connection @model @searchable @auth(rules: [{ allow: public }]) {
   id: ID!
   userID: ID! @index(name: "byUser", sortKeyFields: ["createdAt"])
   connectedUserID: ID! @index(name: "byConnectedUser", sortKeyFields: ["createdAt"])

@@ -945,6 +945,95 @@ export const connectionsByConnectedUserIDAndCreatedAt = /* GraphQL */ `query Con
   APITypes.ConnectionsByConnectedUserIDAndCreatedAtQueryVariables,
   APITypes.ConnectionsByConnectedUserIDAndCreatedAtQuery
 >;
+export const searchConnections = /* GraphQL */ `query SearchConnections(
+  $filter: SearchableConnectionFilterInput
+  $sort: [SearchableConnectionSortInput]
+  $limit: Int
+  $nextToken: String
+  $from: Int
+  $aggregates: [SearchableConnectionAggregationInput]
+) {
+  searchConnections(
+    filter: $filter
+    sort: $sort
+    limit: $limit
+    nextToken: $nextToken
+    from: $from
+    aggregates: $aggregates
+  ) {
+    items {
+      id
+      userID
+      connectedUserID
+      user {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      connectedUser {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      status
+      createdAt
+      viewed
+      updatedAt
+      __typename
+    }
+    nextToken
+    total
+    aggregateItems {
+      name
+      result {
+        ... on SearchableAggregateScalarResult {
+          value
+        }
+        ... on SearchableAggregateBucketResult {
+          buckets {
+            key
+            doc_count
+            __typename
+          }
+        }
+      }
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.SearchConnectionsQueryVariables,
+  APITypes.SearchConnectionsQuery
+>;
 export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
   getUserProject(id: $id) {
     id

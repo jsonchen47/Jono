@@ -951,6 +951,60 @@ export type ModelConnectionFilterInput = {
   not?: ModelConnectionFilterInput | null,
 };
 
+export type SearchableConnectionFilterInput = {
+  id?: SearchableIDFilterInput | null,
+  userID?: SearchableIDFilterInput | null,
+  connectedUserID?: SearchableIDFilterInput | null,
+  status?: SearchableStringFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  viewed?: SearchableBooleanFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  and?: Array< SearchableConnectionFilterInput | null > | null,
+  or?: Array< SearchableConnectionFilterInput | null > | null,
+  not?: SearchableConnectionFilterInput | null,
+};
+
+export type SearchableConnectionSortInput = {
+  field?: SearchableConnectionSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableConnectionSortableFields {
+  id = "id",
+  userID = "userID",
+  connectedUserID = "connectedUserID",
+  status = "status",
+  createdAt = "createdAt",
+  viewed = "viewed",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableConnectionAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableConnectionAggregateField,
+};
+
+export enum SearchableConnectionAggregateField {
+  id = "id",
+  userID = "userID",
+  connectedUserID = "connectedUserID",
+  status = "status",
+  createdAt = "createdAt",
+  viewed = "viewed",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableConnectionConnection = {
+  __typename: "SearchableConnectionConnection",
+  items:  Array<Connection | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
 export type ModelUserProjectFilterInput = {
   id?: ModelIDInput | null,
   projectId?: ModelIDInput | null,
@@ -3279,6 +3333,87 @@ export type ConnectionsByConnectedUserIDAndCreatedAtQuery = {
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type SearchConnectionsQueryVariables = {
+  filter?: SearchableConnectionFilterInput | null,
+  sort?: Array< SearchableConnectionSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableConnectionAggregationInput | null > | null,
+};
+
+export type SearchConnectionsQuery = {
+  searchConnections?:  {
+    __typename: "SearchableConnectionConnection",
+    items:  Array< {
+      __typename: "Connection",
+      id: string,
+      userID: string,
+      connectedUserID: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        status?: string | null,
+        image?: string | null,
+        savedProjectsIDs?: Array< string | null > | null,
+        bio?: string | null,
+        numProjects?: number | null,
+        numTeams?: number | null,
+        numConnections?: number | null,
+        username?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        links?: Array< string | null > | null,
+        premium?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      connectedUser?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        status?: string | null,
+        image?: string | null,
+        savedProjectsIDs?: Array< string | null > | null,
+        bio?: string | null,
+        numProjects?: number | null,
+        numTeams?: number | null,
+        numConnections?: number | null,
+        username?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        links?: Array< string | null > | null,
+        premium?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      status?: string | null,
+      createdAt?: string | null,
+      viewed?: boolean | null,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
   } | null,
 };
 
