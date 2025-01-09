@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator } from 'react-native';
 import { Chip } from 'react-native-paper';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import Emoji from 'react-native-emoji';
 import ProfileHeader from '@/src/components/ProfileHeader';
 import ProfileProjectsScreen from './ProfileProjectsScreen';
 import ProfileTeamsScreen from './ProfileTeamsScreen';
-// import { useUser } from '@/path-to/UserContext';
 import { useUser } from '../contexts/UserContext';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
-import { getUser, listProjects } from '@/src/graphql/queries';
+import { generateClient } from '@aws-amplify/api';
+import { getUser } from '@/src/graphql/queries';
 import { listTeamsByUser } from '@/src/backend/queries';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { fetchAuthSession, getCurrentUser } from '@aws-amplify/auth';
 import { useFocusEffect } from '@react-navigation/native';
+import { listProjects } from '@/src/graphql/queries';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 interface ProfileScreenProps {
   passedUserID?: any;
@@ -29,48 +32,51 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
   const [teamsNextToken, setTeamsNextToken] = useState<string | null>(null);
   const [isFetchingMoreProjects, setIsFetchingMoreProjects] = useState(false);
   const [isFetchingMoreTeams, setIsFetchingMoreTeams] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  const client = generateClient();
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
         if (userID) {
+          setLoading(true);
           await fetchUser(userID);
           await fetchProjects(userID);
           await fetchTeams(userID);
+          setLoading(false);
         }
       };
       fetchData();
     }, [userID])
   );
-  
+
   useEffect(() => {
     if (contextUser && !passedUserID) {
-      setUserData(contextUser); // Sync with context if it's the authenticated user
+      setUserData(contextUser);
     }
   }, [contextUser, passedUserID]);
-  
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       let currentUserID = passedUserID;
 
       if (!currentUserID) {
-        const authUser = await Auth.currentAuthenticatedUser();
-        currentUserID = authUser.attributes.sub;
+        const authUser = await getCurrentUser();
+        currentUserID = authUser.userId;
         setUserID(currentUserID);
       } else {
         setUserID(passedUserID);
       }
 
-      // Fetch user data
       if (!contextUser || passedUserID) {
         await fetchUser(currentUserID);
       }
 
-      // Fetch projects and teams
       await fetchProjects(currentUserID);
       await fetchTeams(currentUserID);
+      setLoading(false);
     };
 
     fetchData();
@@ -78,14 +84,17 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
 
   const fetchUser = async (id: string) => {
     try {
-      const userResult = await API.graphql(graphqlOperation(getUser, { id }));
-      const castedUserResult = userResult as GraphQLResult<any>;
-      const fetchedUser = castedUserResult.data?.getUser;
+      const userResult = await client.graphql({
+        query: getUser,
+        variables: { id },
+      }) as GraphQLResult<any>;
+
+      const fetchedUser = userResult.data?.getUser;
 
       if (!passedUserID) {
-        setUser(fetchedUser); // Set user in context if this is the current user
+        setUser(fetchedUser);
       }
-      setUserData(fetchedUser); // Update local user state
+      setUserData(fetchedUser);
     } catch (err) {
       console.error('Error fetching user:', err);
     }
@@ -93,17 +102,17 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
 
   const fetchProjects = async (id: string, nextToken: string | null = null, fetchMore = false) => {
     try {
-      const projectsData = await API.graphql(
-        graphqlOperation(listProjects, {
+      const projectsData = await client.graphql({
+        query: listProjects,
+        variables: {
           filter: { ownerIDs: { contains: id } },
-          nextToken: nextToken,
+          nextToken,
           limit: 10,
-        })
-      );
+        },
+      }) as GraphQLResult<any>;
 
-      const castedProjectsData = projectsData as GraphQLResult<any>;
-      const fetchedProjects = castedProjectsData.data.listProjects.items;
-      const newProjectsNextToken = castedProjectsData.data.listProjects.nextToken;
+      const fetchedProjects = projectsData.data.listProjects.items;
+      const newProjectsNextToken = projectsData.data.listProjects.nextToken;
 
       setProjects(fetchMore ? [...projects, ...fetchedProjects] : fetchedProjects);
       setProjectsNextToken(newProjectsNextToken);
@@ -116,21 +125,17 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
 
   const fetchTeams = async (id: string, nextToken: string | null = null, fetchMore = false) => {
     try {
-      const teamsData = await API.graphql(
-        graphqlOperation(listTeamsByUser, {
-          id,
-          nextToken,
-          limit: 10,
-        })
-      );
+      const teamsData = await client.graphql({
+        query: listTeamsByUser,
+        variables: { id, nextToken, limit: 10 },
+      }) as GraphQLResult<any>;
 
-      const castedTeamsData = teamsData as GraphQLResult<any>;
-      const rawTeams = castedTeamsData?.data?.getUser?.Projects?.items || [];
+      const rawTeams = teamsData?.data?.getUser?.Projects?.items || [];
       const filteredTeams = rawTeams.filter((item: any) => !item.project.ownerIDs.includes(id));
       const transformedTeams = filteredTeams.map((item: any) => item.project);
 
       setTeams(fetchMore ? [...teams, ...transformedTeams] : transformedTeams);
-      setTeamsNextToken(castedTeamsData?.data?.getUser?.Projects?.nextToken);
+      setTeamsNextToken(teamsData?.data?.getUser?.Projects?.nextToken);
     } catch (err) {
       console.error('Error fetching teams:', err);
     } finally {
@@ -139,45 +144,42 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
   };
 
   function AboutTab() {
+    const hasContent =
+      !!user?.bio ||
+      (user?.skills?.length > 0) ||
+      (user?.resources?.length > 0) ||
+      (user?.links?.length > 0);
+
+    if (!hasContent) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Image
+            source={require('../../assets/images/moon.png')}
+            style={styles.placeholderImage}
+          />
+          <Text style={styles.placeholderText}>
+            No bio set yet! Simply a person of mystery.
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.aboutContainer}>
-        <Text style={styles.bioText} numberOfLines={4}>
-          {user?.bio}
-        </Text>
-        <View style={styles.skillsAndResourcesTopPadding}></View>
-        <View style={styles.skillsAndResourcesTitleContainer}>
-          <Emoji name="rocket" style={styles.emoji} />
-          <Text style={styles.subtitle}> Skills</Text>
-        </View>
-        <View style={styles.skillsAndResourcesChipsContainer}>
-          {user?.skills?.map((skill: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
-              {skill}
-            </Chip>
-          ))}
-        </View>
-        <View style={styles.skillsAndResourcesTitleContainer}>
-          <Emoji name="briefcase" style={styles.emoji} />
-          <Text style={styles.subtitle}> Resources</Text>
-        </View>
-        <View style={styles.skillsAndResourcesChipsContainer}>
-          {user?.resources?.map((resource: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
-              {resource}
-            </Chip>
-          ))}
-        </View>
-        <View style={styles.skillsAndResourcesTitleContainer}>
-          <Emoji name="earth_americas" style={styles.emoji} />
-          <Text style={styles.subtitle}> Links</Text>
-        </View>
-        <View style={styles.skillsAndResourcesChipsContainer}>
-          {user?.links?.map((link: any, index: any) => (
-            <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
-              {link}
-            </Chip>
-          ))}
-        </View>
+        {user?.bio && (
+          <Text style={styles.bioText} numberOfLines={4}>
+            {user.bio}
+          </Text>
+        )}
+        {/* Skills, Resources, and Links */}
+      </View>
+    );
+  }
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#003B7B" />
       </View>
     );
   }
@@ -198,22 +200,21 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
         </Tabs.ScrollView>
       </Tabs.Tab>
       <Tabs.Tab name="Projects">
-        <ProfileProjectsScreen
-          userID={userID}
-          
-        />
+        <ProfileProjectsScreen userID={userID} />
       </Tabs.Tab>
       <Tabs.Tab name="Teams">
-        <ProfileTeamsScreen
-          userID={userID}
-          
-        />
+        <ProfileTeamsScreen userID={userID} />
       </Tabs.Tab>
     </Tabs.Container>
   );
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   aboutContainer: {
     paddingHorizontal: 20,
     paddingTop: 20,
@@ -223,35 +224,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#003B7B',
   },
-  skillsAndResourcesTopPadding: {
-    paddingTop: 5,
-  },
-  skillsAndResourcesTitleContainer: {
-    paddingTop: 15,
-    flexDirection: 'row',
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'flex-start', // Align items towards the top
     alignItems: 'center',
+    paddingTop: 50, // Add some padding from the top
+    paddingHorizontal: 20,
   },
-  emoji: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingHorizontal: 10,
+  placeholderImage: {
+    width: windowWidth / 2,
+    height: windowWidth / 2,
+    borderRadius: 60,
+    marginBottom: 20,
   },
-  subtitle: {
-    fontWeight: '700',
-    fontSize: 18,
-  },
-  skillsAndResourcesChipsContainer: {
-    paddingTop: 15,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    alignSelf: 'flex-start',
-    margin: 5,
-    backgroundColor: 'black',
-  },
-  chipText: {
-    color: 'white',
-    fontSize: 13,
+  placeholderText: {
+    fontSize: 16,
+    color: 'gray',
+    textAlign: 'center',
   },
 });

@@ -1,57 +1,58 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, StyleSheet, Dimensions, Text, Image } from 'react-native';
+import { generateClient } from 'aws-amplify/api';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { useFilter } from '@/src/contexts/FilterContext';
 import ProjectsGridNew from '../components/ProjectsGridNew';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { searchProjects } from '@/src/graphql/queries';
+
+const windowWidth = Dimensions.get('window').width;
+
+const client = generateClient();
 
 const ProjectsScreen = ({ category }: any) => {
   const { filter, setOnFilterApply } = useFilter();
-  const [projects, setProjects] = useState<any>([]);
+  const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  // Fetch projects with the option to reset the list
   const fetchProjects = async (nextToken = null, reset = false) => {
     if (reset) {
       setProjects([]);
       setNextToken(null);
     }
-  
+
     setLoading(true);
     try {
+      const authUser = await getCurrentUser();
+      const authUserID = authUser.userId;
+
       const { sortBy, distance } = filter;
-  
-      // Define filter conditions
+
       let filterConditions: any = {};
-  
-      // Add category filter
+
       if (category) {
         filterConditions = {
           ...filterConditions,
           categories: { eq: category },
         };
       }
-  
-      // Add distance filter
+
       if (distance !== '100+') {
         const parsedDistance = parseFloat(distance as string);
-  
+
         if (isNaN(parsedDistance)) {
           throw new Error('Invalid distance value');
         }
-  
-        // Define the center coordinates (replace with actual values from the user or dynamically)
-        const centerLatitude = 33.158092; // Replace with actual latitude
-        const centerLongitude = -117.350594; // Replace with actual longitude
-  
-        // Calculate bounding box
-        const latAdjustment = parsedDistance / 69; // Approximate adjustment for latitude
+
+        const centerLatitude = 33.158092;
+        const centerLongitude = -117.350594;
+
+        const latAdjustment = parsedDistance / 69;
         const lonAdjustment =
-          parsedDistance / (69 * Math.cos((centerLatitude * Math.PI) / 180)); // Adjustment for longitude
-  
+          parsedDistance / (69 * Math.cos((centerLatitude * Math.PI) / 180));
+
         filterConditions = {
           ...filterConditions,
           and: [
@@ -70,31 +71,31 @@ const ProjectsScreen = ({ category }: any) => {
           ],
         };
       }
-  
+
       const sortCriteria: any = [
         {
           field: 'createdAt',
           direction: sortBy === 'newest' ? 'desc' : 'asc',
         },
       ];
-  
-      const result = await API.graphql(
-        graphqlOperation(searchProjects, {
+
+      const result = await client.graphql({
+        query: searchProjects,
+        variables: {
           filter: filterConditions,
           limit: 8,
           nextToken,
           sort: sortCriteria,
-        })
-      );
-  
-      const castedResult = result as GraphQLResult<any>;
-      const fetchedProjects = castedResult?.data.searchProjects.items;
-  
-      setProjects((prevProjects: any) =>
+        }
+      });
+
+      const fetchedProjects = result.data?.searchProjects?.items || [];
+
+      setProjects((prevProjects) =>
         reset ? fetchedProjects : [...prevProjects, ...fetchedProjects]
       );
-  
-      setNextToken(castedResult?.data.searchProjects.nextToken);
+
+      setNextToken(result.data?.searchProjects?.nextToken);
     } catch (error) {
       console.error('Error fetching projects:', error);
     } finally {
@@ -102,32 +103,35 @@ const ProjectsScreen = ({ category }: any) => {
       setIsFetchingMore(false);
     }
   };
-  
-  
-  
 
-  // Load more projects for pagination
   const loadMoreProjects = () => {
     if (nextToken && !isFetchingMore) {
       setIsFetchingMore(true);
-      fetchProjects(nextToken, false); // Append projects
+      fetchProjects(nextToken);
     }
   };
 
-  // Set the filter apply handler to fetch projects with a reset
   useEffect(() => {
-    setOnFilterApply(() => () => fetchProjects(null, true)); // Full refresh on filter change
+    setOnFilterApply(() => () => fetchProjects(null, true));
   }, []);
 
-  // Fetch projects initially and when the filter or category changes
   useEffect(() => {
-    fetchProjects(null, true); // Reset the list on filter/category change
+    fetchProjects(null, true);
   }, [filter, category]);
 
   return (
     <View style={styles.projectsScreenContainer}>
       {loading && projects.length === 0 ? (
         <Text style={styles.loadingText}>Loading projects...</Text>
+      ) : projects.length === 0 ? (
+        <View style={styles.emptyStateContainer}>
+          <Image
+            source={require('../../assets/images/person_reading.png')} // Ensure this path matches your image location
+            style={styles.emptyImage}
+          />
+          <Text style={styles.emptyText}>No projects yet!</Text>
+          <Text style={styles.emptySubText}>Post a project to populate the space.</Text>
+        </View>
       ) : (
         <ProjectsGridNew
           projects={projects}
@@ -154,5 +158,28 @@ const styles = StyleSheet.create({
     color: 'gray',
     textAlign: 'center',
     marginTop: 20,
+  },
+  emptyStateContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 100, 
+  },
+  emptyImage: {
+    width: windowWidth * 0.7,
+    height: windowWidth * 0.7,
+    resizeMode: 'contain',
+    marginBottom: 20,
+  },
+  emptyText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'gray',
+    marginBottom: 5,
+  },
+  emptySubText: {
+    fontSize: 16,
+    color: 'gray',
+    textAlign: 'center',
   },
 });

@@ -19,7 +19,7 @@ export default function ProfileLayout() {
           // title: 'Explore',
           // headerShown: false,
           headerStyle: {
-            backgroundColor: '#00C0D1',
+            // backgroundColor: '#00C0D1',
             // elevation: 0, // Remove shadow on Android
             // shadowOpacity: 0, // Remove shadow on iOS
             // borderBottomWidth: 0, // Remove border if any

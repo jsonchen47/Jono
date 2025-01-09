@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { getCurrentUser } from 'aws-amplify/auth';
+import { generateClient } from 'aws-amplify/api';
 import { listConnections } from '@/src/graphql/queries';
 import { updateConnection } from '@/src/graphql/mutations';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
 
 interface NotificationContextType {
   hasNotifications: boolean;
@@ -16,21 +16,23 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [hasNotifications, setHasNotifications] = useState(false);
+  const client = generateClient();
 
   const fetchNotifications = async () => {
     try {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const authUserID = authUser.attributes.sub;
+      const authUser = await getCurrentUser();
+      const authUserID = authUser.userId;
 
-      const result = await API.graphql(
-        graphqlOperation(listConnections, {
+      const result = await client.graphql({
+        query: listConnections,
+        variables: {
           filter: {
             connectedUserID: { eq: authUserID },
           },
-        })
-      );
-      const castedResult = result as GraphQLResult<any>;
-      const fetchedNotifications = castedResult?.data?.listConnections?.items || [];
+        },
+      });
+
+      const fetchedNotifications = result.data?.listConnections?.items || [];
       setNotifications(fetchedNotifications);
 
       // Determine if there are unread notifications
@@ -40,32 +42,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       console.error('Error fetching notifications:', error);
     }
   };
-
-  // const markNotificationsAsRead = async () => {
-  //   try {
-  //     const unreadNotifications = notifications.filter((n) => !n.viewed);
-
-  //     // Mark all unread notifications as read
-  //     await Promise.all(
-  //       unreadNotifications.map((notification) =>
-  //         API.graphql(
-  //           graphqlOperation(updateConnection, {
-  //             input: { id: notification.id, viewed: true },
-  //           })
-  //         )
-  //       )
-  //     );
-
-  //     // Update local state
-  //     const updatedNotifications = notifications.map((notification) =>
-  //       notification.viewed ? notification : { ...notification, viewed: true }
-  //     );
-  //     setNotifications(updatedNotifications);
-  //     setHasNotifications(false);
-  //   } catch (error) {
-  //     console.error('Error marking notifications as read:', error);
-  //   }
-  // };
+  
   const markNotificationsAsRead = async () => {
     try {
       const unreadNotifications = notifications.filter((n) => !n.viewed);
@@ -75,11 +52,10 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       // Mark all unread notifications as read
       await Promise.all(
         unreadNotifications.map((notification) =>
-          API.graphql(
-            graphqlOperation(updateConnection, {
-              input: { id: notification.id, viewed: true },
-            })
-          )
+          client.graphql({
+            query: updateConnection,
+            variables: { input: { id: notification.id, viewed: true } },
+          })
         )
       );
   

@@ -1,19 +1,24 @@
-
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api'; // Import generateClient
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { getUser } from '../graphql/queries'
+import { getUser } from '../graphql/queries';
+
+// Create a GraphQL client instance
+const client = generateClient();
 
 // Function to fetch users based on user IDs
 export const fetchUsers = async (userIds: any) => {
     const userPromises = userIds.map(async (userId: any) => {
-      try {
-        const response = await API.graphql(graphqlOperation(getUser, { id: userId }));
-        const castedResponse = response as GraphQLResult<any>
-        return castedResponse.data?.getUser; // Return the fetched user data
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        return null; // Return null if an error occurs
-      }
+        try {
+            const response = await client.graphql({
+                query: getUser,
+                variables: { id: userId },
+            }) as GraphQLResult<any>;
+            
+            return response.data?.getUser; // Return the fetched user data
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            return null; // Return null if an error occurs
+        }
     });
 
     // Wait for all promises to resolve and filter out any null values

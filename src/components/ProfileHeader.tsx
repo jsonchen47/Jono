@@ -7,17 +7,20 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Emoji from 'react-native-emoji';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
 import { createConnection, deleteConnection } from '../graphql/mutations';
 import { listConnections } from '@/src/graphql/queries';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { router } from 'expo-router';
 import { useUser } from '../contexts/UserContext';
+import { getCurrentUser } from '@aws-amplify/auth';
+
+const client = generateClient();
 
 const ProfileHeader = ({ user, otherProfile = false }: any) => {
   const [isRequested, setIsRequested] = useState(false);
   const [connectionID, setConnectionID] = useState<string | null>(null);
-  const { user: loggedInUser, setUser } = useUser(); // Access UserContext
+  const { user: loggedInUser, setUser } = useUser();
 
   useEffect(() => {
     const checkConnectionStatus = async () => {
@@ -29,25 +32,24 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
           return;
         }
 
-        // Query all connections
-        const result = await API.graphql(
-          graphqlOperation(listConnections, {
+        const result = await client.graphql({
+          query: listConnections,
+          variables: {
             filter: {
               or: [
                 { userID: { eq: authUserID }, connectedUserID: { eq: user?.id } },
                 { userID: { eq: user?.id }, connectedUserID: { eq: authUserID } },
               ],
             },
-          })
-        );
+          },
+        }) as GraphQLResult<any>;
 
-        const castedResult = result as GraphQLResult<any>;
-        const connections = castedResult?.data?.listConnections?.items || [];
+        const connections = result.data?.listConnections?.items || [];
         const existingConnection = connections.length > 0;
 
         if (existingConnection) {
           setIsRequested(true);
-          setConnectionID(connections[0]?.id); // Save the connection ID for removal
+          setConnectionID(connections[0]?.id);
         } else {
           setIsRequested(false);
           setConnectionID(null);
@@ -71,17 +73,20 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
         return;
       }
 
-      const input = {
-        userID: authUserID,
-        connectedUserID: user?.id,
-        status: 'requested', // Initial status
-      };
+      const result = await client.graphql({
+        query: createConnection,
+        variables: {
+          input: {
+            userID: authUserID,
+            connectedUserID: user?.id,
+            status: 'requested',
+          },
+        },
+      }) as GraphQLResult<any>;
 
-      const result = await API.graphql(graphqlOperation(createConnection, { input }));
-      const newConnection = (result as GraphQLResult<any>).data.createConnection;
-
+      const newConnection = result.data.createConnection;
       setIsRequested(true);
-      setConnectionID(newConnection.id); // Save the new connection ID
+      setConnectionID(newConnection.id);
       console.log('Connection request sent.');
     } catch (error) {
       console.error('Error requesting connection:', error);
@@ -95,9 +100,11 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
         return;
       }
 
-      const input = { id: connectionID };
+      await client.graphql({
+        query: deleteConnection,
+        variables: { input: { id: connectionID } },
+      });
 
-      await API.graphql(graphqlOperation(deleteConnection, { input }));
       setIsRequested(false);
       setConnectionID(null);
       console.log('Connection request removed.');
@@ -111,9 +118,21 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
       <View style={styles.headerContent}>
         <View style={styles.topItemsContainer}>
           {/* Profile picture */}
-          <View style={styles.imageContainer}>
+          {/* <View style={styles.imageContainer}>
             <View style={styles.imageOutline}>
               <Image style={styles.image} source={{ uri: user?.image }} />
+            </View>
+          </View> */}
+          <View style={styles.imageContainer}>
+            <View style={styles.imageOutline}>
+              <Image
+                style={styles.image}
+                source={
+                  user?.image
+                    ? { uri: user.image }
+                    : require('../../assets/images/profile1.png') // Path to your default image
+                }
+              />
             </View>
           </View>
 
@@ -192,8 +211,6 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
     </View>
   );
 };
-
-export default ProfileHeader;
 
 const styles = StyleSheet.create({
   container: {
@@ -279,3 +296,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
+
+export default ProfileHeader;

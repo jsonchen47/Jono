@@ -82,6 +82,12 @@ const AppEntrance = () => {
 
         const userData = userResult.data?.getUser;
 
+        // console.log('authUser')
+        // console.log(authUser)
+
+        // console.log('userAttributes')
+        // console.log(userAttributes)
+
         if (userData) {
           console.log('User exists:', userData);
           return;
@@ -93,6 +99,8 @@ const AppEntrance = () => {
           username: authUser.username,
           status: 'Hey, I am using Jono',
         };
+
+        
 
         await client.graphql({
           query: createUser,

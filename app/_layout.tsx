@@ -46,7 +46,7 @@ function RootLayout() {
           components={{
             SignIn: (props) => (
               // will render only on the SignIn subcomponent
-              <Authenticator.SignIn {...props}  Header={CustomHeader} />
+              <Authenticator.SignIn {...props} Header={CustomHeader} />
             ),
             SignUp: ({ fields, ...props }) => (
               <Authenticator.SignUp

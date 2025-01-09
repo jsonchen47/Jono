@@ -1,54 +1,50 @@
-// ProjectsScreen.js
-import { View, Text, StyleSheet, Dimensions, PanResponder } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
-import { listProjects } from '@/src/graphql/queries';
-import ProjectsGridNew from '../components/ProjectsGridNew';
-import { GraphQLResult } from '@aws-amplify/api-graphql';
-import Carousel from 'react-native-reanimated-carousel';
-import LargeProjectCard from '../components/LargeProjectCard';
-import { PageIndicator } from 'react-native-page-indicator';
-import { TouchableWithoutFeedback } from 'react-native';
-import LargeProjectCardsFlatList from '../components/LargeProjectCardsFlatList';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { generateClient } from 'aws-amplify/api';
+import { getCurrentUser } from 'aws-amplify/auth';
+import { useFilter } from '@/src/contexts/FilterContext';
 import ProjectsGridForProfile from '../components/ProjectsGridForProfile';
-
+import { searchProjects } from '@/src/graphql/queries'; // Your GraphQL queries
+import { GraphQLResult } from '@aws-amplify/api-graphql';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+
+const client = generateClient();
 
 interface ProfileProjectsScreenProps {
   userID: string; // or any other type that matches the type of userID
 }
 
 const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID }) => {
-    
-  const [currentPage, setCurrentPage] = React.useState(0);
-  const [projects, setProjects] = useState<any>([]);
-  const [loading, setLoading] = useState<any>(false);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [nextToken, setNextToken] = useState<any>(null);
-  const [isFetchingMore, setIsFetchingMore] = useState<any>(false);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
   const fetchProjects = async (nextToken = null) => {
     setLoading(true);
     try {
-      const result = await API.graphql(
-        graphqlOperation(listProjects, {
-          filter: { ownerIDs: { contains: userID } },
+      const result = await client.graphql({
+        query: searchProjects,
+        variables: {
+          filter: { ownerIDs: { match: userID } },
           nextToken: nextToken,
           limit: 10
-        })
-      );
-      const castedResult = result as GraphQLResult<any>
-      const fetchedProjects = castedResult?.data.listProjects.items;
-      console.log(fetchedProjects)
+        }
+      });
+
+      const castedResult = result as GraphQLResult<any>;
+      const fetchedProjects = castedResult?.data?.searchProjects?.items || [];
+      
       // Ensure no duplicate projects
       setProjects((prevProjects: any) => {
         const newProjects = fetchedProjects.filter((newProject: any) => 
             !prevProjects.some((existingProject: any) => existingProject.id === newProject.id)
         );
-        return [...prevProjects, ...newProjects];  // Add only new projects
-    });
-      setNextToken(castedResult?.data.listProjects.nextToken);
+        return [...prevProjects, ...newProjects]; // Add only new projects
+      });
+      
+      setNextToken(castedResult?.data?.searchProjects?.nextToken);
     } catch (error) {
       console.error('Error fetching projects:', error);
     } finally {
@@ -64,17 +60,21 @@ const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID })
   const loadMoreProjects = () => {
     if (nextToken && !isFetchingMore) {
       setIsFetchingMore(true);
-      fetchProjects(nextToken);
+      fetchProjects(nextToken); // Append projects
     }
   };
 
   return (
     <View style={styles.projectsScreenContainer}>
-      <ProjectsGridForProfile
+      {loading && projects.length === 0 ? (
+        <Text style={styles.loadingText}>Loading projects...</Text>
+      ) : (
+        <ProjectsGridForProfile
           projects={projects} // Pass remaining projects after first 4
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
         />
+      )}
     </View>
   );
 };
@@ -89,104 +89,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'whitesmoke',
   },
-  browseProjectsHeaderContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 20,
-  },
-  browseProjectsHeaderText: {
-    fontWeight: 'bold',
+  loadingText: {
     fontSize: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  browseProjectsSubtitleText: {
-    fontSize: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
     color: 'gray',
-    marginTop: 5,
-  },
-   // Pager View
-   pagerViewOuterContainer: {
-    width: '100%',
-    height:  windowWidth*0.85, 
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 20,
-    
-    // backgroundColor: 'red'
-  }, 
-  pagerViewContainer: {
-    width: '100%', 
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // flex: 1,
-  }, 
-  page: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%', 
-    height: '100%',
-  },
-   // Large projects
-   largeProjectContainer: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  largeProjectImageBackground: {
-    width: '90%',
-    height: '100%',
-  },
-  largeProjectImage: {
-    // padding: 30,
-    width: '100%',
-    height: '100%', 
-    borderRadius: 15,
-    padding: 20
-  }, 
-  largeProjectTextContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    padding: 25, 
-    width: windowWidth/1.1,
-    height: '100%',
-  },
-  largeProjectAuthor: {
-    color: 'white',
-    fontSize: 15,
-    textTransform: 'uppercase',
-  }, 
-  largeProjectTitle: {
-    fontWeight: 'bold',
-    color: 'white',
-    fontSize: 25,
-    flexShrink: 1,
-    paddingTop: 10,
-  }, 
-  largeProjectGradient: {
-    flex: 1, 
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute', 
-    width: '100%', 
-    height: '100%',
-    borderRadius: 15, // Match the border radius of the image
-  },
-  indicator: {
-    position: 'absolute',
-    height: '100%',
-    alignItems: 'flex-end',
-    padding: 25,
-  },
-  noProjectsText: {
     textAlign: 'center',
-    fontSize: 18,
-    color: 'gray',
-    paddingTop: 20,
+    marginTop: 20,
   },
 });

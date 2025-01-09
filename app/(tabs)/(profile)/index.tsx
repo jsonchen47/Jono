@@ -5,10 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome6';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { fetchAuthSession, getCurrentUser } from 'aws-amplify/auth'; // Updated imports
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { getUser, listProjects } from '../../../src/graphql/queries';
-import { listTeamsByUser } from '@/src/backend/queries';
+import { getUser } from '../../../src/graphql/queries'; 
 import ProjectsGridNew from '@/src/components/ProjectsGridNew';
 import ProfileHeader from '@/src/components/ProfileHeader';
 import Emoji from 'react-native-emoji';
@@ -20,6 +19,8 @@ import { Octicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { router, useRouter } from 'expo-router';
 import { useNotifications } from '@/src/contexts/NotificationContext';
+import { generateClient } from 'aws-amplify/api';
+import { User } from '@sendbird/chat';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -32,7 +33,6 @@ export default function ProfileIndex() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    // Fetch all data on component mount
     const fetchData = async () => {
       setLoading(true);
       await fetchUser();
@@ -51,19 +51,13 @@ export default function ProfileIndex() {
           </Text>
         </View>
       ),
-      headerStyle: {
-        // backgroundColor: '#00C0D1', // Change the background color of the header
-      },
       headerRight: () => (
       <View style={styles.headerButtonsContainer}>
         <TouchableOpacity 
           style={styles.headerButton}
           onPress={() => {
-            // console.log(hasNotifications)
-            router.push('/(tabs)/(profile)/notifications')
-          }
-          } 
-          >
+            router.push('/(tabs)/(profile)/notifications');
+          }}>
           <Fontisto name='bell' style={styles.icon}/>
           {hasNotifications && <View style={styles.notificationDot} />}
         </TouchableOpacity>
@@ -71,10 +65,8 @@ export default function ProfileIndex() {
         <TouchableOpacity 
           style={styles.headerButton}
           onPress={() => {
-            router.push('/settings')
-          }
-          } 
-          >
+            router.push('/settings');
+          }}>
           <FontAwesome6 name='bars' style={styles.icon}/>
         </TouchableOpacity>
       </View>
@@ -88,19 +80,29 @@ export default function ProfileIndex() {
       ),
     });
   }, [user, hasNotifications]);
-// }, [user]);
-
-  
 
   const fetchUser = async () => {
     try {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const userID = authUser.attributes.sub;
-      const userResult = await API.graphql(
-        graphqlOperation(getUser, { id: userID })
-      );
-      const castedUserResult = userResult as GraphQLResult<any>;
-      setUser(castedUserResult.data?.getUser);
+      // Fetch the current authenticated user
+      const currentUser = await getCurrentUser();
+      const userID = currentUser.userId; // Assuming username is used as user ID
+
+      // Fetch authentication session
+      const session = await fetchAuthSession();
+
+      // Use generateClient to perform GraphQL operations
+      const client = generateClient();
+      
+      const userResult = await client.graphql({
+        query: getUser,
+        variables: { id: userID },
+      }) as GraphQLResult<any>;
+
+      console.log('USER RESULT')
+      console.log(userResult)
+      
+      setUser(userResult.data?.getUser);
+      
     } catch (err) {
       setError(err);
       console.error("Error fetching user:", err);
@@ -108,7 +110,7 @@ export default function ProfileIndex() {
   };
 
   return (
-    <ProfileScreen passedUserID={null}/>
+    <ProfileScreen/>
   );
 }
 
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingHorizontal: 12,
     paddingVertical: 7,
-    fontWeight: 500,
+    fontWeight: '500',
   },
   headerButtonsContainer: {
     flexDirection: 'row', 
@@ -145,54 +147,15 @@ const styles = StyleSheet.create({
     color: 'white',
     borderRadius: 50,
   },
-  aboutContainer: {
-    paddingHorizontal: 7,
-  },
-  skillsAndResourcesTopPadding: {
-    paddingTop: 5,
-  },
-  skillsAndResourcesTitleContainer: {
-    paddingTop: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  emoji: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    paddingHorizontal: 10,
-  },
-  subtitle: {
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-  skillsAndResourcesChipsContainer: {
-    paddingTop: 15,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    alignSelf: 'flex-start',
-    margin: 5,
-    backgroundColor: 'black'
-  },
-  chipText: {
-    color: 'white',
-    fontSize: 13
-  },
-  tabScreen: {
-    // marginTop: windowWidth * 0.67,
-    flex: 1, 
-    width: '100%'
-  }, 
   notificationDot: {
-    position: 'absolute', // Allows positioning relative to the parent container
-    top: 0, // Adjust to position the dot at the top
-    right: 0, // Adjust to position the dot on the right
-    width: 10, // Size of the dot
-    height: 10, // Keep the height and width the same for a circular shape
-    borderRadius: 5, // Half of the width/height for a perfect circle
-    backgroundColor: 'red', // The red color for the notification dot
-    borderWidth: 1, // Optional border for a cleaner look
-    borderColor: 'white', // Matches the parent background for separation
+    position: 'absolute', 
+    top: 0, 
+    right: 0, 
+    width: 10, 
+    height: 10, 
+    borderRadius: 5, 
+    backgroundColor: 'red', 
+    borderWidth: 1, 
+    borderColor: 'white', 
   },
 });
