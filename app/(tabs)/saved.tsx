@@ -9,6 +9,7 @@ import ProjectsGridNew from '@/src/components/ProjectsGridNew';
 import Emoji from 'react-native-emoji';
 import { useNavigation } from '@react-navigation/native';
 import { fetchAuthSession, getCurrentUser } from '@aws-amplify/auth'; // Updated imports
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -23,17 +24,17 @@ export default function SavedScreen() {
   
   const client = generateClient(); // Create a GraphQL client instance
 
-  // SET THE HEADER
-  useEffect(() => {
-    navigation.setOptions({ 
-      headerTitle: () => (
-        <Text></Text>
-      ),
-      headerStyle: {
-        backgroundColor: 'white', // Change the background color of the header
-      },
-    });
-  }, []);
+  // // SET THE HEADER
+  // useEffect(() => {
+  //   navigation.setOptions({ 
+  //     headerTitle: () => (
+  //       <Text></Text>
+  //     ),
+  //     headerStyle: {
+  //       backgroundColor: 'white', // Change the background color of the header
+  //     },
+  //   });
+  // }, []);
 
   // FETCH PROJECTS BASED ON FILTERING BY USER'S SAVED PROJECTS
   const fetchProjects = async (nextToken = null) => {
@@ -41,7 +42,7 @@ export default function SavedScreen() {
     try {
       // Fetch the Auth user
       const authUser = await getCurrentUser(); // Updated to getCurrentUser
-      const userID = authUser.username; // Use username as ID
+      const userID = authUser.userId; // Use username as ID
 
       // Fetch the Auth user's User object
       const userResult = await client.graphql({
@@ -101,17 +102,29 @@ export default function SavedScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.savedContainer}>
-        <Text style={styles.savedText}>Saved</Text>
-      </View>
+    // <View style={styles.container}>
+    //   <View style={styles.savedContainer}>
+    //     <Text style={styles.savedText}>Saved</Text>
+    //   </View>
       
+    //   <ProjectsGridNew
+    //      projects={projects} 
+    //      loadMoreProjects={loadMoreProjects}
+    //      isFetchingMore={isFetchingMore}
+    //   />
+    // </View>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ProjectsGridNew
-         projects={projects} 
-         loadMoreProjects={loadMoreProjects}
-         isFetchingMore={isFetchingMore}
+        projects={projects}
+        loadMoreProjects={loadMoreProjects}
+        isFetchingMore={isFetchingMore}
+        listHeaderComponent={
+          <View style={styles.savedHeader}>
+            <Text style={styles.savedText}>Saved</Text>
+          </View>
+        }
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -126,5 +139,9 @@ const styles = StyleSheet.create({
   savedText: {
     fontSize: 27,
     fontWeight: 'bold',
+  },
+  savedHeader: {
+    paddingHorizontal: windowWidth * 0.1,
+    marginBottom: 20,
   },
 });

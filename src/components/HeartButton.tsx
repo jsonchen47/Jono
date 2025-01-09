@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { API, graphqlOperation } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
 import { updateUser } from '../graphql/mutations';
+
+const client = generateClient();
 
 interface HeartButtonProps {
   projectID: string;
@@ -16,32 +18,39 @@ const HeartButton: React.FC<HeartButtonProps> = ({ projectID, user }) => {
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    // Check if the projectID is in the user's savedProjectsIDs
     setIsSaved(user?.savedProjectsIDs?.includes(projectID));
   }, [projectID, user?.savedProjectsIDs]);
 
   const toggleSaveProject = async () => {
+    console.log('Heart button pressed');
+  
+    // Provide a default empty array if `savedProjectsIDs` is null or undefined
     const updatedSavedProjects = isSaved
-      ? user.savedProjectsIDs?.filter((id) => id !== projectID)
-      : [...user.savedProjectsIDs, projectID];
-
+      ? (user.savedProjectsIDs || []).filter((id) => id !== projectID)
+      : [...(user.savedProjectsIDs || []), projectID];
+  
     try {
-      // Update the savedProjectsIDs in the backend
-      await API.graphql(
-        graphqlOperation(updateUser, {
-          input: {
-            id: user.id,
-            savedProjectsIDs: updatedSavedProjects,
-          },
-        })
-      );
-      // Update the local state
-      setIsSaved(!isSaved);
+      console.log('Updated Saved Projects:', updatedSavedProjects);
+  
+      const result = await client.graphql({
+        query: updateUser,
+        variables: { input: { id: user.id, savedProjectsIDs: updatedSavedProjects } },
+      });
+  
+      console.log('Mutation Result:', result);
+  
+      if (result?.data?.updateUser) {
+        setIsSaved(!isSaved);
+        console.log('Project save state toggled:', !isSaved);
+      } else {
+        console.error('Mutation did not return expected data:', result.errors);
+      }
     } catch (error) {
-      console.error('Error updating saved projects:', error);
+      console.error('GraphQL Mutation Error:', error);
       Alert.alert('Error', 'Failed to update saved projects. Please try again.');
     }
   };
+  
 
   return (
     <TouchableOpacity style={styles.iconSmallContainer} onPress={toggleSaveProject}>

@@ -1,6 +1,7 @@
 import { View, Text, Image, Dimensions, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { getUser } from '../graphql/queries'
 import Emoji from 'react-native-emoji';
@@ -13,10 +14,12 @@ import { formatDateLong } from '../functions/formatDateLong';
 import { fetchUsers } from '../functions/fetchUsers';
 import { useFocusEffect } from '@react-navigation/native';
 
+const client = generateClient();
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const ProjectScreen = ( {project}: any ) => {
+const ProjectScreen = ({ project }: any) => {
     const router = useRouter(); 
     const [user, setUser] = useState<any>(null);
     const [members, setMembers] = useState<any>([]);
@@ -26,73 +29,69 @@ const ProjectScreen = ( {project}: any ) => {
     const [headerOpacity, setHeaderOpacity] = useState(0);
     const [authUserID, setAuthUserID] = useState<any>(null); 
     const [hasRequested, setHasRequested] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false); // Optional for async handling
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const fetchUser = async (ownerID: any) => {
-        const result = await API.graphql(
-          graphqlOperation(getUser, { id: ownerID })
-        );
-        const castedResult = result as GraphQLResult<any>
-        setUser(castedResult.data?.getUser);
+        try {
+            const result = await client.graphql({
+                query: getUser,
+                variables: { id: ownerID }
+            }) as GraphQLResult<any>;
+            setUser(result.data?.getUser);
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
     };
 
     const fetchAuthUserID = async () => { 
-        // Fetch the Auth user and set it 
-        const authUser = await Auth.currentAuthenticatedUser();
-        const userID = authUser.attributes.sub
-        setAuthUserID(userID)
+        try {
+            const authUser = await getCurrentUser();
+            setAuthUserID(authUser.userId);
+        } catch (error) {
+            console.error('Error fetching auth user:', error);
+        }
     }
 
     useEffect(() => {
-        // Fetch the first owner of the project 
       if (project?.ownerIDs?.[0]) {
         fetchUser(project?.ownerIDs[0]);
       }
 
-      // Check if the Auth user is included in the joinRequestIDs. If so, set hasRequested to true. 
       if (project?.joinRequestIDs?.includes(authUserID)) {
         setHasRequested(true)
-      }
-      else {
+      } else {
         setHasRequested(false)
       }
+    }, [project?.ownerIDs, authUserID]);
 
-    }, [project?.ownerIDs]);
-
-     // Scroll event handler
-     const handleScroll = (event: any) => {
+    const handleScroll = (event: any) => {
         const scrollY = event.nativeEvent.contentOffset.y;
-        const newOpacity = Math.min(1, scrollY / 100); // Adjust divisor for faster/slower fade
-        setHeaderOpacity(newOpacity); // Update header opacity
+        const newOpacity = Math.min(1, scrollY / 100);
+        setHeaderOpacity(newOpacity);
     };
 
-    // Get all the members of each project 
     useEffect(() => {
         fetchAuthUserID()
         const loadUsers = async () => {
-          setLoading(true); // Set loading to true while fetching users
-          const userIds = project?.Users?.items.map((item: any) => item.userId) || []; // Extract user IDs
+          setLoading(true);
+          const userIds = project?.Users?.items.map((item: any) => item.userId) || [];
           const joinedDates = project?.Users?.items.map((item: any) => item.createdAt) || []; 
           if (userIds.length > 0) {
-            const usersList = await fetchUsers(userIds); // Fetch users
-            setUsers(usersList); // Update state with fetched users
+            const usersList = await fetchUsers(userIds);
+            setUsers(usersList);
             setJoinedDates(joinedDates);
           }
-          setLoading(false); // Set loading to false after fetching
+          setLoading(false);
         };
     
-        loadUsers(); // Call the function to load users
-    }, [project]); // Run effect when the project changes
-
-      // Handle request to join and cancelling request to join
+        loadUsers();
+    }, [project]);
 
     const handleRequest = async () => {
         setIsProcessing(true);
         try {
             console.log('Sending join request...');
-            // Add logic to send the join request (API call or state update)
-            addUserToJoinRequests()
-
+            await addUserToJoinRequests()
             setHasRequested(true);
         } catch (error) {
             console.error('Failed to send request:', error);
@@ -105,8 +104,7 @@ const ProjectScreen = ( {project}: any ) => {
         setIsProcessing(true);
         try {
             console.log('Canceling join request...');
-            // Add logic to cancel the join request (API call or state update)
-            removeUserFromJoinRequests()
+            await removeUserFromJoinRequests()
             setHasRequested(false);
         } catch (error) {
             console.error('Failed to cancel request:', error);
@@ -115,72 +113,61 @@ const ProjectScreen = ( {project}: any ) => {
         }
     };
 
-
-
-    // Function to add user's ID to the join requests array 
     const addUserToJoinRequests = async () => {
         try {
-          // Fetch the current project to get existing joinRequestIDs
-          const projectData = await API.graphql(graphqlOperation(getProject, { id: project.id }));
-          const castedProjectData = projectData as GraphQLResult<any>;
-          console.log('castedProjectData?.data?.joinRequestIDs: ', castedProjectData?.data?.getProject?.joinRequestIDs)
-          const currentJoinRequestIDs = castedProjectData?.data?.getProject?.joinRequestIDs || [];
+          const projectData = await client.graphql({
+              query: getProject,
+              variables: { id: project.id }
+          }) as GraphQLResult<any>;
+          const currentJoinRequestIDs = projectData?.data?.getProject?.joinRequestIDs || [];
       
-          // Check if the authUserID is already in the array
           if (currentJoinRequestIDs?.includes(authUserID)) {
             console.log("User is already in the joinRequestIDs array.");
             return;
           }
       
-          // Add the authUserID to the array
           const updatedJoinRequestIDs = [...currentJoinRequestIDs, authUserID];
       
-          // Update the project with the new joinRequestIDs array
-          const updatedProject = await API.graphql(
-            graphqlOperation(updateProject, {
-              input: {
-                id: project.id,
-                joinRequestIDs: updatedJoinRequestIDs,
-              },
-            })
-          );
-        const castedUpdatedProject = updatedProject as GraphQLResult<any>;
-          console.log("Updated Project:", castedUpdatedProject?.data?.updateProject);
+          const updatedProject = await client.graphql({
+              query: updateProject,
+              variables: {
+                  input: {
+                      id: project.id,
+                      joinRequestIDs: updatedJoinRequestIDs,
+                  },
+              }
+          }) as GraphQLResult<any>;
+          console.log("Updated Project:", updatedProject?.data?.updateProject);
         } catch (error) {
           console.error("Error adding user to joinRequestIDs:", error);
         }
     };
 
-    // Function to remove user's ID from the join requests array
     const removeUserFromJoinRequests = async () => {
         try {
-        // Fetch the current project to get existing joinRequestIDs
-        const projectData = await API.graphql(graphqlOperation(getProject, { id: project.id }));
-        const castedProjectData = projectData as GraphQLResult<any>;
-        console.log('castedProjectData?.data?.joinRequestIDs: ', castedProjectData?.data?.getProject?.joinRequestIDs)
-        console.log('authID', authUserID)
-        const currentJoinRequestIDs = castedProjectData?.data?.getProject?.joinRequestIDs || [];
+        const projectData = await client.graphql({
+            query: getProject,
+            variables: { id: project.id }
+        }) as GraphQLResult<any>;
+        const currentJoinRequestIDs = projectData?.data?.getProject?.joinRequestIDs || [];
     
-        // Check if the authUserID is in the array
         if (!currentJoinRequestIDs.includes(authUserID)) {
             console.log("User is not in the joinRequestIDs array.");
             return;
         }
     
-        // Remove the authUserID from the array
         const updatedJoinRequestIDs = currentJoinRequestIDs.filter((id: any) => id !== authUserID);
     
-        // Update the project with the new joinRequestIDs array
-        const updatedProject = await API.graphql(
-            graphqlOperation(updateProject, {
-            input: {
-                id: project.id,
-                joinRequestIDs: updatedJoinRequestIDs,
-            },
-            })
-        );
-        const castedUpdatedProject = updatedProject as GraphQLResult<any>;
-        console.log("Updated Project (after removal):", castedUpdatedProject?.data?.updateProject);
+        const updatedProject = await client.graphql({
+            query: updateProject,
+            variables: {
+                input: {
+                    id: project.id,
+                    joinRequestIDs: updatedJoinRequestIDs,
+                },
+            }
+        }) as GraphQLResult<any>;
+        console.log("Updated Project (after removal):", updatedProject?.data?.updateProject);
         } catch (error) {
         console.error("Error removing user from joinRequestIDs:", error);
         }
@@ -260,7 +247,18 @@ const ProjectScreen = ( {project}: any ) => {
                     </Image>
                     {/* Details */}
                     <View style={styles.detailsContainer}>
+                        {/* Title */}
                         <Text style = {styles.title} >{project?.title}</Text>
+                        <View style = {styles.spacerVertical}/>
+                        {/* Location */}
+                        <View style={styles.locationRow}>
+                            <Icon name="location-outline" style={styles.locationIcon} />
+                            <Text style={styles.locationText}>
+                                {project?.city || 'City not specified'}
+                            </Text>
+                        </View>
+                        <View style={styles.divider} />
+                        {/* Description */}
                         <Text style = {styles.description}>{project?.description}</Text>
                         <View style={styles.divider} />
                         {/* Author details */}
@@ -271,12 +269,13 @@ const ProjectScreen = ( {project}: any ) => {
                                 <Text style={styles.dateAuthored}>{formatDateLong(project?.createdAt)} </Text>
                             </View>
                         </View>
+                        
                         <View style={styles.divider} /> 
                         {/* Skills */}
                         <View style={styles.skillsAndResourcesTopPadding}></View>
                         <View style={styles.skillsAndResourcesTitleContainer}>
                             <Emoji name="rocket" style={styles.emoji} />
-                            <Text style={styles.subtitle}> Skills</Text>
+                            <Text style={styles.subtitle}> Skills needed</Text>
                         </View>
                         <View style={styles.skillsAndResourcesChipsContainer}>
                             {project?.skills?.map((skill: any, index: any) => (
@@ -286,7 +285,7 @@ const ProjectScreen = ( {project}: any ) => {
                         {/* Resources */}
                         <View style={styles.skillsAndResourcesTitleContainer}>
                             <Emoji name="briefcase" style={styles.emoji} />
-                            <Text style={styles.subtitle}> Resources</Text>
+                            <Text style={styles.subtitle}> Resources needed</Text>
                         </View>
                         <View style={styles.skillsAndResourcesChipsContainer}>
                             {project?.resources?.map((resource: any, index: any) => (
@@ -474,7 +473,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold', 
     }, 
     description: {
-        paddingTop: 10, 
+        paddingTop: 20, 
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderBottomColor: 'lightgray'
     }, 
@@ -515,13 +514,13 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
     }, 
     emoji: {
-        fontSize: 23,
+        fontSize: 18,
         fontWeight: 'bold', 
         paddingHorizontal: 10,
     }, 
     subtitle: {
-        fontWeight: 'bold', 
-        fontSize: 23, 
+        fontWeight: '700', 
+        fontSize: 18, 
     }, 
     skillsAndResourcesChipsContainer: {
         paddingTop: 15, 
@@ -593,4 +592,21 @@ const styles = StyleSheet.create({
         color: 'black',
         padding: 5,
     },
+    locationRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10, // Optional spacing adjustment
+    },
+    locationIcon: {
+        fontSize: 18,
+        marginRight: 5, // Space between the icon and text
+        fontWeight: '700'
+    },
+    locationText: {
+        fontSize: 15,
+        fontWeight: '500',
+    },
+    spacerVertical: {
+        paddingVertical: 5, 
+    }
 })

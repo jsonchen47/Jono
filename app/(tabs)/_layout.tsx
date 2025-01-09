@@ -100,10 +100,11 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="heart-outline" color={color} size={size} style={{marginTop: 5}}/>
           ),
-          headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: 'white',
-          }
+          // headerShadowVisible: false,
+          // headerStyle: {
+          //   backgroundColor: 'white',
+          // }
+          headerShown: false,
         }}
       />
       <Tabs.Screen 

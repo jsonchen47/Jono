@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { useRouter } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { API, graphqlOperation } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
 import { getUser, getProject } from '../graphql/queries';
 import { getUserWithoutConnections } from '../backend/queries';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
 import HeartButton from './HeartButton';
+
+const client = generateClient();
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -17,31 +19,32 @@ const SmallProjectCard = ({ project }: any) => {
   const { updatedProjectID, updated } = useProjectUpdateContext();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
-  const [currentProject, setCurrentProject] = useState(project);  // Store the current project
+  const [currentProject, setCurrentProject] = useState(project);
 
-  // FETCH THE PROJECT OWNER
   const fetchUser = async (ownerID: any) => {
-    const result = await API.graphql(graphqlOperation(getUserWithoutConnections, { id: ownerID }));
-    const castedResult = result as GraphQLResult<any>;
-    setUser(castedResult.data?.getUser);
+    try {
+      const result = await client.graphql({
+        query: getUserWithoutConnections,
+        variables: { id: ownerID }
+      }) as GraphQLResult<any>;
+      setUser(result.data?.getUser);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
   };
 
-  // FETCH THE PROJECT (REFETCH WHEN THE UPDATED PROJECT ID CHANGES)
   const fetchProject = async (projectID: string) => {
-    const result = await API.graphql(
-      graphqlOperation(getProject, { id: projectID })
-    );
-    const castedResult = result as GraphQLResult<any>;
-    setCurrentProject(castedResult.data?.getProject);  // Assuming getProject returns a single project
+    try {
+      const result = await client.graphql({
+        query: getProject,
+        variables: { id: projectID }
+      }) as GraphQLResult<any>;
+      setCurrentProject(result.data?.getProject);
+    } catch (error) {
+      console.error('Error fetching project:', error);
+    }
   };
 
-  // Run on component mount or when project changes
-  // useEffect(() => {
-  //   console.log('Owner IDs changed:', project.ownerIDs);
-  //   if (project.ownerIDs?.[0]) {
-  //     fetchUser(project.ownerIDs[0]);
-  //   }
-  // }, [project.ownerIDs]);
   useEffect(() => {
     console.log('Owner IDs changed:', currentProject.id);
     if (project.ownerIDs?.[0]) {
@@ -49,7 +52,6 @@ const SmallProjectCard = ({ project }: any) => {
     }
   }, [currentProject.ownerIDs]);
 
-  // Run when updatedProjectID changes, refetch project if necessary
   useEffect(() => {
     if (updated && updatedProjectID === currentProject.id) {
       console.log(`Project ${currentProject.id} was recently updated.`);
@@ -68,8 +70,6 @@ const SmallProjectCard = ({ project }: any) => {
       style={{ width: '100%' }}
     >
       <Image style={styles.browseProjectsImage} source={{ uri: currentProject.image }} />
-      {/* Icon */}
-      
       <LinearGradient
         colors={['rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 0)']}
         start={{ x: 0.5, y: 1 }}
@@ -121,33 +121,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: 'lightgray',
     paddingTop: 5,
-  },
-  iconOutline: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'white',
-    position: 'absolute',
-    padding: 12,
-  },
-  iconFill: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'black',
-    position: 'absolute',
-    padding: 12,
-    opacity: 0.7,
-  },
-  iconSmallContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 25,
-  },
-  iconLargeContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
   },
 });
 
