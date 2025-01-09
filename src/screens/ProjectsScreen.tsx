@@ -126,7 +126,7 @@ const ProjectsScreen = ({ category }: any) => {
       ) : projects.length === 0 ? (
         <View style={styles.emptyStateContainer}>
           <Image
-            source={require('../../assets/images/person_reading.png')} // Ensure this path matches your image location
+            source={require('../../assets/images/dj.png')} // Ensure this path matches your image location
             style={styles.emptyImage}
           />
           <Text style={styles.emptyText}>No projects yet!</Text>
@@ -172,13 +172,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   emptyText: {
-    fontSize: 20,
+    fontSize: 21,
     fontWeight: 'bold',
     color: 'gray',
     marginBottom: 5,
   },
   emptySubText: {
-    fontSize: 16,
+    fontSize: 15,
     color: 'gray',
     textAlign: 'center',
   },

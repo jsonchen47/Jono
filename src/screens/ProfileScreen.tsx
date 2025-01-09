@@ -36,20 +36,21 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
 
   const client = generateClient();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchData = async () => {
-        if (userID) {
-          setLoading(true);
-          await fetchUser(userID);
-          await fetchProjects(userID);
-          await fetchTeams(userID);
-          setLoading(false);
-        }
-      };
-      fetchData();
-    }, [userID])
-  );
+  // To reload the page every time its viewed
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const fetchData = async () => {
+  //       if (userID) {
+  //         setLoading(true);
+  //         await fetchUser(userID);
+  //         await fetchProjects(userID);
+  //         await fetchTeams(userID);
+  //         setLoading(false);
+  //       }
+  //     };
+  //     fetchData();
+  //   }, [userID])
+  // );
 
   useEffect(() => {
     if (contextUser && !passedUserID) {
@@ -238,8 +239,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   placeholderText: {
-    fontSize: 16,
+    fontSize: 15,
     color: 'gray',
     textAlign: 'center',
+    paddingHorizontal: 20,
   },
 });

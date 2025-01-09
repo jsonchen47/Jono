@@ -1,23 +1,22 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import { generateClient } from 'aws-amplify/api';
-import { getCurrentUser } from 'aws-amplify/auth';
-import { useFilter } from '@/src/contexts/FilterContext';
-import ProjectsGridForProfile from '../components/ProjectsGridForProfile';
-import { searchProjects } from '@/src/graphql/queries'; // Your GraphQL queries
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import ProjectsGridForProfile from '../components/ProjectsGridForProfile';
+import { searchProjects } from '@/src/graphql/queries';
 
 const windowWidth = Dimensions.get('window').width;
 
 const client = generateClient();
 
 interface ProfileProjectsScreenProps {
-  userID: string; // or any other type that matches the type of userID
+  userID: string;
 }
 
 const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID }) => {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false); // To prevent flickering
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
@@ -28,28 +27,31 @@ const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID })
         query: searchProjects,
         variables: {
           filter: { ownerIDs: { match: userID } },
-          nextToken: nextToken,
-          limit: 10
-        }
+          nextToken,
+          limit: 10,
+        },
       });
 
       const castedResult = result as GraphQLResult<any>;
       const fetchedProjects = castedResult?.data?.searchProjects?.items || [];
-      
+
       // Ensure no duplicate projects
       setProjects((prevProjects: any) => {
-        const newProjects = fetchedProjects.filter((newProject: any) => 
-            !prevProjects.some((existingProject: any) => existingProject.id === newProject.id)
+        const newProjects = fetchedProjects.filter(
+          (newProject: any) =>
+            !prevProjects.some(
+              (existingProject: any) => existingProject.id === newProject.id
+            )
         );
-        return [...prevProjects, ...newProjects]; // Add only new projects
+        return [...prevProjects, ...newProjects];
       });
-      
+
       setNextToken(castedResult?.data?.searchProjects?.nextToken);
     } catch (error) {
       console.error('Error fetching projects:', error);
     } finally {
       setLoading(false);
-      setIsFetchingMore(false);
+      setTimeout(() => setDataLoaded(true), 300); // Ensure rendering after loading settles
     }
   };
 
@@ -60,17 +62,25 @@ const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID })
   const loadMoreProjects = () => {
     if (nextToken && !isFetchingMore) {
       setIsFetchingMore(true);
-      fetchProjects(nextToken); // Append projects
+      fetchProjects(nextToken);
     }
   };
 
   return (
     <View style={styles.projectsScreenContainer}>
-      {loading && projects.length === 0 ? (
-        <Text style={styles.loadingText}>Loading projects...</Text>
+      {!loading && projects.length === 0 && dataLoaded ? (
+        <View style={styles.noProjectsContainer}>
+          <Image
+            source={require('../../assets/images/dj.png')} // Replace with your placeholder image path
+            style={styles.noProjectsImage}
+          />
+          <Text style={styles.noProjectsText}>
+            No projects yet! Post a project to populate the space.
+          </Text>
+        </View>
       ) : (
         <ProjectsGridForProfile
-          projects={projects} // Pass remaining projects after first 4
+          projects={projects}
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
         />
@@ -88,6 +98,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'whitesmoke',
+  },
+  noProjectsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 50, 
+  },
+  noProjectsImage: {
+    width: windowWidth / 2,
+    height: windowWidth / 2,
+    marginBottom: 20,
+  },
+  noProjectsText: {
+    textAlign: 'center',
+    fontSize: 15,
+    color: 'gray',
+    paddingHorizontal: 20,
   },
   loadingText: {
     fontSize: 18,
