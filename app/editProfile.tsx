@@ -11,16 +11,21 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { selectPhoto } from '@/src/functions/selectPhoto';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
+import { getCurrentUser } from 'aws-amplify/auth';
 import { getUser } from '@/src/graphql/queries';
 import { updateUser } from '@/src/graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import ChipInput from '@/src/components/ChipInput';
+import { uploadData, remove } from 'aws-amplify/storage'; // For uploading and removing images from S3
+import config from "../src/aws-exports"; // AWS Amplify configuration
+
+const client = generateClient();
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
 
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<any>(null);
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
@@ -31,13 +36,13 @@ const EditProfileScreen = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const authUser = await Auth.currentAuthenticatedUser();
-        const userID = authUser.attributes.sub;
-        const userResult = await API.graphql(
-          graphqlOperation(getUser, { id: userID })
-        );
-        const castedResult = userResult as GraphQLResult<any>;
-        const userData = castedResult.data?.getUser;
+        const authUser = await getCurrentUser();
+        const userID = authUser.userId;
+        const userResult = await client.graphql({
+          query: getUser,
+          variables: { id: userID }
+        }) as GraphQLResult<any>;
+        const userData = userResult.data?.getUser;
         if (userData) {
           setImage(userData.image);
           setName(userData.name);
@@ -55,15 +60,61 @@ const EditProfileScreen = () => {
     fetchUserData();
   }, []);
 
-  // Save the updated user data
+  const handleImagePicker = async () => {
+    try {
+      await selectPhoto(async (uri: any) => {
+        if (!uri) return;
+  
+        // Remove the old profile image if it exists
+        if (image) {
+          const oldImageKey = image.split(`${config.aws_user_files_s3_bucket}.s3.${config.aws_user_files_s3_bucket_region}.amazonaws.com/public/`)[1];
+          if (oldImageKey) {
+            try {
+              await remove({ key: oldImageKey, options: { accessLevel: 'guest' } });
+              console.log('Old profile image removed successfully');
+            } catch (error) {
+              console.error('Error removing old profile image:', error);
+            }
+          }
+        }
+  
+        // Generate a new filename for the uploaded image
+        const unfilteredUsername = username || 'default_user';
+        const sanitizedUsername = unfilteredUsername.replace(/[^a-zA-Z0-9]/g, '_');
+        const newImageKey = `${sanitizedUsername}_profile_${Date.now()}.jpg`;
+  
+        // Upload the new image to S3
+        const response = await fetch(uri);
+        const blob = await response.blob();
+  
+        const uploadResult = await uploadData({
+          key: newImageKey,
+          data: blob,
+          options: {
+            contentType: 'image/jpeg',
+            accessLevel: 'guest',
+          },
+        }).result;
+  
+        const newImageUrl = `https://${config.aws_user_files_s3_bucket}.s3.${config.aws_user_files_s3_bucket_region}.amazonaws.com/public/${newImageKey}`;
+        console.log('New profile image uploaded successfully:', newImageUrl);
+  
+        // Update the state with the new image URL
+        setImage(newImageUrl);
+      });
+    } catch (error) {
+      console.error('Error updating profile image:', error);
+    }
+  };
+  
   const handleSave = async () => {
     try {
-      const authUser = await Auth.currentAuthenticatedUser();
-      const userID = authUser.attributes.sub;
-
+      const authUser = await getCurrentUser();
+      const userID = authUser.userId;
+  
       const updatedUser = {
         id: userID,
-        image,
+        image, // Updated profile image URL
         name,
         username,
         bio,
@@ -71,16 +122,19 @@ const EditProfileScreen = () => {
         skills,
         links,
       };
-
-      await API.graphql(
-        graphqlOperation(updateUser, { input: updatedUser })
-      );
-
+  
+      const result = await client.graphql({
+        query: updateUser,
+        variables: { input: updatedUser },
+      }) as GraphQLResult<any>;
+  
+      console.log('User profile updated successfully:', result.data?.updateUser);
       navigation.goBack();
     } catch (error) {
-      console.error('Error updating user data:', error);
+      console.error('Error updating user profile:', error);
     }
   };
+  
 
   // Set navigation options for the header
   React.useEffect(() => {
@@ -101,9 +155,7 @@ const EditProfileScreen = () => {
     });
   }, [navigation, image, name, username, bio, resources, skills, links]);
 
-  const handleImagePicker = async () => {
-    await selectPhoto((uri: any) => setImage(uri));
-  };
+  
 
   return (
     <ScrollView style={styles.container}>

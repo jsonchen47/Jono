@@ -129,7 +129,7 @@ dropdown: {
   },
   input: {
     minWidth: 100,
-    fontSize: 16,
+    fontSize: 15,
     padding: 0,
     marginLeft: 10,
     marginTop: 5, 

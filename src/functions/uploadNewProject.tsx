@@ -1,130 +1,163 @@
-// import { Amplify } from 'aws-amplify';
-// import { generateClient } from 'aws-amplify/api';
-// import { createProject, createUserProject } from '../graphql/mutations';
-// import { v4 as uuidv4 } from 'uuid';
-// import { uploadData } from 'aws-amplify/storage';
-// import config from "../../src/aws-exports";
-// import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
+import { Amplify } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
+import { createProject, createUserProject } from '../graphql/mutations';
+import { v4 as uuidv4 } from 'uuid';
+import { uploadData } from 'aws-amplify/storage';
+import config from '../../src/aws-exports';
+import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
+import Geolocation from '@react-native-community/geolocation';
 
+const client = generateClient();
 
-// const client = generateClient();
+(async () => {
+  try {
+    const { credentials } = await fetchAuthSession();
+    console.log('AWS Credentials:', {
+      accessKeyId: credentials?.accessKeyId,
+      secretAccessKey: credentials?.secretAccessKey,
+      sessionToken: credentials?.sessionToken,
+    });
+  } catch (error) {
+    console.error('Error fetching AWS credentials:', error);
+  }
+})();
 
-// (async () => {
-//   try {
-//     const { credentials } = await fetchAuthSession();
-//     console.log('AWS Credentials:', {
-//       accessKeyId: credentials?.accessKeyId,
-//       secretAccessKey: credentials?.secretAccessKey,
-//       sessionToken: credentials?.sessionToken
-//     });
+function getCurrentDateString() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}_${month}_${day}`;
+}
 
-//   } catch (error) {
-//     console.error('Error fetching AWS credentials:', error);
-//   }
-// })();
+export async function uploadNewProject(
+  formData: any,
+  setFormData: any,
+  showProgressBar: () => void,
+  hideProgressBar: () => void,
+  updateProgress: (progress: number) => void,
+  isVisible: boolean,
+  setProjectId: any
+) {
+  try {
+    showProgressBar();
+    updateProgress(0);
 
-// // Storage configuration is now done globally in your app's entry point
+    console.log('just started');
 
-// function getCurrentDateString() {
-//   const date = new Date();
-//   const year = date.getFullYear();
-//   const month = String(date.getMonth() + 1).padStart(2, '0');
-//   const day = String(date.getDate()).padStart(2, '0');
-//   return `${year}_${month}_${day}`;
-// }
+    // Fetch current user
+    const currentUser = await getCurrentUser();
+    const userId = currentUser.userId;
+    updateProgress(0.1);
 
-// export async function uploadNewProject(
-//   formData: any,
-//   setFormData: any,
-//   showProgressBar: () => void,
-//   hideProgressBar: () => void,
-//   updateProgress: (progress: number) => void,
-//   isVisible: boolean, 
-//   setProjectId: any,
-// ) {
-//   try {
-//     showProgressBar();
-//     updateProgress(0);
+    console.log('just got the auth user');
 
-//     console.log('just started');
-    
-//     const currentUser = await getCurrentUser();
-//     const userId = currentUser.userId;
-//     updateProgress(0.1);
+    // Fetch current location
+    const location = await new Promise<GeolocationPosition>((resolve, reject) => {
+        Geolocation.getCurrentPosition(
+            (position) => resolve(position as GeolocationPosition), // Explicitly cast
+            reject,
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
+    });
+    const { latitude, longitude } = location.coords;
+      
+      
 
-//     console.log('just got the auth user');
+    // Fetch city using reverse geocoding
+    const reverseGeocodingResponse = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+    );
+    const locationData = await reverseGeocodingResponse.json();
+    const cityOnly =
+      locationData.address.city ||
+      locationData.address.town ||
+      locationData.address.village ||
+      locationData.address.hamlet ||
+      'Unknown';
 
-//     const uri = formData.localImageUri;
-//     const unfilteredTitle = formData.title;
-//     const filteredTitle = unfilteredTitle.replace(/[^a-zA-Z0-9 ]/g, "").replace(/ /g, "_");
-//     const dateString = getCurrentDateString();
-//     const randomString = `${uuidv4()}`;
-//     const fileName = `${filteredTitle}_${dateString}_${randomString}.jpg`;
+    const state = locationData.address.state;
+    const city = `${cityOnly}, ${state}`
 
-//     console.log('filename ', fileName);
-//     updateProgress(0.3);
+    console.log(`Location: ${latitude}, ${longitude}, City: ${city}`);
+    updateProgress(0.2);
 
-//     const response = await fetch(uri);
-//     const blob = await response.blob();
+    // Continue with image upload
+    const uri = formData.localImageUri;
+    const unfilteredTitle = formData.title;
+    const filteredTitle = unfilteredTitle.replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '_');
+    const dateString = getCurrentDateString();
+    const randomString = `${uuidv4()}`;
+    const fileName = `${filteredTitle}_${dateString}_${randomString}.jpg`;
 
-//     updateProgress(0.4);
+    console.log('filename ', fileName);
+    updateProgress(0.3);
 
-//     const uploadResult = await uploadData({
-//       key: fileName,
-//       data: blob,
-//       options: {
-//         contentType: 'image/jpeg',
-//         accessLevel: 'guest',
-//         onProgress: ({ transferredBytes, totalBytes }) => {
-//           updateProgress(transferredBytes / (totalBytes ?? 1));
-//         },        
-//       }
-//     }).result;
+    const response = await fetch(uri);
+    const blob = await response.blob();
 
-//     const imageUrl = `https://${config.aws_user_files_s3_bucket}.s3.${config.aws_user_files_s3_bucket_region}.amazonaws.com/public/${fileName}`;
-//     updateProgress(0.8);
+    updateProgress(0.4);
 
-//     setFormData({ ...formData, imageUri: imageUrl });
-//     console.log('imageUrl: ', imageUrl);
+    const uploadResult = await uploadData({
+      key: fileName,
+      data: blob,
+      options: {
+        contentType: 'image/jpeg',
+        accessLevel: 'guest',
+        onProgress: ({ transferredBytes, totalBytes }) => {
+          updateProgress(transferredBytes / (totalBytes ?? 1));
+        },
+      },
+    }).result;
 
-//     console.log('Image uploaded successfully:', imageUrl);
+    const imageUrl = `https://${config.aws_user_files_s3_bucket}.s3.${config.aws_user_files_s3_bucket_region}.amazonaws.com/public/${fileName}`;
+    updateProgress(0.8);
 
-//     const projectData = {
-//       title: formData.title,
-//       image: imageUrl,
-//       description: formData.description,
-//       categories: formData.categories,
-//       skills: formData.skills,
-//       resources: formData.resources,
-//       ownerIDs: [userId], 
-//     };
+    setFormData({ ...formData, imageUri: imageUrl });
+    console.log('imageUrl: ', imageUrl);
 
-//     const projectResult = await client.graphql({
-//       query: createProject,
-//       variables: { input: projectData }
-//     });
+    console.log('Image uploaded successfully:', imageUrl);
 
-//     console.log('Project created successfully:', projectResult.data?.createProject);
+    // Create project data
+    const projectData = {
+      title: formData.title,
+      image: imageUrl,
+      description: formData.description,
+      categories: formData.categories,
+      skills: formData.skills,
+      resources: formData.resources,
+      ownerIDs: [userId],
+      longitude,
+      latitude,
+      city,
+    };
 
-//     const projectId = projectResult.data?.createProject.id;
-//     const userProjectData = {
-//       userId: userId,
-//       projectId: projectId,
-//     };
+    const projectResult = await client.graphql({
+      query: createProject,
+      variables: { input: projectData },
+    });
 
-//     await client.graphql({
-//       query: createUserProject,
-//       variables: { input: userProjectData }
-//     });
+    console.log('Project created successfully:', projectResult.data?.createProject);
 
-//     console.log('Project and user relationship created successfully.');
-    
-//     setProjectId(projectId);
+    const projectId = projectResult.data?.createProject.id;
+    const userProjectData = {
+      userId,
+      projectId,
+    };
 
-//     updateProgress(1);
-//     await new Promise((resolve) => setTimeout(resolve, 100));
-//     hideProgressBar();
-//   } catch (error) {
-//     console.error('Error uploading project:', error);
-//   }
-// }
+    await client.graphql({
+      query: createUserProject,
+      variables: { input: userProjectData },
+    });
+
+    console.log('Project and user relationship created successfully.');
+
+    setProjectId(projectId);
+
+    updateProgress(1);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    hideProgressBar();
+  } catch (error) {
+    console.error('Error uploading project:', error);
+  }
+}

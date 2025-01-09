@@ -11,12 +11,13 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { API, graphqlOperation } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
 import { getUser, getProject } from '../graphql/queries';
 import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
 import HeartButton from './HeartButton';
 
 const windowWidth = Dimensions.get('window').width;
+const client = generateClient();
 
 const LargeProjectCard = ({ project }: any) => {
   const router = useRouter();
@@ -27,11 +28,11 @@ const LargeProjectCard = ({ project }: any) => {
 
   const fetchUser = async (ownerID: any) => {
     try {
-      const result = await API.graphql(
-        graphqlOperation(getUser, { id: ownerID })
-      );
-      const castedResult = result as GraphQLResult<any>;
-      setUser(castedResult.data?.getUser);
+      const result = await client.graphql({
+        query: getUser,
+        variables: { id: ownerID }
+      }) as GraphQLResult<any>;
+      setUser(result.data?.getUser);
     } catch (error) {
       console.error('Error fetching user:', error);
     }
@@ -39,11 +40,11 @@ const LargeProjectCard = ({ project }: any) => {
 
   const fetchProject = async (projectID: string) => {
     try {
-      const result = await API.graphql(
-        graphqlOperation(getProject, { id: projectID })
-      );
-      const castedResult = result as GraphQLResult<any>;
-      setCurrentProject(castedResult.data?.getProject);
+      const result = await client.graphql({
+        query: getProject,
+        variables: { id: projectID }
+      }) as GraphQLResult<any>;
+      setCurrentProject(result.data?.getProject);
     } catch (error) {
       console.error('Error fetching project:', error);
     }

@@ -61,7 +61,7 @@ export default function DeleteAccountScreen() {
       
                   // 3. Delete the user's Sendbird account
                   const sendbirdAppId = '01E73A75-F4D1-4564-957C-FA30C79A0FCE';
-                  const sendbirdAccessToken = 'YOUR_SENDBIRD_ACCESS_TOKEN'; // Replace with your Sendbird API token
+                  const sendbirdAccessToken = '713275b4177f673fa53c09210d43437385c4e877'; // Replace with your Sendbird API token
       
                   await fetch(
                     `https://api-${sendbirdAppId}.sendbird.com/v3/users/${userID}`,

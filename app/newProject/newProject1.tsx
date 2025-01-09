@@ -49,7 +49,7 @@ const newProject1 = () => {
             onPress={() => selectPhoto(handlePhotoSelection)}
             > 
               <View style={styles.addPhotoButtonContent}>
-                <Icon name='plus' size={17}></Icon>
+                <Icon name='plus' size={18}></Icon>
                 <Text style={styles.addPhotoButtonText}>Add photo</Text>
               </View>
             </TouchableOpacity>
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D3D3D3', 
   },
   title: {
-    fontSize: 25, 
+    fontSize: 24, 
     fontWeight: 'bold', 
     marginTop: 20, 
   }, 
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   }, 
   // Project title
   projectTitleHeader: {
-    fontSize: 17, 
+    fontSize: 18, 
     fontWeight: '500', 
     marginTop: 30, 
   }, 
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     height: windowHeight/10, 
     padding: 10,
     textAlignVertical: 'top',
-    fontSize: 17, 
+    fontSize: 15, 
   }, 
   // Project description
   projectDescriptionTextInput: {
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     height: windowHeight/5, 
     padding: 10,
     textAlignVertical: 'top',
-    fontSize: 17, 
+    fontSize: 15, 
   }, 
   // Bottom content
   contentBottom: {
@@ -224,6 +224,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   nextButtonText: {
-    fontSize: 17, 
+    fontSize: 18, 
   }
 });

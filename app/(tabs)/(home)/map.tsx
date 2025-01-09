@@ -5,11 +5,13 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { API, graphqlOperation } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { listProjects } from '@/src/graphql/queries';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const client = generateClient();
 
 const map = () => {
     const router = useRouter(); 
@@ -19,14 +21,13 @@ const map = () => {
       longitude: number;
       latitudeDelta: number;
       longitudeDelta: number;
-    } | null>(null); // Start with null
+    } | null>(null);
     const [projects, setProjects] = useState<any>([]);
-    const [selectedProject, setSelectedProject] = useState<any>(null); // State for selected project
-    const [markerPressed, setMarkerPressed] = useState(false); // To track marker press
+    const [selectedProject, setSelectedProject] = useState<any>(null);
+    const [markerPressed, setMarkerPressed] = useState(false);
 
     const mapRef = useRef<MapView>(null);
 
-    // Set the header 
     useEffect(() => {
         navigation.setOptions({
         headerLeft: () => (
@@ -40,9 +41,7 @@ const map = () => {
         });
     }, [navigation]);
 
-    // Request permission and then obtain current location
     useEffect(() => {
-      // Ask for location permission if on Android
       if (Platform.OS === 'android') {
         PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
           .then(granted => {
@@ -57,15 +56,12 @@ const map = () => {
       }
     }, []);
 
-    // Call helper functions to fetch the projects in that region
     useEffect(() => {
       if (region) {
         fetchProjectsWithinRegion(region).then((projects) => setProjects(projects));
       }
     }, [region]);
-    
 
-    // Helper function to calculate the region
     const calculateBounds = (region: any) => {
       const minLat = region.latitude - region.latitudeDelta / 2;
       const maxLat = region.latitude + region.latitudeDelta / 2;
@@ -75,28 +71,29 @@ const map = () => {
       return { minLat, maxLat, minLng, maxLng };
     };
 
-    // Helper function to fetch the project data from AWS
-  const fetchProjectsWithinRegion = async (region: any) => {
-    const { minLat, maxLat, minLng, maxLng } = calculateBounds(region);
+    const fetchProjectsWithinRegion = async (region: any) => {
+      const { minLat, maxLat, minLng, maxLng } = calculateBounds(region);
 
-    try {
-      const response = await API.graphql(
-        graphqlOperation(listProjects, {
-          filter: {
-            latitude: { between: [minLat, maxLat] },
-            longitude: { between: [minLng, maxLng] }
+      try {
+        const response = await client.graphql({
+          query: listProjects,
+          variables: {
+            filter: {
+              latitude: { between: [minLat, maxLat] },
+              longitude: { between: [minLng, maxLng] }
+            }
           }
-        })
-      );
-      const castedResponse = response as GraphQLResult<any>
-      console.log(castedResponse.data.listProjects.items)
-      console.log("yes")
-      return castedResponse.data.listProjects.items;
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-      return [];
-    }
-  };
+        }) as GraphQLResult<any>;
+        
+        console.log(response.data.listProjects.items);
+        console.log("yes");
+        return response.data.listProjects.items;
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        return [];
+      }
+    };
+
     
     const getCurrentLocation = () => {
       Geolocation.getCurrentPosition(

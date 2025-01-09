@@ -6,6 +6,10 @@ import { getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/api';
 import { createUser } from '../graphql/mutations';
 import { getUser } from '../graphql/queries';
+import { uploadData } from 'aws-amplify/storage';
+import config from '../../src/aws-exports';
+import * as FileSystem from 'expo-file-system';
+import { Image } from 'react-native';
 
 // PROVIDER IMPORTS
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -67,6 +71,42 @@ const platformServices: SendbirdUIKitContainerProps['platformServices'] = {
 
 const mmkv = new MMKV();
 
+// For uploading the default profile picture
+const uploadDefaultProfilePicture = async (username: string) => {
+  try {
+    // Use the bundled asset directly
+    const assetUri = require('../../assets/images/profile1.png'); // Path to your local image
+
+    // Convert the asset to a blob
+    const response = await fetch(Image.resolveAssetSource(assetUri).uri); // Resolve asset URI
+    const blob = await response.blob();
+
+    // Generate a unique file name
+    const fileName = `${username}_default_profile_${Date.now()}.jpg`;
+
+    // Upload the blob to S3
+    const uploadResult = await uploadData({
+      key: fileName,
+      data: blob,
+      options: {
+        contentType: 'image/jpeg',
+        accessLevel: 'guest',
+      },
+    }).result;
+
+    // Generate the public URL
+    const uploadedImageUrl = `https://${config.aws_user_files_s3_bucket}.s3.${config.aws_user_files_s3_bucket_region}.amazonaws.com/public/${fileName}`;
+    return uploadedImageUrl;
+  } catch (error) {
+    console.error('Error uploading default profile picture:', error);
+    return null;
+  }
+};
+
+
+
+
+
 const AppEntrance = () => {
 
   useEffect(() => {
@@ -74,44 +114,42 @@ const AppEntrance = () => {
       try {
         const authUser = await getCurrentUser();
         const userAttributes = await fetchUserAttributes();
-
+    
         const userResult = await client.graphql({
           query: getUser,
           variables: { id: authUser.userId },
         });
-
+    
         const userData = userResult.data?.getUser;
-
-        // console.log('authUser')
-        // console.log(authUser)
-
-        // console.log('userAttributes')
-        // console.log(userAttributes)
-
+    
         if (userData) {
           console.log('User exists:', userData);
           return;
         }
-
+    
+        // Use the username to generate the file name
+        const username = authUser.username || 'default_user';
+        const defaultImage = await uploadDefaultProfilePicture(username);
+    
         const newUser = {
           id: authUser.userId,
           name: userAttributes.name || 'New User',
-          username: authUser.username,
+          username: username,
           status: 'Hey, I am using Jono',
+          image: defaultImage || null, // Set the default profile picture if available
         };
-
-        
-
+    
         await client.graphql({
           query: createUser,
           variables: { input: newUser },
         });
-
+    
         console.log('New user created:', newUser);
       } catch (error) {
         console.error('Error syncing user:', error);
       }
     };
+    
 
     syncUser();
   }, []);

@@ -8,41 +8,57 @@ import { useConnection } from '@sendbird/uikit-react-native';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/api';
 import { getUser } from '@/src/graphql/queries';
+import SendbirdChat from '@sendbird/chat'; // Ensure you have the correct Sendbird import for your SDK
 
 const client = generateClient();
 
 export default function TabLayout() {
   const { hasNotifications } = useNotifications();
-  const router = useRouter(); 
+  const router = useRouter();
+  const { connect } = useConnection(); // Use the hook at the top level
+
   const handleCenterTabPress = () => {
     router.push('/newProject/newProject1'); // Replace with your desired screen
     console.log('tabs button pressed');
   };
-  
-  const { connect } = useConnection();
 
   // Connect user to Sendbird 
   useEffect(() => {
     const connectUser = async () => {
       try {
-        // Get Auth user
+        // Get Authenticated User ID from Amplify Auth
         const authUser = await getCurrentUser();
-        
-        // Query the database using Auth user id (sub)
+        const userID = authUser.userId;
+    
+        // Query the database using the user ID from Auth
         const result = await client.graphql({
           query: getUser,
-          variables: { id: authUser.userId }
+          variables: { id: userID },
         });
-
+    
         const userData = result.data?.getUser;
-        const userID = userData?.id;
-        const username = userData?.name;
-
-        console.log(userID);
-        console.log(username);
-
-        if (userID && username) {
-          connect(userID, { nickname: username });
+    
+        if (userData) {
+          const username = userData.name; // Updated name from GraphQL
+          const profileImage = userData.image; // Updated profile image from GraphQL
+    
+          console.log('User ID:', userID);
+          console.log('Username:', username);
+          console.log('Profile Image:', profileImage);
+    
+          // Step 1: Connect to Sendbird with the user ID and nickname
+          await connect(userID, { nickname: username || 'User' });
+    
+          // Step 2: Update the user's profile image
+          const sb = SendbirdChat.instance; // Use instance to access the SendbirdChat singleton
+          await sb.updateCurrentUserInfo({
+            nickname: username || 'User',
+            profileUrl: profileImage || '', // Set profile image
+          });
+    
+          console.log('Sendbird profile updated successfully.');
+        } else {
+          console.warn('No user data found in the database.');
         }
       } catch (error) {
         console.error('Error connecting user to Sendbird:', error);
@@ -50,7 +66,7 @@ export default function TabLayout() {
     };
 
     connectUser();
-  }, [connect]);
+  }, [connect]); // Dependency array includes `connect`
 
   return (
     <Tabs

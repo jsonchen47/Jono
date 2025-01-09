@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
   contentTop: {
     width: '80%', 
     // justifyContent: 'flex-start'
-
   },
   divider: {
     height: 1,            
@@ -173,47 +172,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     marginTop: 20, 
   }, 
-  addPhotoButtonContainer: {
-    borderWidth: 2, 
-    borderRadius: 10,
-    marginTop: 20, 
-  }, 
-  addPhotoButtonContent: {
-    margin: 15, 
-    flexDirection: 'row',
-    alignItems: 'center'
-  }, 
-  addPhotoButtonText: {
-    fontSize: 20, 
-    marginLeft: 10
-  }, 
-  addPhotoButtonIcon:{
-
-  }, 
   // Project title
   subtitle: {
-    fontSize: 17, 
+    fontSize: 18, 
     fontWeight: '500', 
     marginTop: 30, 
-  }, 
-  projectTitleTextInput: {
-    marginTop: 10, 
-    borderWidth: 2, 
-    borderRadius: 10,
-    height: windowHeight/10, 
-    padding: 10,
-    textAlignVertical: 'top',
-    fontSize: 17, 
-  }, 
-  // Project description
-  projectDescriptionTextInput: {
-    marginTop: 10, 
-    borderWidth: 2, 
-    borderRadius: 10,
-    height: windowHeight/5, 
-    padding: 10,
-    textAlignVertical: 'top',
-    fontSize: 17, 
   }, 
   // Bottom content
   contentBottom: {
@@ -228,52 +191,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   nextButtonText: {
-    fontSize: 17, 
+    fontSize: 18, 
   },
-  // Category selection
-  dropdown: {
-    height: 50,
-    borderColor: 'black',
-    borderWidth: 2,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    marginTop: 10, 
-  },
-  chip: {
-    backgroundColor: 'black',
-    marginRight: 5, 
-    marginBottom: 5
-  }, 
-  chipsContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  chipTextStyle: {
-    color: 'white',
-  },
-  chipCloseIcon: {
-
-  }, 
-  skillsBoxContainer: {
-    flexDirection: 'row',
-    borderColor: 'black',
-    borderWidth: 2,
-    borderRadius: 8,
-    padding: 10,
-    marginTop: 10,
-  },
-  skillsBox: {
-    // marginTop: 10, 
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-  },
-  input: {
-    minWidth: 100,
-    fontSize: 16,
-    padding: 0,
-    marginLeft: 10,
-    marginTop: 5, 
-  },
+  
+  
 });
