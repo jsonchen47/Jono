@@ -98,19 +98,24 @@ const newProject2 = () => {
            <DropdownWithChipDisplay formData={formData} setFormData={setFormData} handleSelectCategory={handleSelectCategory}/>
 
         {/* Skills Input */}
-        <Text style={styles.subtitle}>List your skills</Text>
+        <Text style={styles.subtitle}>Skills needed</Text>
+        <View style={styles.spacerVertical}/>
         <ChipInput
           placeholder="Skills"
           chips={formData.skills}
           onChangeChips={handleSkillsChange}
+          highlightBorder={true}
         />
 
+
         {/* Resources Input */}
-        <Text style={styles.subtitle}>List available resources</Text>
+        <Text style={styles.subtitle}>Resources needed</Text>
+        <View style={styles.spacerVertical}/>
         <ChipInput
           placeholder="Resources"
           chips={formData.resources}
           onChangeChips={handleResourcesChange}
+          highlightBorder={true}
         />
           </ScrollView>
           {/* Divider */}
@@ -193,6 +198,8 @@ const styles = StyleSheet.create({
   nextButtonText: {
     fontSize: 18, 
   },
-  
+  spacerVertical: {
+    marginVertical: 5, 
+  }
   
 });

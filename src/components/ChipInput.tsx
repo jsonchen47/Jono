@@ -7,9 +7,10 @@ interface ChipInputProps {
     placeholder: any;
     chips: any;
     onChangeChips: any;
+    highlightBorder?: boolean; // Optional parameter
   }
 
-const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, onChangeChips }) => {
+const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, onChangeChips, highlightBorder = false, }) => {
     const [text, setText] = useState<any>('');
     const isFocused = useRef(false); // Use ref to track focus state
   
@@ -47,7 +48,7 @@ const ChipInput: React.FC<ChipInputProps> = ({ placeholder, chips, onChangeChips
     };
   
     return (
-      <View style={styles.skillsBoxContainer}>
+      <View style={[styles.skillsBoxContainer, highlightBorder && styles.highlightedSkillsBox]}>
         <View style={styles.skillsBox}>
           {chips?.map((chip: any, index: any) => (
             <Chip
@@ -112,13 +113,17 @@ dropdown: {
   }, 
   skillsBoxContainer: {
     flexDirection: 'row',
-    borderColor: '#ddd',
+    borderColor: 'lightgray',
     borderWidth: 1,
     borderRadius: 8,
     padding: 10,
     // marginVertical: 5,
     backgroundColor: '#f9f9f9',
-    marginBottom: 20,
+    // marginBottom: 20,
+  },
+  highlightedSkillsBox: {
+    borderColor: 'gray',
+    borderWidth: 2,
   },
   skillsBox: {
     // marginTop: 10, 

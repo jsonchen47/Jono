@@ -416,6 +416,7 @@ const ManageProjectScreen = ({project}: any) => {
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Skills needed</Text>
                 </View>
+                <View style={styles.spacerVerticalSmall}/>
                 <ChipInput
                 placeholder="Skills"
                 chips={formData?.skills}
@@ -428,6 +429,7 @@ const ManageProjectScreen = ({project}: any) => {
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Resources needed</Text>
                 </View>
+                <View style={styles.spacerVerticalSmall}/>
                 <ChipInput
                 placeholder="Resources"
                 chips={formData?.resources}
@@ -516,13 +518,15 @@ const styles = StyleSheet.create({
         marginVertical: 20, 
     },
     titleTextBox: {
-        borderWidth: 2,
+        borderWidth: 1,
         height: windowHeight/10,
         borderRadius: 10, 
         padding: 10, 
         textAlign: 'left', 
         textAlignVertical: 'top', 
         marginBottom: 20, 
+        borderColor: 'lightgray',
+        backgroundColor: '#f9f9f9'
     }, 
     textBoxHeader: { 
         marginBottom: 5, 
@@ -530,13 +534,15 @@ const styles = StyleSheet.create({
         color: 'dimgray'
     }, 
     descriptionTextBox: {
-        borderWidth: 2,
+        borderWidth: 1,
         height: windowHeight/8,
         borderRadius: 10, 
         padding: 10, 
         textAlign: 'left', 
         textAlignVertical: 'top', 
         marginBottom: 20, 
+        borderColor: 'lightgray',
+        backgroundColor: '#f9f9f9'
     }, 
     // Details tab
     detailsTabContainer: {
@@ -592,6 +598,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 2,
         justifyContent: 'space-between',
+        borderColor: 'gray'
     },
     listButtonText: {
         fontSize: 15, 

@@ -212,25 +212,31 @@ const EditProfileScreen = () => {
           />
 
           <Text style={styles.label}>Resources</Text>
-          <ChipInput
-            placeholder="Add a resource"
-            chips={resources}
-            onChangeChips={setResources}
-          />
+          <View style={styles.chipInputContainer}>
+            <ChipInput
+              placeholder="Add a resource"
+              chips={resources}
+              onChangeChips={setResources}
+            />
+          </View>
 
           <Text style={styles.label}>Skills</Text>
-          <ChipInput
-            placeholder="Add a skill"
-            chips={skills}
-            onChangeChips={setSkills}
-          />
+          <View style={styles.chipInputContainer}>
+            <ChipInput
+              placeholder="Add a skill"
+              chips={skills}
+              onChangeChips={setSkills}
+            />
+          </View>
 
           <Text style={styles.label}>Links</Text>
-          <ChipInput
-            placeholder="Add a link"
-            chips={links}
-            onChangeChips={setLinks}
-          />
+          <View style={styles.chipInputContainer}>
+            <ChipInput
+              placeholder="Add a link"
+              chips={links}
+              onChangeChips={setLinks}
+            />
+          </View>
         </View>
       </SafeAreaView>
     </ScrollView>
@@ -268,7 +274,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: 'lightgray',
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
@@ -286,5 +292,8 @@ const styles = StyleSheet.create({
   },
   spacerVertical: {
 
+  }, 
+  chipInputContainer: {
+    marginBottom: 20, 
   }
 });

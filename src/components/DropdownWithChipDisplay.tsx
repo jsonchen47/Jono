@@ -70,16 +70,16 @@ export default DropdownWithChipDisplay
 const styles = StyleSheet.create({
     dropdown: {
         height: 50,
-        borderColor: 'black',
+        borderColor: 'gray',
         borderWidth: 2,
         borderRadius: 8,
         paddingHorizontal: 8,
         marginTop: 10, 
       },
     chipsContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+      marginTop: 20,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
     },
     chip: {
         backgroundColor: 'black',

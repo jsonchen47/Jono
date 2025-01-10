@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     borderWidth: 2, 
     borderRadius: 10,
     marginTop: 20, 
+    borderColor: 'gray'
   }, 
   addPhotoButtonContent: {
     margin: 15, 
@@ -199,7 +200,9 @@ const styles = StyleSheet.create({
     height: windowHeight/10, 
     padding: 10,
     textAlignVertical: 'top',
-    fontSize: 15, 
+    fontSize: 14, 
+    borderColor: 'gray',
+    backgroundColor: '#f9f9f9',
   }, 
   // Project description
   projectDescriptionTextInput: {
@@ -209,7 +212,10 @@ const styles = StyleSheet.create({
     height: windowHeight/5, 
     padding: 10,
     textAlignVertical: 'top',
-    fontSize: 15, 
+    fontSize: 14, 
+    borderColor: 'gray',
+    backgroundColor: '#f9f9f9',
+    
   }, 
   // Bottom content
   contentBottom: {
