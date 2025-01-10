@@ -95,7 +95,7 @@ const LargeProjectCard = ({ project }: any) => {
           source={{ uri: currentProject.image }}
         >
           <View style={styles.heartButtonContainer}>
-            <HeartButton projectID={currentProject.id} user={user} />
+            <HeartButton projectID={currentProject.id} />
           </View>
         </ImageBackground>
 

@@ -13,6 +13,7 @@ import { getProject } from '../graphql/queries';
 import { formatDateLong } from '../functions/formatDateLong';
 import { fetchUsers } from '../functions/fetchUsers';
 import { useFocusEffect } from '@react-navigation/native';
+import HeartButton from '../components/HeartButton';
 
 const client = generateClient();
 
@@ -220,23 +221,34 @@ const ProjectScreen = ({ project }: any) => {
                             <Icon name="ellipsis-horizontal" style={styles.icon}/>
                         </TouchableOpacity>
                         {/* Share button */}
-                        <TouchableOpacity 
+                        {/* <TouchableOpacity 
                             style={styles.headerButtonRight}
                             onPress={() => {
                                 console.log('pressed share')
                             }}
                             >
                             <Icon name="share-outline" style={styles.icon}/>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         {/* Heart button */}
-                        <TouchableOpacity 
+                        {/* Heart button with white circle background */}
+                        {/* <View style={styles.heartButtonContainer}>
+                            <HeartButton projectID={project.id} />
+                        </View> */}
+                        <View style={styles.heartButtonWrapper}>
+                            <View style={styles.circleBackground} />
+                            <View style={styles.onlyHeartButtonContainer}>
+                                <HeartButton projectID={project?.id} />
+                            </View>
+                        </View>
+                        {/* <TouchableOpacity 
                             style={styles.headerButtonRight}
                             onPress={() => {
                                 console.log('pressed heart')
                             }}
                             >
                             <Icon name="heart-outline" style={styles.icon}/>
-                        </TouchableOpacity>
+
+                        </TouchableOpacity> */}
                     </View>
                 </SafeAreaView>
             </View>
@@ -608,5 +620,22 @@ const styles = StyleSheet.create({
     },
     spacerVertical: {
         paddingVertical: 5, 
-    }
+    }, 
+    heartButtonWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 15, // Consistent spacing with other buttons
+    marginBottom: 10,
+  },
+  circleBackground: {
+    backgroundColor: 'white',
+    width: 30, // Circle size
+    height: 30,
+    borderRadius: 15, // Circular shape
+    position: 'absolute', // Allows layering
+  },
+  onlyHeartButtonContainer: {
+    paddingTop: 3, 
+  }
+
 })
