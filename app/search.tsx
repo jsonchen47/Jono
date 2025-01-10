@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { View, TextInput, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useRouter } from 'expo-router';
 import Icon3 from 'react-native-vector-icons/AntDesign';
@@ -9,6 +9,9 @@ import ProjectsGridNew from '@/src/components/ProjectsGridNew';
 import UsersList from '@/src/components/UsersList';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import { useFilter } from '@/src/contexts/FilterContext';
+import { SearchableProjectSortInput } from '@/src/API';
 
 const windowWidth = Dimensions.get('window').width;
 const Tab = createMaterialTopTabNavigator();
@@ -24,6 +27,7 @@ const Search = () => {
   const [nextTokenUsers, setNextTokenUsers] = useState<any>(null);
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { filter } = useFilter();
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -43,32 +47,76 @@ const Search = () => {
     try {
       setIsFetchingMoreProjects(true);
       const searchWords = searchTerm.split(' ').filter(word => word.trim() !== '').map(word => `*${word}*`);
-
+  
       if (searchWords.length === 0) {
         setProjectsResults([]);
         setNextTokenProjects(null);
         setIsFetchingMoreProjects(false);
         return;
       }
-
-      const searchFilters = searchWords.map(word => ({
+  
+      const { sortBy, distance } = filter; // Access filter settings
+      let filterConditions: any = {};
+  
+      // Add search word filters
+      filterConditions.or = searchWords.map(word => ({
         or: [
           { title: { wildcard: word } },
           { description: { wildcard: word } },
         ],
       }));
-
+  
+      // Filter by distance
+      if (distance !== '100+') {
+        const parsedDistance = parseFloat(distance as string);
+  
+        if (isNaN(parsedDistance)) {
+          throw new Error('Invalid distance value');
+        }
+  
+        const centerLatitude = 33.158092; // Replace with your dynamic value if needed
+        const centerLongitude = -117.350594; // Replace with your dynamic value if needed
+  
+        const latAdjustment = parsedDistance / 69; // Approximate miles to latitude
+        const lonAdjustment = parsedDistance / (69 * Math.cos((centerLatitude * Math.PI) / 180)); // Approximate miles to longitude
+  
+        filterConditions.and = [
+          {
+            latitude: {
+              gte: centerLatitude - latAdjustment,
+              lte: centerLatitude + latAdjustment,
+            },
+          },
+          {
+            longitude: {
+              gte: centerLongitude - lonAdjustment,
+              lte: centerLongitude + lonAdjustment,
+            },
+          },
+        ];
+      }
+  
+      // Sort criteria
+      const sortCriteria = [
+        {
+          field: 'createdAt',
+          direction: sortBy === 'newest' ? 'desc' : 'asc',
+        },
+      ];
+  
+      // Fetch data
       const result = await client.graphql({
         query: searchProjects,
         variables: {
-          filter: { or: searchFilters },
+          filter: filterConditions,
           nextToken: isLoadMore ? nextTokenProjects : null,
+          sort: sortCriteria as (SearchableProjectSortInput | null)[],
         },
       });
-
+  
       const items = result.data?.searchProjects?.items || [];
       const newNextToken = result.data?.searchProjects?.nextToken || null;
-
+  
       setProjectsResults(isLoadMore ? [...projectsResults, ...items] : items);
       setNextTokenProjects(newNextToken);
       setIsFetchingMoreProjects(false);
@@ -78,6 +126,7 @@ const Search = () => {
       setIsFetchingMoreProjects(false);
     }
   };
+  
 
   const fetchUsers = async (searchTerm: string, isLoadMore = false) => {
     try {
@@ -162,6 +211,12 @@ const Search = () => {
     }
   }, [text, nextTokenUsers, isFetchingMoreUsers]);
 
+  // Trigger fetch when the filter changes
+  useEffect(() => {
+    fetchProjects(text, false);
+    fetchUsers(text, false);
+  }, [filter]);
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.searchBarContainer}>
@@ -178,7 +233,17 @@ const Search = () => {
               fetchUsers(text);
             }}
           />
+          {/* Filter Button */}
+        <TouchableOpacity
+          style={styles.filterButtonContainer}
+          onPress={() => router.push('/filter')}
+        >
+          <View style={styles.filterButton}>
+            <FontAwesome6 name="sliders" size={15} />
+          </View>
+        </TouchableOpacity>
         </View>
+        
       </View>
 
       <Tab.Navigator
@@ -233,7 +298,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#E8E8E8',
     paddingVertical: 10,
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15,
+    paddingLeft: 15, 
+    paddingRight: 9,
     borderRadius: 30,
     flex: 1,
     borderWidth: 1,
@@ -258,6 +325,18 @@ const styles = StyleSheet.create({
   },
   tabContent: { flex: 1 },
   loader: { marginTop: windowWidth * 0.1 },
+  filterButtonContainer: {
+    marginLeft: 10,
+  },
+  filterButton: {
+    height: 35,
+    width: 35,
+    borderRadius: 20,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+  },
 });
 
 export default Search;
