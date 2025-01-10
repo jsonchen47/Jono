@@ -102,6 +102,15 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
       setUserID(passedUserID);
     }
 
+    const authUser = await getCurrentUser();
+    const authUserID = authUser.userId
+
+    // Check if its another user based on the ID
+    // const isOtherUser = passedUserID && passedUserID !== authUserID; 
+    if (passedUserID == authUserID ) {
+      passedUserID = null
+    }
+
     if (!contextUser || passedUserID) {
       await fetchUser(currentUserID);
     }

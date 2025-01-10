@@ -179,7 +179,7 @@ const EditProfileScreen = () => {
       <SafeAreaView edges={['bottom']}>
         <TouchableOpacity style={styles.imageContainer} onPress={handleImagePicker}>
           <Image
-            source={image ? { uri: image } : require('../assets/images/default-profile.png')}
+            source={image ? { uri: image } : require('../assets/images/profile1.png')}
             style={styles.profileImage}
           />
           <Text style={styles.imageText}>Change Profile Image</Text>
@@ -284,4 +284,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 16,
   },
+  spacerVertical: {
+
+  }
 });
