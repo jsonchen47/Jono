@@ -6,6 +6,7 @@ import { useFilter } from '@/src/contexts/FilterContext';
 import ProjectsGridNew from '../components/ProjectsGridNew';
 import { searchProjects } from '@/src/graphql/queries';
 
+
 const windowWidth = Dimensions.get('window').width;
 
 const client = generateClient();

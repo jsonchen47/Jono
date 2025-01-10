@@ -14,6 +14,7 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { useUser } from '../contexts/UserContext';
 import { listTeamsByUser } from '../backend/queries';
 import { router } from 'expo-router';
+import { createConnection, deleteConnection } from '../graphql/mutations';
 
 const client = generateClient();
 
@@ -84,6 +85,55 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
     );
   }
 
+  const handleRequestConnection = async () => {
+    try {
+      const authUserID = loggedInUser?.id;
+
+      if (!authUserID || !user?.id) {
+        console.warn('Missing user data for connection request.');
+        return;
+      }
+
+      const result = await client.graphql({
+        query: createConnection,
+        variables: {
+          input: {
+            userID: authUserID,
+            connectedUserID: user?.id,
+            status: 'requested',
+          },
+        },
+      }) as GraphQLResult<any>;
+
+      const newConnection = result.data.createConnection;
+      setIsRequested(true);
+      setConnectionID(newConnection.id);
+      console.log('Connection request sent.');
+    } catch (error) {
+      console.error('Error requesting connection:', error);
+    }
+  };
+
+  const handleRemoveConnection = async () => {
+    try {
+      if (!connectionID) {
+        console.warn('No connection ID found to remove.');
+        return;
+      }
+
+      await client.graphql({
+        query: deleteConnection,
+        variables: { input: { id: connectionID } },
+      });
+
+      setIsRequested(false);
+      setConnectionID(null);
+      console.log('Connection request removed.');
+    } catch (error) {
+      console.error('Error removing connection:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContent}>
@@ -126,6 +176,43 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
             </View>
           </View>
         </View>
+        {/* Button */}
+        <TouchableOpacity
+          style={
+            otherProfile
+              ? isRequested
+                ? styles.removeRequestButton
+                : styles.editProfileButton
+              : styles.editProfileButton
+          }
+          onPress={() => {
+            if (otherProfile) {
+              if (isRequested) {
+                handleRemoveConnection();
+              } else {
+                handleRequestConnection();
+              }
+            } else {
+              router.push('/editProfile');
+            }
+          }}
+        >
+          <Text
+            style={
+              otherProfile
+                ? isRequested
+                  ? styles.editProfileText
+                  : styles.editProfileText
+                : styles.editProfileText
+            }
+          >
+            {otherProfile
+              ? isRequested
+                ? 'Requested'
+                : 'Request to Connect'
+              : 'Edit Profile'}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -194,7 +281,29 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 15,
-  }
+  }, 
+  editProfileButton: {
+    width: '100%',
+    backgroundColor: '#004068',
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignSelf: 'center',
+  },
+  removeRequestButton: {
+    width: '100%',
+    backgroundColor: 'lightgray',
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignSelf: 'center',
+  },
+  editProfileText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 15,
+  },
 });
 
 export default ProfileHeader;

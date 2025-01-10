@@ -14,6 +14,7 @@ import { ProgressProvider, useProgress } from '@/src/contexts/ProgressContext';
 import { ProgressBar, Snackbar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Octicons'; // Import vector icons
 import { useRouter } from 'expo-router';
+import { RefreshProvider } from '../contexts/RefreshContext';
 
 // OTHER PROVIDER IMPORTS
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -239,117 +240,119 @@ const AppEntrance = () => {
             <UserProvider>
               <ProjectUpdateProvider>
                 <FilterProvider>
-                  <View style={styles.container}>
-                    <Stack>
-                      <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen
-                        name="chatScreen/[id]"
-                        options={{
-                          title: 'Chat',
-                          headerStyle: { backgroundColor: 'white' },
-                          headerTintColor: 'black',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="project/[id]"
-                        options={{
-                          headerShown: false,
-                          title: 'Project',
-                          headerStyle: { backgroundColor: 'white' },
-                          headerTintColor: 'black',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="otherProfile"
-                        options={{
-                          title: 'Profile',
-                          headerStyle: { backgroundColor: 'white' },
-                          headerTintColor: 'black',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="groupInfoScreen"
-                        options={{
-                          title: 'Group Info',
-                          headerStyle: { backgroundColor: 'white' },
-                          headerTintColor: 'black',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="newProject"
-                        options={{
-                          animation: 'slide_from_bottom',
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="search"
-                        options={{
-                          headerShown: false,
-                          animation: 'fade',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="filter"
-                        options={{
-                          presentation: 'modal',
-                          title: 'Filter',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="optionsScreen"
-                        options={{
-                          presentation: 'modal',
-                          title: 'Options',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="deleteProjectConfirmationScreen"
-                        options={{
-                          headerShown: false,
-                          presentation: 'transparentModal',
-                          title: 'Options',
-                          animation: 'fade',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="progressBar"
-                        options={{
-                          headerShown: false,
-                          presentation: 'modal',
-                          title: 'Options',
-                          animation: 'fade',
-                        }}
-                      />
-                      <Stack.Screen
-                        name="manageProject"
-                        options={{
-                          title: 'Manage Project',
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="editProfile"
-                        options={{
-                          title: 'Edit Profile',
-                          presentation: 'fullScreenModal',
-                        }}
-                      />
-                    </Stack>
-                    <ProgressBarComponent 
+                  <RefreshProvider>
+                    <View style={styles.container}>
+                      <Stack>
+                        <Stack.Screen
+                          name="(tabs)"
+                          options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                          name="chatScreen/[id]"
+                          options={{
+                            title: 'Chat',
+                            headerStyle: { backgroundColor: 'white' },
+                            headerTintColor: 'black',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="project/[id]"
+                          options={{
+                            headerShown: false,
+                            title: 'Project',
+                            headerStyle: { backgroundColor: 'white' },
+                            headerTintColor: 'black',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="otherProfile"
+                          options={{
+                            title: 'Profile',
+                            headerStyle: { backgroundColor: 'white' },
+                            headerTintColor: 'black',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="groupInfoScreen"
+                          options={{
+                            title: 'Group Info',
+                            headerStyle: { backgroundColor: 'white' },
+                            headerTintColor: 'black',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="newProject"
+                          options={{
+                            animation: 'slide_from_bottom',
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="search"
+                          options={{
+                            headerShown: false,
+                            animation: 'fade',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="filter"
+                          options={{
+                            presentation: 'modal',
+                            title: 'Filter',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="optionsScreen"
+                          options={{
+                            presentation: 'modal',
+                            title: 'Options',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="deleteProjectConfirmationScreen"
+                          options={{
+                            headerShown: false,
+                            presentation: 'transparentModal',
+                            title: 'Options',
+                            animation: 'fade',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="progressBar"
+                          options={{
+                            headerShown: false,
+                            presentation: 'modal',
+                            title: 'Options',
+                            animation: 'fade',
+                          }}
+                        />
+                        <Stack.Screen
+                          name="manageProject"
+                          options={{
+                            title: 'Manage Project',
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="editProfile"
+                          options={{
+                            title: 'Edit Profile',
+                            presentation: 'fullScreenModal',
+                          }}
+                        />
+                      </Stack>
+                      <ProgressBarComponent 
+                          snackbarVisible={snackbarVisible} 
+                          setSnackbarVisible={setSnackbarVisible} 
+                        />
+                        {/* Snackbar Component */}
+                        
+                        <SnackBarComponent
                         snackbarVisible={snackbarVisible} 
                         setSnackbarVisible={setSnackbarVisible} 
-                      />
-                      {/* Snackbar Component */}
-                      
-                      <SnackBarComponent
-                      snackbarVisible={snackbarVisible} 
-                      setSnackbarVisible={setSnackbarVisible} 
-                      />
-                  </View>
+                        />
+                    </View>
+                  </RefreshProvider>
                 </FilterProvider>
               </ProjectUpdateProvider>
             </UserProvider>

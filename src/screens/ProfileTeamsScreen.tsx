@@ -4,6 +4,7 @@ import { generateClient } from 'aws-amplify/api';
 import { listTeamsByUser } from '@/src/backend/queries';
 import ProjectsGridForProfile from '../components/ProjectsGridForProfile';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 
 const client = generateClient();
 
@@ -69,15 +70,17 @@ const ProfileTeamsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID }) =>
   return (
     <View style={styles.projectsScreenContainer}>
       {projects.length === 0 && !loading && dataLoaded ? (
-        <View style={styles.noProjectsContainer}>
-          <Image
-            source={require('../../assets/images/camping.png')} // Replace with your actual image path
-            style={styles.noProjectsImage}
-          />
-          <Text style={styles.noProjectsText}>
-            No teams yet! Join a project to populate the space.
-          </Text>
-        </View>
+        <Tabs.ScrollView>
+          <View style={styles.noProjectsContainer}>
+            <Image
+              source={require('../../assets/images/camping.png')} // Replace with your actual image path
+              style={styles.noProjectsImage}
+            />
+            <Text style={styles.noProjectsText}>
+              No teams yet! Join a project to populate the space.
+            </Text>
+          </View>
+        </Tabs.ScrollView>
       ) : (
         <ProjectsGridForProfile
           projects={projects}
@@ -101,10 +104,10 @@ const styles = StyleSheet.create({
   },
   noProjectsContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 30,
   },
   noProjectsImage: {
     width: windowWidth / 2,

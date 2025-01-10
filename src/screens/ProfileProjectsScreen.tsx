@@ -4,6 +4,7 @@ import { generateClient } from 'aws-amplify/api';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import ProjectsGridForProfile from '../components/ProjectsGridForProfile';
 import { searchProjects } from '@/src/graphql/queries';
+import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -69,15 +70,17 @@ const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID })
   return (
     <View style={styles.projectsScreenContainer}>
       {!loading && projects.length === 0 && dataLoaded ? (
-        <View style={styles.noProjectsContainer}>
-          <Image
-            source={require('../../assets/images/dj.png')} // Replace with your placeholder image path
-            style={styles.noProjectsImage}
-          />
-          <Text style={styles.noProjectsText}>
-            No projects yet! Post a project to populate the space.
-          </Text>
-        </View>
+        <Tabs.ScrollView>
+          <View style={styles.noProjectsContainer}>
+            <Image
+              source={require('../../assets/images/dj.png')} // Replace with your placeholder image path
+              style={styles.noProjectsImage}
+            />
+            <Text style={styles.noProjectsText}>
+              No projects yet! Post a project to populate the space.
+            </Text>
+          </View>
+        </Tabs.ScrollView>
       ) : (
         <ProjectsGridForProfile
           projects={projects}
@@ -101,10 +104,10 @@ const styles = StyleSheet.create({
   },
   noProjectsContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 50, 
+    paddingTop: 30, 
   },
   noProjectsImage: {
     width: windowWidth / 2,

@@ -14,6 +14,7 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { fetchAuthSession, getCurrentUser } from '@aws-amplify/auth';
 import { useFocusEffect } from '@react-navigation/native';
 import { listProjects } from '@/src/graphql/queries';
+import { useRefresh } from '../contexts/RefreshContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -33,6 +34,8 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
   const [isFetchingMoreProjects, setIsFetchingMoreProjects] = useState(false);
   const [isFetchingMoreTeams, setIsFetchingMoreTeams] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { shouldRefresh, setShouldRefresh } = useRefresh();
+
 
   const client = generateClient();
 
@@ -51,6 +54,34 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
   //     fetchData();
   //   }, [userID])
   // );
+  useFocusEffect(
+    React.useCallback(() => {
+      if (shouldRefresh) {
+        // fetchData();
+        const fetchData = async () => {
+          if (userID) {
+            setLoading(true);
+            await fetchUser(userID);
+            await fetchProjects(userID);
+            await fetchTeams(userID);
+            setLoading(false);
+        }
+        
+        };
+        fetchData();
+        setShouldRefresh(false); // Reset the flag after refreshing
+      }
+    }, [shouldRefresh])
+  );
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (shouldRefresh) {
+  //       fetchData();
+  //       setShouldRefresh(false); // Reset the flag after refreshing
+  //     }
+  //   }, [shouldRefresh])
+  // );
 
   useEffect(() => {
     if (contextUser && !passedUserID) {
@@ -58,27 +89,29 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
     }
   }, [contextUser, passedUserID]);
 
+
+  const fetchData = async () => {
+    setLoading(true);
+    let currentUserID = passedUserID;
+
+    if (!currentUserID) {
+      const authUser = await getCurrentUser();
+      currentUserID = authUser.userId;
+      setUserID(currentUserID);
+    } else {
+      setUserID(passedUserID);
+    }
+
+    if (!contextUser || passedUserID) {
+      await fetchUser(currentUserID);
+    }
+
+    await fetchProjects(currentUserID);
+    await fetchTeams(currentUserID);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      let currentUserID = passedUserID;
-
-      if (!currentUserID) {
-        const authUser = await getCurrentUser();
-        currentUserID = authUser.userId;
-        setUserID(currentUserID);
-      } else {
-        setUserID(passedUserID);
-      }
-
-      if (!contextUser || passedUserID) {
-        await fetchUser(currentUserID);
-      }
-
-      await fetchProjects(currentUserID);
-      await fetchTeams(currentUserID);
-      setLoading(false);
-    };
 
     fetchData();
   }, [passedUserID, contextUser]);
@@ -245,3 +278,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+

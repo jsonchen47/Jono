@@ -19,10 +19,12 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 import ChipInput from '@/src/components/ChipInput';
 import { uploadData, remove } from 'aws-amplify/storage'; // For uploading and removing images from S3
 import config from "../src/aws-exports"; // AWS Amplify configuration
+import { useRefresh } from '@/src/contexts/RefreshContext';
 
 const client = generateClient();
 
 const EditProfileScreen = () => {
+  const { setShouldRefresh } = useRefresh();
   const navigation = useNavigation();
 
   const [image, setImage] = useState<any>(null);
@@ -109,6 +111,7 @@ const EditProfileScreen = () => {
   
   const handleSave = async () => {
     try {
+      
       const authUser = await getCurrentUser();
       const userID = authUser.userId;
   
@@ -129,6 +132,8 @@ const EditProfileScreen = () => {
       }) as GraphQLResult<any>;
   
       console.log('User profile updated successfully:', result.data?.updateUser);
+      setShouldRefresh(true); // Notify that ProfileScreen should refresh
+
       navigation.goBack();
     } catch (error) {
       console.error('Error updating user profile:', error);
