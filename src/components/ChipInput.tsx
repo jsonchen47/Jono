@@ -112,11 +112,13 @@ dropdown: {
   }, 
   skillsBoxContainer: {
     flexDirection: 'row',
-    borderColor: 'black',
-    borderWidth: 2,
+    borderColor: '#ddd',
+    borderWidth: 1,
     borderRadius: 8,
     padding: 10,
-    marginTop: 10,
+    // marginVertical: 5,
+    backgroundColor: '#f9f9f9',
+    marginBottom: 20,
   },
   skillsBox: {
     // marginTop: 10, 
@@ -129,7 +131,7 @@ dropdown: {
   },
   input: {
     minWidth: 100,
-    fontSize: 15,
+    fontSize: 14,
     padding: 0,
     marginLeft: 10,
     marginTop: 5, 

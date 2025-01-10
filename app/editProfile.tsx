@@ -143,12 +143,24 @@ const EditProfileScreen = () => {
 
   // Set navigation options for the header
   React.useEffect(() => {
+
+    const getUser = async () => {
+      const user = await getCurrentUser();
+      console.log(user)
+    }
+    
     navigation.setOptions({
       title: 'Edit Profile',
       headerStyle: { backgroundColor: '#f8f8f8' },
       headerTitleStyle: { fontWeight: 'bold' },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => 
+        {
+          getUser()
+          navigation.goBack()
+        }
+        }
+        >
           <Text style={styles.headerButton}>Cancel</Text>
         </TouchableOpacity>
       ),
@@ -182,13 +194,13 @@ const EditProfileScreen = () => {
             placeholder="Enter your name"
           />
 
-          <Text style={styles.label}>Username</Text>
+          {/* <Text style={styles.label}>Username</Text>
           <TextInput
             style={styles.input}
             value={username}
             onChangeText={setUsername}
             placeholder="Enter your username"
-          />
+          /> */}
 
           <Text style={styles.label}>Bio</Text>
           <TextInput
