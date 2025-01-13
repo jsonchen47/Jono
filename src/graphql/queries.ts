@@ -33,7 +33,19 @@ export const getProject = /* GraphQL */ `query GetProject($id: ID!) {
     longitude
     latitude
     city
-    joinRequestIDs
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -65,7 +77,10 @@ export const listProjects = /* GraphQL */ `query ListProjects(
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -110,7 +125,10 @@ export const searchProjects = /* GraphQL */ `query SearchProjects(
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -525,6 +543,19 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
       nextToken
       __typename
     }
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -565,6 +596,10 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -621,6 +656,10 @@ export const searchUsers = /* GraphQL */ `query SearchUsers(
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -689,6 +728,10 @@ export const getConnection = /* GraphQL */ `query GetConnection($id: ID!) {
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -721,6 +764,10 @@ export const getConnection = /* GraphQL */ `query GetConnection($id: ID!) {
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -1034,6 +1081,278 @@ export const searchConnections = /* GraphQL */ `query SearchConnections(
   APITypes.SearchConnectionsQueryVariables,
   APITypes.SearchConnectionsQuery
 >;
+export const getJoinRequest = /* GraphQL */ `query GetJoinRequest($id: ID!) {
+  getJoinRequest(id: $id) {
+    id
+    userID
+    projectID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      longitude
+      latitude
+      city
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    viewed
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetJoinRequestQueryVariables,
+  APITypes.GetJoinRequestQuery
+>;
+export const listJoinRequests = /* GraphQL */ `query ListJoinRequests(
+  $filter: ModelJoinRequestFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listJoinRequests(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      userID
+      projectID
+      user {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      project {
+        id
+        ownerIDs
+        title
+        description
+        image
+        skills
+        resources
+        categories
+        longitude
+        latitude
+        city
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      viewed
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListJoinRequestsQueryVariables,
+  APITypes.ListJoinRequestsQuery
+>;
+export const joinRequestsByUserIDAndCreatedAt = /* GraphQL */ `query JoinRequestsByUserIDAndCreatedAt(
+  $userID: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelJoinRequestFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  joinRequestsByUserIDAndCreatedAt(
+    userID: $userID
+    createdAt: $createdAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userID
+      projectID
+      user {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      project {
+        id
+        ownerIDs
+        title
+        description
+        image
+        skills
+        resources
+        categories
+        longitude
+        latitude
+        city
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      viewed
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.JoinRequestsByUserIDAndCreatedAtQueryVariables,
+  APITypes.JoinRequestsByUserIDAndCreatedAtQuery
+>;
+export const joinRequestsByProjectIDAndCreatedAt = /* GraphQL */ `query JoinRequestsByProjectIDAndCreatedAt(
+  $projectID: ID!
+  $createdAt: ModelStringKeyConditionInput
+  $sortDirection: ModelSortDirection
+  $filter: ModelJoinRequestFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  joinRequestsByProjectIDAndCreatedAt(
+    projectID: $projectID
+    createdAt: $createdAt
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      userID
+      projectID
+      user {
+        id
+        name
+        status
+        image
+        savedProjectsIDs
+        bio
+        numProjects
+        numTeams
+        numConnections
+        username
+        skills
+        resources
+        links
+        premium
+        createdAt
+        updatedAt
+        __typename
+      }
+      project {
+        id
+        ownerIDs
+        title
+        description
+        image
+        skills
+        resources
+        categories
+        longitude
+        latitude
+        city
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      viewed
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.JoinRequestsByProjectIDAndCreatedAtQueryVariables,
+  APITypes.JoinRequestsByProjectIDAndCreatedAtQuery
+>;
 export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
   getUserProject(id: $id) {
     id
@@ -1055,7 +1374,10 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1088,6 +1410,10 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -1126,7 +1452,6 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         longitude
         latitude
         city
-        joinRequestIDs
         createdAt
         updatedAt
         __typename
@@ -1192,7 +1517,6 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         longitude
         latitude
         city
-        joinRequestIDs
         createdAt
         updatedAt
         __typename
@@ -1258,7 +1582,6 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         longitude
         latitude
         city
-        joinRequestIDs
         createdAt
         updatedAt
         __typename
@@ -1354,6 +1677,10 @@ export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }

@@ -25,9 +25,9 @@ import { updateProjectImage } from '../functions/updateProjectImage';
 import { Alert } from 'react-native';
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from 'aws-amplify/auth';
+import { deleteJoinRequest } from '../graphql/mutations';
 
 const client = generateClient();
-
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -80,7 +80,7 @@ const ManageProjectScreen = ({project}: any) => {
             longitude: project?.longitude, 
             latitude: project?.latitude, 
             city: project?.city, 
-            joinRequestIDs: project?.joinRequestIDs, 
+            joinRequests: project?.joinRequests, 
         }));
     }, [project])
 
@@ -106,9 +106,11 @@ const ManageProjectScreen = ({project}: any) => {
     const handleSave = async () => {
         try {
             setLoading(true);
-            const currentFormData = { ...formData };
-            console.log(currentFormData);
     
+            // Step 1: Remove canceled joinRequests
+            await removeCanceledJoinRequests();
+    
+            // Step 2: Update project details
             const input = {
                 id: project.id,
                 title: formData.title,
@@ -120,22 +122,21 @@ const ManageProjectScreen = ({project}: any) => {
                 longitude: formData.longitude,
                 latitude: formData.latitude,
                 city: formData.city,
-                joinRequestIDs: formData.joinRequestIDs,
                 ownerIDs: formData.ownerIDs,
             };
     
             const result = await client.graphql({
                 query: updateProject,
-                variables: { input }
+                variables: { input },
             }) as GraphQLResult<any>;
     
-            if (formData?.image != project?.image) {
-                updateProjectImage(project?.id, formData, setFormData, project?.image);
+            if (formData?.image !== project?.image) {
+                await updateProjectImage(project?.id, formData, setFormData, project?.image);
             }
     
             await Promise.all([
                 handleAddUsers(),
-                handleRemoveUsers(project.id, formData.removeUserIDs)
+                handleRemoveUsers(project.id, formData.removeUserIDs),
             ]);
     
             if (result?.data?.updateProject) {
@@ -167,51 +168,83 @@ const ManageProjectScreen = ({project}: any) => {
         });
     }, [navigation, router, handleSaveConfirmation, project]);
     
-    const handleAddUsers = async () => {
-        try {
-            const { addUserIDs, joinRequestIDs } = formData;
-    
-            if (addUserIDs.length === 0) {
-                console.log('No users to add.');
-                return;
-            }
-    
-            const addUserPromises = addUserIDs.map(async (userId) => {
-                const input = {
-                    userId,
-                    projectId: project.id,
-                };
-    
-                await client.graphql({
-                    query: createUserProject,
-                    variables: { input }
-                });
-                console.log(`User ${userId} added to the project.`);
-            });
-    
-            await Promise.all(addUserPromises);
-    
-            const updatedJoinRequestIDs = joinRequestIDs.filter(
-                (id) => !addUserIDs.includes(id)
-            );
-    
-            setFormData({ ...formData, joinRequestIDs: updatedJoinRequestIDs });
-    
-            const input = {
-                id: project.id,
-                joinRequestIDs: updatedJoinRequestIDs,
-            };
-            await client.graphql({
-                query: updateProject,
-                variables: { input }
-            });
-    
-            console.log('Users successfully added and join requests updated.');
-        } catch (error) {
-            console.error('Error adding users:', error);
-            alert('An error occurred while adding users.');
+
+    // Function to remove canceled joinRequests
+const removeCanceledJoinRequests = async () => {
+    try {
+        // Get the list of joinRequests to be removed
+        const canceledRequests = project.joinRequests.items.filter(
+            (request: any) => !formData.joinRequests.some((formRequest: any) => formRequest.id === request.id)
+        );
+
+        // Remove each canceled request
+        const removePromises = canceledRequests.map((request: any) =>
+            client.graphql({
+                query: deleteJoinRequest, // Replace with the actual mutation
+                variables: { input: { id: request.id } },
+            })
+        );
+
+        await Promise.all(removePromises);
+        console.log("Canceled joinRequests successfully removed.");
+    } catch (error) {
+        console.error("Error removing canceled joinRequests:", error);
+    }
+};
+
+const handleAddUsers = async () => {
+    try {
+        const { addUserIDs, joinRequests } = formData;
+
+        if (addUserIDs.length === 0) {
+            console.log('No users to add.');
+            return;
         }
-    };
+
+        // Step 1: Add users to the project
+        const addUserPromises = addUserIDs.map(async (userId) => {
+            const input = {
+                userId,
+                projectId: project.id,
+            };
+
+            await client.graphql({
+                query: createUserProject,
+                variables: { input },
+            });
+            console.log(`User ${userId} added to the project.`);
+        });
+
+        await Promise.all(addUserPromises);
+
+        // Step 2: Remove corresponding joinRequests
+        const joinRequestsToDelete = joinRequests.filter((request) =>
+            addUserIDs.includes(request.userID)
+        );
+
+        const deletePromises = joinRequestsToDelete.map(async (request) =>
+            client.graphql({
+                query: deleteJoinRequest, // Replace with your actual mutation
+                variables: { input: { id: request.id } },
+            })
+        );
+
+        await Promise.all(deletePromises);
+
+        // Update formData locally
+        const updatedJoinRequests = joinRequests.filter(
+            (request) => !addUserIDs.includes(request.userID)
+        );
+        setFormData({ ...formData, joinRequests: updatedJoinRequests });
+
+        console.log('Users successfully added and join requests updated.');
+    } catch (error) {
+        console.error('Error adding users:', error);
+        alert('An error occurred while adding users.');
+    }
+};
+
+
     
     const handleRemoveUsers = async (projectId: string, userIds: string[]) => {
         try {

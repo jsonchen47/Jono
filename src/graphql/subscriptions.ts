@@ -33,7 +33,19 @@ export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filt
     longitude
     latitude
     city
-    joinRequestIDs
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -68,7 +80,19 @@ export const onUpdateProject = /* GraphQL */ `subscription OnUpdateProject($filt
     longitude
     latitude
     city
-    joinRequestIDs
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -103,7 +127,19 @@ export const onDeleteProject = /* GraphQL */ `subscription OnDeleteProject($filt
     longitude
     latitude
     city
-    joinRequestIDs
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -382,6 +418,19 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
       nextToken
       __typename
     }
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -451,6 +500,19 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
         userID
         connectedUserID
         status
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
         createdAt
         viewed
         updatedAt
@@ -536,6 +598,19 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
       nextToken
       __typename
     }
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -583,6 +658,10 @@ export const onCreateConnection = /* GraphQL */ `subscription OnCreateConnection
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -615,6 +694,10 @@ export const onCreateConnection = /* GraphQL */ `subscription OnCreateConnection
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -671,6 +754,10 @@ export const onUpdateConnection = /* GraphQL */ `subscription OnUpdateConnection
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -703,6 +790,10 @@ export const onUpdateConnection = /* GraphQL */ `subscription OnUpdateConnection
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -759,6 +850,10 @@ export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -794,6 +889,10 @@ export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -808,6 +907,246 @@ export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection
 ` as GeneratedSubscription<
   APITypes.OnDeleteConnectionSubscriptionVariables,
   APITypes.OnDeleteConnectionSubscription
+>;
+export const onCreateJoinRequest = /* GraphQL */ `subscription OnCreateJoinRequest(
+  $filter: ModelSubscriptionJoinRequestFilterInput
+) {
+  onCreateJoinRequest(filter: $filter) {
+    id
+    userID
+    projectID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      longitude
+      latitude
+      city
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    viewed
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateJoinRequestSubscriptionVariables,
+  APITypes.OnCreateJoinRequestSubscription
+>;
+export const onUpdateJoinRequest = /* GraphQL */ `subscription OnUpdateJoinRequest(
+  $filter: ModelSubscriptionJoinRequestFilterInput
+) {
+  onUpdateJoinRequest(filter: $filter) {
+    id
+    userID
+    projectID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      longitude
+      latitude
+      city
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    viewed
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateJoinRequestSubscriptionVariables,
+  APITypes.OnUpdateJoinRequestSubscription
+>;
+export const onDeleteJoinRequest = /* GraphQL */ `subscription OnDeleteJoinRequest(
+  $filter: ModelSubscriptionJoinRequestFilterInput
+) {
+  onDeleteJoinRequest(filter: $filter) {
+    id
+    userID
+    projectID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      longitude
+      latitude
+      city
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    viewed
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteJoinRequestSubscriptionVariables,
+  APITypes.OnDeleteJoinRequestSubscription
 >;
 export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProject(
   $filter: ModelSubscriptionUserProjectFilterInput
@@ -832,7 +1171,10 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -865,6 +1207,10 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -904,7 +1250,10 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -937,6 +1286,10 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -976,7 +1329,10 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1009,6 +1365,10 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -1090,6 +1450,10 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1168,6 +1532,10 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1243,6 +1611,10 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }

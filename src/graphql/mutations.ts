@@ -36,7 +36,19 @@ export const createProject = /* GraphQL */ `mutation CreateProject(
     longitude
     latitude
     city
-    joinRequestIDs
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -74,7 +86,19 @@ export const updateProject = /* GraphQL */ `mutation UpdateProject(
     longitude
     latitude
     city
-    joinRequestIDs
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -112,7 +136,19 @@ export const deleteProject = /* GraphQL */ `mutation DeleteProject(
     longitude
     latitude
     city
-    joinRequestIDs
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -412,6 +448,19 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       nextToken
       __typename
     }
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -484,6 +533,19 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
         userID
         connectedUserID
         status
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
         createdAt
         viewed
         updatedAt
@@ -572,6 +634,19 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
       nextToken
       __typename
     }
+    joinRequests {
+      items {
+        id
+        userID
+        projectID
+        createdAt
+        viewed
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -620,6 +695,10 @@ export const createConnection = /* GraphQL */ `mutation CreateConnection(
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -652,6 +731,10 @@ export const createConnection = /* GraphQL */ `mutation CreateConnection(
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -709,6 +792,10 @@ export const updateConnection = /* GraphQL */ `mutation UpdateConnection(
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -741,6 +828,10 @@ export const updateConnection = /* GraphQL */ `mutation UpdateConnection(
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -798,6 +889,10 @@ export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -833,6 +928,10 @@ export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -847,6 +946,249 @@ export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
 ` as GeneratedMutation<
   APITypes.DeleteConnectionMutationVariables,
   APITypes.DeleteConnectionMutation
+>;
+export const createJoinRequest = /* GraphQL */ `mutation CreateJoinRequest(
+  $input: CreateJoinRequestInput!
+  $condition: ModelJoinRequestConditionInput
+) {
+  createJoinRequest(input: $input, condition: $condition) {
+    id
+    userID
+    projectID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      longitude
+      latitude
+      city
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    viewed
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateJoinRequestMutationVariables,
+  APITypes.CreateJoinRequestMutation
+>;
+export const updateJoinRequest = /* GraphQL */ `mutation UpdateJoinRequest(
+  $input: UpdateJoinRequestInput!
+  $condition: ModelJoinRequestConditionInput
+) {
+  updateJoinRequest(input: $input, condition: $condition) {
+    id
+    userID
+    projectID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      longitude
+      latitude
+      city
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    viewed
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateJoinRequestMutationVariables,
+  APITypes.UpdateJoinRequestMutation
+>;
+export const deleteJoinRequest = /* GraphQL */ `mutation DeleteJoinRequest(
+  $input: DeleteJoinRequestInput!
+  $condition: ModelJoinRequestConditionInput
+) {
+  deleteJoinRequest(input: $input, condition: $condition) {
+    id
+    userID
+    projectID
+    user {
+      id
+      name
+      status
+      image
+      Messages {
+        nextToken
+        __typename
+      }
+      ChatRooms {
+        nextToken
+        __typename
+      }
+      Projects {
+        nextToken
+        __typename
+      }
+      savedProjectsIDs
+      bio
+      numProjects
+      numTeams
+      numConnections
+      username
+      skills
+      resources
+      links
+      premium
+      connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    project {
+      id
+      ownerIDs
+      Users {
+        nextToken
+        __typename
+      }
+      title
+      description
+      image
+      skills
+      resources
+      categories
+      longitude
+      latitude
+      city
+      joinRequests {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    viewed
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteJoinRequestMutationVariables,
+  APITypes.DeleteJoinRequestMutation
 >;
 export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
   $input: CreateUserProjectInput!
@@ -872,7 +1214,10 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -905,6 +1250,10 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -945,7 +1294,10 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -978,6 +1330,10 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -1018,7 +1374,10 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
       longitude
       latitude
       city
-      joinRequestIDs
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1051,6 +1410,10 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }
@@ -1133,6 +1496,10 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1212,6 +1579,10 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
         nextToken
         __typename
       }
+      joinRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1288,6 +1659,10 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
       links
       premium
       connections {
+        nextToken
+        __typename
+      }
+      joinRequests {
         nextToken
         __typename
       }

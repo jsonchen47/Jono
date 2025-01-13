@@ -14,7 +14,6 @@ export type CreateProjectInput = {
   longitude?: number | null,
   latitude?: number | null,
   city?: string | null,
-  joinRequestIDs?: Array< string | null > | null,
 };
 
 export type ModelProjectConditionInput = {
@@ -28,7 +27,6 @@ export type ModelProjectConditionInput = {
   longitude?: ModelFloatInput | null,
   latitude?: ModelFloatInput | null,
   city?: ModelStringInput | null,
-  joinRequestIDs?: ModelStringInput | null,
   and?: Array< ModelProjectConditionInput | null > | null,
   or?: Array< ModelProjectConditionInput | null > | null,
   not?: ModelProjectConditionInput | null,
@@ -102,7 +100,7 @@ export type Project = {
   longitude?: number | null,
   latitude?: number | null,
   city?: string | null,
-  joinRequestIDs?: Array< string | null > | null,
+  joinRequests?: ModelJoinRequestConnection | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -144,6 +142,7 @@ export type User = {
   links?: Array< string | null > | null,
   premium?: boolean | null,
   connections?: ModelConnectionConnection | null,
+  joinRequests?: ModelJoinRequestConnection | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -214,6 +213,24 @@ export type Connection = {
   updatedAt: string,
 };
 
+export type ModelJoinRequestConnection = {
+  __typename: "ModelJoinRequestConnection",
+  items:  Array<JoinRequest | null >,
+  nextToken?: string | null,
+};
+
+export type JoinRequest = {
+  __typename: "JoinRequest",
+  id: string,
+  userID?: string | null,
+  projectID?: string | null,
+  user?: User | null,
+  project?: Project | null,
+  createdAt?: string | null,
+  viewed?: boolean | null,
+  updatedAt: string,
+};
+
 export type UpdateProjectInput = {
   id: string,
   ownerIDs?: Array< string | null > | null,
@@ -226,7 +243,6 @@ export type UpdateProjectInput = {
   longitude?: number | null,
   latitude?: number | null,
   city?: string | null,
-  joinRequestIDs?: Array< string | null > | null,
 };
 
 export type DeleteProjectInput = {
@@ -424,6 +440,37 @@ export type DeleteConnectionInput = {
   id: string,
 };
 
+export type CreateJoinRequestInput = {
+  id?: string | null,
+  userID?: string | null,
+  projectID?: string | null,
+  createdAt?: string | null,
+  viewed?: boolean | null,
+};
+
+export type ModelJoinRequestConditionInput = {
+  userID?: ModelIDInput | null,
+  projectID?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  viewed?: ModelBooleanInput | null,
+  and?: Array< ModelJoinRequestConditionInput | null > | null,
+  or?: Array< ModelJoinRequestConditionInput | null > | null,
+  not?: ModelJoinRequestConditionInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type UpdateJoinRequestInput = {
+  id: string,
+  userID?: string | null,
+  projectID?: string | null,
+  createdAt?: string | null,
+  viewed?: boolean | null,
+};
+
+export type DeleteJoinRequestInput = {
+  id: string,
+};
+
 export type CreateUserProjectInput = {
   id?: string | null,
   projectId: string,
@@ -488,7 +535,6 @@ export type ModelProjectFilterInput = {
   longitude?: ModelFloatInput | null,
   latitude?: ModelFloatInput | null,
   city?: ModelStringInput | null,
-  joinRequestIDs?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   and?: Array< ModelProjectFilterInput | null > | null,
@@ -514,7 +560,6 @@ export type SearchableProjectFilterInput = {
   longitude?: SearchableFloatFilterInput | null,
   latitude?: SearchableFloatFilterInput | null,
   city?: SearchableStringFilterInput | null,
-  joinRequestIDs?: SearchableStringFilterInput | null,
   createdAt?: SearchableStringFilterInput | null,
   updatedAt?: SearchableStringFilterInput | null,
   and?: Array< SearchableProjectFilterInput | null > | null,
@@ -583,7 +628,6 @@ export enum SearchableProjectSortableFields {
   longitude = "longitude",
   latitude = "latitude",
   city = "city",
-  joinRequestIDs = "joinRequestIDs",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
 }
@@ -623,7 +667,6 @@ export enum SearchableProjectAggregateField {
   longitude = "longitude",
   latitude = "latitude",
   city = "city",
-  joinRequestIDs = "joinRequestIDs",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
 }
@@ -1005,6 +1048,18 @@ export type SearchableConnectionConnection = {
   aggregateItems:  Array<SearchableAggregateResult | null >,
 };
 
+export type ModelJoinRequestFilterInput = {
+  id?: ModelIDInput | null,
+  userID?: ModelIDInput | null,
+  projectID?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  viewed?: ModelBooleanInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelJoinRequestFilterInput | null > | null,
+  or?: Array< ModelJoinRequestFilterInput | null > | null,
+  not?: ModelJoinRequestFilterInput | null,
+};
+
 export type ModelUserProjectFilterInput = {
   id?: ModelIDInput | null,
   projectId?: ModelIDInput | null,
@@ -1039,7 +1094,6 @@ export type ModelSubscriptionProjectFilterInput = {
   longitude?: ModelSubscriptionFloatInput | null,
   latitude?: ModelSubscriptionFloatInput | null,
   city?: ModelSubscriptionStringInput | null,
-  joinRequestIDs?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionProjectFilterInput | null > | null,
@@ -1161,6 +1215,17 @@ export type ModelSubscriptionConnectionFilterInput = {
   or?: Array< ModelSubscriptionConnectionFilterInput | null > | null,
 };
 
+export type ModelSubscriptionJoinRequestFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  userID?: ModelSubscriptionIDInput | null,
+  projectID?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  viewed?: ModelSubscriptionBooleanInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionJoinRequestFilterInput | null > | null,
+  or?: Array< ModelSubscriptionJoinRequestFilterInput | null > | null,
+};
+
 export type ModelSubscriptionUserProjectFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   projectId?: ModelSubscriptionIDInput | null,
@@ -1212,7 +1277,19 @@ export type CreateProjectMutation = {
     longitude?: number | null,
     latitude?: number | null,
     city?: string | null,
-    joinRequestIDs?: Array< string | null > | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1249,7 +1326,19 @@ export type UpdateProjectMutation = {
     longitude?: number | null,
     latitude?: number | null,
     city?: string | null,
-    joinRequestIDs?: Array< string | null > | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1286,7 +1375,19 @@ export type DeleteProjectMutation = {
     longitude?: number | null,
     latitude?: number | null,
     city?: string | null,
-    joinRequestIDs?: Array< string | null > | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1579,6 +1680,19 @@ export type CreateUserMutation = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1652,6 +1766,19 @@ export type UpdateUserMutation = {
         userID: string,
         connectedUserID: string,
         status?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
         createdAt?: string | null,
         viewed?: boolean | null,
         updatedAt: string,
@@ -1737,6 +1864,19 @@ export type DeleteUserMutation = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1785,6 +1925,10 @@ export type CreateConnectionMutation = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -1818,6 +1962,10 @@ export type CreateConnectionMutation = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -1873,6 +2021,10 @@ export type UpdateConnectionMutation = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -1906,6 +2058,10 @@ export type UpdateConnectionMutation = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -1961,6 +2117,10 @@ export type DeleteConnectionMutation = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -1996,10 +2156,254 @@ export type DeleteConnectionMutation = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     status?: string | null,
+    createdAt?: string | null,
+    viewed?: boolean | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateJoinRequestMutationVariables = {
+  input: CreateJoinRequestInput,
+  condition?: ModelJoinRequestConditionInput | null,
+};
+
+export type CreateJoinRequestMutation = {
+  createJoinRequest?:  {
+    __typename: "JoinRequest",
+    id: string,
+    userID?: string | null,
+    projectID?: string | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      savedProjectsIDs?: Array< string | null > | null,
+      bio?: string | null,
+      numProjects?: number | null,
+      numTeams?: number | null,
+      numConnections?: number | null,
+      username?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      links?: Array< string | null > | null,
+      premium?: boolean | null,
+      connections?:  {
+        __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    project?:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      longitude?: number | null,
+      latitude?: number | null,
+      city?: string | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt?: string | null,
+    viewed?: boolean | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateJoinRequestMutationVariables = {
+  input: UpdateJoinRequestInput,
+  condition?: ModelJoinRequestConditionInput | null,
+};
+
+export type UpdateJoinRequestMutation = {
+  updateJoinRequest?:  {
+    __typename: "JoinRequest",
+    id: string,
+    userID?: string | null,
+    projectID?: string | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      savedProjectsIDs?: Array< string | null > | null,
+      bio?: string | null,
+      numProjects?: number | null,
+      numTeams?: number | null,
+      numConnections?: number | null,
+      username?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      links?: Array< string | null > | null,
+      premium?: boolean | null,
+      connections?:  {
+        __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    project?:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      longitude?: number | null,
+      latitude?: number | null,
+      city?: string | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt?: string | null,
+    viewed?: boolean | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteJoinRequestMutationVariables = {
+  input: DeleteJoinRequestInput,
+  condition?: ModelJoinRequestConditionInput | null,
+};
+
+export type DeleteJoinRequestMutation = {
+  deleteJoinRequest?:  {
+    __typename: "JoinRequest",
+    id: string,
+    userID?: string | null,
+    projectID?: string | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      savedProjectsIDs?: Array< string | null > | null,
+      bio?: string | null,
+      numProjects?: number | null,
+      numTeams?: number | null,
+      numConnections?: number | null,
+      username?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      links?: Array< string | null > | null,
+      premium?: boolean | null,
+      connections?:  {
+        __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    project?:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      longitude?: number | null,
+      latitude?: number | null,
+      city?: string | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt?: string | null,
     viewed?: boolean | null,
     updatedAt: string,
@@ -2034,7 +2438,10 @@ export type CreateUserProjectMutation = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2068,6 +2475,10 @@ export type CreateUserProjectMutation = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -2106,7 +2517,10 @@ export type UpdateUserProjectMutation = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2140,6 +2554,10 @@ export type UpdateUserProjectMutation = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -2178,7 +2596,10 @@ export type DeleteUserProjectMutation = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2212,6 +2633,10 @@ export type DeleteUserProjectMutation = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -2292,6 +2717,10 @@ export type CreateUserChatRoomMutation = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2368,6 +2797,10 @@ export type UpdateUserChatRoomMutation = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -2448,6 +2881,10 @@ export type DeleteUserChatRoomMutation = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2486,7 +2923,19 @@ export type GetProjectQuery = {
     longitude?: number | null,
     latitude?: number | null,
     city?: string | null,
-    joinRequestIDs?: Array< string | null > | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2518,7 +2967,10 @@ export type ListProjectsQuery = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -2555,7 +3007,10 @@ export type SearchProjectsQuery = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -2939,6 +3394,19 @@ export type GetUserQuery = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2983,6 +3451,10 @@ export type ListUsersQuery = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -3034,6 +3506,10 @@ export type SearchUsersQuery = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -3102,6 +3578,10 @@ export type GetConnectionQuery = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3135,6 +3615,10 @@ export type GetConnectionQuery = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -3417,6 +3901,262 @@ export type SearchConnectionsQuery = {
   } | null,
 };
 
+export type GetJoinRequestQueryVariables = {
+  id: string,
+};
+
+export type GetJoinRequestQuery = {
+  getJoinRequest?:  {
+    __typename: "JoinRequest",
+    id: string,
+    userID?: string | null,
+    projectID?: string | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      savedProjectsIDs?: Array< string | null > | null,
+      bio?: string | null,
+      numProjects?: number | null,
+      numTeams?: number | null,
+      numConnections?: number | null,
+      username?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      links?: Array< string | null > | null,
+      premium?: boolean | null,
+      connections?:  {
+        __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    project?:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      longitude?: number | null,
+      latitude?: number | null,
+      city?: string | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt?: string | null,
+    viewed?: boolean | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListJoinRequestsQueryVariables = {
+  filter?: ModelJoinRequestFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListJoinRequestsQuery = {
+  listJoinRequests?:  {
+    __typename: "ModelJoinRequestConnection",
+    items:  Array< {
+      __typename: "JoinRequest",
+      id: string,
+      userID?: string | null,
+      projectID?: string | null,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        status?: string | null,
+        image?: string | null,
+        savedProjectsIDs?: Array< string | null > | null,
+        bio?: string | null,
+        numProjects?: number | null,
+        numTeams?: number | null,
+        numConnections?: number | null,
+        username?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        links?: Array< string | null > | null,
+        premium?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      project?:  {
+        __typename: "Project",
+        id: string,
+        ownerIDs?: Array< string | null > | null,
+        title: string,
+        description?: string | null,
+        image?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        categories?: Array< string | null > | null,
+        longitude?: number | null,
+        latitude?: number | null,
+        city?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt?: string | null,
+      viewed?: boolean | null,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type JoinRequestsByUserIDAndCreatedAtQueryVariables = {
+  userID: string,
+  createdAt?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelJoinRequestFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type JoinRequestsByUserIDAndCreatedAtQuery = {
+  joinRequestsByUserIDAndCreatedAt?:  {
+    __typename: "ModelJoinRequestConnection",
+    items:  Array< {
+      __typename: "JoinRequest",
+      id: string,
+      userID?: string | null,
+      projectID?: string | null,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        status?: string | null,
+        image?: string | null,
+        savedProjectsIDs?: Array< string | null > | null,
+        bio?: string | null,
+        numProjects?: number | null,
+        numTeams?: number | null,
+        numConnections?: number | null,
+        username?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        links?: Array< string | null > | null,
+        premium?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      project?:  {
+        __typename: "Project",
+        id: string,
+        ownerIDs?: Array< string | null > | null,
+        title: string,
+        description?: string | null,
+        image?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        categories?: Array< string | null > | null,
+        longitude?: number | null,
+        latitude?: number | null,
+        city?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt?: string | null,
+      viewed?: boolean | null,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type JoinRequestsByProjectIDAndCreatedAtQueryVariables = {
+  projectID: string,
+  createdAt?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelJoinRequestFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type JoinRequestsByProjectIDAndCreatedAtQuery = {
+  joinRequestsByProjectIDAndCreatedAt?:  {
+    __typename: "ModelJoinRequestConnection",
+    items:  Array< {
+      __typename: "JoinRequest",
+      id: string,
+      userID?: string | null,
+      projectID?: string | null,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        status?: string | null,
+        image?: string | null,
+        savedProjectsIDs?: Array< string | null > | null,
+        bio?: string | null,
+        numProjects?: number | null,
+        numTeams?: number | null,
+        numConnections?: number | null,
+        username?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        links?: Array< string | null > | null,
+        premium?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      project?:  {
+        __typename: "Project",
+        id: string,
+        ownerIDs?: Array< string | null > | null,
+        title: string,
+        description?: string | null,
+        image?: string | null,
+        skills?: Array< string | null > | null,
+        resources?: Array< string | null > | null,
+        categories?: Array< string | null > | null,
+        longitude?: number | null,
+        latitude?: number | null,
+        city?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt?: string | null,
+      viewed?: boolean | null,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetUserProjectQueryVariables = {
   id: string,
 };
@@ -3444,7 +4184,10 @@ export type GetUserProjectQuery = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -3478,6 +4221,10 @@ export type GetUserProjectQuery = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -3515,7 +4262,6 @@ export type ListUserProjectsQuery = {
         longitude?: number | null,
         latitude?: number | null,
         city?: string | null,
-        joinRequestIDs?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -3574,7 +4320,6 @@ export type UserProjectsByProjectIdQuery = {
         longitude?: number | null,
         latitude?: number | null,
         city?: string | null,
-        joinRequestIDs?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -3633,7 +4378,6 @@ export type UserProjectsByUserIdQuery = {
         longitude?: number | null,
         latitude?: number | null,
         city?: string | null,
-        joinRequestIDs?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -3730,6 +4474,10 @@ export type GetUserChatRoomQuery = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -3921,7 +4669,19 @@ export type OnCreateProjectSubscription = {
     longitude?: number | null,
     latitude?: number | null,
     city?: string | null,
-    joinRequestIDs?: Array< string | null > | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3957,7 +4717,19 @@ export type OnUpdateProjectSubscription = {
     longitude?: number | null,
     latitude?: number | null,
     city?: string | null,
-    joinRequestIDs?: Array< string | null > | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3993,7 +4765,19 @@ export type OnDeleteProjectSubscription = {
     longitude?: number | null,
     latitude?: number | null,
     city?: string | null,
-    joinRequestIDs?: Array< string | null > | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4279,6 +5063,19 @@ export type OnCreateUserSubscription = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4351,6 +5148,19 @@ export type OnUpdateUserSubscription = {
         userID: string,
         connectedUserID: string,
         status?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
         createdAt?: string | null,
         viewed?: boolean | null,
         updatedAt: string,
@@ -4435,6 +5245,19 @@ export type OnDeleteUserSubscription = {
       } | null >,
       nextToken?: string | null,
     } | null,
+    joinRequests?:  {
+      __typename: "ModelJoinRequestConnection",
+      items:  Array< {
+        __typename: "JoinRequest",
+        id: string,
+        userID?: string | null,
+        projectID?: string | null,
+        createdAt?: string | null,
+        viewed?: boolean | null,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4482,6 +5305,10 @@ export type OnCreateConnectionSubscription = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4515,6 +5342,10 @@ export type OnCreateConnectionSubscription = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -4569,6 +5400,10 @@ export type OnUpdateConnectionSubscription = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4602,6 +5437,10 @@ export type OnUpdateConnectionSubscription = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -4656,6 +5495,10 @@ export type OnDeleteConnectionSubscription = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4691,10 +5534,251 @@ export type OnDeleteConnectionSubscription = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
     status?: string | null,
+    createdAt?: string | null,
+    viewed?: boolean | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateJoinRequestSubscriptionVariables = {
+  filter?: ModelSubscriptionJoinRequestFilterInput | null,
+};
+
+export type OnCreateJoinRequestSubscription = {
+  onCreateJoinRequest?:  {
+    __typename: "JoinRequest",
+    id: string,
+    userID?: string | null,
+    projectID?: string | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      savedProjectsIDs?: Array< string | null > | null,
+      bio?: string | null,
+      numProjects?: number | null,
+      numTeams?: number | null,
+      numConnections?: number | null,
+      username?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      links?: Array< string | null > | null,
+      premium?: boolean | null,
+      connections?:  {
+        __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    project?:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      longitude?: number | null,
+      latitude?: number | null,
+      city?: string | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt?: string | null,
+    viewed?: boolean | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateJoinRequestSubscriptionVariables = {
+  filter?: ModelSubscriptionJoinRequestFilterInput | null,
+};
+
+export type OnUpdateJoinRequestSubscription = {
+  onUpdateJoinRequest?:  {
+    __typename: "JoinRequest",
+    id: string,
+    userID?: string | null,
+    projectID?: string | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      savedProjectsIDs?: Array< string | null > | null,
+      bio?: string | null,
+      numProjects?: number | null,
+      numTeams?: number | null,
+      numConnections?: number | null,
+      username?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      links?: Array< string | null > | null,
+      premium?: boolean | null,
+      connections?:  {
+        __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    project?:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      longitude?: number | null,
+      latitude?: number | null,
+      city?: string | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt?: string | null,
+    viewed?: boolean | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteJoinRequestSubscriptionVariables = {
+  filter?: ModelSubscriptionJoinRequestFilterInput | null,
+};
+
+export type OnDeleteJoinRequestSubscription = {
+  onDeleteJoinRequest?:  {
+    __typename: "JoinRequest",
+    id: string,
+    userID?: string | null,
+    projectID?: string | null,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      status?: string | null,
+      image?: string | null,
+      Messages?:  {
+        __typename: "ModelMessageConnection",
+        nextToken?: string | null,
+      } | null,
+      ChatRooms?:  {
+        __typename: "ModelUserChatRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      Projects?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      savedProjectsIDs?: Array< string | null > | null,
+      bio?: string | null,
+      numProjects?: number | null,
+      numTeams?: number | null,
+      numConnections?: number | null,
+      username?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      links?: Array< string | null > | null,
+      premium?: boolean | null,
+      connections?:  {
+        __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    project?:  {
+      __typename: "Project",
+      id: string,
+      ownerIDs?: Array< string | null > | null,
+      Users?:  {
+        __typename: "ModelUserProjectConnection",
+        nextToken?: string | null,
+      } | null,
+      title: string,
+      description?: string | null,
+      image?: string | null,
+      skills?: Array< string | null > | null,
+      resources?: Array< string | null > | null,
+      categories?: Array< string | null > | null,
+      longitude?: number | null,
+      latitude?: number | null,
+      city?: string | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt?: string | null,
     viewed?: boolean | null,
     updatedAt: string,
@@ -4728,7 +5812,10 @@ export type OnCreateUserProjectSubscription = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -4762,6 +5849,10 @@ export type OnCreateUserProjectSubscription = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -4799,7 +5890,10 @@ export type OnUpdateUserProjectSubscription = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -4833,6 +5927,10 @@ export type OnUpdateUserProjectSubscription = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -4870,7 +5968,10 @@ export type OnDeleteUserProjectSubscription = {
       longitude?: number | null,
       latitude?: number | null,
       city?: string | null,
-      joinRequestIDs?: Array< string | null > | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -4904,6 +6005,10 @@ export type OnDeleteUserProjectSubscription = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -4983,6 +6088,10 @@ export type OnCreateUserChatRoomSubscription = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -5060,6 +6169,10 @@ export type OnUpdateUserChatRoomSubscription = {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
       } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -5135,6 +6248,10 @@ export type OnDeleteUserChatRoomSubscription = {
       premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
+        nextToken?: string | null,
+      } | null,
+      joinRequests?:  {
+        __typename: "ModelJoinRequestConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,

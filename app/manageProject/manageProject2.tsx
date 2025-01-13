@@ -56,13 +56,26 @@ const manageProject2 = () => {
 
         // Function for getting the request members
         const loadRequestMembers = async () => {
-            if (formData?.joinRequestIDs?.length > 0) {
-                const usersList = await fetchUsers(formData?.joinRequestIDs); // Fetch users
-                setRequestMembers(usersList); // Update state with fetched users
-                const joinedDates = usersList?.map((item: any) => item.createdAt) || []; 
+            if (formData?.joinRequests?.length > 0) {
+                // Extract user IDs from the joinRequests
+                const userIds = formData.joinRequests.map((request: any) => request.userID);
+
+                // Fetch user details based on the user IDs
+                const usersList = await fetchUsers(userIds);
+
+                // Map join request creation dates to the corresponding user
+                const joinedDates = formData.joinRequests.map((request: any) => request.createdAt);
+
+                // Update state with fetched users and their join dates
+                setRequestMembers(usersList);
                 setRequestDates(joinedDates);
-              }
-        }
+            } else {
+                // Clear the state if there are no join requests
+                setRequestMembers([]);
+                setRequestDates([]);
+            }
+        };
+
 
         // Function for getting the admins
         // Function for getting the admins based on existing members and ownerIDs

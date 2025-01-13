@@ -12,6 +12,17 @@ interface User {
     // other properties
 }
 
+
+// Define the shape of a join request
+interface JoinRequest {
+  id: string;
+  userID: string;
+  projectID: string;
+  createdAt?: string;
+  user?: User; // Relationship to User
+}
+
+
 // Define the shape of the form data
 interface FormData {
     ownerIDs: string[],
@@ -27,7 +38,7 @@ interface FormData {
     longitude: Float
     latitude: Float
     city: string
-    joinRequestIDs: string[]
+    joinRequests: JoinRequest[]; // Updated to use JoinRequest model
     removeUserIDs: string[]
     addUserIDs: string[]
   }
@@ -46,7 +57,7 @@ interface FormData {
         longitude: 0, 
         latitude: 0, 
         city: '', 
-        joinRequestIDs: [], 
+        joinRequests: [], // Initialize joinRequests as an empty array
         removeUserIDs: [],
         addUserIDs: [],
     },
@@ -70,7 +81,7 @@ export default function FormLayout() {
     longitude: 0, 
     latitude: 0, 
     city: '', 
-    joinRequestIDs: [], 
+    joinRequests: [], // Initialize joinRequests as an empty array
     removeUserIDs: [],
     addUserIDs: [],
   });

@@ -106,7 +106,6 @@ export const listProjectsWithSort = /* GraphQL */ `query ListProjectsWithSort(
       longitude
       latitude
       city
-      joinRequestIDs
       createdAt
       updatedAt
       __typename

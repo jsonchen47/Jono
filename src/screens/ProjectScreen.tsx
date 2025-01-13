@@ -14,6 +14,9 @@ import { formatDateLong } from '../functions/formatDateLong';
 import { fetchUsers } from '../functions/fetchUsers';
 import { useFocusEffect } from '@react-navigation/native';
 import HeartButton from '../components/HeartButton';
+import { createJoinRequest } from '../graphql/mutations';
+import { deleteJoinRequest } from '../graphql/mutations';
+import { listJoinRequests } from '../graphql/queries';
 
 const client = generateClient();
 
@@ -54,16 +57,21 @@ const ProjectScreen = ({ project }: any) => {
     }
 
     useEffect(() => {
-      if (project?.ownerIDs?.[0]) {
-        fetchUser(project?.ownerIDs[0]);
-      }
-
-      if (project?.joinRequestIDs?.includes(authUserID)) {
-        setHasRequested(true)
-      } else {
-        setHasRequested(false)
-      }
-    }, [project?.ownerIDs, authUserID]);
+        if (project?.ownerIDs?.[0]) {
+            fetchUser(project?.ownerIDs[0]);
+        }
+    
+        if (
+            Array.isArray(project?.joinRequests) &&
+            project?.joinRequests.some((request: any) => request.userID === authUserID)
+        ) {
+            setHasRequested(true);
+        } else {
+            setHasRequested(false);
+        }
+    }, [project?.ownerIDs, authUserID, project?.joinRequests]);
+    
+    
 
     const handleScroll = (event: any) => {
         const scrollY = event.nativeEvent.contentOffset.y;
@@ -116,63 +124,49 @@ const ProjectScreen = ({ project }: any) => {
 
     const addUserToJoinRequests = async () => {
         try {
-          const projectData = await client.graphql({
-              query: getProject,
-              variables: { id: project.id }
-          }) as GraphQLResult<any>;
-          const currentJoinRequestIDs = projectData?.data?.getProject?.joinRequestIDs || [];
+          const input = {
+            userID: authUserID,
+            projectID: project.id,
+            createdAt: new Date().toISOString(),
+          };
       
-          if (currentJoinRequestIDs?.includes(authUserID)) {
-            console.log("User is already in the joinRequestIDs array.");
+          const result = await client.graphql({
+            query: createJoinRequest,
+            variables: { input },
+          });
+          console.log('Join request created:', result);
+          setHasRequested(true);
+        } catch (error) {
+          console.error('Error creating join request:', error);
+        }
+      };
+
+      const removeUserFromJoinRequests = async () => {
+        try {
+          // Fetch the JoinRequest ID for this user and project
+          const result = await client.graphql({
+            query: listJoinRequests,
+            variables: { filter: { userID: { eq: authUserID }, projectID: { eq: project.id } } },
+          });
+      
+          const joinRequestId = result.data?.listJoinRequests?.items?.[0]?.id;
+      
+          if (!joinRequestId) {
+            console.log('No join request found to remove.');
             return;
           }
       
-          const updatedJoinRequestIDs = [...currentJoinRequestIDs, authUserID];
+          await client.graphql({
+            query: deleteJoinRequest,
+            variables: { input: { id: joinRequestId } },
+          });
       
-          const updatedProject = await client.graphql({
-              query: updateProject,
-              variables: {
-                  input: {
-                      id: project.id,
-                      joinRequestIDs: updatedJoinRequestIDs,
-                  },
-              }
-          }) as GraphQLResult<any>;
-          console.log("Updated Project:", updatedProject?.data?.updateProject);
+          console.log('Join request removed.');
+          setHasRequested(false);
         } catch (error) {
-          console.error("Error adding user to joinRequestIDs:", error);
+          console.error('Error removing join request:', error);
         }
-    };
-
-    const removeUserFromJoinRequests = async () => {
-        try {
-        const projectData = await client.graphql({
-            query: getProject,
-            variables: { id: project.id }
-        }) as GraphQLResult<any>;
-        const currentJoinRequestIDs = projectData?.data?.getProject?.joinRequestIDs || [];
-    
-        if (!currentJoinRequestIDs.includes(authUserID)) {
-            console.log("User is not in the joinRequestIDs array.");
-            return;
-        }
-    
-        const updatedJoinRequestIDs = currentJoinRequestIDs.filter((id: any) => id !== authUserID);
-    
-        const updatedProject = await client.graphql({
-            query: updateProject,
-            variables: {
-                input: {
-                    id: project.id,
-                    joinRequestIDs: updatedJoinRequestIDs,
-                },
-            }
-        }) as GraphQLResult<any>;
-        console.log("Updated Project (after removal):", updatedProject?.data?.updateProject);
-        } catch (error) {
-        console.error("Error removing user from joinRequestIDs:", error);
-        }
-    };
+      };
   
     
 

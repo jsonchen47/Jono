@@ -11,7 +11,7 @@ type Project @model @searchable @auth(rules: [{allow: public}]) {
   longitude: Float
   latitude: Float
   city: String
-  joinRequestIDs: [String]
+  joinRequests: [JoinRequest] @hasMany(indexName: "byProject", fields: ["id"])
 }
 
 type ChatRoom @model @searchable @auth(rules: [{allow: public}]) {
@@ -51,6 +51,7 @@ type User @model @searchable @auth(rules: [{allow: public}]) {
   links: [String]
   premium: Boolean
   connections: [Connection] @hasMany(indexName: "byUser", fields: ["id"])
+  joinRequests: [JoinRequest] @hasMany(indexName: "byUser", fields: ["id"]) # Connection to JoinRequest
 }
 
 type Connection @model @searchable @auth(rules: [{ allow: public }]) {
@@ -62,4 +63,14 @@ type Connection @model @searchable @auth(rules: [{ allow: public }]) {
   status: String
   createdAt: AWSDateTime
   viewed: Boolean @default(value: "false") 
+}
+
+type JoinRequest @model @auth(rules: [{ allow: public }]) {
+  id: ID! # The only required field
+  userID: ID @index(name: "byUser", sortKeyFields: ["createdAt"]) # Index for user relationships
+  projectID: ID @index(name: "byProject", sortKeyFields: ["createdAt"]) # Index for project relationships
+  user: User @belongsTo(fields: ["userID"]) # Optional relationship
+  project: Project @belongsTo(fields: ["projectID"]) # Optional relationship
+  createdAt: AWSDateTime # Optional: Can be null
+  viewed: Boolean @default(value: "false") # Optional with default value
 }
