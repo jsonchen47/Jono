@@ -15,8 +15,10 @@ import { fetchUsers } from '../functions/fetchUsers';
 import { useFocusEffect } from '@react-navigation/native';
 import HeartButton from '../components/HeartButton';
 import { createJoinRequest } from '../graphql/mutations';
-import { deleteJoinRequest } from '../graphql/mutations';
+import { deleteJoinRequest, deleteUserProject } from '../graphql/mutations';
 import { listJoinRequests } from '../graphql/queries';
+import { listUserProjects } from '../graphql/queries';
+
 
 const client = generateClient();
 
@@ -62,8 +64,8 @@ const ProjectScreen = ({ project }: any) => {
         }
     
         if (
-            Array.isArray(project?.joinRequests) &&
-            project?.joinRequests.some((request: any) => request.userID === authUserID)
+            Array.isArray(project?.joinRequests?.items) &&
+            project?.joinRequests?.items?.some((request: any) => request.userID === authUserID)
         ) {
             setHasRequested(true);
         } else {
@@ -168,7 +170,41 @@ const ProjectScreen = ({ project }: any) => {
         }
       };
   
-    
+      const removeUserFromProject = async () => {
+        try {
+          // Step 1: Query to find the user's project relationship
+          const result = await client.graphql({
+            query: listUserProjects,
+            variables: {
+              filter: {
+                projectId: { eq: project.id },
+                userId: { eq: authUserID },
+              },
+            },
+          }) as GraphQLResult<any>;
+      
+          const userProject = result.data?.listUserProjects?.items?.[0];
+      
+          if (!userProject) {
+            console.log('User is not part of the project.');
+            return;
+          }
+      
+          // Step 2: Use deleteUserProject mutation to remove the user
+          await client.graphql({
+            query: deleteUserProject,
+            variables: { input: { id: userProject.id } },
+          });
+      
+          console.log('User successfully removed from the project.');
+      
+          // Optional: Navigate back or refresh the UI
+        //   router.back();
+        } catch (error) {
+          console.error('Error removing user from project:', error);
+        }
+      };
+      
 
     return (
         <View style={styles.container}>
@@ -325,53 +361,62 @@ const ProjectScreen = ({ project }: any) => {
                             <Text style={styles.membersCountText}>{users.length}</Text>
                             <Text style={styles.membersText}>Members</Text>
                         </View>
-                        {/* <Button 
-                            style={styles.joinButton} 
-                            labelStyle={styles.joinButtonText}
-                            mode="contained"  
-                            onPress={() => console.log('pressed')}>
-                            Request to Join
-                        </Button> */}
+                        
                         {/* Conditional Button Rendering */}
-        {users.some((user: any) => user.id === authUserID) ? (
-            <Button 
-                style={styles.joinButton} 
-                labelStyle={styles.joinButtonText}
-                mode="contained"  
-                onPress={() => 
-                    // console.log('Manage/Edit pressed')
-                    router.push({
-                        pathname: '/manageProject/manageProject1',
-                        params: { projectId: project.id },
-                    })
-                }>
-                Manage and Edit
-            </Button>
-        ) : (
-            hasRequested ? (
-                // Requested Button
-                <Button
-                    style={styles.requestedButton}
-                    labelStyle={styles.joinButtonText}
-                    mode="contained"
-                    onPress={handleCancelRequest}
-                    disabled={isProcessing}
-                >
-                    {isProcessing ? 'Canceling...' : 'Requested'}
-                </Button>
-            ) : (
-                // Join Button
-                <Button
-                    style={styles.joinButton}
-                    labelStyle={styles.joinButtonText}
-                    mode="contained"
-                    onPress={handleRequest}
-                    disabled={isProcessing}
-                >
-                    {isProcessing ? 'Requesting...' : 'Request to Join'}
-                </Button>
-            )
-        )}
+  {project?.ownerIDs?.includes(authUserID) ? (
+    // Owner: Manage and Edit button
+    <Button 
+      style={styles.joinButton} 
+      labelStyle={styles.joinButtonText}
+      mode="contained"  
+      onPress={() => 
+        router.push({
+          pathname: '/manageProject/manageProject1',
+          params: { projectId: project.id },
+        })
+      }>
+      Manage and Edit
+    </Button>
+  ) : users.some((user: any) => user.id === authUserID) ? (
+    // Member: Leave Project button
+    <Button
+      style={styles.leaveButton}
+      labelStyle={styles.joinButtonText}
+      mode="contained"
+      onPress={async () => {
+        try {
+          await removeUserFromProject(); // Call the removal function
+          router.back(); // Navigate back after leaving the project
+        } catch (error) {
+          console.error('Failed to leave the project:', error);
+        }
+      }}
+    >
+      Leave Project
+    </Button>
+  ) : hasRequested ? (
+    // Not a member, but requested: Requested button
+    <Button
+      style={styles.requestedButton}
+      labelStyle={styles.joinButtonText}
+      mode="contained"
+      onPress={handleCancelRequest}
+      disabled={isProcessing}
+    >
+      {isProcessing ? 'Canceling...' : 'Requested'}
+    </Button>
+  ) : (
+    // Not a member and no request: Request to Join button
+    <Button
+      style={styles.joinButton}
+      labelStyle={styles.joinButtonText}
+      mode="contained"
+      onPress={handleRequest}
+      disabled={isProcessing}
+    >
+      {isProcessing ? 'Requesting...' : 'Request to Join'}
+    </Button>
+  )}
                     </View>
                 </SafeAreaView>
             </View>
@@ -630,6 +675,12 @@ const styles = StyleSheet.create({
   },
   onlyHeartButtonContainer: {
     paddingTop: 3, 
-  }
+  },
+  leaveButton: {
+    borderRadius: 10,
+    alignSelf: 'flex-end',
+    width: 200,
+    backgroundColor: '#EFD6D6', // Red color for leaving the project
+  },
 
 })

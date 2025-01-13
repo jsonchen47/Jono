@@ -149,3 +149,46 @@ export const getUserWithoutConnections = /* GraphQL */ `
   }
 `;
 
+
+export const listProjectsWithJoinRequests = /* GraphQL */ `
+  query ListProjectsWithJoinRequests(
+    $filter: ModelProjectFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        description
+        image
+        skills
+        resources
+        categories
+        ownerIDs
+        longitude
+        latitude
+        city
+        createdAt
+        updatedAt
+        joinRequests {
+          items {
+            id
+            userID
+            projectID
+            createdAt
+            viewed
+            user {
+              id
+              name
+              image
+              username
+            }
+          }
+          nextToken
+        }
+      }
+      nextToken
+    }
+  }
+`;

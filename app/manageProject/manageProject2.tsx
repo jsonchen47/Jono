@@ -56,10 +56,18 @@ const manageProject2 = () => {
 
         // Function for getting the request members
         const loadRequestMembers = async () => {
+            console.log('formdata join requestss')
+            console.log(formData?.joinRequests)
+            console.log('length')
+            console.log(formData?.joinRequests?.length)
             if (formData?.joinRequests?.length > 0) {
+                console.log('if statement true')
+                
                 // Extract user IDs from the joinRequests
                 const userIds = formData.joinRequests.map((request: any) => request.userID);
 
+                console.log('formdata.joinRequests')
+                console.log(formData.joinRequests)
                 // Fetch user details based on the user IDs
                 const usersList = await fetchUsers(userIds);
 
@@ -73,6 +81,7 @@ const manageProject2 = () => {
                 // Clear the state if there are no join requests
                 setRequestMembers([]);
                 setRequestDates([]);
+                console.log('if statement false')
             }
         };
 
@@ -120,6 +129,7 @@ const manageProject2 = () => {
     
             // Step 3: Load request members (optional, can run concurrently if not dependent)
             loadRequestMembers();
+            
     
             setLoading(false); // End loading state
         };

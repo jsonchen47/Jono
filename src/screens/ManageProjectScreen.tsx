@@ -80,8 +80,11 @@ const ManageProjectScreen = ({project}: any) => {
             longitude: project?.longitude, 
             latitude: project?.latitude, 
             city: project?.city, 
-            joinRequests: project?.joinRequests, 
+            joinRequests: project?.joinRequests?.items, 
         }));
+        // console.log('joinRequests')
+        // console.log(project?.joinRequests)
+        // console.log(formData.joinRequests)
     }, [project])
 
     // Confirmation after clicking on save 

@@ -15,6 +15,10 @@ import { ProgressBar, Snackbar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Octicons'; // Import vector icons
 import { useRouter } from 'expo-router';
 import { RefreshProvider } from '../contexts/RefreshContext';
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from 'react-native-reanimated';
 
 // OTHER PROVIDER IMPORTS
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -46,6 +50,12 @@ import * as ExpoImageManipulator from 'expo-image-manipulator';
 
 import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
 import { MMKV } from 'react-native-mmkv';
+
+// This is the default configuration
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false, // Reanimated runs in strict mode by default
+});
 
 const client = generateClient();
 

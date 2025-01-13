@@ -15,6 +15,8 @@ import { useUser } from '../contexts/UserContext';
 import { listTeamsByUser } from '../backend/queries';
 import { router } from 'expo-router';
 import { createConnection, deleteConnection } from '../graphql/mutations';
+import { getCurrentUser } from 'aws-amplify/auth';
+
 
 const client = generateClient();
 
@@ -24,7 +26,31 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
   const [counts, setCounts] = useState({ numConnections: 0, numProjects: 0, numTeams: 0 });
   const [loading, setLoading] = useState(true);
   const { user: loggedInUser } = useUser();
+  const [stateAuthUserID, setAuthUserID] = useState<string | null>(null); // State for user's ID
 
+  useEffect(() => {
+    // Fetch the user's ID from context or Auth
+    const fetchUserID = async () => {
+      try {
+        if (loggedInUser?.id) {
+          // Use context if it's populated
+          setAuthUserID(loggedInUser.id);
+        } else {
+          // Fallback to fetching from Auth
+          const authUser = await getCurrentUser();
+          setAuthUserID(authUser.userId);
+        }
+      } catch (error) {
+        console.error('Error fetching authenticated user ID:', error);
+      } finally {
+        setLoading(false); // Stop loading after attempting to fetch
+      }
+    };
+
+    fetchUserID();
+  }, [loggedInUser]); // Depend on loggedInUser to re-fetch if it changes
+
+  
   const fetchCounts = async (userID: string) => {
     try {
       // Fetch connections using searchable
@@ -87,7 +113,10 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
 
   const handleRequestConnection = async () => {
     try {
-      const authUserID = loggedInUser?.id;
+      const authUserID = stateAuthUserID;
+
+      console.log('authuser: ', authUserID)
+      console.log('user id: ', user?.id)
 
       if (!authUserID || !user?.id) {
         console.warn('Missing user data for connection request.');

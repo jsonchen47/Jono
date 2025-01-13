@@ -8,6 +8,7 @@ const NotificationsPage = () => {
   const { notifications, markNotificationsAsRead } = useNotifications();
 
   useEffect(() => {
+    console.log(notifications)
     const markAsRead = async () => {
       try {
         await markNotificationsAsRead(); // Mark notifications as read when page is viewed
@@ -22,15 +23,21 @@ const NotificationsPage = () => {
   const renderItem = ({ item }: any) => {
     const isApproved = item.status === 'approved';
     const daysAgo = moment(item.updatedAt).fromNow();
-
+  
+    // Determine the title based on the notification type
+    let title = '';
+    if (item.type === 'connectionRequest') {
+      title = isApproved
+        ? `@${item.user.username} connected with you.`
+        : `@${item.user.username} requested to connect with you.`;
+    } else if (item.type === 'joinRequest') {
+      title = `@${item.user.username} has requested to join ${item.projectTitle}.`;
+    }
+  
     return (
       <List.Item
         style={{ paddingRight: 0 }}
-        title={
-          isApproved
-            ? `@${item.user.username} connected with you.`
-            : `@${item.user.username} requested to connect with you`
-        }
+        title={title}
         titleStyle={styles.listItemTitle}
         titleNumberOfLines={2}
         description={daysAgo}
@@ -54,6 +61,7 @@ const NotificationsPage = () => {
       />
     );
   };
+  
 
   return (
     <View style={styles.container}>

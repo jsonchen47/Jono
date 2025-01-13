@@ -7,12 +7,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Auth } from 'aws-amplify';
+import { signOut } from 'aws-amplify/auth';
 import Icon from 'react-native-vector-icons/Feather';
 import { useRouter } from 'expo-router';
-
-
-
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
@@ -22,7 +19,13 @@ export default function SettingsScreen() {
     {
       id: '1',
       title: 'Sign out',
-      onPress: () => Auth.signOut(),
+      onPress: async () => {
+        try {
+          await signOut();
+        } catch (error) {
+          console.error('Error signing out:', error);
+        }
+      },
       showChevron: false,
       icon: 'log-out',
     },
@@ -30,7 +33,7 @@ export default function SettingsScreen() {
       id: '2',
       title: 'Delete Account',
       onPress: () => {
-        router.push('/(tabs)/(profile)/deleteAccount')
+        router.push('/(tabs)/(profile)/deleteAccount');
       },
       showChevron: true,
       icon: 'trash-2',
@@ -81,11 +84,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 8,
     backgroundColor: '#ffffff',
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 4,
-    // elevation: 2,
   },
   listItemContent: {
     flexDirection: 'row',
