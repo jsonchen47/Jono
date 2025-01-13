@@ -60,7 +60,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
         ...connections.map((c) => ({ ...c, type: 'connectionRequest' })), // Add type identifier
         ...joinRequests,
       ].sort((a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       );
 
       console.log('allnotificationslength', allNotifications.length)

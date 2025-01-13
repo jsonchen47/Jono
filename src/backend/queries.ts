@@ -177,6 +177,7 @@ export const listProjectsWithJoinRequests = /* GraphQL */ `
             userID
             projectID
             createdAt
+            updatedAt
             viewed
             user {
               id
