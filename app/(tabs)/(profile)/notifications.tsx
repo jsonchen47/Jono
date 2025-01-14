@@ -3,15 +3,19 @@ import { View, FlatList, StyleSheet, Text, Image, TouchableOpacity } from 'react
 import { List } from 'react-native-paper';
 import moment from 'moment';
 import { useNotifications } from '@/src/contexts/NotificationContext';
+import { generateClient } from 'aws-amplify/api';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { updateConnection, deleteConnection, deleteJoinRequest, createUserProject } from '@/src/graphql/mutations';
+
+const client = generateClient();
 
 const NotificationsPage = () => {
-  const { notifications, markNotificationsAsRead } = useNotifications();
+  const { notifications, markNotificationsAsRead, fetchNotifications } = useNotifications();
 
   useEffect(() => {
-    console.log(notifications)
     const markAsRead = async () => {
       try {
-        await markNotificationsAsRead(); // Mark notifications as read when page is viewed
+        await markNotificationsAsRead();
       } catch (error) {
         console.error('Error marking notifications as read:', error);
       }
@@ -20,11 +24,71 @@ const NotificationsPage = () => {
     markAsRead();
   }, []);
 
+  const handleApprove = async (notification: any) => {
+    try {
+      if (notification.type === 'connectionRequest') {
+        await client.graphql({
+          query: updateConnection,
+          variables: {
+            input: {
+              id: notification.id,
+              status: 'approved',
+            },
+          },
+        });
+      } else if (notification.type === 'joinRequest') {
+        await client.graphql({
+          query: createUserProject,
+          variables: {
+            input: {
+              userId: notification.userID,
+              projectId: notification.projectID,
+            },
+          },
+        });
+
+        await client.graphql({
+          query: deleteJoinRequest,
+          variables: {
+            input: { id: notification.id },
+          },
+        });
+      }
+
+      await fetchNotifications(); // Refresh notifications list
+    } catch (error) {
+      console.error('Error approving notification:', error);
+    }
+  };
+
+  const handleDelete = async (notification: any) => {
+    try {
+      if (notification.type === 'connectionRequest') {
+        await client.graphql({
+          query: deleteConnection,
+          variables: {
+            input: { id: notification.id },
+          },
+        });
+      } else if (notification.type === 'joinRequest') {
+        await client.graphql({
+          query: deleteJoinRequest,
+          variables: {
+            input: { id: notification.id },
+          },
+        });
+      }
+
+      await fetchNotifications(); // Refresh notifications list
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
+  };
+
   const renderItem = ({ item }: any) => {
     const isApproved = item.status === 'approved';
     const daysAgo = moment(item.updatedAt).fromNow();
-  
-    // Determine the title based on the notification type
+
     let title = '';
     if (item.type === 'connectionRequest') {
       title = isApproved
@@ -33,7 +97,7 @@ const NotificationsPage = () => {
     } else if (item.type === 'joinRequest') {
       title = `@${item.user.username} has requested to join ${item.projectTitle}.`;
     }
-  
+
     return (
       <List.Item
         style={{ paddingRight: 0 }}
@@ -47,13 +111,19 @@ const NotificationsPage = () => {
         )}
         right={() => (
           <View style={styles.buttonContainer}>
+            {!isApproved && (
+              <TouchableOpacity
+                onPress={() => handleApprove(item)}
+                style={styles.approveButton}
+              >
+                <Text style={styles.buttonText}>Approve</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
-              onPress={() => console.log('Handle approve or remove here')}
-              style={isApproved ? styles.removeButton : styles.approveButton}
+              onPress={() => handleDelete(item)}
+              style={styles.deleteButton}
             >
-              <Text style={styles.buttonText}>
-                {isApproved ? 'Unfollow' : 'Approve'}
-              </Text>
+              <Text style={styles.buttonText}>Delete</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -61,7 +131,6 @@ const NotificationsPage = () => {
       />
     );
   };
-  
 
   return (
     <View style={styles.container}>
@@ -91,24 +160,24 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   approveButton: {
     backgroundColor: '#1ABFFB',
-    marginHorizontal: 10,
-    borderRadius: 10,
-    alignSelf: 'center',
-    paddingVertical: 10,
+    marginVertical: 3,
+    borderRadius: 5,
+    paddingVertical: 5,
     paddingHorizontal: 15,
+    marginHorizontal: 5, 
   },
-  removeButton: {
-    backgroundColor: 'lightgray',
-    marginHorizontal: 10,
-    borderRadius: 10,
-    alignSelf: 'center',
-    paddingVertical: 10,
+  deleteButton: {
+    backgroundColor: '#D4B5B5',
+    marginVertical: 3,
+    borderRadius: 5,
+    paddingVertical: 5,
     paddingHorizontal: 15,
+    marginHorizontal: 5, 
   },
   loadingText: {
     fontSize: 16,
@@ -118,9 +187,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
+    textAlign: 'center',
+    fontSize: 12,
   },
   listItemTitle: {
-    fontSize: 15,
+    fontSize: 12,
+    fontWeight: '500',
   },
   listItemDescription: {
     fontSize: 12,

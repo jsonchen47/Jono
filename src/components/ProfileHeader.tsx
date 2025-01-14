@@ -53,21 +53,21 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
   
   const fetchCounts = async (userID: string) => {
     try {
-      // Fetch connections using searchable
+      // Fetch connections using searchable with a filter for accepted status
       const connectionsResult = await client.graphql({
         query: searchConnections,
         variables: {
           filter: {
             or: [
-              { userID: { eq: userID } },
-              { connectedUserID: { eq: userID } },
+              { userID: { eq: userID }, status: { eq: "accepted" } },
+              { connectedUserID: { eq: userID }, status: { eq: "accepted" } },
             ],
           },
         },
       }) as GraphQLResult<any>;
-
+  
       const numConnections = connectionsResult?.data?.searchConnections?.total || 0;
-
+  
       // Fetch projects
       const projectsResult = await client.graphql({
         query: listProjects,
@@ -75,9 +75,9 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
           filter: { ownerIDs: { contains: userID } },
         },
       }) as GraphQLResult<any>;
-
+  
       const numProjects = projectsResult?.data?.listProjects?.items?.length || 0;
-
+  
       // Fetch teams
       const teamsResult = await client.graphql({
         query: listTeamsByUser,
@@ -85,9 +85,9 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
           id: userID,
         },
       }) as GraphQLResult<any>;
-
+  
       const numTeams = teamsResult?.data?.listTeamsByUser?.items?.length || 0;
-
+  
       setCounts({ numConnections, numProjects, numTeams });
     } catch (error) {
       console.error('Error fetching counts:', error);
@@ -96,6 +96,7 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     if (user?.id) {
