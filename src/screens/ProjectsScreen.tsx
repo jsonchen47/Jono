@@ -5,7 +5,7 @@ import { getCurrentUser } from 'aws-amplify/auth';
 import { useFilter } from '@/src/contexts/FilterContext';
 import ProjectsGridNew from '../components/ProjectsGridNew';
 import { searchProjects } from '@/src/graphql/queries';
-
+import { useFocusEffect } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -119,6 +119,13 @@ const ProjectsScreen = ({ category }: any) => {
   useEffect(() => {
     fetchProjects(null, true);
   }, [filter, category]);
+
+  // Whenever the page comes back into view, refresh the data
+  useFocusEffect(
+    useCallback(() => {
+      fetchProjects(null, true);
+    }, [category])
+  );
 
   return (
     <View style={styles.projectsScreenContainer}>

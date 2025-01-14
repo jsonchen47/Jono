@@ -59,8 +59,8 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
         variables: {
           filter: {
             or: [
-              { userID: { eq: userID }, status: { eq: "accepted" } },
-              { connectedUserID: { eq: userID }, status: { eq: "accepted" } },
+              { userID: { eq: userID }, status: { eq: "approved" } },
+              { connectedUserID: { eq: userID }, status: { eq: "approved" } },
             ],
           },
         },

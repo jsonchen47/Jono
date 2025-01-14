@@ -95,7 +95,7 @@ const NotificationsPage = () => {
         ? `@${item.user.username} connected with you.`
         : `@${item.user.username} requested to connect with you.`;
     } else if (item.type === 'joinRequest') {
-      title = `@${item.user.username} has requested to join ${item.projectTitle}.`;
+      title = `@${item.user.username} requested to join ${item.projectTitle}.`;
     }
 
     return (
@@ -112,19 +112,22 @@ const NotificationsPage = () => {
         right={() => (
           <View style={styles.buttonContainer}>
             {!isApproved && (
-              <TouchableOpacity
-                onPress={() => handleApprove(item)}
-                style={styles.approveButton}
+              <View>
+                <TouchableOpacity
+                  onPress={() => handleApprove(item)}
+                  style={styles.approveButton}
+                >
+                  <Text style={styles.buttonText}>Approve</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => handleDelete(item)}
+                style={styles.deleteButton}
               >
-                <Text style={styles.buttonText}>Approve</Text>
+                <Text style={styles.deleteButtonText}>Delete</Text>
               </TouchableOpacity>
+            </View>
             )}
-            <TouchableOpacity
-              onPress={() => handleDelete(item)}
-              style={styles.deleteButton}
-            >
-              <Text style={styles.buttonText}>Delete</Text>
-            </TouchableOpacity>
+            
           </View>
         )}
         descriptionNumberOfLines={2}
@@ -158,6 +161,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 5,
     marginRight: 10,
+    marginVertical: 5,
   },
   buttonContainer: {
     flexDirection: 'column',
@@ -165,17 +169,17 @@ const styles = StyleSheet.create({
   },
   approveButton: {
     backgroundColor: '#1ABFFB',
-    marginVertical: 3,
+    marginVertical: 2,
     borderRadius: 5,
-    paddingVertical: 5,
+    paddingVertical: 7,
     paddingHorizontal: 15,
     marginHorizontal: 5, 
   },
   deleteButton: {
-    backgroundColor: '#D4B5B5',
-    marginVertical: 3,
+    backgroundColor: '#EFD6D6',
+    marginVertical: 2,
     borderRadius: 5,
-    paddingVertical: 5,
+    paddingVertical: 7,
     paddingHorizontal: 15,
     marginHorizontal: 5, 
   },
@@ -189,6 +193,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontSize: 12,
+    fontWeight: '500',
   },
   listItemTitle: {
     fontSize: 12,
@@ -197,4 +202,10 @@ const styles = StyleSheet.create({
   listItemDescription: {
     fontSize: 12,
   },
+  deleteButtonText: {
+    color: 'black',
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: '500',
+  }
 });
