@@ -6,8 +6,10 @@ import { listUserProjects, getProject } from '@/src/graphql/queries';
 import { deleteProject, deleteUserProject } from '@/src/graphql/mutations';
 import { useProgress } from '@/src/contexts/ProgressContext';
 import { remove } from 'aws-amplify/storage';
+import { useRefresh } from '@/src/contexts/RefreshContext';
 
 const client = generateClient();
+
 
 // Get the UserProjects
 const fetchProjectLinks = async (projectId: string) => {
@@ -66,6 +68,7 @@ const deleteProjectById = async (projectId: string) => {
       query: deleteProject,
       variables: { input: { id: projectId } }
     });
+    
     console.log('Project deleted successfully');
 
   } catch (error) {
@@ -77,6 +80,7 @@ const DeleteProjectConfirmationScreen = () => {
   const router = useRouter();
   const { projectId } = useLocalSearchParams();
   const { setDeleted } = useProgress();
+  const { setShouldRefresh } = useRefresh();
 
   return (
     <View style={styles.overlay}>
@@ -90,6 +94,9 @@ const DeleteProjectConfirmationScreen = () => {
             deleteProjectById(projectId as string);
             router.replace('/(tabs)/(home)');
             setDeleted(true);
+            // setTimeout(() => {
+            //   setShouldRefresh(true);
+            // }, 1000); // 1 second delay
           }}
         >
           <Text style={styles.deleteButtonText}>Delete</Text>

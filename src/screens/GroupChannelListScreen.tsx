@@ -8,6 +8,9 @@ const GroupChannelListScreen = () => {
   const navigation = useNavigation<any>();
   return (
     <GroupChannelListFragment
+    channelListQueryParams={{
+      includeEmpty: true, // Include empty channels
+    }}
       onPressCreateChannel={(channelType) => {
         navigation.navigate('GroupChannelCreate', { channelType });
       }}

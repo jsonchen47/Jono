@@ -6,6 +6,7 @@ import { uploadData } from 'aws-amplify/storage';
 import config from '../../src/aws-exports';
 import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import Geolocation from '@react-native-community/geolocation';
+import { useSendbirdChat } from '@sendbird/uikit-react-native';
 
 const client = generateClient();
 
@@ -37,8 +38,10 @@ export async function uploadNewProject(
   hideProgressBar: () => void,
   updateProgress: (progress: number) => void,
   isVisible: boolean,
-  setProjectId: any
+  setProjectId: any,
+  sdk: any
 ) {
+
   try {
     showProgressBar();
     updateProgress(0);
@@ -153,6 +156,25 @@ export async function uploadNewProject(
     console.log('Project and user relationship created successfully.');
 
     setProjectId(projectId);
+
+
+    // Create a chat channel in Sendbird
+    if (sdk && projectId) {
+      console.log('formdata.title', formData.title)
+      const channelName = `${formData.title}`;
+      const channelCoverImageUrl = imageUrl; // Use the project image as the channel cover
+
+      const channelParams = {
+        name: channelName,
+        coverUrl: channelCoverImageUrl,
+        isDistinct: false, // Ensures new chat will be created even when it has the same users
+        invitedUserIds: [userId], // Invites the user who created the project
+        operatorUserIds: [userId], // Sets the project creator as the channel operator
+      };
+
+      const channel = await sdk.groupChannel.createChannel(channelParams);
+      console.log('Sendbird channel created:', channel);
+    }
 
     updateProgress(1);
     await new Promise((resolve) => setTimeout(resolve, 100));

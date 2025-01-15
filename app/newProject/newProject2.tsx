@@ -10,6 +10,7 @@ import { uploadNewProject } from "../../src/functions/uploadNewProject"
 import { useProgress } from '@/src/contexts/ProgressContext';
 import ChipInput from '@/src/components/ChipInput';
 import DropdownWithChipDisplay from '@/src/components/DropdownWithChipDisplay';
+import { useSendbirdChat } from '@sendbird/uikit-react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -25,6 +26,7 @@ const categories = [
 ];
 
 const newProject2 = () => {
+  const { sdk } = useSendbirdChat();
   const { hideProgressBar, showProgressBar, updateProgress, isVisible, setProjectId } = useProgress();
   const { formData, setFormData } = useContext(FormContext);
   const router = useRouter();
@@ -74,7 +76,7 @@ const newProject2 = () => {
         <View style={styles.header}>
           <Pressable onPress={() => {
             router.replace('/(tabs)/(home)')
-            uploadNewProject(formData, setFormData, showProgressBar, hideProgressBar, updateProgress, isVisible, setProjectId)
+            uploadNewProject(formData, setFormData, showProgressBar, hideProgressBar, updateProgress, isVisible, setProjectId, sdk)
             // router.back()
             // console.log('hit first router back')
             // router.back()

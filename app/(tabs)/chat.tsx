@@ -9,10 +9,19 @@ const chat = () => {
   const { sdk } = useSendbirdChat();
 
   useEffect(() => {
+    async function verifyChannel() {
+      const query = sdk.groupChannel.createMyGroupChannelListQuery({
+        includeEmpty: true, // Include empty channels
+      });
+
+      const channels = await query.next();
+      console.log('Fetched channels:', channels);
+    }
     if (sdk) {
       console.log('Sendbird SDK connection state:', sdk.connectionState);
       console.log('Current user:', sdk.currentUser);
     }
+    verifyChannel()
   }, [sdk]);
 
   return (

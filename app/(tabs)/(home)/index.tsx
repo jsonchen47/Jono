@@ -16,6 +16,7 @@ import ProjectsScreenFYP from '@/src/screens/ProjectsScreenFYP';
 import { RouterStore } from 'expo-router/build/global-state/router-store';
 import { useProgress } from '@/src/contexts/ProgressContext';
 import { Snackbar } from 'react-native-paper';
+import { useRefresh } from '@/src/contexts/RefreshContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -70,6 +71,7 @@ const TabBarLabel = ({ label, IconComponent, icon, focused }: tabBarLabelProps) 
 );
 
 function MyTabs() {
+
   return (
 
     <SafeAreaView style={styles.safeAreaView}>
@@ -176,6 +178,7 @@ function MyTabs() {
 
 // Main app 
 export default function App() {
+  const { setShouldRefresh } = useRefresh();
   const router = useRouter();
   const { progress, setProgress, deleted, setDeleted } = useProgress();
   const [snackbarVisible, setSnackbarVisible] = useState<any>(false); // Snackbar visibility state
@@ -193,6 +196,7 @@ export default function App() {
     if (deleted == true) { 
       setSnackbarVisible(true)
       setDeleted(false)
+      setShouldRefresh(true);
     }
   }, [deleted == true]);  
 

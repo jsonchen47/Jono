@@ -17,7 +17,6 @@ import { router } from 'expo-router';
 import { createConnection, deleteConnection } from '../graphql/mutations';
 import { getCurrentUser } from 'aws-amplify/auth';
 
-
 const client = generateClient();
 
 const ProfileHeader = ({ user, otherProfile = false }: any) => {
