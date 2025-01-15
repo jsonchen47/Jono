@@ -12,6 +12,7 @@ type Project @model @searchable @auth(rules: [{allow: public}]) {
   latitude: Float
   city: String
   joinRequests: [JoinRequest] @hasMany(indexName: "byProject", fields: ["id"])
+  groupChatID: String
 }
 
 type ChatRoom @model @searchable @auth(rules: [{allow: public}]) {

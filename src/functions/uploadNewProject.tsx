@@ -121,6 +121,24 @@ export async function uploadNewProject(
 
     console.log('Image uploaded successfully:', imageUrl);
 
+    // Create a chat channel in Sendbird
+    
+    console.log('formdata.title', formData.title)
+    const channelName = `${formData.title}`;
+    const channelCoverImageUrl = imageUrl; // Use the project image as the channel cover
+
+    const channelParams = {
+      name: channelName,
+      coverUrl: channelCoverImageUrl,
+      isDistinct: false, // Ensures new chat will be created even when it has the same users
+      invitedUserIds: [userId], // Invites the user who created the project
+      operatorUserIds: [userId], // Sets the project creator as the channel operator
+    };
+
+    const channel = await sdk.groupChannel.createChannel(channelParams);
+    console.log('Sendbird channel created:', channel);
+    const groupChatID = channel.url; // Get the unique ID of the group chat
+
     // Create project data
     const projectData = {
       title: formData.title,
@@ -133,6 +151,7 @@ export async function uploadNewProject(
       longitude,
       latitude,
       city,
+      groupChatID: groupChatID
     };
 
     const projectResult = await client.graphql({
@@ -158,23 +177,7 @@ export async function uploadNewProject(
     setProjectId(projectId);
 
 
-    // Create a chat channel in Sendbird
-    if (sdk && projectId) {
-      console.log('formdata.title', formData.title)
-      const channelName = `${formData.title}`;
-      const channelCoverImageUrl = imageUrl; // Use the project image as the channel cover
-
-      const channelParams = {
-        name: channelName,
-        coverUrl: channelCoverImageUrl,
-        isDistinct: false, // Ensures new chat will be created even when it has the same users
-        invitedUserIds: [userId], // Invites the user who created the project
-        operatorUserIds: [userId], // Sets the project creator as the channel operator
-      };
-
-      const channel = await sdk.groupChannel.createChannel(channelParams);
-      console.log('Sendbird channel created:', channel);
-    }
+    
 
     updateProgress(1);
     await new Promise((resolve) => setTimeout(resolve, 100));

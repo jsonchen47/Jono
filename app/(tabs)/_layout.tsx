@@ -10,6 +10,7 @@ import { generateClient } from 'aws-amplify/api';
 import { getUser } from '@/src/graphql/queries';
 import SendbirdChat from '@sendbird/chat'; // Ensure you have the correct Sendbird import for your SDK
 
+
 const client = generateClient();
 
 export default function TabLayout() {
@@ -66,6 +67,7 @@ export default function TabLayout() {
     };
 
     connectUser();
+    
   }, [connect]); // Dependency array includes `connect`
 
   return (

@@ -6,6 +6,8 @@ import { searchProjects } from '@/src/graphql/queries';
 import { useFilter } from '@/src/contexts/FilterContext';
 import LargeProjectCardsFlatList from '../components/LargeProjectCardsFlatList';
 import { useFocusEffect } from '@react-navigation/native';
+import { useRefresh } from '../contexts/RefreshContext';
+
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -17,6 +19,23 @@ const ProjectsScreenFYP = ({ category }: any) => {
   const [loading, setLoading] = useState(false);
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const { shouldRefresh, setShouldRefresh } = useRefresh();
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (shouldRefresh) {
+        // fetchData();
+        const fetchData = async () => {
+          setLoading(true);
+          fetchProjects(null, true);
+          setLoading(false);
+        };
+        fetchData()
+        setShouldRefresh(false); // Reset the flag after refreshing
+      }
+    }, [shouldRefresh])
+  );
 
   const fetchProjects = async (nextToken = null, reset = false) => {
     if (reset) {

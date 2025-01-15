@@ -46,6 +46,7 @@ export const getProject = /* GraphQL */ `query GetProject($id: ID!) {
       nextToken
       __typename
     }
+    groupChatID
     createdAt
     updatedAt
     __typename
@@ -81,6 +82,7 @@ export const listProjects = /* GraphQL */ `query ListProjects(
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -129,6 +131,7 @@ export const searchProjects = /* GraphQL */ `query SearchProjects(
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1145,6 +1148,7 @@ export const getJoinRequest = /* GraphQL */ `query GetJoinRequest($id: ID!) {
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1200,6 +1204,7 @@ export const listJoinRequests = /* GraphQL */ `query ListJoinRequests(
         longitude
         latitude
         city
+        groupChatID
         createdAt
         updatedAt
         __typename
@@ -1268,6 +1273,7 @@ export const joinRequestsByUserIDAndCreatedAt = /* GraphQL */ `query JoinRequest
         longitude
         latitude
         city
+        groupChatID
         createdAt
         updatedAt
         __typename
@@ -1336,6 +1342,7 @@ export const joinRequestsByProjectIDAndCreatedAt = /* GraphQL */ `query JoinRequ
         longitude
         latitude
         city
+        groupChatID
         createdAt
         updatedAt
         __typename
@@ -1378,6 +1385,7 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1452,6 +1460,7 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         longitude
         latitude
         city
+        groupChatID
         createdAt
         updatedAt
         __typename
@@ -1517,6 +1526,7 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         longitude
         latitude
         city
+        groupChatID
         createdAt
         updatedAt
         __typename
@@ -1582,6 +1592,7 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         longitude
         latitude
         city
+        groupChatID
         createdAt
         updatedAt
         __typename

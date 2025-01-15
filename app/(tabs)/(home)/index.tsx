@@ -196,7 +196,7 @@ export default function App() {
     if (deleted == true) { 
       setSnackbarVisible(true)
       setDeleted(false)
-      setShouldRefresh(true);
+      
     }
   }, [deleted == true]);  
 
@@ -209,7 +209,11 @@ export default function App() {
     <Snackbar
         style={styles.snackBar}
         visible={snackbarVisible}
-        onDismiss={() => setSnackbarVisible(false)} // Dismiss Snackbar
+        onDismiss={() => {
+          {setSnackbarVisible(false)}
+          setShouldRefresh(true);
+        }
+        } // Dismiss Snackbar
         duration={3000} // Optional duration for the Snackbar
       >
         Project Deleted

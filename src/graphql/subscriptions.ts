@@ -46,6 +46,7 @@ export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filt
       nextToken
       __typename
     }
+    groupChatID
     createdAt
     updatedAt
     __typename
@@ -93,6 +94,7 @@ export const onUpdateProject = /* GraphQL */ `subscription OnUpdateProject($filt
       nextToken
       __typename
     }
+    groupChatID
     createdAt
     updatedAt
     __typename
@@ -140,6 +142,7 @@ export const onDeleteProject = /* GraphQL */ `subscription OnDeleteProject($filt
       nextToken
       __typename
     }
+    groupChatID
     createdAt
     updatedAt
     __typename
@@ -974,6 +977,7 @@ export const onCreateJoinRequest = /* GraphQL */ `subscription OnCreateJoinReque
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1054,6 +1058,7 @@ export const onUpdateJoinRequest = /* GraphQL */ `subscription OnUpdateJoinReque
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1134,6 +1139,7 @@ export const onDeleteJoinRequest = /* GraphQL */ `subscription OnDeleteJoinReque
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1175,6 +1181,7 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1254,6 +1261,7 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1333,6 +1341,7 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename

@@ -49,6 +49,7 @@ export const createProject = /* GraphQL */ `mutation CreateProject(
       nextToken
       __typename
     }
+    groupChatID
     createdAt
     updatedAt
     __typename
@@ -99,6 +100,7 @@ export const updateProject = /* GraphQL */ `mutation UpdateProject(
       nextToken
       __typename
     }
+    groupChatID
     createdAt
     updatedAt
     __typename
@@ -149,6 +151,7 @@ export const deleteProject = /* GraphQL */ `mutation DeleteProject(
       nextToken
       __typename
     }
+    groupChatID
     createdAt
     updatedAt
     __typename
@@ -1014,6 +1017,7 @@ export const createJoinRequest = /* GraphQL */ `mutation CreateJoinRequest(
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1095,6 +1099,7 @@ export const updateJoinRequest = /* GraphQL */ `mutation UpdateJoinRequest(
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1176,6 +1181,7 @@ export const deleteJoinRequest = /* GraphQL */ `mutation DeleteJoinRequest(
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1218,6 +1224,7 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1298,6 +1305,7 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
@@ -1378,6 +1386,7 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
         nextToken
         __typename
       }
+      groupChatID
       createdAt
       updatedAt
       __typename
