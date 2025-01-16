@@ -19,8 +19,9 @@ interface projectsGridProps {
 const LargeProjectCardsFlatList = ({ projects, loadMoreProjects, isFetchingMore, listHeaderComponent = null }: projectsGridProps) => {
   return (
     <FlatList
-        style={styles.flatList}
-        showsVerticalScrollIndicator={false}
+      style={styles.flatList}
+      // pagingEnabled
+      showsVerticalScrollIndicator={false}
       data={projects}
       renderItem={({ item }) => 
         <View style={styles.projectCardContainer}>

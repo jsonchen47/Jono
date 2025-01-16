@@ -6,11 +6,13 @@ import { useNotifications } from '@/src/contexts/NotificationContext';
 import { generateClient } from 'aws-amplify/api';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { updateConnection, deleteConnection, deleteJoinRequest, createUserProject } from '@/src/graphql/mutations';
+import { useSendbirdChat } from '@sendbird/uikit-react-native';
 
 const client = generateClient();
 
 const NotificationsPage = () => {
   const { notifications, markNotificationsAsRead, fetchNotifications } = useNotifications();
+  const { sdk } = useSendbirdChat();
 
   useEffect(() => {
     const markAsRead = async () => {
@@ -53,6 +55,15 @@ const NotificationsPage = () => {
             input: { id: notification.id },
           },
         });
+        
+        // Add user to group chat 
+        if (notification.project.groupChatID) {
+          const channel = await sdk.groupChannel.getChannel(notification.project.groupChatID);
+          console.log('got the channel at least')
+          await channel.inviteWithUserIds([notification.userID]);
+          console.log(`User ${notification.userID} added to group chat ${notification.project.groupChatID}.`);
+        }
+        
       }
 
       await fetchNotifications(); // Refresh notifications list

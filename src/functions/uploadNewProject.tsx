@@ -10,18 +10,18 @@ import { useSendbirdChat } from '@sendbird/uikit-react-native';
 
 const client = generateClient();
 
-(async () => {
-  try {
-    const { credentials } = await fetchAuthSession();
-    console.log('AWS Credentials:', {
-      accessKeyId: credentials?.accessKeyId,
-      secretAccessKey: credentials?.secretAccessKey,
-      sessionToken: credentials?.sessionToken,
-    });
-  } catch (error) {
-    console.error('Error fetching AWS credentials:', error);
-  }
-})();
+// (async () => {
+//   try {
+//     const { credentials } = await fetchAuthSession();
+//     console.log('AWS Credentials:', {
+//       accessKeyId: credentials?.accessKeyId,
+//       secretAccessKey: credentials?.secretAccessKey,
+//       sessionToken: credentials?.sessionToken,
+//     });
+//   } catch (error) {
+//     console.error('Error fetching AWS credentials:', error);
+//   }
+// })();
 
 function getCurrentDateString() {
   const date = new Date();
@@ -138,6 +138,7 @@ export async function uploadNewProject(
     const channel = await sdk.groupChannel.createChannel(channelParams);
     console.log('Sendbird channel created:', channel);
     const groupChatID = channel.url; // Get the unique ID of the group chat
+    console.log('group chat id: ', groupChatID)
 
     // Create project data
     const projectData = {

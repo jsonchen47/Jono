@@ -26,6 +26,7 @@ import { Alert } from 'react-native';
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { deleteJoinRequest } from '../graphql/mutations';
+import { useSendbirdChat } from '@sendbird/uikit-react-native';
 
 const client = generateClient();
 
@@ -40,7 +41,8 @@ const ManageProjectScreen = ({project}: any) => {
     const router = useRouter(); 
     const navigation = useNavigation();
     const [loading, setLoading] = React.useState(false)
-    
+    const { sdk } = useSendbirdChat();
+
     // Header with image, title, and project 
     const Header = () => {
         return (
@@ -216,6 +218,14 @@ const handleAddUsers = async () => {
                 variables: { input },
             });
             console.log(`User ${userId} added to the project.`);
+
+            // Add users to the group chat 
+            if (project?.groupChatID) {
+                const channel = await sdk.groupChannel.getChannel(project.groupChatID);
+                console.log('got the channel at least')
+                await channel.inviteWithUserIds([userId]);
+                console.log(`User ${userId} added to group chat ${project?.groupChatID}.`);
+            }
         });
 
         await Promise.all(addUserPromises);
@@ -278,6 +288,9 @@ const handleAddUsers = async () => {
             }
     
             const deletionPromises = userProjectIds.map(async (userProjectId: any) => {
+                
+
+                // Return the deletion query 
                 return client.graphql({
                     query: deleteUserProject,
                     variables: { input: { id: userProjectId } }
@@ -391,7 +404,7 @@ const handleAddUsers = async () => {
                 {/* PROJECT TITLE AND DESCRIPTION */}
                 {/* Project title */}
                 <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="notebook" style={styles.emoji} />
+                    {/* <Emoji name="notebook" style={styles.emoji} /> */}
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Title</Text>
                 </View>
@@ -409,7 +422,7 @@ const handleAddUsers = async () => {
                 />
                 {/* Project description */}
                 <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="scroll" style={styles.emoji} />
+                    {/* <Emoji name="scroll" style={styles.emoji} /> */}
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Description</Text>
                 </View>
@@ -427,7 +440,7 @@ const handleAddUsers = async () => {
                 />
                 {/* Category selection */}
                 <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="label" style={styles.emoji} />
+                    {/* <Emoji name="label" style={styles.emoji} /> */}
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Category selection</Text>
                 </View>
@@ -448,7 +461,7 @@ const handleAddUsers = async () => {
                 <View style={styles.spacerVertical}/>
                 {/* Skills Input */}
                 <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="rocket" style={styles.emoji} />
+                    {/* <Emoji name="rocket" style={styles.emoji} /> */}
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Skills needed</Text>
                 </View>
@@ -461,7 +474,7 @@ const handleAddUsers = async () => {
                 <View style={styles.spacerVertical}/>
                 {/* Resources Input */}
                 <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="briefcase" style={styles.emoji} />
+                    {/* <Emoji name="briefcase" style={styles.emoji} /> */}
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Resources needed</Text>
                 </View>
@@ -474,7 +487,7 @@ const handleAddUsers = async () => {
                 <View style={styles.spacerVertical}/>
                 {/* Location reselection */}
                 <View style={styles.detailsTabHeaderContainer}>
-                    <Emoji name="earth_americas" style={styles.emoji} />
+                    {/* <Emoji name="earth_americas" style={styles.emoji} /> */}
                     <View style={styles.spacerHorizontal}/>
                     <Text style={styles.detailsTabHeaderText}>Set location</Text>
                 </View>
@@ -616,7 +629,8 @@ const styles = StyleSheet.create({
         marginVertical: 150,
     }, 
     locationButtonStyle: {
-        borderRadius: 5,     
+        borderRadius: 10,     
+        marginBottom: 20, 
     }, 
     locationButtonContent: {
         // backgroundColor: '#4CDFFF', // Light gray background

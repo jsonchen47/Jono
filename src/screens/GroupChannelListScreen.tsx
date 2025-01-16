@@ -2,7 +2,21 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createGroupChannelListFragment } from '@sendbird/uikit-react-native';
 
-const GroupChannelListFragment = createGroupChannelListFragment();
+const GroupChannelListFragment = createGroupChannelListFragment({
+  // Header: (props) => {
+  //   const { HeaderComponent } = useHeaderStyle();
+  //   return (
+  //     <HeaderComponent
+  //       title={'Custom title'}
+  //       titleAlign={'center'}
+  //       left={'Back'}
+  //       onPressLeft={props.onPressHeaderLeft}
+  //       right={'Info'}
+  //       onPressRight={props.onPressHeaderRight}
+  //     />
+  //   );
+  // },
+});
 
 const GroupChannelListScreen = () => {
   const navigation = useNavigation<any>();
@@ -17,6 +31,7 @@ const GroupChannelListScreen = () => {
       onPressChannel={(channel) => {
         navigation.navigate('GroupChannel', { channelUrl: channel.url });
       }}
+      
     />
   );
 };
