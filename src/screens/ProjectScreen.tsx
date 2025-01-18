@@ -18,8 +18,11 @@ import { createJoinRequest } from '../graphql/mutations';
 import { deleteJoinRequest, deleteUserProject } from '../graphql/mutations';
 import { listJoinRequests } from '../graphql/queries';
 import { listUserProjects } from '../graphql/queries';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ChatNavigatorParamList } from '../navigation/ChatNavigatorParamList';
 
-
+type NavigationProps = NativeStackNavigationProp<ChatNavigatorParamList, 'GroupChannel'>;
 const client = generateClient();
 
 const windowWidth = Dimensions.get('window').width;
@@ -36,6 +39,7 @@ const ProjectScreen = ({ project }: any) => {
     const [authUserID, setAuthUserID] = useState<any>(null); 
     const [hasRequested, setHasRequested] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
+    const navigation = useNavigation<NavigationProps>();
 
     const fetchUser = async (ownerID: any) => {
         try {
@@ -250,6 +254,22 @@ const ProjectScreen = ({ project }: any) => {
                             >
                             <Icon name="ellipsis-horizontal" style={styles.icon}/>
                         </TouchableOpacity>
+                        {/* Chat button */}
+                        <TouchableOpacity 
+                            style={styles.headerButtonRight}
+                            onPress={() => {
+                                console.log('pressed chat')
+                                if (project?.groupChatID) {
+                                    // navigation.navigate('GroupChannel', { channelUrl: project.groupChatID });
+                                    router.push(`/groupChat?channelUrl=${project?.groupChatID}`);
+
+                                  } else {
+                                    alert('Chat channel not found for this project.');
+                                }
+                            }}
+                            >
+                            <Icon name="chatbubbles" style={styles.icon}/>
+                        </TouchableOpacity>
                         {/* Share button */}
                         {/* <TouchableOpacity 
                             style={styles.headerButtonRight}
@@ -339,13 +359,20 @@ const ProjectScreen = ({ project }: any) => {
                         <Text style={styles.membersSubtitle}>Members</Text>
                         <View style={styles.membersList}>
                             {users?.map((member: any, index: any) => (
-                                <View key={index} style={styles.authorSection}>
+                                <TouchableOpacity key={index} style={styles.authorSection}
+                                    onPress={() =>
+                                        router.push({
+                                        pathname: '/otherProfile',
+                                        params: { id: member.id },
+                                        })
+                                    }
+                                >
                                     <Image style={styles.authorImage} source={{uri: member?.image}}/>
                                     <View style={styles.authorDetailsContainer}>
                                         <Text style={styles.authorName}>{member?.name}</Text>
                                         <Text style={styles.dateAuthored}>Joined {formatDateLong(joinedDates?.[index])} </Text>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             ))
                             }
                         </View>

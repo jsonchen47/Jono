@@ -35,7 +35,7 @@ const GroupChannelModerationScreen = () => {
         navigation.navigate('BannedUsers', { channelUrl: channel.url });
       }}
       onPressMenuOperators={() => {
-        navigation.navigate('OperatorsList', { channelUrl: channel.url });
+        navigation.navigate('Operators', { channelUrl: channel.url });
       }}
     />
   );

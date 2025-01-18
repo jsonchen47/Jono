@@ -130,14 +130,26 @@ const ManageProjectScreen = ({project}: any) => {
                 ownerIDs: formData.ownerIDs,
             };
     
+            // Update the project
             const result = await client.graphql({
                 query: updateProject,
                 variables: { input },
             }) as GraphQLResult<any>;
-    
-            if (formData?.image !== project?.image) {
-                await updateProjectImage(project?.id, formData, setFormData, project?.image);
+
+            // Update the chat's title 
+            if (project?.groupChatID) {
+                const channel = await sdk.groupChannel.getChannel(project.groupChatID);
+                await channel.updateChannel({
+                    name: formData.title || channel.name, // Update the title if provided
+                  });
             }
+
+            // Update the project image and the chat image 
+            if (formData?.image !== project?.image) {
+                await updateProjectImage(project?.id, formData, setFormData, project?.image, sdk, project?.groupChatID);
+            }
+
+
     
             await Promise.all([
                 handleAddUsers(),

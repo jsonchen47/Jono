@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, StyleSheet, Dimensions, Text, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Image, ActivityIndicator } from 'react-native';
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { useFilter } from '@/src/contexts/FilterContext';
@@ -36,7 +36,7 @@ const ProjectsScreen = ({ category }: any) => {
       if (category) {
         filterConditions = {
           ...filterConditions,
-          categories: { eq: category },
+          categories: { regexp: `.*${category}.*` },
         };
       }
 
@@ -130,7 +130,9 @@ const ProjectsScreen = ({ category }: any) => {
   return (
     <View style={styles.projectsScreenContainer}>
       {loading && projects.length === 0 ? (
-        <Text style={styles.loadingText}>Loading projects...</Text>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#003B7B" />
+        </View>
       ) : projects.length === 0 ? (
         <View style={styles.emptyStateContainer}>
           <Image
@@ -189,5 +191,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'gray',
     textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

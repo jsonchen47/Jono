@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, ActivityIndicator, View, StyleSheet, Dimensions } from 'react-native';
 import { List } from 'react-native-paper'; // Import List from react-native-paper
 import { useNavigation } from '@react-navigation/native'; // For navigating to user profile
+import { useRouter } from 'expo-router';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -14,6 +15,7 @@ interface UsersListProps {
 
 const UsersList = ({ users, loadMoreUsers, isFetchingMore }: UsersListProps) => {
   const navigation = useNavigation();
+  const router = useRouter();
 
   const renderItem = ({ item }: any) => {
     return (
@@ -33,11 +35,12 @@ const UsersList = ({ users, loadMoreUsers, isFetchingMore }: UsersListProps) => 
                         marginLeft: 20, // Optional spacing between image and text
                     }}
                 />}
-        onPress={() => {
-            // navigation.navigate('UserProfile', { userId: item.id })
-            console.log('navigate to the user profile')
+        onPress={() =>
+          router.push({
+            pathname: '/otherProfile',
+            params: { id: item.id },
+          })
         }
-        } // Assuming you're navigating to a profile
       />
     );
   };

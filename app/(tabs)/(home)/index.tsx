@@ -148,7 +148,7 @@ function MyTabs() {
         name="Environment"
         children={() => <ProjectsScreen category="environment" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="leaf" focused={focused} />
+          tabBarLabel: ({ focused }) => <TabBarLabel label="Environment" IconComponent={FontAwesome6} icon="leaf" focused={focused} />
         }} 
       />
        <Tab.Screen

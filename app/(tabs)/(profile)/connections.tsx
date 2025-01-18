@@ -16,8 +16,10 @@ const ConnectionsPage = () => {
   const [connections, setConnections] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
+  const [authUser, setAuthUser] = useState<any>(null);
   const { setShouldRefresh } = useRefresh();
   const navigation = useNavigation();
+  
 
   useEffect(() => {
     navigation.setOptions({
@@ -42,6 +44,7 @@ const ConnectionsPage = () => {
       try {
         const authUser = await getCurrentUser();
         const authUserID = authUser.userId;
+        setAuthUser(authUser)
 
         if (!authUserID) {
           console.error('Error: User ID not found.');
@@ -135,7 +138,7 @@ const ConnectionsPage = () => {
   // Rest of the component remains the same...
   const renderItem = ({ item }: any) => {
     const otherUser =
-      item?.userID === item?.connectedUserID ? item?.connectedUser : item?.user;
+      authUser?.userId === item?.connectedUserID ? item?.user : item?.connectedUser;
 
     const connectionDate = moment(item?.updatedAt).format('MMMM D, YYYY');
 

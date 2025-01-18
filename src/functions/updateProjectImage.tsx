@@ -5,6 +5,7 @@ import { getCurrentUser } from 'aws-amplify/auth';
 import { uploadData, remove } from 'aws-amplify/storage';
 import { v4 as uuidv4 } from 'uuid';
 import config from "../../src/aws-exports";
+import { useSendbirdChat } from '@sendbird/uikit-react-native';
 
 const client = generateClient();
 
@@ -25,7 +26,9 @@ export async function updateProjectImage(
   projectId: string,
   formData: any,
   setFormData: any,
-  oldProjectImage: string
+  oldProjectImage: string,
+  sdk: any, 
+  groupChatID: any
 ) {
   try {
     // GET THE CURRENT USER
@@ -75,10 +78,20 @@ export async function updateProjectImage(
       image: imageUrl,
     };
     
+    // Update the project image 
     const updateResult = await client.graphql({
       query: updateProject,
       variables: { input: updatedProjectData }
     });
+
+    // Update the chat's image 
+    if (groupChatID) {
+      const channel = await sdk.groupChannel.getChannel(groupChatID);
+      await channel.updateChannel({
+        coverUrl: imageUrl || channel.coverUrl, // Update the title if provided
+        });
+  }
+
     
     console.log('Project updated successfully:', updateResult.data?.updateProject);
     

@@ -143,6 +143,7 @@ const map = () => {
       <View style={styles.container}>
         {region ? (
           <MapView
+            mapType="standard" // or "satellite"
             ref={mapRef}
             provider={PROVIDER_GOOGLE}
             style={styles.map}

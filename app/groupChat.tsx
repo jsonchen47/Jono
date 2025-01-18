@@ -1,52 +1,32 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import GroupChannelListScreen from '../screens/GroupChannelListScreen';
-import GroupChannelCreateScreen from '../screens/GroupChannelCreateScreen';
-import GroupChannelScreen from '../screens/GroupChannelScreen';
-import GroupChannelSettingsScreen from '../screens/GroupChannelSettingsScreen';
-import GroupChannelModerationScreen from '../screens/GroupChannelModerationScreen';
-import GroupChannelMembersScreen from '../screens/GroupChannelMembersScreen';
-import GroupChannelInviteScreen from '../screens/GroupChannelInviteScreen';
-import OperatorsScreen from '../screens/GroupChannelOperatorsScreen';
-import MutedMembersScreen from '../screens/GroupChannelMutedMembersScreen';
-import BannedUsersScreen from '../screens/GroupChannelBannedMembersScreen';
-import { ChatNavigatorParamList } from './ChatNavigatorParamList';
+import GroupChannelScreen from '@/src/screens/GroupChannelScreen';
+import GroupChannelSettingsScreen from '@/src/screens/GroupChannelSettingsScreen';
+import GroupChannelModerationScreen from '@/src/screens/GroupChannelModerationScreen';
+import GroupChannelMembersScreen from '@/src/screens/GroupChannelMembersScreen';
+import GroupChannelInviteScreen from '@/src/screens/GroupChannelInviteScreen';
+import OperatorsScreen from '@/src/screens/GroupChannelOperatorsScreen';
+import MutedMembersScreen from '@/src/screens/GroupChannelMutedMembersScreen';
+import BannedUsersScreen from '@/src/screens/GroupChannelBannedMembersScreen';
+const Stack = createStackNavigator();
 
-const Stack = createStackNavigator<ChatNavigatorParamList>();
-
-const ChatNavigator = () => {
+const GroupChatNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="GroupChannelList"
-        component={GroupChannelListScreen}
-        options={{ 
-          title: 'Channels',
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="GroupChannelCreate"
-        component={GroupChannelCreateScreen}
-        options={{ 
-          title: 'Create Channel',
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
         name="GroupChannel"
         component={GroupChannelScreen}
-        options={{ 
+        options={{
           title: 'Chat',
-          headerShown: false,
+          headerShown: false, // Show the header for navigation
         }}
       />
       <Stack.Screen
         name="GroupChannelSettings"
         component={GroupChannelSettingsScreen}
         options={{
-           title: 'Channel Settings',
-           headerShown: false,
+          title: 'Settings',
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -97,9 +77,8 @@ const ChatNavigator = () => {
           headerShown: false,
         }}
       />
-
     </Stack.Navigator>
   );
 };
 
-export default ChatNavigator;
+export default GroupChatNavigator;

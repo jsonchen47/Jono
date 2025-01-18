@@ -350,6 +350,13 @@ const AppEntrance = () => {
                             presentation: 'fullScreenModal',
                           }}
                         />
+                        <Stack.Screen
+                          name="groupChat"
+                          options={{
+                            title: 'Group Chat',
+                            headerShown: false,
+                          }}
+                        />
                       </Stack>
                       <ProgressBarComponent 
                           snackbarVisible={snackbarVisible} 

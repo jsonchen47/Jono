@@ -21,7 +21,7 @@ export default function SavedScreen() {
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
   const navigation = useNavigation();
-  
+
   const client = generateClient(); // Create a GraphQL client instance
 
   const fetchProjects = async (nextToken = null, reset = false) => {
@@ -87,21 +87,18 @@ export default function SavedScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.savedHeader}>
+        <Text style={styles.savedText}>Saved</Text>
+      </View>
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#1ABFFB" />
-          <Text style={styles.loadingText}>Loading saved projects...</Text>
         </View>
       ) : (
         <ProjectsGridNew
           projects={projects}
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
-          listHeaderComponent={
-            <View style={styles.savedHeader}>
-              <Text style={styles.savedText}>Saved</Text>
-            </View>
-          }
         />
       )}
     </SafeAreaView>
@@ -125,6 +122,7 @@ const styles = StyleSheet.create({
   savedHeader: {
     paddingHorizontal: windowWidth * 0.1,
     marginBottom: 20,
+    marginTop: 10,
   },
   savedText: {
     fontSize: 27,
