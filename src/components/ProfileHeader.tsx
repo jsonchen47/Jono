@@ -182,7 +182,7 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
 
           <View style={styles.rightOfImageInfoBox}>
             <Text style={styles.nameText}>{user?.name}</Text>
-            <Text style={styles.usernameText}>{user?.username ? `@${user.username}` : '@Anonymous'}</Text>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.usernameText}>{user?.username ? `@${user.username}` : '@Anonymous'}</Text>
             <View style={styles.allStatsContainer}>
               <View style={styles.statsContainer}>
                 <Emoji name="bulb" style={styles.emoji} />
@@ -284,6 +284,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginTop: 5,
+    width: '80%',
+    flex: 1, 
   },
   allStatsContainer: {
     flexDirection: 'row',

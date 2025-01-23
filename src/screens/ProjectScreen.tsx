@@ -23,6 +23,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 // import { ChatNavigatorParamList } from '../navigation/ChatNavigatorParamList';
 import { useSendbirdChat } from '@sendbird/uikit-react-native';
 import { Alert } from 'react-native';
+import Purchases from 'react-native-purchases';
+import RevenueCatUI from 'react-native-purchases-ui';
 
 // type NavigationProps = NativeStackNavigationProp<ChatNavigatorParamList, 'GroupChannel'>;
 const client = generateClient();
@@ -45,6 +47,50 @@ const ProjectScreen = ({ project }: any) => {
     const navigation = useNavigation();
     const [isValidChat, setIsValidChat] = useState(false);
 
+    const handleRequestToJoin = async () => {
+        try {
+          setIsProcessing(true);
+    
+          // Check the user's premium status
+          const customerInfo = await Purchases.getCustomerInfo();
+          const isPremium = !!customerInfo.entitlements.active['premium'];
+    
+          if (isPremium) {
+            // Handle the request to join logic here
+            console.log('User is premium, sending join request...');
+            // Your actual request to join logic
+            // Alert.alert('Request Sent', 'Your request to join has been sent!');
+            handleRequest()
+          } else {
+            console.log('User is not premium, showing paywall...');
+            // Show the paywall
+            const offerings = await Purchases.getOfferings();
+    
+            if (offerings.current) {
+              const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
+                offering: offerings.current,
+                requiredEntitlementIdentifier: 'premium',
+              });
+    
+              if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
+                console.log('User purchased premium, unlocking features...');
+                Alert.alert('Success', 'You are now a premium member! Please try again.');
+              } else {
+                console.log('Paywall dismissed without purchase');
+              }
+            } else {
+              console.error('No offerings configured in RevenueCat.');
+              Alert.alert('Error', 'No available offerings found.');
+            }
+          }
+        } catch (error) {
+          console.error('Error handling request or paywall:', error);
+          Alert.alert('Error', 'An error occurred while processing your request.');
+        } finally {
+          setIsProcessing(false);
+        }
+      };
+    
     const createGroupChat = async () => {
         try {
           // Create a new group channel
@@ -510,7 +556,7 @@ const ProjectScreen = ({ project }: any) => {
       style={styles.joinButton}
       labelStyle={styles.joinButtonText}
       mode="contained"
-      onPress={handleRequest}
+      onPress={handleRequestToJoin}
       disabled={isProcessing}
     >
       {isProcessing ? 'Requesting...' : 'Request to Join'}

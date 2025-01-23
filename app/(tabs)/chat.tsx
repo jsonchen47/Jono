@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
+    marginBottom: 70,
     // shadowColor: '#000',
     // shadowOffset: { width: 0, height: 3 },
     // shadowOpacity: 0.3,
