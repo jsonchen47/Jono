@@ -9,7 +9,8 @@ import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/api';
 import { getUser } from '@/src/graphql/queries';
 import SendbirdChat from '@sendbird/chat'; // Ensure you have the correct Sendbird import for your SDK
-
+import Purchases from 'react-native-purchases';
+import RevenueCatUI from 'react-native-purchases-ui';
 
 const client = generateClient();
 
@@ -18,10 +19,41 @@ export default function TabLayout() {
   const router = useRouter();
   const { connect } = useConnection(); // Use the hook at the top level
 
-  const handleCenterTabPress = () => {
-    router.push('/newProject/newProject1'); // Replace with your desired screen
-    console.log('tabs button pressed');
+  const handleCenterTabPress = async () => {
+    try {
+      const customerInfo = await Purchases.getCustomerInfo();
+      const isPremium = !!customerInfo.entitlements.active['premium'];
+  
+      if (isPremium) {
+        router.push('/newProject/newProject1');
+        console.log('Navigated to /newProject/newProject1');
+      } else {
+        const offerings = await Purchases.getOfferings();
+        
+        if (offerings.current) {
+          const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
+            offering: offerings.current,
+            requiredEntitlementIdentifier: "premium"
+          });
+  
+          if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
+            console.log('Purchase successful! Unlocking premium features.');
+            router.push('/newProject/newProject1');
+          } else {
+            console.log('Paywall dismissed without purchase');
+          }
+        } else {
+          console.error('No offerings configured in RevenueCat.');
+          alert('No available offerings found.');
+        }
+      }
+    } catch (error: any) {
+      console.error('Error handling paywall or purchase:', error);
+      alert('An error occurred while processing your request.');
+    }
   };
+  
+
 
   // Connect user to Sendbird 
   useEffect(() => {

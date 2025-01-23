@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createGroupChannelCreateFragment } from '@sendbird/uikit-react-native';
 import { useSendbirdChat } from '@sendbird/uikit-react-native';
@@ -66,13 +66,30 @@ const GroupChannelCreateScreen = () => {
     );
   }
 
+  // if (allowedUserIDs.length === 0) {
+  //   return (
+  //     <View style={styles.noConnectionsContainer}>
+  //       <Text style={styles.noConnectionsText}>No connections available to create a group.</Text>
+  //     </View>
+  //   );
+  // }
+
   return (
     <GroupChannelCreateFragment
       queryCreator={() => {
-        const query = sdk.createApplicationUserListQuery({
-          userIdsFilter: allowedUserIDs, // Use the dynamic list of allowed user IDs
+        if (allowedUserIDs.length === 0) {
+          // Return an empty query when there are no connections
+          return {
+            next: () => Promise.resolve([]),
+            hasNext: false,
+            loadNext: () => Promise.resolve([]),
+            isLoading: loading
+          };
+        }
+
+        return sdk.createApplicationUserListQuery({
+          userIdsFilter: allowedUserIDs,
         });
-        return query;
       }}
       onCreateChannel={async (channel) => {
         navigation.replace('GroupChannel', { channelUrl: channel.url });
@@ -92,5 +109,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
+  },
+  noConnectionsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+  },
+  noConnectionsText: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: 'gray',
   },
 });

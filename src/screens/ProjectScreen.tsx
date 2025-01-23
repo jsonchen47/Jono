@@ -20,15 +20,18 @@ import { listJoinRequests } from '../graphql/queries';
 import { listUserProjects } from '../graphql/queries';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ChatNavigatorParamList } from '../navigation/ChatNavigatorParamList';
+// import { ChatNavigatorParamList } from '../navigation/ChatNavigatorParamList';
+import { useSendbirdChat } from '@sendbird/uikit-react-native';
+import { Alert } from 'react-native';
 
-type NavigationProps = NativeStackNavigationProp<ChatNavigatorParamList, 'GroupChannel'>;
+// type NavigationProps = NativeStackNavigationProp<ChatNavigatorParamList, 'GroupChannel'>;
 const client = generateClient();
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const ProjectScreen = ({ project }: any) => {
+    const { sdk } = useSendbirdChat();
     const router = useRouter(); 
     const [user, setUser] = useState<any>(null);
     const [members, setMembers] = useState<any>([]);
@@ -39,7 +42,59 @@ const ProjectScreen = ({ project }: any) => {
     const [authUserID, setAuthUserID] = useState<any>(null); 
     const [hasRequested, setHasRequested] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    const navigation = useNavigation<NavigationProps>();
+    const navigation = useNavigation();
+    const [isValidChat, setIsValidChat] = useState(false);
+
+    const createGroupChat = async () => {
+        try {
+          // Create a new group channel
+          const newChannel = await sdk.groupChannel.createChannel({
+            invitedUserIds: project.Users.items.map((user: any) => user.userId),
+            name: project.title, // Use project title as the chat name
+            isDistinct: false,
+            coverUrl: project.image, // Use the project's image as the group chat's cover image
+          });
+      
+          // Update the project's groupChatID
+          const updatedProject = await client.graphql({
+            query: updateProject,
+            variables: {
+              input: {
+                id: project.id,
+                groupChatID: newChannel.url, // Set the new group chat ID
+              },
+            },
+          });
+      
+          console.log('Project updated with new group chat ID:', updatedProject);
+      
+          // Navigate to the newly created group chat
+          router.push(`/groupChat?channelUrl=${newChannel.url}`);
+        } catch (error) {
+          console.error('Error creating group chat:', error);
+          Alert.alert('Error', 'Failed to create a group chat. Please try again later.');
+        }
+      };
+      
+    useEffect(() => {
+        const checkChatValidity = async () => {
+          if (project?.groupChatID) {
+            try {
+              // Check if the group chat exists
+              const channel = await sdk.groupChannel.getChannel(project.groupChatID);
+              if (channel) {
+                setIsValidChat(true); // Valid group chat ID
+              } else {
+                setIsValidChat(false); // Not a valid group chat
+              }
+            } catch {
+              setIsValidChat(false); // Silently handle invalid or deleted group chats
+            }
+          }
+        };
+    
+        checkChatValidity();
+    }, [project?.groupChatID, sdk]);
 
     const fetchUser = async (ownerID: any) => {
         try {
@@ -255,21 +310,38 @@ const ProjectScreen = ({ project }: any) => {
                             <Icon name="ellipsis-horizontal" style={styles.icon}/>
                         </TouchableOpacity>
                         {/* Chat button */}
-                        <TouchableOpacity 
+                        {project?.Users?.items?.some((user: any) => user.userId === authUserID) && (
+                        // <TouchableOpacity 
+                        //     style={styles.headerButtonRight}
+                        //     onPress={() => {
+                        //     console.log('pressed chat');
+                        //     if (project?.groupChatID) {
+                        //         router.push(`/groupChat?channelUrl=${project.groupChatID}`);
+                        //         console.log('group chat id', project.groupChatID);
+                        //     } else {
+                        //         alert('Chat channel not found for this project.');
+                        //     }
+                        //     }}
+                        // >
+                        //     <Icon name="chatbubbles" style={styles.icon}/>
+                        // </TouchableOpacity>
+                        <TouchableOpacity
                             style={styles.headerButtonRight}
-                            onPress={() => {
-                                console.log('pressed chat')
-                                if (project?.groupChatID) {
-                                    // navigation.navigate('GroupChannel', { channelUrl: project.groupChatID });
-                                    router.push(`/groupChat?channelUrl=${project?.groupChatID}`);
-
-                                  } else {
-                                    alert('Chat channel not found for this project.');
-                                }
+                            onPress={async () => {
+                            console.log('Pressed chat');
+                            if (isValidChat && project?.groupChatID) {
+                                // Navigate to the existing group chat
+                                router.push(`/groupChat?channelUrl=${project.groupChatID}`);
+                            } else {
+                                // Create a new group chat if invalid
+                                await createGroupChat();
+                            }
                             }}
-                            >
-                            <Icon name="chatbubbles" style={styles.icon}/>
+                        >
+                            <Icon name="chatbubbles" style={styles.icon} />
                         </TouchableOpacity>
+                        )}
+
                         {/* Share button */}
                         {/* <TouchableOpacity 
                             style={styles.headerButtonRight}
@@ -304,9 +376,9 @@ const ProjectScreen = ({ project }: any) => {
             </View>
             <View style={styles.contentContainer}>
                 <ScrollView style={styles.scrollView} onScroll={handleScroll} scrollEventThrottle={16}>
-                    <Image style={styles.projectImage} source={{uri: project?.image}}>
+                    <Image style={styles.projectImage} source={{uri: project?.image}}/>
                         
-                    </Image>
+                    
                     {/* Details */}
                     <View style={styles.detailsContainer}>
                         {/* Title */}

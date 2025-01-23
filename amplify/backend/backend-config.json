@@ -38,7 +38,10 @@
         "signupAttributes": [
           "EMAIL"
         ],
-        "socialProviders": [],
+        "socialProviders": [
+          "GOOGLE",
+          "APPLE"
+        ],
         "usernameAttributes": [],
         "verificationMechanisms": [
           "EMAIL"

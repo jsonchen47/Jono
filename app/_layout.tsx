@@ -15,22 +15,31 @@ const theme = {
       primary: {
         10: '#e0f7f8',
         20: '#b3eef0',
-        40: '#80e4e9',
-        60: '#4dd9e1',
-        80: '#1fcdd9',
-        90: '#00b5c4',
-        100: '#0098a6',
+        40: '#015E98',
+        60: '80e4e9',
+        80: '#015E98',
+        90: '#015E98',
+        100: '#015E98',
       },
     },
   },
 };
+
+
+
+
+
+
+
+
+
 
 // Custom Header Component with Logo
 function CustomHeader() {
   return (
     <View style={styles.header}>
       <Image
-        source={require('../assets/images/logo_placeholder.png')} // Update with your logo path
+        source={require('../assets/images/jono_logo_text_light.png')} // Update with your logo path
         style={styles.logo}
       />
     </View>
@@ -83,7 +92,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   logo: {
-    width: 100, // Adjust width as needed
+    width: 200, // Adjust width as needed
     height: 100, // Adjust height as needed
     resizeMode: 'contain', // Ensures the logo maintains its aspect ratio
   },

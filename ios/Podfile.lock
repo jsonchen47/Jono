@@ -1,6 +1,8 @@
 PODS:
   - AmplifyRTNCore (1.1.6):
     - React-Core
+  - AmplifyRTNWebBrowser (1.1.1):
+    - React-Core
   - boost (1.84.0)
   - BVLinearGradient (2.8.3):
     - React-Core
@@ -332,6 +334,11 @@ PODS:
   - MMKV (2.0.2):
     - MMKVCore (~> 2.0.2)
   - MMKVCore (2.0.2)
+  - PurchasesHybridCommon (13.14.0):
+    - RevenueCat (= 5.14.0)
+  - PurchasesHybridCommonUI (13.14.0):
+    - PurchasesHybridCommon (= 13.14.0)
+    - RevenueCatUI (= 5.14.0)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1952,6 +1959,9 @@ PODS:
     - React-logger (= 0.76.2)
     - React-perflogger (= 0.76.2)
     - React-utils (= 0.76.2)
+  - RevenueCat (5.14.0)
+  - RevenueCatUI (5.14.0):
+    - RevenueCat (= 5.14.0)
   - RNCAsyncStorage (1.24.0):
     - React-Core
   - RNCPicker (2.9.0):
@@ -1977,6 +1987,12 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNPaywalls (8.5.0):
+    - PurchasesHybridCommonUI (= 13.14.0)
+    - React-Core
+  - RNPurchases (8.5.0):
+    - PurchasesHybridCommon (= 13.14.0)
+    - React-Core
   - RNReanimated (3.16.6):
     - DoubleConversion
     - glog
@@ -2120,6 +2136,7 @@ PODS:
 
 DEPENDENCIES:
   - "AmplifyRTNCore (from `../node_modules/@aws-amplify/react-native`)"
+  - "AmplifyRTNWebBrowser (from `../node_modules/@aws-amplify/rtn-web-browser`)"
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -2227,6 +2244,8 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPaywalls (from `../node_modules/react-native-purchases-ui`)
+  - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -2241,6 +2260,10 @@ SPEC REPOS:
     - libwebp
     - MMKV
     - MMKVCore
+    - PurchasesHybridCommon
+    - PurchasesHybridCommonUI
+    - RevenueCat
+    - RevenueCatUI
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
@@ -2248,6 +2271,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   AmplifyRTNCore:
     :path: "../node_modules/@aws-amplify/react-native"
+  AmplifyRTNWebBrowser:
+    :path: "../node_modules/@aws-amplify/rtn-web-browser"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BVLinearGradient:
@@ -2459,6 +2484,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-picker/picker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPaywalls:
+    :path: "../node_modules/react-native-purchases-ui"
+  RNPurchases:
+    :path: "../node_modules/react-native-purchases"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -2474,6 +2503,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AmplifyRTNCore: fed43e0ab4504c7ae49291204c3c704da4963255
+  AmplifyRTNWebBrowser: 56813d9858f5d196d096a598aa9aa8651c7863fd
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
@@ -2515,6 +2545,8 @@ SPEC CHECKSUMS:
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   MMKV: 3eacda84cd1c4fc95cf848d3ecb69d85ed56006c
   MMKVCore: 508b4d3a8ce031f1b5c8bd235f0517fb3f4c73a9
+  PurchasesHybridCommon: ea662e5a551e6fc79c1eb17feb0478c01c59f3e6
+  PurchasesHybridCommonUI: 7f6a7707655327740f4b7e2842985bcb38745030
   RCT-Folly: bf5c0376ffe4dd2cf438dcf86db385df9fdce648
   RCTDeprecation: d575d28132f93e5deef4849d5afffb4ac4e63226
   RCTRequired: e2e5df1df76aac8685aabfebca389e6bec64792b
@@ -2581,9 +2613,13 @@ SPEC CHECKSUMS:
   React-utils: ed6cb7ba089ac0856aa104df12691e99abbf14e1
   ReactCodegen: 93b271af49774429f34d7fd561197020d86436e2
   ReactCommon: 208cb02e3c0bb8a727b3e1a1782202bcfa5d9631
+  RevenueCat: 34f4147c8d26d2f3c691be4e3c9f033698e557f2
+  RevenueCatUI: d07cd11f991f9fe72fbc64aa14257438ff1b3189
   RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
   RNCPicker: f963e01f78e546a93b98aa201501713dbda14e94
   RNGestureHandler: 511250b190a284388f9dd0d2e56c1df76f14cfb8
+  RNPaywalls: 87b0a5aaa0ae343f7e4416c9541287ecd57adcde
+  RNPurchases: a99a9d9139c977811e5db73178ea21d8c12f11ac
   RNReanimated: ac21443586c889b6eae9e50d9011ced1a64eb548
   RNScreens: e52d2e7e5fa29266d6f8f68e8229452e5b2f4236
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d

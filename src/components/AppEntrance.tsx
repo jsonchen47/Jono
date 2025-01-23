@@ -19,6 +19,7 @@ import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
+import Purchases from 'react-native-purchases';
 
 // OTHER PROVIDER IMPORTS
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -84,6 +85,23 @@ const platformServices: SendbirdUIKitContainerProps['platformServices'] = {
 };
 
 const mmkv = new MMKV();
+
+// Connect the user to RevenueCat
+const configurePurchases = async () => {
+  try {
+    const authUser = await getCurrentUser(); // Replace with your method to get the current user
+    const userId = authUser.userId; // Ensure this is a unique identifier for your user
+
+    await Purchases.configure({
+      apiKey: 'appl_UqBRgTSPvhuYXQgHiSORJTTAxVL',
+      appUserID: userId,
+    });
+
+    console.log(`RevenueCat configured with user ID: ${userId}`);
+  } catch (e) {
+    console.error('Error configuring RevenueCat:', e);
+  }
+};
 
 // For uploading the default profile picture
 const uploadDefaultProfilePicture = async (username: string) => {
@@ -233,7 +251,7 @@ const AppEntrance = () => {
       }
     };
     
-
+    configurePurchases(); 
     syncUser();
   }, []);
 
