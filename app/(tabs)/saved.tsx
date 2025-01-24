@@ -24,6 +24,18 @@ export default function SavedScreen() {
 
   const client = generateClient(); // Create a GraphQL client instance
 
+  const EmptyState = () => (
+    <View style={styles.placeholderContainer}>
+        <Image
+          source={require('../../assets/images/robotics.png')} // Replace with your actual image path
+          style={styles.placeholderImage}
+        />
+        <Text style={styles.placeholderText}>
+          No saved projects yet! Like a project to fill the space.
+        </Text>
+      </View>
+  );
+
   const fetchProjects = async (nextToken = null, reset = false) => {
     setLoading(true);
     try {
@@ -85,48 +97,30 @@ export default function SavedScreen() {
     }
   };
 
-  // return (
-  //   <SafeAreaView style={styles.container} edges={['top']}>
-  //     <View style={styles.savedHeader}>
-  //       <Text style={styles.savedText}>Saved</Text>
-  //     </View>
-  //     {loading ? (
-  //       <View style={styles.loadingContainer}>
-  //         <ActivityIndicator size="large" color="#1ABFFB" />
-  //       </View>
-  //     ) : projects.length > 0 ? (
-  //       <ProjectsGridNew
-  //         projects={projects}
-  //         loadMoreProjects={() => fetchProjects(nextToken)}
-  //         isFetchingMore={Boolean(nextToken)}
-  //       />
-  //     ) : (
-  //       <View style={styles.placeholderContainer}>
-  //         <Image
-  //           source={require('../../assets/images/robotics.png')} // Replace with your actual image path
-  //           style={styles.placeholderImage}
-  //         />
-  //         <Text style={styles.placeholderText}>
-  //           No saved projects yet! Like a project to fill the space.
-  //         </Text>
-  //       </View>
-  //     )}
-  //   </SafeAreaView>
-  // );
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.savedHeader}>
         <Text style={styles.savedText}>Saved</Text>
       </View>
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#1ABFFB" />
-        </View>
-      ) : projects.length > 0 ? (
+      <ProjectsGridNew
+          projects={projects}
+          loadMoreProjects={loadMoreProjects}
+          isFetchingMore={isFetchingMore}
+          loading={loading}
+          noProjectsComponent={<EmptyState />}
+        />
+      {/* {
+      // loading ? (
+      //   <View style={styles.loadingContainer}>
+      //     <ActivityIndicator size="large" color="#1ABFFB" />
+      //   </View>
+      // ) :
+       projects.length > 0 ? (
         <ProjectsGridNew
           projects={projects}
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
+          loading={loading}
         />
       ): (
       <View style={styles.placeholderContainer}>
@@ -138,7 +132,7 @@ export default function SavedScreen() {
           No saved projects yet! Like a project to fill the space.
         </Text>
       </View>
-    )}
+    )} */}
     </SafeAreaView>
   );
 }

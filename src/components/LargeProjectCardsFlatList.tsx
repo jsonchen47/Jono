@@ -4,7 +4,7 @@ import { FlatList, ActivityIndicator, View, StyleSheet, Dimensions, Text } from 
 import SmallProjectCard from './SmallProjectCard';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import LargeProjectCard from './LargeProjectCard';
-
+import LargeProjectCardSkeleton from './LargeProjectCardSkeleton';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -14,9 +14,47 @@ interface projectsGridProps {
     loadMoreProjects: any, 
     isFetchingMore: any, 
     listHeaderComponent?: any, 
+    loading: boolean; // Loading state for the entire list
+    noProjectsComponent: any;
 }
 
-const LargeProjectCardsFlatList = ({ projects, loadMoreProjects, isFetchingMore, listHeaderComponent = null }: projectsGridProps) => {
+const LargeProjectCardsFlatList = ({ 
+  projects, 
+  loadMoreProjects, 
+  isFetchingMore, 
+  listHeaderComponent = null,
+  loading, 
+  noProjectsComponent
+}: projectsGridProps) => {
+
+  if (loading) {
+    const skeletons = Array.from({ length: 6 }); // Number of skeleton cards to display
+
+    return (
+      <FlatList
+        style={styles.flatList}
+        showsVerticalScrollIndicator={false}
+        data={skeletons}
+        renderItem={({ index }) => (
+          <View style={styles.projectCardContainer}>
+            <LargeProjectCardSkeleton key={index} />
+          </View>
+        )}
+        keyExtractor={(_, index) => `skeleton-${index}`}
+        ListHeaderComponent={listHeaderComponent || null}
+      />
+    );
+  }
+
+  if (projects?.length === 0) {
+    // Render the custom empty state if no projects
+    return noProjectsComponent || (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No projects available</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       style={styles.flatList}
@@ -67,6 +105,17 @@ const styles = StyleSheet.create({
     // aspectRatio: 1, 
     // backgroundColor: 'green',
     // height: '50%'
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: 'gray',
+    textAlign: 'center',
   },
 });
 

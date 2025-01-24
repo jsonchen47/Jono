@@ -21,6 +21,16 @@ const ProjectsScreenFYP = ({ category }: any) => {
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const { shouldRefresh, setShouldRefresh } = useRefresh();
 
+  const EmptyState = () => (
+    <View style={styles.emptyStateContainer}>
+      <Image
+        source={require('../../assets/images/dj.png')} // Ensure the image path is correct
+        style={styles.emptyImage}
+      />
+      <Text style={styles.emptyText}>No projects yet!</Text>
+      <Text style={styles.emptySubText}>Post a project to populate the space.</Text>
+    </View>
+  );
 
   useFocusEffect(
     React.useCallback(() => {
@@ -146,7 +156,14 @@ const ProjectsScreenFYP = ({ category }: any) => {
 
   return (
     <View style={styles.projectsScreenContainer}>
-      {loading && projects.length === 0 ? (
+       <LargeProjectCardsFlatList
+          projects={projects}
+          loadMoreProjects={loadMoreProjects}
+          isFetchingMore={isFetchingMore}
+          loading={loading}
+          noProjectsComponent={<EmptyState/>}
+        />
+      {/* {loading && projects.length === 0 ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#003B7B" />
         </View>
@@ -164,8 +181,10 @@ const ProjectsScreenFYP = ({ category }: any) => {
           projects={projects}
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
+          loading={loading}
+          noProjectsComponent={<EmptyState/>}
         />
-      )}
+      )} */}
     </View>
   );
 };

@@ -21,6 +21,20 @@ const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID })
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
+  const EmptyState = () => (
+    <Tabs.ScrollView>
+    <View style={styles.noProjectsContainer}>
+      <Image
+        source={require('../../assets/images/dj.png')} // Replace with your placeholder image path
+        style={styles.noProjectsImage}
+      />
+      <Text style={styles.noProjectsText}>
+        No projects yet! Post a project to populate the space.
+      </Text>
+    </View>
+  </Tabs.ScrollView>
+  );
+
   const fetchProjects = async (nextToken = null) => {
     setLoading(true);
     try {
@@ -69,7 +83,14 @@ const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID })
 
   return (
     <View style={styles.projectsScreenContainer}>
-      {!loading && projects.length === 0 && dataLoaded ? (
+      <ProjectsGridForProfile
+          projects={projects}
+          loadMoreProjects={loadMoreProjects}
+          isFetchingMore={isFetchingMore}
+          loading={loading}
+          noProjectsComponent={<EmptyState/>}
+        />
+      {/* {!loading && projects.length === 0 && dataLoaded ? (
         <Tabs.ScrollView>
           <View style={styles.noProjectsContainer}>
             <Image
@@ -87,7 +108,7 @@ const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID })
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
         />
-      )}
+      )} */}
     </View>
   );
 };

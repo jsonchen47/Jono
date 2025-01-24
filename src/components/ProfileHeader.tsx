@@ -16,14 +16,15 @@ import { listTeamsByUser } from '../backend/queries';
 import { router } from 'expo-router';
 import { createConnection, deleteConnection } from '../graphql/mutations';
 import { getCurrentUser } from 'aws-amplify/auth';
+import ProfileHeaderSkeleton from './ProfileHeaderSkeleton';
 
 const client = generateClient();
 
-const ProfileHeader = ({ user, otherProfile = false }: any) => {
+const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any) => {
   const [isRequested, setIsRequested] = useState(false);
   const [connectionID, setConnectionID] = useState<string | null>(null);
   const [counts, setCounts] = useState({ numConnections: 0, numProjects: 0, numTeams: 0 });
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const { user: loggedInUser } = useUser();
   const [stateAuthUserID, setAuthUserID] = useState<string | null>(null); // State for user's ID
 
@@ -103,13 +104,13 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
     }
   }, [user]);
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#003B7B" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" color="#003B7B" />
+  //     </View>
+  //   );
+  // }
 
   const handleRequestConnection = async () => {
     try {
@@ -162,6 +163,10 @@ const ProfileHeader = ({ user, otherProfile = false }: any) => {
       console.error('Error removing connection:', error);
     }
   };
+
+  if (loading) {
+    return <ProfileHeaderSkeleton />;
+  }
 
   return (
     <View style={styles.container}>

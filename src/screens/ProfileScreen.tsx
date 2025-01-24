@@ -289,17 +289,17 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
     );
   }
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#003B7B" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" color="#003B7B" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <Tabs.Container
-      renderHeader={() => <ProfileHeader user={user} otherProfile={!!passedUserID} />}
+      renderHeader={() => <ProfileHeader user={user} otherProfile={!!passedUserID} loading={loading} setLoading={setLoading} />}
       renderTabBar={(props) => (
         <MaterialTabBar
           {...props}

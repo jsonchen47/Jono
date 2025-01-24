@@ -18,6 +18,17 @@ const ProjectsScreen = ({ category }: any) => {
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
+  const EmptyState = () => (
+    <View style={styles.emptyStateContainer}>
+      <Image
+        source={require('../../assets/images/dj.png')} // Ensure this path matches your image location
+        style={styles.emptyImage}
+      />
+      <Text style={styles.emptyText}>No projects yet!</Text>
+      <Text style={styles.emptySubText}>Post a project to populate the space.</Text>
+    </View>
+  );
+
   const fetchProjects = async (nextToken = null, reset = false) => {
     if (reset) {
       setProjects([]);
@@ -129,7 +140,15 @@ const ProjectsScreen = ({ category }: any) => {
 
   return (
     <View style={styles.projectsScreenContainer}>
-      {loading && projects.length === 0 ? (
+      <ProjectsGridNew
+          projects={projects}
+          loadMoreProjects={loadMoreProjects}
+          isFetchingMore={isFetchingMore}
+          loading={loading}
+          noProjectsComponent={<EmptyState/>}
+
+        />
+      {/* {loading && projects.length === 0 ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#003B7B" />
         </View>
@@ -147,8 +166,11 @@ const ProjectsScreen = ({ category }: any) => {
           projects={projects}
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
+          loading={loading}
+          noProjectsComponent={<EmptyState/>}
+
         />
-      )}
+      )} */}
     </View>
   );
 };
@@ -176,13 +198,13 @@ const styles = StyleSheet.create({
     paddingBottom: 100, 
   },
   emptyImage: {
-    width: windowWidth * 0.7,
-    height: windowWidth * 0.7,
+    width: windowWidth * 0.5,
+    height: windowWidth * 0.5,
     resizeMode: 'contain',
     marginBottom: 20,
   },
   emptyText: {
-    fontSize: 21,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'gray',
     marginBottom: 5,

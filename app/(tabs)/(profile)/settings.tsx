@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,21 @@ import { useNavigation } from '@react-navigation/native';
 import { signOut } from 'aws-amplify/auth';
 import Icon from 'react-native-vector-icons/Feather';
 import { useRouter } from 'expo-router';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // For the chevron icon
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <FontAwesome6 name="chevron-left" size={20} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }); 
 
   const settingsData = [
     {
@@ -93,5 +104,8 @@ const styles = StyleSheet.create({
     color: '#333',
     fontSize: 16,
     marginLeft: 12,
+  },
+  backButton: {
+    paddingHorizontal: 15,
   },
 });

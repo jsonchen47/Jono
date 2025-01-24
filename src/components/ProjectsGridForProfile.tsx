@@ -3,19 +3,58 @@ import React from 'react';
 import { FlatList, ActivityIndicator, View, StyleSheet, Dimensions } from 'react-native';
 import SmallProjectCard from './SmallProjectCard';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
+import SmallProjectCardSkeleton from './SmallProjectCardSkeleton';
 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 interface projectsGridProps {
-    projects: any, 
-    loadMoreProjects: any, 
-    isFetchingMore: any, 
-    listHeaderComponent?: any, 
+  projects: any[]; // List of projects
+  loadMoreProjects: () => void; // Function to load more projects
+  isFetchingMore: boolean; // Loading indicator for fetching more projects
+  loading: boolean; // Loading state for skeletons
+  noProjectsComponent?: React.ReactNode; // Component to show when there are no projects
+  listHeaderComponent?: any; // Optional header component
 }
 
-const ProjectsGridForProfile = ({ projects, loadMoreProjects, isFetchingMore, listHeaderComponent = null }: projectsGridProps) => {
+const ProjectsGridForProfile: React.FC<projectsGridProps> = ({
+  projects,
+  loadMoreProjects,
+  isFetchingMore,
+  loading,
+  noProjectsComponent = null, // Default is null if not provided
+  listHeaderComponent = null,
+}: projectsGridProps) => {
+
+  if (loading) {
+    // Render skeletons during loading
+    const skeletons = Array.from({ length: 6 }); // Number of skeletons to render
+    return (
+      <Tabs.FlatList
+      maintainVisibleContentPosition={{ minIndexForVisible: 1 }}
+      contentContainerStyle={{ paddingTop: 0 }}
+      style={styles.flatList}
+        data={skeletons}
+        keyExtractor={(_, index) => `skeleton-${index}`}
+        renderItem={() => (
+          <View style={styles.smallProjectCardContainer}>
+            <SmallProjectCardSkeleton />
+          </View>
+        )}
+        numColumns={2}
+        columnWrapperStyle={styles.columnWrapper}
+        // contentContainerStyle={styles.skeletonFlatListContent}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={listHeaderComponent || null}
+      />
+    );
+  }
+
+  if (projects.length === 0) {
+    // Render the noProjectsComponent when there are no projects
+    return <>{noProjectsComponent}</>;
+  }
 
   return (
     <Tabs.FlatList

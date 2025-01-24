@@ -7,14 +7,27 @@ import { generateClient } from 'aws-amplify/api';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { updateConnection, deleteConnection, deleteJoinRequest, createUserProject } from '@/src/graphql/mutations';
 import { useSendbirdChat } from '@sendbird/uikit-react-native';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // For the chevron icon
+import { useNavigation } from '@react-navigation/native';
 
 const client = generateClient();
 
 const NotificationsPage = () => {
   const { notifications, markNotificationsAsRead, fetchNotifications } = useNotifications();
   const { sdk } = useSendbirdChat();
+  const navigation = useNavigation();
+
 
   useEffect(() => {
+
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <FontAwesome6 name="chevron-left" size={20} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+
     const markAsRead = async () => {
       try {
         await markNotificationsAsRead();
@@ -24,7 +37,7 @@ const NotificationsPage = () => {
     };
 
     markAsRead();
-  }, []);
+  }, [navigation]);
 
   const handleApprove = async (notification: any) => {
     try {
@@ -166,6 +179,9 @@ export default NotificationsPage;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
+  },
+  backButton: {
+    paddingHorizontal: 15,
   },
   profileImage: {
     width: 50,
