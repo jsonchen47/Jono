@@ -214,7 +214,7 @@ const EditProfileScreen = () => {
           <Text style={styles.label}>Resources</Text>
           <View style={styles.chipInputContainer}>
             <ChipInput
-              placeholder="Add a resource"
+              placeholder="Press return after each resource"
               chips={resources}
               onChangeChips={setResources}
             />
@@ -223,7 +223,7 @@ const EditProfileScreen = () => {
           <Text style={styles.label}>Skills</Text>
           <View style={styles.chipInputContainer}>
             <ChipInput
-              placeholder="Add a skill"
+              placeholder="Press return after each skill"
               chips={skills}
               onChangeChips={setSkills}
             />
@@ -232,7 +232,7 @@ const EditProfileScreen = () => {
           <Text style={styles.label}>Links</Text>
           <View style={styles.chipInputContainer}>
             <ChipInput
-              placeholder="Add a link"
+              placeholder="Press return after each link"
               chips={links}
               onChangeChips={setLinks}
             />

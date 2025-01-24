@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator, Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { generateClient } from 'aws-amplify/api'; // Import generateClient
 import { GraphQLResult } from '@aws-amplify/api-graphql';
@@ -85,6 +85,34 @@ export default function SavedScreen() {
     }
   };
 
+  // return (
+  //   <SafeAreaView style={styles.container} edges={['top']}>
+  //     <View style={styles.savedHeader}>
+  //       <Text style={styles.savedText}>Saved</Text>
+  //     </View>
+  //     {loading ? (
+  //       <View style={styles.loadingContainer}>
+  //         <ActivityIndicator size="large" color="#1ABFFB" />
+  //       </View>
+  //     ) : projects.length > 0 ? (
+  //       <ProjectsGridNew
+  //         projects={projects}
+  //         loadMoreProjects={() => fetchProjects(nextToken)}
+  //         isFetchingMore={Boolean(nextToken)}
+  //       />
+  //     ) : (
+  //       <View style={styles.placeholderContainer}>
+  //         <Image
+  //           source={require('../../assets/images/robotics.png')} // Replace with your actual image path
+  //           style={styles.placeholderImage}
+  //         />
+  //         <Text style={styles.placeholderText}>
+  //           No saved projects yet! Like a project to fill the space.
+  //         </Text>
+  //       </View>
+  //     )}
+  //   </SafeAreaView>
+  // );
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.savedHeader}>
@@ -94,13 +122,23 @@ export default function SavedScreen() {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#1ABFFB" />
         </View>
-      ) : (
+      ) : projects.length > 0 ? (
         <ProjectsGridNew
           projects={projects}
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
         />
-      )}
+      ): (
+      <View style={styles.placeholderContainer}>
+        <Image
+          source={require('../../assets/images/robotics.png')} // Replace with your actual image path
+          style={styles.placeholderImage}
+        />
+        <Text style={styles.placeholderText}>
+          No saved projects yet! Like a project to fill the space.
+        </Text>
+      </View>
+    )}
     </SafeAreaView>
   );
 }
@@ -125,7 +163,26 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   savedText: {
-    fontSize: 27,
+    fontSize: 30,
     fontWeight: 'bold',
+  },
+  placeholderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  placeholderImage: {
+    width: windowWidth / 2,
+    height: windowWidth / 2,
+    marginBottom: 20,
+    resizeMode: 'contain',
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: 'gray',
+    textAlign: 'center',
+    marginHorizontal: 30, 
+    marginBottom: 70,
   },
 });

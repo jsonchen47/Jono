@@ -439,8 +439,13 @@ const ProjectScreen = ({ project }: any) => {
                         </View>
                         <View style={styles.divider} />
                         {/* Description */}
-                        <Text style = {styles.description}>{project?.description}</Text>
-                        <View style={styles.divider} />
+                        {project?.description && (
+                        <>
+                            <Text style={styles.description}>{project.description}</Text>
+                            <View style={styles.divider} />
+                        </>
+                        )}
+
                         {/* Author details */}
                         <View style={styles.authorSection}>
                             <Image style={styles.authorImage} source={{uri: user?.image}}/>
@@ -451,28 +456,50 @@ const ProjectScreen = ({ project }: any) => {
                         </View>
                         
                         <View style={styles.divider} /> 
-                        {/* Skills */}
+                        {/* Conditional rendering for Skills and Resources */}
+                        {(project?.skills?.length > 0 || project?.resources?.length > 0) && (
                         <View style={styles.skillsAndResourcesTopPadding}></View>
-                        <View style={styles.skillsAndResourcesTitleContainer}>
+                        )}
+
+                        {/* Skills */}
+                        {project?.skills?.length > 0 && (
+                        <>
+                            <View style={styles.skillsAndResourcesTitleContainer}>
                             <Emoji name="rocket" style={styles.emoji} />
                             <Text style={styles.subtitle}> Skills needed</Text>
-                        </View>
-                        <View style={styles.skillsAndResourcesChipsContainer}>
-                            {project?.skills?.map((skill: any, index: any) => (
-                                <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{skill}</Chip>
+                            </View>
+                            <View style={styles.skillsAndResourcesChipsContainer}>
+                            {project.skills.map((skill: any, index: any) => (
+                                <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
+                                {skill}
+                                </Chip>
                             ))}
-                        </View>
+                            </View>
+                        </>
+                        )}
+
                         {/* Resources */}
-                        <View style={styles.skillsAndResourcesTitleContainer}>
+                        {project?.resources?.length > 0 && (
+                        <>
+                            <View style={styles.skillsAndResourcesTitleContainer}>
                             <Emoji name="briefcase" style={styles.emoji} />
                             <Text style={styles.subtitle}> Resources needed</Text>
-                        </View>
-                        <View style={styles.skillsAndResourcesChipsContainer}>
-                            {project?.resources?.map((resource: any, index: any) => (
-                                <Chip key={index} style={styles.chip} textStyle={styles.chipText}>{resource}</Chip>
+                            </View>
+                            <View style={styles.skillsAndResourcesChipsContainer}>
+                            {project.resources.map((resource: any, index: any) => (
+                                <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
+                                {resource}
+                                </Chip>
                             ))}
-                        </View>
-                        <View style={styles.divider} /> 
+                            </View>
+                        </>
+                        )}
+
+                        {/* Divider */}
+                        {(project?.skills?.length > 0 || project?.resources?.length > 0) && (
+                        <View style={styles.divider} />
+                        )}
+
                         {/* Members */}
                         <Text style={styles.membersSubtitle}>Members</Text>
                         <View style={styles.membersList}>

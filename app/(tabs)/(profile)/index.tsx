@@ -46,7 +46,7 @@ export default function ProfileIndex() {
     navigation.setOptions({ 
       headerTitle: () => (
         <View style={styles.headerTitleContainer}> 
-          <Text style={styles.headerTitle}>
+          <Text style={styles.headerTitle} numberOfLines={1}>
             {`@${user?.username}`}
           </Text>
         </View>
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 7,
     fontWeight: '500',
+    // width: '50%'
   },
   headerButtonsContainer: {
     flexDirection: 'row', 

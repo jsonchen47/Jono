@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator } from 'react-native';
+import { Alert, Linking, View, Text, StyleSheet, Image, Dimensions, ActivityIndicator } from 'react-native';
 import { Chip } from 'react-native-paper';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import Emoji from 'react-native-emoji';
@@ -215,6 +215,76 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
           </Text>
         )}
         {/* Skills, Resources, and Links */}
+        {(user?.skills?.length > 0 || user?.resources?.length > 0 || user?.links?.length > 0) && (
+          <View style={styles.skillsAndResourcesTopPadding}></View>
+        )}
+
+        {/* Skills */}
+        {user?.skills?.length > 0 && (
+          <>
+            <View style={styles.skillsAndResourcesTitleContainer}>
+              <Emoji name="rocket" style={styles.emoji} />
+              <Text style={styles.subtitle}> Skills</Text>
+            </View>
+            <View style={styles.skillsAndResourcesChipsContainer}>
+              {user.skills.map((skill: any, index: any) => (
+                <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
+                  {skill}
+                </Chip>
+              ))}
+            </View>
+          </>
+        )}
+
+        {/* Resources */}
+        {user?.resources?.length > 0 && (
+          <>
+            <View style={styles.skillsAndResourcesTitleContainer}>
+              <Emoji name="briefcase" style={styles.emoji} />
+              <Text style={styles.subtitle}> Resources</Text>
+            </View>
+            <View style={styles.skillsAndResourcesChipsContainer}>
+              {user.resources.map((resource: any, index: any) => (
+                <Chip key={index} style={styles.chip} textStyle={styles.chipText}>
+                  {resource}
+                </Chip>
+              ))}
+            </View>
+          </>
+        )}
+
+        {/* Links */}
+{user?.links?.length > 0 && (
+  <>
+    <View style={styles.skillsAndResourcesTitleContainer}>
+      <Emoji name="earth_americas" style={styles.emoji} />
+      <Text style={styles.subtitle}> Links</Text>
+    </View>
+    <View style={styles.skillsAndResourcesChipsContainer}>
+      {user.links.map((link: string, index: number) => (
+        <Chip
+          key={index}
+          style={styles.chip}
+          textStyle={styles.chipText}
+          onPress={() => {
+            Linking.canOpenURL(link)
+              .then((supported) => {
+                if (supported) {
+                  Linking.openURL(link);
+                } else {
+                  Alert.alert('Error', 'Cannot open the link: ' + link);
+                }
+              })
+              .catch((err) => console.error('Error opening link:', err));
+          }}
+        >
+          {link}
+        </Chip>
+      ))}
+    </View>
+  </>
+)}
+
       </View>
     );
   }
@@ -285,6 +355,37 @@ const styles = StyleSheet.create({
     color: 'gray',
     textAlign: 'center',
     paddingHorizontal: 20,
+  },
+  skillsAndResourcesTopPadding: {
+    paddingTop: 5,
+  },
+  skillsAndResourcesTitleContainer: {
+    paddingTop: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  emoji: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
+  },
+  subtitle: {
+    fontWeight: '700',
+    fontSize: 18,
+  },
+  skillsAndResourcesChipsContainer: {
+    paddingTop: 15,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    alignSelf: 'flex-start',
+    margin: 5,
+    backgroundColor: 'black',
+  },
+  chipText: {
+    color: 'white',
+    fontSize: 13,
   },
 });
 

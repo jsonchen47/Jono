@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   message: {
-    fontSize: 21,
+    fontSize: 24,
     fontWeight: '600',
     marginBottom: 20,
     textAlign: 'center',
