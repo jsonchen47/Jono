@@ -51,6 +51,7 @@ export default function ProfileIndex() {
           </Text>
         </View>
       ),
+      headerTitleAlign: 'center', // Center the title
       headerRight: () => (
       <View style={styles.headerButtonsContainer}>
         <TouchableOpacity 
@@ -73,9 +74,9 @@ export default function ProfileIndex() {
       ),
       headerLeft: () => (
         <View style={styles.headerButtonsContainer}>
-          <TouchableOpacity style={styles.headerButton}>
+          {/* <TouchableOpacity style={styles.headerButton}>
             <Octicons name='info' style={styles.icon}/>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       ),
     });

@@ -98,7 +98,9 @@ dropdown: {
   chip: {
     backgroundColor: 'black',
     marginRight: 5, 
-    marginBottom: 5
+    marginBottom: 5, 
+    // flexDirection: 'row', // Maintain row layout
+    height: 35, // Set a consistent heightx
   }, 
   chipsContainer: {
     marginTop: 20,
@@ -107,6 +109,7 @@ dropdown: {
   },
   chipTextStyle: {
     color: 'white',
+
   },
   chipCloseIcon: {
 

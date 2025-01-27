@@ -1,4 +1,4 @@
-import { View, Text, Image, Dimensions, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, ImageBackground } from 'react-native'
+import { View, Text, Image, Dimensions, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from 'aws-amplify/auth';
@@ -25,6 +25,7 @@ import { useSendbirdChat } from '@sendbird/uikit-react-native';
 import { Alert } from 'react-native';
 import Purchases from 'react-native-purchases';
 import RevenueCatUI from 'react-native-purchases-ui';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // type NavigationProps = NativeStackNavigationProp<ChatNavigatorParamList, 'GroupChannel'>;
 const client = generateClient();
@@ -372,20 +373,53 @@ const ProjectScreen = ({ project }: any) => {
                         //     <Icon name="chatbubbles" style={styles.icon}/>
                         // </TouchableOpacity>
                         <TouchableOpacity
-                            style={styles.headerButtonRight}
-                            onPress={async () => {
-                            console.log('Pressed chat');
-                            if (isValidChat && project?.groupChatID) {
-                                // Navigate to the existing group chat
-                                router.push(`/groupChat?channelUrl=${project.groupChatID}`);
-                            } else {
-                                // Create a new group chat if invalid
-                                await createGroupChat();
+                          style={styles.headerButtonRight}
+                          onPress={async () => {
+                            try {
+                              console.log('Pressed chat');
+                              // Check user's premium status
+                              const customerInfo = await Purchases.getCustomerInfo();
+                              const isPremium = !!customerInfo.entitlements.active['premium'];
+
+                              if (isPremium) {
+                                console.log('User is premium');
+                                if (isValidChat && project?.groupChatID) {
+                                  // Navigate to the existing group chat
+                                  router.push(`/groupChat?channelUrl=${project.groupChatID}`);
+                                } else {
+                                  // Create a new group chat if invalid
+                                  await createGroupChat();
+                                }
+                              } else {
+                                console.log('User is not premium, showing paywall...');
+                                const offerings = await Purchases.getOfferings();
+
+                                if (offerings.current) {
+                                  const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
+                                    offering: offerings.current,
+                                    requiredEntitlementIdentifier: 'premium',
+                                  });
+
+                                  if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
+                                    console.log('User purchased premium, unlocking chat feature...');
+                                    Alert.alert('Success', 'You are now a premium member! Please try again.');
+                                  } else {
+                                    console.log('Paywall dismissed without purchase.');
+                                  }
+                                } else {
+                                  console.error('No offerings configured in RevenueCat.');
+                                  Alert.alert('Error', 'No available offerings found.');
+                                }
+                              }
+                            } catch (error) {
+                              console.error('Error checking premium status or showing paywall:', error);
+                              Alert.alert('Error', 'An error occurred while processing your request.');
                             }
-                            }}
+                          }}
                         >
-                            <Icon name="chatbubbles" style={styles.icon} />
+                          <Icon name="chatbubbles" style={styles.icon} />
                         </TouchableOpacity>
+
                         )}
 
                         {/* Share button */}

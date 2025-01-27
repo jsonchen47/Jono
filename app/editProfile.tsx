@@ -20,6 +20,7 @@ import ChipInput from '@/src/components/ChipInput';
 import { uploadData, remove } from 'aws-amplify/storage'; // For uploading and removing images from S3
 import config from "../src/aws-exports"; // AWS Amplify configuration
 import { useRefresh } from '@/src/contexts/RefreshContext';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const client = generateClient();
 
@@ -151,6 +152,7 @@ const EditProfileScreen = () => {
     
     navigation.setOptions({
       title: 'Edit Profile',
+      headerTitleAlign: 'center', // Center the title
       headerStyle: { backgroundColor: '#f8f8f8' },
       headerTitleStyle: { fontWeight: 'bold' },
       headerLeft: () => (
@@ -177,13 +179,26 @@ const EditProfileScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView edges={['bottom']}>
-        <TouchableOpacity style={styles.imageContainer} onPress={handleImagePicker}>
+        {/* <TouchableOpacity style={styles.imageContainer} onPress={handleImagePicker}>
           <Image
             source={image ? { uri: image } : require('../assets/images/profile1.png')}
             style={styles.profileImage}
           />
           <Text style={styles.imageText}>Change Profile Image</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <View style={styles.imageContainer}>
+          <TouchableOpacity onPress={handleImagePicker} style={styles.editButtonContainer}>
+            <Image
+              source={image ? { uri: image } : require('../assets/images/profile1.png')}
+              style={styles.profileImage}
+            />
+            <View style={styles.outerBorder}>
+              <View style={styles.editIcon}>
+                <Icon name="edit" size={20} color="white" />
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Name</Text>
@@ -286,14 +301,40 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   headerButton: {
-    color: '#007bff',
+    // color: '#007bff',
     fontWeight: 'bold',
     paddingHorizontal: 16,
+    fontSize: 17,
   },
   spacerVertical: {
 
   }, 
   chipInputContainer: {
     marginBottom: 20, 
-  }
+  }, 
+  editButtonContainer: {
+    position: 'relative',
+  },
+  editIcon: {
+    
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderWidth: 3, // Thickness of the border
+    // borderColor: 'white', // Color of the border
+  },
+  outerBorder: {
+    position: 'absolute',
+    bottom: 5,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 35, // Outer border size (larger than the inner shape)
+    height: 35, // Outer border size
+    backgroundColor: 'white', // Outer border color
+    borderRadius: 15, // To match the inner shape's border radius
+  },
 });

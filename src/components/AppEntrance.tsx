@@ -401,6 +401,8 @@ const AppEntrance = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: '100%',
+    backgroundColor: 'red'
   },
   progressBarContainer: {
     position: 'absolute', // Position the progress bar absolutely

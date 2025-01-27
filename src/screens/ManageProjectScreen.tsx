@@ -174,6 +174,7 @@ const ManageProjectScreen = ({project}: any) => {
     useEffect(() => {
         navigation.setOptions({ 
             title: 'Manage Project', 
+            headerTitleAlign: 'center', // Center the title
             headerLeft: () => 
             <TouchableOpacity onPress={() => router.back()}>
                 <Octicons name='x' style={styles.exitButton}/>

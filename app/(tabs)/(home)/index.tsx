@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Text, View, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
@@ -17,6 +17,7 @@ import { RouterStore } from 'expo-router/build/global-state/router-store';
 import { useProgress } from '@/src/contexts/ProgressContext';
 import { Snackbar } from 'react-native-paper';
 import { useRefresh } from '@/src/contexts/RefreshContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -74,7 +75,7 @@ function MyTabs() {
 
   return (
 
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={styles.safeAreaView} edges={['left']}>
       <Header/>
     
     <Tab.Navigator
@@ -99,63 +100,63 @@ function MyTabs() {
         name="For You"
         children={() => <ProjectsScreenFYP category="" />}
         options={{
-            tabBarLabel: ({ focused }) => <TabBarLabel label="For You" IconComponent={FontAwesome5} icon="home" focused={focused} />
+            tabBarLabel: ({ focused }: any) => <TabBarLabel label="For You" IconComponent={FontAwesome5} icon="home" focused={focused} />
         }} 
       />
       <Tab.Screen
         name="All"
         children={() => <ProjectsScreen category="" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="All" IconComponent={FontAwesome6} icon="star" focused={focused} />
+          tabBarLabel: ({ focused }: any) => <TabBarLabel label="All" IconComponent={FontAwesome6} icon="star" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Health"
         children={() => <ProjectsScreen category="health" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="Health" IconComponent={Fontisto} icon="heartbeat" focused={focused} />
+          tabBarLabel: ({ focused }: any) => <TabBarLabel label="Health" IconComponent={Fontisto} icon="heartbeat" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Finance"
         children={() => <ProjectsScreen category="finance" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="Finance" IconComponent={FontAwesome6} icon="sack-dollar" focused={focused} />
+          tabBarLabel: ({ focused }: any) => <TabBarLabel label="Finance" IconComponent={FontAwesome6} icon="sack-dollar" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Tech"
         children={() => <ProjectsScreen category="tech" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="Tech" IconComponent={MaterialCommunityIcons} icon="robot-industrial" focused={focused} />
+          tabBarLabel: ({ focused }: any) => <TabBarLabel label="Tech" IconComponent={MaterialCommunityIcons} icon="robot-industrial" focused={focused} />
       }} 
       />
       <Tab.Screen
         name="Politics"
         children={() => <ProjectsScreen category="politics" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="Politics" IconComponent={Entypo} icon="globe" focused={focused} />
+          tabBarLabel: ({ focused }: any) => <TabBarLabel label="Politics" IconComponent={Entypo} icon="globe" focused={focused} />
       }} 
       />
        <Tab.Screen
         name="Education"
         children={() => <ProjectsScreen category="education" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="book" focused={focused} />
+          tabBarLabel: ({ focused }: any) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="book" focused={focused} />
         }} 
       />
        <Tab.Screen
         name="Environment"
         children={() => <ProjectsScreen category="environment" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="Environment" IconComponent={FontAwesome6} icon="leaf" focused={focused} />
+          tabBarLabel: ({ focused }: any) => <TabBarLabel label="Environment" IconComponent={FontAwesome6} icon="leaf" focused={focused} />
         }} 
       />
        <Tab.Screen
         name="Social Justice"
         children={() => <ProjectsScreen category="social justice" />}
         options={{
-          tabBarLabel: ({ focused }) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="scale-balanced" focused={focused} />
+          tabBarLabel: ({ focused }: any) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="scale-balanced" focused={focused} />
       }} 
       />
     </Tab.Navigator>

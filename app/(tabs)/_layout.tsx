@@ -52,6 +52,16 @@ export default function TabLayout() {
       alert('An error occurred while processing your request.');
     }
   };
+
+  useEffect(() => {
+    const initializePurchases = () => {
+      const apiKey = 'appl_UqBRgTSPvhuYXQgHiSORJTTAxVL'; // Replace with your actual RevenueCat API key
+      Purchases.configure({ apiKey });
+      console.log('Purchases configured successfully');
+    };
+  
+    initializePurchases();
+  }, []);
   
 
 
@@ -139,8 +149,8 @@ export default function TabLayout() {
           // Step 2: Update the user's profile image
           const sb = SendbirdChat.instance;
           await sb.updateCurrentUserInfo({
-            nickname: username,
-            profileUrl: profileImage,
+            nickname: username || 'User',
+            profileUrl: profileImage || '', // Set profile image
           });
   
           console.log('Sendbird profile updated successfully.');

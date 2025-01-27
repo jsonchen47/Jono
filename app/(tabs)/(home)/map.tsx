@@ -38,6 +38,7 @@ const map = () => {
             </TouchableOpacity>
         ),
         headerTitle: 'Map',
+        headerTitleAlign: 'center', // Center the title
         });
     }, [navigation]);
 
