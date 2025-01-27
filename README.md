@@ -4,6 +4,10 @@ This is [Jono](https://apps.apple.com/us/app/jono-project-network/id6740828913),
 
 ---
 
+<img width="1015" alt="image" src="https://github.com/user-attachments/assets/78665146-7951-41f3-b84b-7d409ede018c" />
+
+<img width="1015" alt="image" src="https://github.com/user-attachments/assets/c64aff2a-0961-45ee-b3b3-192c0e07ad4b" />
+
 ## 🚀 What is Jono?
 
 Jono is a **team-finding app designed for projects of all kinds**. Unlike other platforms where you need to sift through endless profiles to find collaborators, Jono brings together a community where everyone is ready to build something amazing. 
