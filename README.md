@@ -1,50 +1,68 @@
-# Welcome to your Expo app 👋
+# Welcome to Jono - The Project Hub for Visionaries 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is [Jono](https://apps.apple.com/us/app/jono-project-network/id6740828913), the only project hub powered by a community of thinkers, creators, and doers. Whether you’re a coder, entrepreneur, artist, or someone with a spark of an idea, Jono helps you find your perfect team and turn your vision into reality.
 
-## Get started
+---
 
-1. Install dependencies
+<img width="1015" alt="image" src="https://github.com/user-attachments/assets/78665146-7951-41f3-b84b-7d409ede018c" />
 
-   ```bash
-   npm install
-   ```
+<img width="1015" alt="image" src="https://github.com/user-attachments/assets/c64aff2a-0961-45ee-b3b3-192c0e07ad4b" />
 
-2. Start the app
+## 🚀 What is Jono?
 
-   ```bash
-    npx expo start
-   ```
+Jono is a **team-finding app designed for projects of all kinds**. Unlike other platforms where you need to sift through endless profiles to find collaborators, Jono brings together a community where everyone is ready to build something amazing. 
 
-In the output, you'll find options to open the app in a
+Whether you're working on:
+- The next big tech breakthrough,
+- Crafting a creative masterpiece,
+- Solving pressing global issues,  
+Jono connects you with like-minded individuals eager to join forces.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🎨 Who is Jono for?
 
-## Get a fresh project
+Jono is for anyone passionate about collaboration:
+- **Students:** Showcase your skills, find coding buddies, or start a project that’ll make your resume pop. Learn and grow with peers who share your enthusiasm.
+- **Entrepreneurs:** Find co-founders or early team members who are as passionate about your startup idea as you are.
+- **Changemakers:** Organize community initiatives, propose policy changes, or rally support for social causes.
+- **Creatives:** Assemble a team to work on films, art installations, or musical projects.
 
-When you're ready, run:
+---
 
-```bash
-npm run reset-project
-```
+## 🌟 Key Features
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Discover Projects:** Browse and join projects that resonate with your passions and skills.
+- **Create Projects:** Got an idea? Post it and watch your team come together.
+- **Messaging:** Communicate instantly with potential collaborators using direct messages and group chats.
+- **Profiles:** Showcase your skills, bio, and projects to attract collaborators.
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## 💼 Premium Membership
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Unlock the full potential of Jono with a **Premium Membership**:
+- **Monthly:** $5.99
+- **Annually:** $35.99 (save 50%!)
 
-## Join the community
+### Premium Benefits:
+- Unlimited project creation and joining
+- Send direct messages and create group chats
+- Priority support and early access to new features
 
-Join our community of developers creating universal apps.
+> **Note:** The free version allows you to:
+> - Share contact information through your profile.
+> - Display your project ideas on your bio.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 📲 Get Started Today!
+
+1. [Download Jono from the App Store](https://apps.apple.com/us/app/jono-project-network/id6740828913).
+2. Create your profile and start connecting with visionaries today!
+
+---
+
+## 🔒 Privacy and Terms
+
+Your privacy matters to us. By using Jono, you agree to our [Terms of Use](https://www.apple.com/legal/internet-services/itunes/dev/stdeula/).
