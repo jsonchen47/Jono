@@ -255,6 +255,7 @@ const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // height: 100, 
   },
   headerContent: {
     width: '90%',

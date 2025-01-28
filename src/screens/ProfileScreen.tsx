@@ -306,6 +306,8 @@ export default function ProfileScreen({ passedUserID }: ProfileScreenProps) {
           indicatorStyle={{ backgroundColor: 'black', height: 2 }}
         />
       )}
+      headerHeight={300}
+      
     >
       <Tabs.Tab name="About">
         <Tabs.ScrollView>

@@ -82,37 +82,47 @@ const ProfileTeamsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID }) =>
   };
 
   return (
-    <View style={styles.projectsScreenContainer}>
-      <ProjectsGridForProfile
+    <ProjectsGridForProfile
           projects={projects}
           loadMoreProjects={loadMoreProjects}
           isFetchingMore={isFetchingMore}
           loading={loading}
           noProjectsComponent={<EmptyState/>}
         />
-      {/* {projects.length === 0 && !loading && dataLoaded ? (
-        <Tabs.ScrollView>
-          <View style={styles.noProjectsContainer}>
-            <Image
-              source={require('../../assets/images/camping.png')} // Replace with your actual image path
-              style={styles.noProjectsImage}
-            />
-            <Text style={styles.noProjectsText}>
-              No teams yet! Join a project to populate the space.
-            </Text>
-          </View>
-        </Tabs.ScrollView>
-      ) : (
-        <ProjectsGridForProfile
-          projects={projects}
-          loadMoreProjects={loadMoreProjects}
-          isFetchingMore={isFetchingMore}
-          loading={loading}
-          noProjectsComponent={<EmptyState/>}
-        />
-      )} */}
-    </View>
-  );
+  )
+
+  // return (
+  //   <View style={styles.projectsScreenContainer}>
+  //     <ProjectsGridForProfile
+  //         projects={projects}
+  //         loadMoreProjects={loadMoreProjects}
+  //         isFetchingMore={isFetchingMore}
+  //         loading={loading}
+  //         noProjectsComponent={<EmptyState/>}
+  //       />
+  //     {/* {projects.length === 0 && !loading && dataLoaded ? (
+  //       <Tabs.ScrollView>
+  //         <View style={styles.noProjectsContainer}>
+  //           <Image
+  //             source={require('../../assets/images/camping.png')} // Replace with your actual image path
+  //             style={styles.noProjectsImage}
+  //           />
+  //           <Text style={styles.noProjectsText}>
+  //             No teams yet! Join a project to populate the space.
+  //           </Text>
+  //         </View>
+  //       </Tabs.ScrollView>
+  //     ) : (
+  //       <ProjectsGridForProfile
+  //         projects={projects}
+  //         loadMoreProjects={loadMoreProjects}
+  //         isFetchingMore={isFetchingMore}
+  //         loading={loading}
+  //         noProjectsComponent={<EmptyState/>}
+  //       />
+  //     )} */}
+  //   </View>
+  // );
 };
 
 export default ProfileTeamsScreen;

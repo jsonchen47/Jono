@@ -84,41 +84,58 @@ const ProfileProjectsScreen: React.FC<ProfileProjectsScreenProps> = ({ userID })
   return (
     <View style={styles.projectsScreenContainer}>
       <ProjectsGridForProfile
-          projects={projects}
-          loadMoreProjects={loadMoreProjects}
-          isFetchingMore={isFetchingMore}
-          loading={loading}
-          noProjectsComponent={<EmptyState/>}
-        />
-      {/* {!loading && projects.length === 0 && dataLoaded ? (
-        <Tabs.ScrollView>
-          <View style={styles.noProjectsContainer}>
-            <Image
-              source={require('../../assets/images/dj.png')} // Replace with your placeholder image path
-              style={styles.noProjectsImage}
-            />
-            <Text style={styles.noProjectsText}>
-              No projects yet! Post a project to populate the space.
-            </Text>
-          </View>
-        </Tabs.ScrollView>
-      ) : (
-        <ProjectsGridForProfile
-          projects={projects}
-          loadMoreProjects={loadMoreProjects}
-          isFetchingMore={isFetchingMore}
-        />
-      )} */}
-    </View>
-  );
+            projects={projects}
+            loadMoreProjects={loadMoreProjects}
+            isFetchingMore={isFetchingMore}
+            loading={loading}
+            noProjectsComponent={<EmptyState/>}
+        /> 
+     </View>
+  )
+
+//   return (
+//     <View style={styles.projectsScreenContainer}>
+//       <Text>hi</Text>
+      
+//       {/* <ProjectsGridForProfile
+//           projects={projects}
+//           loadMoreProjects={loadMoreProjects}
+//           isFetchingMore={isFetchingMore}
+//           loading={loading}
+//           noProjectsComponent={<EmptyState/>}
+//       /> */}
+     
+//       {/* {!loading && projects.length === 0 && dataLoaded ? (
+//         <Tabs.ScrollView>
+//           <View style={styles.noProjectsContainer}>
+//             <Image
+//               source={require('../../assets/images/dj.png')} // Replace with your placeholder image path
+//               style={styles.noProjectsImage}
+//             />
+//             <Text style={styles.noProjectsText}>
+//               No projects yet! Post a project to populate the space.
+//             </Text>
+//           </View>
+//         </Tabs.ScrollView>
+//       ) : (
+//         <ProjectsGridForProfile
+//           projects={projects}
+//           loadMoreProjects={loadMoreProjects}
+//           isFetchingMore={isFetchingMore}
+//         />
+//       )} */}
+//     </View>
+//   );
 };
 
 export default ProfileProjectsScreen;
 
 const styles = StyleSheet.create({
   projectsScreenContainer: {
-    flex: 1,
-    width: '100%',
+    // flex: 1,
+    // width: '100%',
+    // height: '100%',
+
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'whitesmoke',

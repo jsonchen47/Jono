@@ -4,10 +4,12 @@ import { FlatList, ActivityIndicator, View, StyleSheet, Dimensions } from 'react
 import SmallProjectCard from './SmallProjectCard';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import SmallProjectCardSkeleton from './SmallProjectCardSkeleton';
+import { useCollapsibleStyle } from 'react-native-collapsible-tab-view'
 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
 
 interface projectsGridProps {
   projects: any[]; // List of projects
@@ -26,6 +28,8 @@ const ProjectsGridForProfile: React.FC<projectsGridProps> = ({
   noProjectsComponent = null, // Default is null if not provided
   listHeaderComponent = null,
 }: projectsGridProps) => {
+  const { contentContainerStyle } = useCollapsibleStyle()
+
 
   if (loading) {
     // Render skeletons during loading
@@ -58,8 +62,9 @@ const ProjectsGridForProfile: React.FC<projectsGridProps> = ({
 
   return (
     <Tabs.FlatList
+    
     maintainVisibleContentPosition={{ minIndexForVisible: 1 }}
-    contentContainerStyle={{ paddingTop: 0 }}
+    contentContainerStyle={{ }}
     style={styles.flatList}
     data={projects}
     renderItem={({ item }) => 
@@ -71,7 +76,7 @@ const ProjectsGridForProfile: React.FC<projectsGridProps> = ({
     numColumns={2} // Use 2 columns for a grid-like layout
     columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
     onEndReached={loadMoreProjects}
-    onEndReachedThreshold={0.1}
+    onEndReachedThreshold={0.5}
     ListHeaderComponent={listHeaderComponent || null}
     ListFooterComponent={() =>
       isFetchingMore ? (
