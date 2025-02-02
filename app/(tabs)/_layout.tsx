@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useNotifications } from '@/src/contexts/NotificationContext';
 import { useConnection } from '@sendbird/uikit-react-native';
 import { getCurrentUser } from 'aws-amplify/auth';
@@ -11,6 +11,11 @@ import { getUser } from '@/src/graphql/queries';
 import SendbirdChat from '@sendbird/chat'; // Ensure you have the correct Sendbird import for your SDK
 import Purchases from 'react-native-purchases';
 import RevenueCatUI from 'react-native-purchases-ui';
+import { enableScreens } from 'react-native-screens';
+import { StatusBar } from 'expo-status-bar';
+<StatusBar style="auto" translucent={true} />
+
+enableScreens();
 
 const client = generateClient();
 
@@ -21,6 +26,7 @@ export default function TabLayout() {
 
   const handleCenterTabPress = async () => {
     try {
+
       const customerInfo = await Purchases.getCustomerInfo();
       const isPremium = !!customerInfo.entitlements.active['premium'];
   
@@ -49,13 +55,18 @@ export default function TabLayout() {
       }
     } catch (error: any) {
       console.error('Error handling paywall or purchase:', error);
-      alert('An error occurred while processing your request.');
+      alert(`An error occurred while processing your request:\n${error.message || error}`);
     }
   };
 
   useEffect(() => {
+    const REVENUECAT_API_KEY =
+    Platform.OS === 'ios'
+      ? 'appl_UqBRgTSPvhuYXQgHiSORJTTAxVL'
+      : 'goog_oAEGXDSpZwSoOveOnooDmfDNNma';
+
     const initializePurchases = () => {
-      const apiKey = 'appl_UqBRgTSPvhuYXQgHiSORJTTAxVL'; // Replace with your actual RevenueCat API key
+      const apiKey = REVENUECAT_API_KEY; // Replace with your actual RevenueCat API key
       Purchases.configure({ apiKey });
       console.log('Purchases configured successfully');
     };

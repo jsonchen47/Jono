@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, StatusBar } from 'react-native';
 import { Amplify } from 'aws-amplify';
 import { ThemeProvider, Authenticator } from '@aws-amplify/ui-react-native';
 

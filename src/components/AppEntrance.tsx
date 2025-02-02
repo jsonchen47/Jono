@@ -1,7 +1,7 @@
 // AppEntrance.tsx
 import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Platform } from 'react-native';
 import { getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/api';
 import { createUser } from '../graphql/mutations';
@@ -88,12 +88,18 @@ const mmkv = new MMKV();
 
 // Connect the user to RevenueCat
 const configurePurchases = async () => {
+
+  const REVENUECAT_API_KEY =
+  Platform.OS === 'ios'
+    ? 'appl_UqBRgTSPvhuYXQgHiSORJTTAxVL'
+    : 'goog_oAEGXDSpZwSoOveOnooDmfDNNma';
+
   try {
     const authUser = await getCurrentUser(); // Replace with your method to get the current user
     const userId = authUser.userId; // Ensure this is a unique identifier for your user
 
     await Purchases.configure({
-      apiKey: 'appl_UqBRgTSPvhuYXQgHiSORJTTAxVL',
+      apiKey: REVENUECAT_API_KEY,
       appUserID: userId,
     });
 
@@ -401,8 +407,8 @@ const AppEntrance = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: '100%',
-    backgroundColor: 'red'
+    // height: '100%',
+    // backgroundColor: 'red'
   },
   progressBarContainer: {
     position: 'absolute', // Position the progress bar absolutely

@@ -1,0 +1,759 @@
+[debug] [2025-02-01T19:02:32.474Z] ----------------------------------------------------------------------
+[debug] [2025-02-01T19:02:32.476Z] Command:       /opt/homebrew/Cellar/node/23.5.0/bin/node /opt/homebrew/bin/firebase deploy --only functions
+[debug] [2025-02-01T19:02:32.477Z] CLI Version:   13.29.3
+[debug] [2025-02-01T19:02:32.477Z] Platform:      darwin
+[debug] [2025-02-01T19:02:32.477Z] Node Version:  v23.5.0
+[debug] [2025-02-01T19:02:32.477Z] Time:          Sat Feb 01 2025 11:02:32 GMT-0800 (Pacific Standard Time)
+[debug] [2025-02-01T19:02:32.477Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-02-01T19:02:32.539Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-02-01T19:02:32.539Z] > authorizing via signed-in user (chen.jason.w@gmail.com)
+[debug] [2025-02-01T19:02:32.539Z] [iam] checking project jono-47470 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-02-01T19:02:32.540Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:32.540Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:32.540Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions [none]
+[debug] [2025-02-01T19:02:32.540Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:32.540Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-02-01T19:02:32.820Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions 200
+[debug] [2025-02-01T19:02:32.821Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-02-01T19:02:32.821Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:32.821Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:32.821Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-02-01T19:02:32.821Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-02-01T19:02:33.230Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-02-01T19:02:33.231Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'jono-47470'...
+[info] 
+[info] i  deploying functions 
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2025-02-01T19:02:33.235Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.235Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.236Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 [none]
+[debug] [2025-02-01T19:02:33.364Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 200
+[debug] [2025-02-01T19:02:33.364Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 {"projectNumber":"1029512715286","projectId":"jono-47470","lifecycleState":"ACTIVE","name":"Jono","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-02-01T17:41:31.186885Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-02-01T19:02:33.365Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.365Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.365Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.366Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-02-01T19:02:33.366Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.366Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-02-01T19:02:33.366Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.366Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.366Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-02-01T19:02:33.366Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:33.367Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-02-01T19:02:33.367Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:33.369Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com [none]
+[debug] [2025-02-01T19:02:33.369Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:33.370Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com [none]
+[debug] [2025-02-01T19:02:33.370Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:33.753Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com 200
+[debug] [2025-02-01T19:02:33.753Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-02-01T19:02:33.761Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com 200
+[debug] [2025-02-01T19:02:33.761Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-02-01T19:02:33.762Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com 200
+[debug] [2025-02-01T19:02:33.762Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-02-01T19:02:33.763Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com 200
+[debug] [2025-02-01T19:02:33.763Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-02-01T19:02:33.764Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.764Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:33.764Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig [none]
+[debug] [2025-02-01T19:02:34.107Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig 200
+[debug] [2025-02-01T19:02:34.108Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig {"projectId":"jono-47470","storageBucket":"jono-47470.firebasestorage.app"}
+[debug] [2025-02-01T19:02:34.108Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:34.108Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:34.108Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs [none]
+[debug] [2025-02-01T19:02:34.327Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs 200
+[debug] [2025-02-01T19:02:34.327Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs {"configs":[{"name":"projects/jono-47470/configs/stream"}]}
+[debug] [2025-02-01T19:02:34.328Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:34.328Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:34.328Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables [none]
+[debug] [2025-02-01T19:02:34.478Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables 200
+[debug] [2025-02-01T19:02:34.478Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables {"variables":[{"name":"projects/jono-47470/configs/stream/variables/api_key","updateTime":"2025-02-01T17:56:17.675232732Z"},{"name":"projects/jono-47470/configs/stream/variables/secret","updateTime":"2025-02-01T17:56:17.075519685Z"}]}
+[debug] [2025-02-01T19:02:34.479Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:34.479Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:34.479Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:34.479Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:34.479Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key [none]
+[debug] [2025-02-01T19:02:34.480Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret [none]
+[debug] [2025-02-01T19:02:34.629Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key 200
+[debug] [2025-02-01T19:02:34.629Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key {"name":"projects/jono-47470/configs/stream/variables/api_key","updateTime":"2025-02-01T17:56:17.675232732Z","text":"6ara8tryfyf7"}
+[debug] [2025-02-01T19:02:34.677Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret 200
+[debug] [2025-02-01T19:02:34.677Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret {"name":"projects/jono-47470/configs/stream/variables/secret","updateTime":"2025-02-01T17:56:17.075519685Z","text":"gc8gnne6fq43y6ghu6znvcnbjpg7gr9xd85595th9aprfvavwkpx7jmen2x78sb2"}
+[debug] [2025-02-01T19:02:34.680Z] Validating nodejs source
+[debug] [2025-02-01T19:02:35.115Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-02-01T19:02:35.115Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-02-01T19:02:35.116Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-02-01T19:02:35.120Z] Found firebase-functions binary at '/Users/johnsmith/Documents/React-Native/Jono_app_and_website/Jono/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8921
+
+[debug] [2025-02-01T19:02:35.442Z] Got response from /__/functions.yaml {"endpoints":{"generateStreamToken":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"generateStreamToken"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2025-02-01T19:02:39.467Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:39.467Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:39.467Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/firebaseextensions.googleapis.com [none]
+[debug] [2025-02-01T19:02:39.467Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:39.845Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/firebaseextensions.googleapis.com 200
+[debug] [2025-02-01T19:02:39.845Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/firebaseextensions.googleapis.com [omitted]
+[info] ✔  extensions: required API firebaseextensions.googleapis.com is enabled 
+[debug] [2025-02-01T19:02:39.845Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-02-01T19:02:39.846Z] > authorizing via signed-in user (chen.jason.w@gmail.com)
+[debug] [2025-02-01T19:02:39.846Z] [iam] checking project jono-47470 for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2025-02-01T19:02:39.846Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:39.846Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:39.846Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions [none]
+[debug] [2025-02-01T19:02:39.846Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:39.846Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-02-01T19:02:40.090Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions 200
+[debug] [2025-02-01T19:02:40.091Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-02-01T19:02:40.091Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:40.091Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:40.092Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/jono-47470/instances pageSize=100&pageToken=
+[debug] [2025-02-01T19:02:40.527Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/jono-47470/instances 200
+[debug] [2025-02-01T19:02:40.528Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/jono-47470/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged /Users/johnsmith/Documents/React-Native/Jono_app_and_website/Jono/functions (66.13 KB) for uploading 
+[debug] [2025-02-01T19:02:40.572Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:40.572Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:40.572Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/jono-47470/locations/-/functions [none]
+[debug] [2025-02-01T19:02:41.060Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/jono-47470/locations/-/functions 200
+[debug] [2025-02-01T19:02:41.060Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/jono-47470/locations/-/functions {}
+[debug] [2025-02-01T19:02:41.060Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.061Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.061Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-02-01T19:02:41.655Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/-/functions 200
+[debug] [2025-02-01T19:02:41.655Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/-/functions {}
+[info] i  functions: ensuring required API run.googleapis.com is enabled... 
+[debug] [2025-02-01T19:02:41.657Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.657Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  functions: ensuring required API eventarc.googleapis.com is enabled... 
+[debug] [2025-02-01T19:02:41.657Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.657Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  functions: ensuring required API pubsub.googleapis.com is enabled... 
+[debug] [2025-02-01T19:02:41.657Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.657Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  functions: ensuring required API storage.googleapis.com is enabled... 
+[debug] [2025-02-01T19:02:41.657Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.657Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.657Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com [none]
+[debug] [2025-02-01T19:02:41.657Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:41.658Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com [none]
+[debug] [2025-02-01T19:02:41.658Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:41.659Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/pubsub.googleapis.com [none]
+[debug] [2025-02-01T19:02:41.659Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/pubsub.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:41.659Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/storage.googleapis.com [none]
+[debug] [2025-02-01T19:02:41.659Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/storage.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:41.982Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com 200
+[debug] [2025-02-01T19:02:41.982Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com [omitted]
+[warn] ⚠  functions: missing required API run.googleapis.com. Enabling now... 
+[debug] [2025-02-01T19:02:41.982Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.982Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:41.983Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com:enable [none]
+[debug] [2025-02-01T19:02:41.983Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com:enable x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:42.045Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/pubsub.googleapis.com 200
+[debug] [2025-02-01T19:02:42.045Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/pubsub.googleapis.com [omitted]
+[info] ✔  functions: required API pubsub.googleapis.com is enabled 
+[debug] [2025-02-01T19:02:42.046Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/storage.googleapis.com 200
+[debug] [2025-02-01T19:02:42.046Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/storage.googleapis.com [omitted]
+[info] ✔  functions: required API storage.googleapis.com is enabled 
+[debug] [2025-02-01T19:02:42.047Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com 200
+[debug] [2025-02-01T19:02:42.047Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com [omitted]
+[warn] ⚠  functions: missing required API eventarc.googleapis.com. Enabling now... 
+[debug] [2025-02-01T19:02:42.047Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:42.047Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:42.047Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com:enable [none]
+[debug] [2025-02-01T19:02:42.047Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com:enable x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:42.330Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com:enable 200
+[debug] [2025-02-01T19:02:42.331Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com:enable [omitted]
+[debug] [2025-02-01T19:02:42.507Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com:enable 200
+[debug] [2025-02-01T19:02:42.507Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com:enable [omitted]
+[debug] [2025-02-01T19:02:52.332Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:52.333Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:52.333Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com [none]
+[debug] [2025-02-01T19:02:52.333Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:52.508Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:52.509Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:52.509Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com [none]
+[debug] [2025-02-01T19:02:52.509Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:52.729Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com 200
+[debug] [2025-02-01T19:02:52.730Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/run.googleapis.com [omitted]
+[info] ✔  functions: required API run.googleapis.com is enabled 
+[debug] [2025-02-01T19:02:52.897Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com 200
+[debug] [2025-02-01T19:02:52.897Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/eventarc.googleapis.com [omitted]
+[info] ✔  functions: required API eventarc.googleapis.com is enabled 
+[info] i  functions: generating the service identity for pubsub.googleapis.com... 
+[debug] [2025-02-01T19:02:52.899Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:52.899Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  functions: generating the service identity for eventarc.googleapis.com... 
+[debug] [2025-02-01T19:02:52.899Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:52.899Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:52.900Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1beta1/projects/1029512715286/services/pubsub.googleapis.com:generateServiceIdentity [none]
+[debug] [2025-02-01T19:02:52.900Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1beta1/projects/1029512715286/services/eventarc.googleapis.com:generateServiceIdentity [none]
+[debug] [2025-02-01T19:02:53.193Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1beta1/projects/1029512715286/services/eventarc.googleapis.com:generateServiceIdentity 200
+[debug] [2025-02-01T19:02:53.193Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/1029512715286/services/eventarc.googleapis.com:generateServiceIdentity {"name":"operations/finished.DONE_OPERATION","done":true,"response":{"@type":"type.googleapis.com/google.api.serviceusage.v1beta1.ServiceIdentity","email":"service-1029512715286@gcp-sa-eventarc.iam.gserviceaccount.com","uniqueId":"103923418396401935084"}}
+[debug] [2025-02-01T19:02:53.501Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1beta1/projects/1029512715286/services/pubsub.googleapis.com:generateServiceIdentity 200
+[debug] [2025-02-01T19:02:53.501Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/1029512715286/services/pubsub.googleapis.com:generateServiceIdentity {"name":"operations/finished.DONE_OPERATION","done":true,"response":{"@type":"type.googleapis.com/google.api.serviceusage.v1beta1.ServiceIdentity","email":"service-1029512715286@gcp-sa-pubsub.iam.gserviceaccount.com","uniqueId":"110909431307733197549"}}
+[debug] [2025-02-01T19:02:53.503Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:53.503Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:53.503Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 [none]
+[debug] [2025-02-01T19:02:53.815Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 200
+[debug] [2025-02-01T19:02:53.815Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 {"projectNumber":"1029512715286","projectId":"jono-47470","lifecycleState":"ACTIVE","name":"Jono","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-02-01T17:41:31.186885Z"}
+[debug] [2025-02-01T19:02:53.816Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:53.816Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:53.816Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/jono-47470/billingInfo [none]
+[debug] [2025-02-01T19:02:54.143Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/jono-47470/billingInfo 200
+[debug] [2025-02-01T19:02:54.143Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/jono-47470/billingInfo {"name":"projects/jono-47470/billingInfo","projectId":"jono-47470","billingAccountName":"billingAccounts/01278C-6442DE-0EC220","billingEnabled":true}
+[debug] [2025-02-01T19:02:54.144Z] [functions] found 1 new HTTP functions, testing setIamPolicy permission...
+[debug] [2025-02-01T19:02:54.144Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:54.144Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:54.145Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions [none]
+[debug] [2025-02-01T19:02:54.145Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:02:54.145Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["cloudfunctions.functions.setIamPolicy"]}
+[debug] [2025-02-01T19:02:54.228Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions 200
+[debug] [2025-02-01T19:02:54.228Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["cloudfunctions.functions.setIamPolicy"]}
+[debug] [2025-02-01T19:02:54.228Z] [functions] found setIamPolicy permission, proceeding with deploy
+[debug] [2025-02-01T19:02:54.229Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:54.229Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:54.230Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/functions:generateUploadUrl [none]
+[debug] [2025-02-01T19:02:55.755Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/functions:generateUploadUrl 200
+[debug] [2025-02-01T19:02:55.756Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/gcf-v2-uploads-1029512715286.us-central1.cloudfunctions.appspot.com/453da24a-4759-4339-9d15-a6a8607d3cf8.zip?GoogleAccessId=service-1029512715286@gcf-admin-robot.iam.gserviceaccount.com&Expires=1738438375&Signature=MmwpdjTbbjexnOj1ohcG0ezEMw%2FHEwuMYowPwAjq%2Baujn6fhlifiqoTnrs88K%2BFfqffoXg7iZv0cZWnJKyXAI0QqfCJgKyWJJwvAvPIXPs1eEqdkboyXqCScrqvUoMos6RM1l7bBUYVgcrEN6QoSNcXgXmqs0ZJXZEw57xTChnMuMG%2FyPmJjhKCHXiXsrK5UMzsLY2P%2B%2BaqMLRc8v9bPSW0u4PiLdIIw%2F6avaX3tsxg5X9YGQ4KsCDeJ5ZQV%2BnaLRQZAmq33cT93JPOHkU97Vyy1i4bpVP4GPHo%2B4XF0qX%2F6a6LXSceuL8Nm2noxJTV2gt0KqUnz%2F1yP6Oy2wPDgJQ%3D%3D","storageSource":{"bucket":"gcf-v2-uploads-1029512715286.us-central1.cloudfunctions.appspot.com","object":"453da24a-4759-4339-9d15-a6a8607d3cf8.zip"}}
+[debug] [2025-02-01T19:02:55.756Z] >>> [apiv2][query] PUT https://storage.googleapis.com/gcf-v2-uploads-1029512715286.us-central1.cloudfunctions.appspot.com/453da24a-4759-4339-9d15-a6a8607d3cf8.zip GoogleAccessId=service-1029512715286%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1738438375&Signature=MmwpdjTbbjexnOj1ohcG0ezEMw%2FHEwuMYowPwAjq%2Baujn6fhlifiqoTnrs88K%2BFfqffoXg7iZv0cZWnJKyXAI0QqfCJgKyWJJwvAvPIXPs1eEqdkboyXqCScrqvUoMos6RM1l7bBUYVgcrEN6QoSNcXgXmqs0ZJXZEw57xTChnMuMG%2FyPmJjhKCHXiXsrK5UMzsLY2P%2B%2BaqMLRc8v9bPSW0u4PiLdIIw%2F6avaX3tsxg5X9YGQ4KsCDeJ5ZQV%2BnaLRQZAmq33cT93JPOHkU97Vyy1i4bpVP4GPHo%2B4XF0qX%2F6a6LXSceuL8Nm2noxJTV2gt0KqUnz%2F1yP6Oy2wPDgJQ%3D%3D
+[debug] [2025-02-01T19:02:55.757Z] >>> [apiv2][body] PUT https://storage.googleapis.com/gcf-v2-uploads-1029512715286.us-central1.cloudfunctions.appspot.com/453da24a-4759-4339-9d15-a6a8607d3cf8.zip [stream]
+[debug] [2025-02-01T19:02:56.078Z] <<< [apiv2][status] PUT https://storage.googleapis.com/gcf-v2-uploads-1029512715286.us-central1.cloudfunctions.appspot.com/453da24a-4759-4339-9d15-a6a8607d3cf8.zip 200
+[debug] [2025-02-01T19:02:56.078Z] <<< [apiv2][body] PUT https://storage.googleapis.com/gcf-v2-uploads-1029512715286.us-central1.cloudfunctions.appspot.com/453da24a-4759-4339-9d15-a6a8607d3cf8.zip [omitted]
+[info] ✔  functions: functions folder uploaded successfully 
+[info] i  functions: creating Node.js 22 (2nd Gen) function generateStreamToken(us-central1)... 
+[debug] [2025-02-01T19:02:56.081Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:56.081Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:56.081Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/functions functionId=generateStreamToken
+[debug] [2025-02-01T19:02:56.081Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/functions {"name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-uploads-1029512715286.us-central1.cloudfunctions.appspot.com","object":"453da24a-4759-4339-9d15-a6a8607d3cf8.zip"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}},"serviceConfig":{"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken"},"ingressSettings":null,"timeoutSeconds":null,"serviceAccountEmail":null,"availableMemory":"256Mi","minInstanceCount":null,"maxInstanceCount":null,"maxInstanceRequestConcurrency":80,"availableCpu":"1","vpcConnector":null,"vpcConnectorEgressSettings":null},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"}}
+[debug] [2025-02-01T19:02:57.966Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/functions 200
+[debug] [2025-02-01T19:02:57.966Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/functions {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2"},"done":false}
+[debug] [2025-02-01T19:02:57.967Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:57.967Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:57.967Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:02:58.279Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:02:58.280Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","state":"NOT_STARTED"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION"},"done":false}
+[debug] [2025-02-01T19:02:58.781Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:02:58.781Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:58.781Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:02:58.781Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:02:59.134Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:02:59.134Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","state":"NOT_STARTED"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION"},"done":false}
+[debug] [2025-02-01T19:03:00.135Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:03:00.136Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:00.136Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:00.136Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:03:00.436Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:03:00.436Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","state":"NOT_STARTED"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION"},"done":false}
+[debug] [2025-02-01T19:03:02.438Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:03:02.439Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:02.439Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:02.439Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:03:02.828Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:03:02.828Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","state":"NOT_STARTED"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION"},"done":false}
+[debug] [2025-02-01T19:03:06.829Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:03:06.830Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:06.830Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:06.830Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:03:06.940Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:03:06.941Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","state":"NOT_STARTED"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION"},"done":false}
+[debug] [2025-02-01T19:03:14.943Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:03:14.944Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:14.944Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:14.944Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:03:15.271Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:03:15.272Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","message":"Build in progress","state":"IN_PROGRESS","resource":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637","resourceUri":"https://console.cloud.google.com/cloud-build/builds;region=us-central1/3226b60e-41a5-4cff-a370-8a57f5c48637?project=1029512715286"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION","buildName":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637"},"done":false}
+[debug] [2025-02-01T19:03:25.272Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:03:25.273Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:25.273Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:25.273Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:03:25.637Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:03:25.637Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","message":"Build in progress","state":"IN_PROGRESS","resource":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637","resourceUri":"https://console.cloud.google.com/cloud-build/builds;region=us-central1/3226b60e-41a5-4cff-a370-8a57f5c48637?project=1029512715286"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION","buildName":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637"},"done":false}
+[debug] [2025-02-01T19:03:35.638Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:03:35.639Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:35.639Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:35.639Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:03:36.002Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:03:36.002Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","message":"Build in progress","state":"IN_PROGRESS","resource":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637","resourceUri":"https://console.cloud.google.com/cloud-build/builds;region=us-central1/3226b60e-41a5-4cff-a370-8a57f5c48637?project=1029512715286"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION","buildName":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637"},"done":false}
+[debug] [2025-02-01T19:03:46.004Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:03:46.004Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:46.004Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:46.005Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:03:46.444Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:03:46.445Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","message":"Build in progress","state":"IN_PROGRESS","resource":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637","resourceUri":"https://console.cloud.google.com/cloud-build/builds;region=us-central1/3226b60e-41a5-4cff-a370-8a57f5c48637?project=1029512715286"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION","buildName":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637"},"done":false}
+[debug] [2025-02-01T19:03:56.447Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:03:56.447Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:56.447Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:03:56.447Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:03:56.795Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:03:56.795Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","message":"Build in progress","state":"IN_PROGRESS","resource":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637","resourceUri":"https://console.cloud.google.com/cloud-build/builds;region=us-central1/3226b60e-41a5-4cff-a370-8a57f5c48637?project=1029512715286"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION","buildName":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637"},"done":false}
+[debug] [2025-02-01T19:04:06.796Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:04:06.797Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:06.797Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:06.797Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:04:07.146Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:04:07.146Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","message":"Build in progress","state":"IN_PROGRESS","resource":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637","resourceUri":"https://console.cloud.google.com/cloud-build/builds;region=us-central1/3226b60e-41a5-4cff-a370-8a57f5c48637?project=1029512715286"},{"name":"SERVICE","state":"NOT_STARTED"}],"operationType":"CREATE_FUNCTION","buildName":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637"},"done":false}
+[debug] [2025-02-01T19:04:17.147Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:04:17.148Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:17.148Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:17.148Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:04:17.579Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:04:17.579Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","message":"Build finished","state":"COMPLETE","resource":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637","resourceUri":"https://console.cloud.google.com/cloud-build/builds;region=us-central1/3226b60e-41a5-4cff-a370-8a57f5c48637?project=1029512715286"},{"name":"SERVICE","message":"Creating Cloud Run service","state":"IN_PROGRESS","resource":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","resourceUri":"https://console.cloud.google.com/run/detail/us-central1/generatestreamtoken?project=jono-47470"}],"sourceToken":"Clhwcm9qZWN0cy8xMDI5NTEyNzE1Mjg2L2xvY2F0aW9ucy91cy1jZW50cmFsMS9idWlsZHMvMzIyNmI2MGUtNDFhNS00Y2ZmLWEzNzAtOGE1N2Y1YzQ4NjM3Em51cy1jZW50cmFsMS1kb2NrZXIucGtnLmRldi9qb25vLTQ3NDcwL2djZi1hcnRpZmFjdHMvam9uby0tNDc0NzBfX3VzLS1jZW50cmFsMV9fZ2VuZXJhdGVfc3RyZWFtX3Rva2VuOnZlcnNpb25fMRiWuPWd+x0iR3Byb2plY3RzL2pvbm8tNDc0NzAvbG9jYXRpb25zL3VzLWNlbnRyYWwxL2Z1bmN0aW9ucy9nZW5lcmF0ZVN0cmVhbVRva2VuKgwIqeD5vAYQsPnFsgMyCG5vZGVqczIyOnYKI2djci5pby9nYWUtcnVudGltZXMvbm9kZWpzMjI6c3RhYmxlEk91cy1jZW50cmFsMS1kb2NrZXIucGtnLmRldi9zZXJ2ZXJsZXNzLXJ1bnRpbWVzL2dvb2dsZS0yMi1mdWxsL3J1bnRpbWVzL25vZGVqczIyQAE=","operationType":"CREATE_FUNCTION","buildName":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637"},"done":false}
+[debug] [2025-02-01T19:04:17.579Z] Got source token Clhwcm9qZWN0cy8xMDI5NTEyNzE1Mjg2L2xvY2F0aW9ucy91cy1jZW50cmFsMS9idWlsZHMvMzIyNmI2MGUtNDFhNS00Y2ZmLWEzNzAtOGE1N2Y1YzQ4NjM3Em51cy1jZW50cmFsMS1kb2NrZXIucGtnLmRldi9qb25vLTQ3NDcwL2djZi1hcnRpZmFjdHMvam9uby0tNDc0NzBfX3VzLS1jZW50cmFsMV9fZ2VuZXJhdGVfc3RyZWFtX3Rva2VuOnZlcnNpb25fMRiWuPWd+x0iR3Byb2plY3RzL2pvbm8tNDc0NzAvbG9jYXRpb25zL3VzLWNlbnRyYWwxL2Z1bmN0aW9ucy9nZW5lcmF0ZVN0cmVhbVRva2VuKgwIqeD5vAYQsPnFsgMyCG5vZGVqczIyOnYKI2djci5pby9nYWUtcnVudGltZXMvbm9kZWpzMjI6c3RhYmxlEk91cy1jZW50cmFsMS1kb2NrZXIucGtnLmRldi9zZXJ2ZXJsZXNzLXJ1bnRpbWVzL2dvb2dsZS0yMi1mdWxsL3J1bnRpbWVzL25vZGVqczIyQAE= for region us-central1
+[debug] [2025-02-01T19:04:27.580Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:04:27.580Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:27.580Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:27.581Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:04:27.912Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:04:27.912Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"BUILD","message":"Build finished","state":"COMPLETE","resource":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637","resourceUri":"https://console.cloud.google.com/cloud-build/builds;region=us-central1/3226b60e-41a5-4cff-a370-8a57f5c48637?project=1029512715286"},{"name":"SERVICE","message":"Creating Cloud Run service","state":"IN_PROGRESS","resource":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","resourceUri":"https://console.cloud.google.com/run/detail/us-central1/generatestreamtoken?project=jono-47470"}],"sourceToken":"Clhwcm9qZWN0cy8xMDI5NTEyNzE1Mjg2L2xvY2F0aW9ucy91cy1jZW50cmFsMS9idWlsZHMvMzIyNmI2MGUtNDFhNS00Y2ZmLWEzNzAtOGE1N2Y1YzQ4NjM3Em51cy1jZW50cmFsMS1kb2NrZXIucGtnLmRldi9qb25vLTQ3NDcwL2djZi1hcnRpZmFjdHMvam9uby0tNDc0NzBfX3VzLS1jZW50cmFsMV9fZ2VuZXJhdGVfc3RyZWFtX3Rva2VuOnZlcnNpb25fMRiWuPWd+x0iR3Byb2plY3RzL2pvbm8tNDc0NzAvbG9jYXRpb25zL3VzLWNlbnRyYWwxL2Z1bmN0aW9ucy9nZW5lcmF0ZVN0cmVhbVRva2VuKgwIqeD5vAYQsPnFsgMyCG5vZGVqczIyOnYKI2djci5pby9nYWUtcnVudGltZXMvbm9kZWpzMjI6c3RhYmxlEk91cy1jZW50cmFsMS1kb2NrZXIucGtnLmRldi9zZXJ2ZXJsZXNzLXJ1bnRpbWVzL2dvb2dsZS0yMi1mdWxsL3J1bnRpbWVzL25vZGVqczIyQAE=","operationType":"CREATE_FUNCTION","buildName":"projects/1029512715286/locations/us-central1/builds/3226b60e-41a5-4cff-a370-8a57f5c48637"},"done":false}
+[debug] [2025-02-01T19:04:27.912Z] Got source token Clhwcm9qZWN0cy8xMDI5NTEyNzE1Mjg2L2xvY2F0aW9ucy91cy1jZW50cmFsMS9idWlsZHMvMzIyNmI2MGUtNDFhNS00Y2ZmLWEzNzAtOGE1N2Y1YzQ4NjM3Em51cy1jZW50cmFsMS1kb2NrZXIucGtnLmRldi9qb25vLTQ3NDcwL2djZi1hcnRpZmFjdHMvam9uby0tNDc0NzBfX3VzLS1jZW50cmFsMV9fZ2VuZXJhdGVfc3RyZWFtX3Rva2VuOnZlcnNpb25fMRiWuPWd+x0iR3Byb2plY3RzL2pvbm8tNDc0NzAvbG9jYXRpb25zL3VzLWNlbnRyYWwxL2Z1bmN0aW9ucy9nZW5lcmF0ZVN0cmVhbVRva2VuKgwIqeD5vAYQsPnFsgMyCG5vZGVqczIyOnYKI2djci5pby9nYWUtcnVudGltZXMvbm9kZWpzMjI6c3RhYmxlEk91cy1jZW50cmFsMS1kb2NrZXIucGtnLmRldi9zZXJ2ZXJsZXNzLXJ1bnRpbWVzL2dvb2dsZS0yMi1mdWxsL3J1bnRpbWVzL25vZGVqczIyQAE= for region us-central1
+[debug] [2025-02-01T19:04:37.914Z] [create-default-us-central1-generateStreamToken] Retrying task index 0
+[debug] [2025-02-01T19:04:37.914Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:37.915Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:37.915Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d [none]
+[debug] [2025-02-01T19:04:38.278Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d 200
+[debug] [2025-02-01T19:04:38.278Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d {"name":"projects/jono-47470/locations/us-central1/operations/operation-1738436576417-62d194e9a15bc-113e0ecd-a5a2c34d","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v2.OperationMetadata","createTime":"2025-02-01T19:02:57.900471200Z","endTime":"2025-02-01T19:04:29.522542769Z","target":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","verb":"create","cancelRequested":false,"apiVersion":"v2","requestResource":{"@type":"type.googleapis.com/google.cloud.functions.v2.Function","name":"projects/jono-47470/locations/us-central1/functions/generateStreamToken","buildConfig":{"runtime":"nodejs22","entryPoint":"generateStreamToken","source":{"storageSource":{"bucket":"gcf-v2-sources-1029512715286-us-central1","object":"generateStreamToken/function-source.zip","generation":"1738436577634050"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"serviceAccount":"projects/jono-47470/serviceAccounts/1029512715286-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/jono-47470/locations/us-central1/services/generatestreamtoken","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}","GCLOUD_PROJECT":"jono-47470","EVENTARC_CLOUD_EVENT_SOURCE":"projects/jono-47470/locations/us-central1/services/generateStreamToken","FUNCTION_TARGET":"generateStreamToken","LOG_EXECUTION_ID":"true"},"ingressSettings":"ALLOW_ALL","serviceAccountEmail":"1029512715286-compute@developer.gserviceaccount.com","availableMemory":"256Mi","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"},"environment":"GEN_2"},"stages":[{"name":"ARTIFACT_REGISTRY","message":"Deleting function artifacts in Artifact Registry","state":"COMPLETE"},{"name":"SERVICE","message":"Deleting Cloud Run service","state":"COMPLETE","resource":"projects/jono-47470/locations/us-central1/services/generatestreamtoken"}],"operationType":"CREATE_FUNCTION"},"done":true,"error":{"code":3,"message":"Could not create or update Cloud Run service generatestreamtoken, Container Healthcheck failed. Revision 'generatestreamtoken-00001-deq' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=jono-47470&resource=cloud_run_revision/service_name/generatestreamtoken/revision_name/generatestreamtoken-00001-deq&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22generatestreamtoken%22%0Aresource.labels.revision_name%3D%22generatestreamtoken-00001-deq%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start"}}
+[debug] [2025-02-01T19:04:38.279Z] Got source token undefined for region us-central1
+[error] Could not create or update Cloud Run service generatestreamtoken, Container Healthcheck failed. Revision 'generatestreamtoken-00001-deq' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.
+
+Logs URL: https://console.cloud.google.com/logs/viewer?project=jono-47470&resource=cloud_run_revision/service_name/generatestreamtoken/revision_name/generatestreamtoken-00001-deq&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22generatestreamtoken%22%0Aresource.labels.revision_name%3D%22generatestreamtoken-00001-deq%22 
+For more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start
+[debug] [2025-02-01T19:04:38.286Z] Total Function Deployment time: 102200
+[debug] [2025-02-01T19:04:38.286Z] 1 Functions Deployed
+[debug] [2025-02-01T19:04:38.286Z] 1 Functions Errored
+[debug] [2025-02-01T19:04:38.286Z] 0 Function Deployments Aborted
+[debug] [2025-02-01T19:04:38.286Z] Average Function Deployment time: 102199
+[info] 
+[info] Functions deploy had errors with the following functions:
+	generateStreamToken(us-central1)
+[debug] [2025-02-01T19:04:38.415Z] Not printing URL for HTTPS function. Typically this means it didn't match a filter or we failed deployment
+[info] i  functions: cleaning up build files... 
+[debug] [2025-02-01T19:04:38.416Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:38.416Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:38.417Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:38.417Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:38.417Z] >>> [apiv2][query] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/jono-47470/locations/us-central1/repositories/gcf-artifacts/packages/generate_stream_token [none]
+[debug] [2025-02-01T19:04:38.418Z] >>> [apiv2][query] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list [none]
+[debug] [2025-02-01T19:04:38.874Z] <<< [apiv2][status] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/jono-47470/locations/us-central1/repositories/gcf-artifacts/packages/generate_stream_token 404
+[debug] [2025-02-01T19:04:38.874Z] <<< [apiv2][body] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/jono-47470/locations/us-central1/repositories/gcf-artifacts/packages/generate_stream_token {"error":{"code":404,"message":"Package \"projects/jono-47470/locations/us-central1/repositories/gcf-artifacts/packages/generate_stream_token\" was not found.","status":"NOT_FOUND"}}
+[debug] [2025-02-01T19:04:39.166Z] <<< [apiv2][status] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list 404
+[debug] [2025-02-01T19:04:39.166Z] <<< [apiv2][body] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list {"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}]}
+[debug] [2025-02-01T19:04:39.166Z] Failed docker command with error  Request to https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list had HTTP Error: 404, Not Found {"name":"FirebaseError","children":[],"context":{"body":{"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}],"error":{"message":"Not Found"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list had HTTP Error: 404, Not Found","status":404}
+[debug] [2025-02-01T19:04:39.167Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:39.167Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:39.167Z] >>> [apiv2][query] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list [none]
+[debug] [2025-02-01T19:04:39.320Z] <<< [apiv2][status] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list 404
+[debug] [2025-02-01T19:04:39.320Z] <<< [apiv2][body] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list {"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}]}
+[debug] [2025-02-01T19:04:39.321Z] Failed docker command with error  Request to https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list had HTTP Error: 404, Not Found {"name":"FirebaseError","children":[],"context":{"body":{"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}],"error":{"message":"Not Found"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list had HTTP Error: 404, Not Found","status":404}
+[debug] [2025-02-01T19:04:39.422Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:39.422Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:04:39.422Z] >>> [apiv2][query] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list [none]
+[debug] [2025-02-01T19:04:39.582Z] <<< [apiv2][status] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list 404
+[debug] [2025-02-01T19:04:39.582Z] <<< [apiv2][body] GET https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list {"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}]}
+[debug] [2025-02-01T19:04:39.583Z] Failed docker command with error  Request to https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list had HTTP Error: 404, Not Found {"name":"FirebaseError","children":[],"context":{"body":{"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}],"error":{"message":"Not Found"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://us.gcr.io/v2/jono-47470/gcf/us-central1/tags/list had HTTP Error: 404, Not Found","status":404}
+[warn] ⚠  functions: Unhandled error cleaning up build images. This could result in a small monthly bill if not corrected. You can attempt to delete these images by redeploying or you can delete them manually at https://console.cloud.google.com/gcr/images/jono-47470/us/gcf 
+[debug] [2025-02-01T19:04:39.583Z] Functions deploy failed.
+[debug] [2025-02-01T19:04:39.583Z] {
+  "endpoint": {
+    "id": "generateStreamToken",
+    "project": "jono-47470",
+    "region": "us-central1",
+    "entryPoint": "generateStreamToken",
+    "platform": "gcfv2",
+    "runtime": "nodejs22",
+    "httpsTrigger": {},
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "serviceAccount": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "concurrency": 80,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"jono-47470\",\"storageBucket\":\"jono-47470.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "jono-47470",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/jono-47470/locations/us-central1/services/generateStreamToken"
+    },
+    "codebase": "default",
+    "cpu": 1,
+    "targetedByOnly": false,
+    "hash": "abb0b94dc4471b155a04e5b93f3a94b3fdd31b3b"
+  },
+  "op": "create",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "exit": 1,
+    "message": "Could not create or update Cloud Run service generatestreamtoken, Container Healthcheck failed. Revision 'generatestreamtoken-00001-deq' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=jono-47470&resource=cloud_run_revision/service_name/generatestreamtoken/revision_name/generatestreamtoken-00001-deq&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22generatestreamtoken%22%0Aresource.labels.revision_name%3D%22generatestreamtoken-00001-deq%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+    "original": {
+      "code": 3,
+      "message": "Could not create or update Cloud Run service generatestreamtoken, Container Healthcheck failed. Revision 'generatestreamtoken-00001-deq' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable within the allocated timeout. This can happen when the container port is misconfigured or if the timeout is too short. The health check timeout can be extended. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=jono-47470&resource=cloud_run_revision/service_name/generatestreamtoken/revision_name/generatestreamtoken-00001-deq&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22generatestreamtoken%22%0Aresource.labels.revision_name%3D%22generatestreamtoken-00001-deq%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start"
+    },
+    "status": 3,
+    "code": 3
+  }
+}
+[debug] [2025-02-01T19:04:39.633Z] Error: Failed to create function generateStreamToken in region us-central1
+    at /opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:294:27
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Fabricator.createV2Function (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:278:30)
+    at async Fabricator.createEndpoint (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:137:13)
+    at async handle (/opt/homebrew/lib/node_modules/firebase-tools/lib/deploy/functions/release/fabricator.js:89:17)
+[error] 
+[error] Error: There was an error deploying functions
+[debug] [2025-02-01T19:08:39.481Z] ----------------------------------------------------------------------
+[debug] [2025-02-01T19:08:39.483Z] Command:       /opt/homebrew/Cellar/node/23.5.0/bin/node /opt/homebrew/bin/firebase deploy --only functions
+[debug] [2025-02-01T19:08:39.483Z] CLI Version:   13.29.3
+[debug] [2025-02-01T19:08:39.483Z] Platform:      darwin
+[debug] [2025-02-01T19:08:39.483Z] Node Version:  v23.5.0
+[debug] [2025-02-01T19:08:39.483Z] Time:          Sat Feb 01 2025 11:08:39 GMT-0800 (Pacific Standard Time)
+[debug] [2025-02-01T19:08:39.483Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-02-01T19:08:39.551Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-02-01T19:08:39.551Z] > authorizing via signed-in user (chen.jason.w@gmail.com)
+[debug] [2025-02-01T19:08:39.551Z] [iam] checking project jono-47470 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-02-01T19:08:39.552Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:39.552Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:39.552Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions [none]
+[debug] [2025-02-01T19:08:39.552Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:08:39.552Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-02-01T19:08:39.728Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions 200
+[debug] [2025-02-01T19:08:39.728Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-02-01T19:08:39.728Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:39.728Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:39.728Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-02-01T19:08:39.728Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-02-01T19:08:40.123Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-02-01T19:08:40.123Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'jono-47470'...
+[info] 
+[info] i  deploying functions 
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2025-02-01T19:08:40.126Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.126Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.126Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 [none]
+[debug] [2025-02-01T19:08:40.263Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 200
+[debug] [2025-02-01T19:08:40.264Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 {"projectNumber":"1029512715286","projectId":"jono-47470","lifecycleState":"ACTIVE","name":"Jono","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-02-01T17:41:31.186885Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-02-01T19:08:40.266Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.266Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.266Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.266Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-02-01T19:08:40.266Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.266Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-02-01T19:08:40.266Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.266Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.267Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-02-01T19:08:40.267Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:08:40.268Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-02-01T19:08:40.268Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:08:40.269Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com [none]
+[debug] [2025-02-01T19:08:40.269Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:08:40.271Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com [none]
+[debug] [2025-02-01T19:08:40.271Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:08:40.839Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com 200
+[debug] [2025-02-01T19:08:40.839Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-02-01T19:08:40.841Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com 200
+[debug] [2025-02-01T19:08:40.841Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-02-01T19:08:40.842Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com 200
+[debug] [2025-02-01T19:08:40.842Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-02-01T19:08:40.843Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com 200
+[debug] [2025-02-01T19:08:40.843Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-02-01T19:08:40.843Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.843Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:40.843Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig [none]
+[debug] [2025-02-01T19:08:41.088Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig 200
+[debug] [2025-02-01T19:08:41.088Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig {"projectId":"jono-47470","storageBucket":"jono-47470.firebasestorage.app"}
+[debug] [2025-02-01T19:08:41.089Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:41.089Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:41.089Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs [none]
+[debug] [2025-02-01T19:08:41.383Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs 200
+[debug] [2025-02-01T19:08:41.383Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs {"configs":[{"name":"projects/jono-47470/configs/stream"}]}
+[debug] [2025-02-01T19:08:41.384Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:41.384Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:41.385Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables [none]
+[debug] [2025-02-01T19:08:41.552Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables 200
+[debug] [2025-02-01T19:08:41.552Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables {"variables":[{"name":"projects/jono-47470/configs/stream/variables/api_key","updateTime":"2025-02-01T17:56:17.675232732Z"},{"name":"projects/jono-47470/configs/stream/variables/secret","updateTime":"2025-02-01T17:56:17.075519685Z"}]}
+[debug] [2025-02-01T19:08:41.552Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:41.552Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:41.552Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:41.552Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:08:41.552Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key [none]
+[debug] [2025-02-01T19:08:41.553Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret [none]
+[debug] [2025-02-01T19:08:41.703Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key 200
+[debug] [2025-02-01T19:08:41.703Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key {"name":"projects/jono-47470/configs/stream/variables/api_key","updateTime":"2025-02-01T17:56:17.675232732Z","text":"6ara8tryfyf7"}
+[debug] [2025-02-01T19:08:41.751Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret 200
+[debug] [2025-02-01T19:08:41.752Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret {"name":"projects/jono-47470/configs/stream/variables/secret","updateTime":"2025-02-01T17:56:17.075519685Z","text":"gc8gnne6fq43y6ghu6znvcnbjpg7gr9xd85595th9aprfvavwkpx7jmen2x78sb2"}
+[debug] [2025-02-01T19:08:41.754Z] Validating nodejs source
+[debug] [2025-02-01T19:08:42.307Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-02-01T19:08:42.307Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-02-01T19:08:42.308Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-02-01T19:08:42.312Z] Found firebase-functions binary at '/Users/johnsmith/Documents/React-Native/Jono_app_and_website/Jono/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8209
+
+[error] node:events:491
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8209
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/johnsmith/Documents/React-Native/Jono_app_and_website/Jono/functions/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/johnsmith/Documents/React-Native/Jono_app_and_website/Jono/functions/index.js:28:5)
+    at Module._compile (node:internal/modules/cjs/loader:1740:14)
+    at Object..js (node:internal/modules/cjs/loader:1905:10)
+    at Module.load (node:internal/modules/cjs/loader:1474:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 8209
+}
+
+Node.js v23.5.0
+
+[debug] [2025-02-01T19:08:42.649Z] Failed to call quitquitquit. This often means the server failed to start request to http://localhost:8209/__/quitquitquit failed, reason:  {"message":"request to http://localhost:8209/__/quitquitquit failed, reason: ","type":"system","errno":"ECONNREFUSED","code":"ECONNREFUSED"}
+[debug] [2025-02-01T19:08:42.749Z] FetchError: request to http://127.0.0.1:8209/__/functions.yaml failed, reason: socket hang up
+    at ClientRequest.<anonymous> (/opt/homebrew/lib/node_modules/firebase-tools/node_modules/node-fetch/lib/index.js:1501:11)
+    at ClientRequest.emit (node:events:513:28)
+    at ClientRequest.emit (node:domain:489:12)
+    at emitErrorEvent (node:_http_client:104:11)
+    at Socket.socketOnEnd (node:_http_client:542:5)
+    at Socket.emit (node:events:525:35)
+    at Socket.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1696:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-02-01T19:11:17.059Z] ----------------------------------------------------------------------
+[debug] [2025-02-01T19:11:17.061Z] Command:       /opt/homebrew/Cellar/node/23.5.0/bin/node /opt/homebrew/bin/firebase deploy --only functions
+[debug] [2025-02-01T19:11:17.061Z] CLI Version:   13.29.3
+[debug] [2025-02-01T19:11:17.061Z] Platform:      darwin
+[debug] [2025-02-01T19:11:17.061Z] Node Version:  v23.5.0
+[debug] [2025-02-01T19:11:17.061Z] Time:          Sat Feb 01 2025 11:11:17 GMT-0800 (Pacific Standard Time)
+[debug] [2025-02-01T19:11:17.062Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-02-01T19:11:17.123Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-02-01T19:11:17.123Z] > authorizing via signed-in user (chen.jason.w@gmail.com)
+[debug] [2025-02-01T19:11:17.123Z] [iam] checking project jono-47470 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-02-01T19:11:17.124Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.124Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.124Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions [none]
+[debug] [2025-02-01T19:11:17.124Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:11:17.124Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-02-01T19:11:17.396Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions 200
+[debug] [2025-02-01T19:11:17.397Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-02-01T19:11:17.397Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.397Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.397Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-02-01T19:11:17.397Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-02-01T19:11:17.770Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-02-01T19:11:17.771Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/jono-47470/serviceAccounts/jono-47470@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'jono-47470'...
+[info] 
+[info] i  deploying functions 
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2025-02-01T19:11:17.774Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.774Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.774Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 [none]
+[debug] [2025-02-01T19:11:17.905Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 200
+[debug] [2025-02-01T19:11:17.905Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/jono-47470 {"projectNumber":"1029512715286","projectId":"jono-47470","lifecycleState":"ACTIVE","name":"Jono","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-02-01T17:41:31.186885Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-02-01T19:11:17.907Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.907Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.907Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.907Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-02-01T19:11:17.907Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.907Z] Checked if tokens are valid: true, expires at: 1738438489190
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-02-01T19:11:17.907Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.907Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:17.907Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-02-01T19:11:17.907Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:11:17.909Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-02-01T19:11:17.909Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:11:17.910Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com [none]
+[debug] [2025-02-01T19:11:17.911Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:11:17.912Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com [none]
+[debug] [2025-02-01T19:11:17.912Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com x-goog-quota-user=projects/jono-47470
+[debug] [2025-02-01T19:11:18.301Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com 200
+[debug] [2025-02-01T19:11:18.302Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-02-01T19:11:18.303Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com 200
+[debug] [2025-02-01T19:11:18.303Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-02-01T19:11:18.304Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com 200
+[debug] [2025-02-01T19:11:18.304Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-02-01T19:11:18.329Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com 200
+[debug] [2025-02-01T19:11:18.330Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/jono-47470/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-02-01T19:11:18.330Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:18.330Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:18.330Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig [none]
+[debug] [2025-02-01T19:11:18.742Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig 200
+[debug] [2025-02-01T19:11:18.742Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/jono-47470/adminSdkConfig {"projectId":"jono-47470","storageBucket":"jono-47470.firebasestorage.app"}
+[debug] [2025-02-01T19:11:18.743Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:18.743Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:18.743Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs [none]
+[debug] [2025-02-01T19:11:18.938Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs 200
+[debug] [2025-02-01T19:11:18.938Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs {"configs":[{"name":"projects/jono-47470/configs/stream"}]}
+[debug] [2025-02-01T19:11:18.939Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:18.939Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:18.939Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables [none]
+[debug] [2025-02-01T19:11:19.181Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables 200
+[debug] [2025-02-01T19:11:19.182Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables {"variables":[{"name":"projects/jono-47470/configs/stream/variables/api_key","updateTime":"2025-02-01T17:56:17.675232732Z"},{"name":"projects/jono-47470/configs/stream/variables/secret","updateTime":"2025-02-01T17:56:17.075519685Z"}]}
+[debug] [2025-02-01T19:11:19.182Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:19.182Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:19.182Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:19.182Z] Checked if tokens are valid: true, expires at: 1738438489190
+[debug] [2025-02-01T19:11:19.182Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key [none]
+[debug] [2025-02-01T19:11:19.183Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret [none]
+[debug] [2025-02-01T19:11:19.329Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key 200
+[debug] [2025-02-01T19:11:19.329Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/api_key {"name":"projects/jono-47470/configs/stream/variables/api_key","updateTime":"2025-02-01T17:56:17.675232732Z","text":"6ara8tryfyf7"}
+[debug] [2025-02-01T19:11:19.403Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret 200
+[debug] [2025-02-01T19:11:19.403Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/jono-47470/configs/stream/variables/secret {"name":"projects/jono-47470/configs/stream/variables/secret","updateTime":"2025-02-01T17:56:17.075519685Z","text":"gc8gnne6fq43y6ghu6znvcnbjpg7gr9xd85595th9aprfvavwkpx7jmen2x78sb2"}
+[debug] [2025-02-01T19:11:19.406Z] Validating nodejs source
+[debug] [2025-02-01T19:11:19.856Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-02-01T19:11:19.856Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-02-01T19:11:19.856Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-02-01T19:11:19.860Z] Found firebase-functions binary at '/Users/johnsmith/Documents/React-Native/Jono_app_and_website/Jono/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8604
+
+[error] node:events:491
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8604
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/johnsmith/Documents/React-Native/Jono_app_and_website/Jono/functions/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/johnsmith/Documents/React-Native/Jono_app_and_website/Jono/functions/index.js:28:5)
+    at Module._compile (node:internal/modules/cjs/loader:1740:14)
+    at Object..js (node:internal/modules/cjs/loader:1905:10)
+    at Module.load (node:internal/modules/cjs/loader:1474:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 8604
+}
+
+Node.js v23.5.0
+
+[debug] [2025-02-01T19:11:21.174Z] Failed to call quitquitquit. This often means the server failed to start request to http://localhost:8604/__/quitquitquit failed, reason:  {"message":"request to http://localhost:8604/__/quitquitquit failed, reason: ","type":"system","errno":"ECONNREFUSED","code":"ECONNREFUSED"}
+[debug] [2025-02-01T19:11:21.280Z] FetchError: request to http://127.0.0.1:8604/__/functions.yaml failed, reason: socket hang up
+    at ClientRequest.<anonymous> (/opt/homebrew/lib/node_modules/firebase-tools/node_modules/node-fetch/lib/index.js:1501:11)
+    at ClientRequest.emit (node:events:513:28)
+    at ClientRequest.emit (node:domain:489:12)
+    at emitErrorEvent (node:_http_client:104:11)
+    at Socket.socketOnEnd (node:_http_client:542:5)
+    at Socket.emit (node:events:525:35)
+    at Socket.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1696:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+[error] 
+[error] Error: An unexpected error has occurred.

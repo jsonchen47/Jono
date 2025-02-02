@@ -75,7 +75,7 @@ function MyTabs() {
 
   return (
 
-    <SafeAreaView style={styles.safeAreaView} edges={['left']}>
+    <SafeAreaView style={styles.safeAreaView} edges={['top']}>
       <Header/>
     
     <Tab.Navigator
@@ -203,10 +203,10 @@ export default function App() {
 
   return (
     <View style={{flex: 1}}>
-    <SafeAreaView style={{flex: 1}}>
+    {/* <SafeAreaView style={{flex: 1}}> */}
       <MyTabs />
       
-    </SafeAreaView>
+    {/* </SafeAreaView> */}
     <Snackbar
         style={styles.snackBar}
         visible={snackbarVisible}
