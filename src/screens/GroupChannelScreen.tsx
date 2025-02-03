@@ -1,45 +1,34 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useLocalSearchParams } from 'expo-router'; // Use LocalSearchParams
-import { useSendbirdChat, createGroupChannelFragment } from '@sendbird/uikit-react-native';
-import { useGroupChannel } from '@sendbird/uikit-chat-hooks';
-
-const GroupChannelFragment = createGroupChannelFragment();
+import { useLocalSearchParams } from 'expo-router'; // Supports Expo Router
+import { Channel, MessageList, MessageInput, useChatContext } from 'stream-chat-react-native';
 
 const GroupChannelScreen = () => {
-  const navigation = useNavigation<any>();
-  const { sdk } = useSendbirdChat();
+  const navigation = useNavigation();
+  const { client } = useChatContext();
   const { params } = useRoute<any>(); // Get params from navigation
   const searchParams = useLocalSearchParams(); // Get params from router
 
-  // Consolidate channelUrl from both sources
-  const channelUrl = params?.channelUrl ?? searchParams?.channelUrl;
-  const validChannelUrl = Array.isArray(channelUrl) ? channelUrl[0] : channelUrl;
+  // Consolidate channelId from both sources
+  const channelId = params?.channelId ?? searchParams?.channelId;
+  const validChannelId = Array.isArray(channelId) ? channelId[0] : channelId;
 
-  if (!validChannelUrl) {
-    return <Text>Error: channelUrl is missing!</Text>; // Handle missing channelUrl
+  if (!validChannelId) {
+    return <Text>Error: channelId is missing!</Text>; // Handle missing channelId
   }
 
-  const { channel } = useGroupChannel(sdk, validChannelUrl);
+  const channel = client.channel('messaging', validChannelId);
 
   if (!channel) {
     return <Text>Loading channel...</Text>;
   }
 
   return (
-    <GroupChannelFragment
-      channel={channel}
-      onChannelDeleted={() => {
-        navigation.navigate('GroupChannelList');
-      }}
-      onPressHeaderLeft={() => {
-        navigation.goBack();
-      }}
-      onPressHeaderRight={() => {
-        navigation.navigate('GroupChannelSettings', { channelUrl: validChannelUrl });
-      }}
-    />
+    <Channel channel={channel}>
+      <MessageList />
+      <MessageInput />
+    </Channel>
   );
 };
 

@@ -1,125 +1,435 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  FlatList, 
+  Image, 
+  SafeAreaView,
+  ActivityIndicator,
+  StyleSheet 
+} from 'react-native';
+import { 
+  useChatContext, 
+  Channel as StreamChatChannel 
+} from 'stream-chat-react-native';
 import { useNavigation } from '@react-navigation/native';
-import { createGroupChannelCreateFragment } from '@sendbird/uikit-react-native';
-import { useSendbirdChat } from '@sendbird/uikit-react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from 'aws-amplify/auth';
-import { listConnections } from '@/src/graphql/queries'; // Update to your actual path
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { searchConnectionsWithUsers } from '@/src/backend/queries';
+import { searchUsers } from '@/src/backend/queries';
 
-const GroupChannelCreateFragment = createGroupChannelCreateFragment();
+// Import your search connections query
+import { searchConnections } from '@/src/graphql/queries';
+// import { APITypes } from '@/src/API'; // Adjust path as needed
 
-const GroupChannelCreateScreen = () => {
+// Define your RootStackParamList type
+// type RootStackParamList = {
+//   GroupChannelCreate: undefined;
+//   ChatScreen: { channel: StreamChatChannel };
+// };
+
+// Define a type for connected user based on your query result
+interface ConnectedUser {
+  id: string;
+  name?: string;
+  image?: string;
+  username?: string;
+}
+
+const GroupChannelCreateScreen: React.FC = () => {
+  const { client: chatClient } = useChatContext();
   const navigation = useNavigation<any>();
-  const { sdk } = useSendbirdChat();
-  const [allowedUserIDs, setAllowedUserIDs] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true); // Loading state
-  const client = generateClient();
+  const amplifyClient = generateClient();
 
-  useEffect(() => {
-    const fetchConnections = async () => {
-      try {
-        const authUser = await getCurrentUser();
-        const authUserID = authUser.userId;
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [connectedUsers, setConnectedUsers] = useState<any[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-        // Fetch connections where the authenticated user is involved
-        const result = (await client.graphql({
-          query: listConnections,
-          variables: {
-            filter: {
-              or: [
-                { userID: { eq: authUserID } },
-                { connectedUserID: { eq: authUserID } },
-              ],
-              status: { eq: 'approved' }, // Only approved connections
-            },
-          },
-        })) as GraphQLResult<any>;
+  // Search for connections
+  const searchForConnections = useCallback(async (term: string) => {
+    if (term.length < 2) {
+      setConnectedUsers([]);
+      return;
+    }
 
-        const connections = result.data?.listConnections?.items || [];
-        console.log('Fetched connections:', connections);
+    setLoading(true);
+    try {
+      const authUser = await getCurrentUser();
 
-        // Extract the userIDs of the connections
-        const userIDs = connections.map((connection: any) =>
-          connection.userID === authUserID
-            ? connection.connectedUserID
-            : connection.userID
+      // const result = await amplifyClient.graphql({
+      //   query: searchConnectionsWithUsers,
+      //   variables: {
+      //     filter: {
+      //       status: { eq: "approved" } // Only approved connections
+      //     },
+      //     filterUser: {
+      //       or: [
+      //         { name: { matchPhrasePrefix: term } },
+      //         { username: { matchPhrasePrefix: term } }
+      //       ]
+      //     },
+      //     filterConnectedUser: {
+      //       or: [
+      //         { name: { matchPhrasePrefix: term } },
+      //         { username: { matchPhrasePrefix: term } }
+      //       ]
+      //     },
+      //     limit: 10
+      //   }
+      // }) as GraphQLResult<any>;
+       // Step 1: Find users whose name matches
+    const userSearchResult = await amplifyClient.graphql({
+      query: searchUsers,
+      variables: {
+        filter: {
+          or: [
+            { name: { matchPhrasePrefix: searchTerm } },
+            { username: { matchPhrasePrefix: searchTerm } }
+          ]
+        },
+        limit: 10
+      }
+    }) as GraphQLResult<any>;
+
+    const matchingUserIDs = userSearchResult.data?.searchUsers.items.map((user: any) => user.id);
+
+    if (!matchingUserIDs.length) {
+      console.log('No users found');
+      return [];
+    }
+
+    // Step 2: Search connections where userID or connectedUserID is in the matched users
+    const result = await amplifyClient.graphql({
+      query: searchConnectionsWithUsers,
+      variables: {
+        filter: {
+          or: matchingUserIDs.map((id: string) => ({
+            or: [{ userID: { eq: id } }, { connectedUserID: { eq: id } }]
+          }))
+        },
+        limit: 10
+      }
+    }) as GraphQLResult<any>;
+
+      // Transform connections to users
+      const users: ConnectedUser[] = (result.data?.searchConnections?.items || [])
+        .map((connection: any) => {
+          // Determine which user to use based on current user's ID
+          const relevantUser = connection.userID === authUser.userId 
+            ? connection.connectedUser 
+            : connection.user;
+          
+          return {
+            id: relevantUser?.id || '',
+            name: relevantUser?.name,
+            image: relevantUser?.image,
+            username: relevantUser?.username
+          };
+        })
+        // Remove duplicates and current user
+        .filter((user: any, index: any, self: any) => 
+          user.id && 
+          user.id !== authUser.userId && 
+          self.findIndex((u: any) => u.id === user.id) === index
         );
 
-        setAllowedUserIDs(userIDs); // Set the filtered list of user IDs
-      } catch (error) {
-        console.error('Error fetching connections:', error);
-      } finally {
-        setLoading(false); // Set loading to false after fetching
-      }
-    };
+      setConnectedUsers(users);
+    } catch (error) {
+      console.error('Error searching connections:', error);
+      setConnectedUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [amplifyClient]);
 
-    fetchConnections();
-  }, []);
+  // Handle search input
+  const handleSearchChange = useCallback((text: string) => {
+    setSearchTerm(text);
+    searchForConnections(text);
+  }, [searchForConnections]);
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#1ABFFB" />
-      </View>
-    );
+  // Toggle user selection
+const toggleUserSelection = (user: ConnectedUser) => {
+  setSelectedUsers(current => {
+    // Check if user is already selected
+    const isAlreadySelected = current.some(selectedUser => selectedUser.id === user.id);
+    
+    // If already selected, remove; if not selected, add
+    return isAlreadySelected 
+      ? current.filter(selectedUser => selectedUser.id !== user.id)
+      : [...current, user];
+  });
+};
+
+const createChannel = async () => {
+  try {
+    const currentUserId = chatClient.userID;
+    if (!currentUserId) {
+      console.error('No current user ID');
+      return;
+    }
+
+    const memberIds = [currentUserId, ...selectedUsers.map(user => user.id)];
+    
+    const channelType = memberIds.length > 2 ? 'messaging' : 'messaging';
+    
+    const channel = chatClient.channel(channelType, {
+      members: memberIds,
+      ...(memberIds.length > 2 && { 
+        name: selectedUsers.map(u => u.name || u.username || u.id).join(', ') 
+      })
+    });
+
+    // Create the channel
+    const createdChannel = await channel.create();
+    
+    // Navigate to GroupChannelScreen with channelId
+    navigation.replace('GroupChannel', { channelId: channel.id });
+  } catch (error) {
+    console.error('Error creating channel', error);
   }
+};
 
-  // if (allowedUserIDs.length === 0) {
-  //   return (
-  //     <View style={styles.noConnectionsContainer}>
-  //       <Text style={styles.noConnectionsText}>No connections available to create a group.</Text>
-  //     </View>
-  //   );
-  // }
+
+  // Render selected users chips
+  const SelectedUserChips = () => (
+    <View style={styles.selectedUsersContainer}>
+      {selectedUsers.map(user => (
+        <TouchableOpacity 
+          key={user.id} 
+          style={styles.userChip}
+          onPress={() => toggleUserSelection(user)}
+        >
+          {user.image && (
+            <Image 
+              source={{ uri: user.image }} 
+              style={styles.chipAvatar} 
+            />
+          )}
+          <Text style={styles.chipText}>{user.name || user.username || user.id}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+
+  // Render user search results
+  // Render user search results
+const renderUserItem = ({ item }: { item: ConnectedUser }) => (
+  <TouchableOpacity 
+    style={styles.userItem}
+    onPress={() => toggleUserSelection(item)}
+  >
+    {item.image && (
+      <Image 
+        source={{ uri: item.image }} 
+        style={styles.userAvatar} 
+      />
+    )}
+    <View style={styles.userInfoContainer}>
+      <Text style={styles.userName}>
+        {item.name || item.username || item.id}
+      </Text>
+      <View 
+        style={[
+          styles.selectionIndicator,
+          selectedUsers.some(user => user.id === item.id) && styles.selectedIndicator
+        ]}
+      />
+    </View>
+  </TouchableOpacity>
+);
 
   return (
-    <GroupChannelCreateFragment
-      queryCreator={() => {
-        if (allowedUserIDs.length === 0) {
-          // Return an empty query when there are no connections
-          return {
-            next: () => Promise.resolve([]),
-            hasNext: false,
-            loadNext: () => Promise.resolve([]),
-            isLoading: loading
-          };
-        }
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeButton}>
+          <Text style={styles.closeButtonText}>Cancel</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>New Message</Text>
+        <TouchableOpacity 
+          onPress={createChannel} 
+          disabled={selectedUsers.length === 0}
+          style={[
+            styles.createButton,
+            selectedUsers.length === 0 && styles.disabledCreateButton
+          ]}
+        >
+          <Text style={[
+            styles.createButtonText,
+            selectedUsers.length === 0 && styles.disabledCreateButtonText
+          ]}>Create</Text>
+        </TouchableOpacity>
+      </View>
 
-        return sdk.createApplicationUserListQuery({
-          userIdsFilter: allowedUserIDs,
-        });
-      }}
-      onCreateChannel={async (channel) => {
-        navigation.replace('GroupChannel', { channelUrl: channel.url });
-      }}
-      onPressHeaderLeft={() => {
-        navigation.goBack();
-      }}
-    />
+      <View style={styles.searchContainer}>
+        <TextInput 
+          placeholder="Search connections" 
+          value={searchTerm}
+          onChangeText={handleSearchChange}
+          style={styles.searchInput}
+        />
+      </View>
+
+      {selectedUsers.length > 0 && <SelectedUserChips />}
+
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <FlatList 
+          data={connectedUsers}
+          renderItem={renderUserItem}
+          keyExtractor={(item) => item.id}
+          style={styles.userList}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyStateContainer}>
+              <Text style={styles.emptyStateText}>
+                {searchTerm 
+                  ? "No connections found matching your search" 
+                  : "Start searching for your connections"}
+              </Text>
+            </View>
+          )}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 
-export default GroupChannelCreateScreen;
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E0E0E0'
+  },
+  closeButton: {
+    padding: 5
+  },
+  closeButtonText: {
+    color: '#007AFF',
+    fontSize: 17
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '600'
+  },
+  createButton: {
+    padding: 5
+  },
+  disabledCreateButton: {
+    opacity: 0.5
+  },
+  createButtonText: {
+    color: '#007AFF',
+    fontSize: 17,
+    fontWeight: '600'
+  },
+  disabledCreateButtonText: {
+    color: '#CCCCCC'
+  },
+  searchContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E0E0E0'
+  },
+  searchInput: {
+    height: 40,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16
+  },
+  selectedUsersContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 15,
+    paddingVertical: 10
+  },
+  userChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E0E0E0',
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    margin: 5
+  },
+  chipAvatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    marginRight: 5
+  },
+  chipText: {
+    fontSize: 14
+  },
+  userList: {
+    flex: 1
+  },
+  userItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E0E0E0'
+  },
+  userAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 15
+  },
+  userInfoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  userName: {
+    fontSize: 16,
+    fontWeight: '500'
+  },
+  selectionIndicator: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#007AFF'
+  },
+  selectedIndicator: {
+    backgroundColor: '#007AFF'
+  }, 
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    alignItems: 'center'
   },
-  noConnectionsContainer: {
+  emptyStateContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: 'white',
+    padding: 20
   },
-  noConnectionsText: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: 'gray',
-  },
+  emptyStateText: {
+    color: '#888',
+    textAlign: 'center'
+  }
 });
+
+export default GroupChannelCreateScreen;

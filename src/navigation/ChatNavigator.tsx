@@ -24,7 +24,7 @@ const ChatNavigator = () => {
         component={GroupChannelListScreen}
         options={{ 
           title: 'Channels',
-          headerShown: false,
+          // headerShown: false,
         }}
       />
       <Stack.Screen
@@ -33,6 +33,7 @@ const ChatNavigator = () => {
         options={{ 
           title: 'Create Channel',
           headerShown: false,
+          presentation: 'modal',
         }}
       />
       <Stack.Screen
@@ -40,7 +41,7 @@ const ChatNavigator = () => {
         component={GroupChannelScreen}
         options={{ 
           title: 'Chat',
-          headerShown: false,
+          // headerShown: false,
         }}
       />
       <Stack.Screen

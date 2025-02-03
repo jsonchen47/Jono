@@ -197,3 +197,91 @@ export const listProjectsWithJoinRequests = /* GraphQL */ `
     }
   }
 `;
+
+
+// export const searchConnectionsWithUsers = /* GraphQL */
+//     `query SearchConnectionsWithUsers(
+//         $filter: SearchableConnectionFilterInput
+//         $limit: Int
+//         $nextToken: String
+//         $filterUser: SearchableUserFilterInput
+//         $filterConnectedUser: SearchableUserFilterInput
+//     ) {
+//         searchConnections(
+//             filter: $filter
+//             limit: $limit
+//             nextToken: $nextToken
+//         ) {
+//             items {
+//                 id
+//                 userID
+//                 connectedUserID
+//                 status
+//                 createdAt
+//                 updatedAt
+//                 user(filter: $filterUser) {
+//                     id
+//                     name
+//                     username
+//                     image
+//                 }
+//                 connectedUser(filter: $filterConnectedUser) {
+//                     id
+//                     name
+//                     username
+//                     image
+//                 }
+//             }
+//             nextToken
+//         }
+//     }`
+
+
+
+    export const searchConnectionsWithUsers = /* GraphQL */
+    `query SearchConnectionsWithUsers(
+        $filter: SearchableConnectionFilterInput
+        $limit: Int
+        $nextToken: String
+    ) {
+        searchConnections(
+            filter: $filter
+            limit: $limit
+            nextToken: $nextToken
+        ) {
+            items {
+                id
+                userID
+                connectedUserID
+                status
+                createdAt
+                updatedAt
+                user {
+                    id
+                    name
+                    username
+                    image
+                }
+                connectedUser {
+                    id
+                    name
+                    username
+                    image
+                }
+            }
+            nextToken
+        }
+    }`
+
+
+export const searchUsers = /* GraphQL */ `
+    query SearchUsers($filter: SearchableUserFilterInput, $limit: Int) {
+        searchUsers(filter: $filter, limit: $limit) {
+            items {
+                id
+                name
+                username
+            }
+        }
+    }
+`;

@@ -47,38 +47,82 @@ export default function TabLayout() {
   }, []);
   
 
-  useEffect(() => {
-    const connectUser = async () => {
-      try {
-        const authUser = await getCurrentUser();
-        const userID = authUser.userId;
+  // useEffect(() => {
+  //   const connectUser = async () => {
+  //     try {
+  //       const authUser = await getCurrentUser();
+  //       const userID = authUser.userId;
   
-        // Fetch the token from AWS API Gateway
-        const response = await fetch(
-          `https://bkcog8h7gc.execute-api.us-east-1.amazonaws.com/default/generateStreamToken?userId=${userID}`
-        );
-        console.log('response', response)
-        const { token } = await response.json();
+  //       // Fetch the token from AWS API Gateway
+  //       const response = await fetch(
+  //         `https://bkcog8h7gc.execute-api.us-east-1.amazonaws.com/default/generateStreamToken?userId=${userID}`
+  //       );
+  //       console.log('response', response)
+  //       const { token } = await response.json();
   
-        console.log('token', token)
+  //       console.log('token', token)
 
-        // Connect user to Stream Chat
-        await chatClient.connectUser(
-          {
-            id: userID,
-            name: authUser.username,
-          },
-          token // ✅ Use the secure token
-        );
+  //       // Connect user to Stream Chat
+  //       await chatClient.connectUser(
+  //         {
+  //           id: userID,
+  //           name: authUser.username,
+  //         },
+  //         token // ✅ Use the secure token
+  //       );
   
-        console.log("User connected:", chatClient.user);
-      } catch (error) {
-        console.error("Stream Chat connection error:", error);
-      }
+  //       console.log("User connected:", chatClient.user);
+  //     } catch (error) {
+  //       console.error("Stream Chat connection error:", error);
+  //     }
+  //   };
+  
+  //   connectUser();
+  // }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const connectUser = async () => {
+        try {
+            const authUser = await getCurrentUser();
+            const userID = authUser.userId;
+
+            // Fetch the token from AWS API Gateway
+            const response = await fetch(
+                `https://bkcog8h7gc.execute-api.us-east-1.amazonaws.com/default/generateStreamToken?userId=${userID}`
+            );
+            const { token } = await response.json();
+
+            // Connect user to Stream Chat
+            await chatClient.connectUser(
+                {
+                    id: userID,
+                    name: authUser.username,
+                },
+                token // ✅ Use the secure token
+            );
+
+            if (isMounted) {
+                console.log("User connected:", chatClient.user);
+            }
+        } catch (error) {
+            console.error("Stream Chat connection error:", error);
+        }
     };
-  
+
     connectUser();
-  }, []);
+
+    return () => {
+        isMounted = false;
+        chatClient.disconnectUser().then(() => {
+            console.log("User disconnected from Stream Chat");
+        }).catch(error => {
+            console.error("Error disconnecting user:", error);
+        });
+    };
+}, []);
+
 
   
   

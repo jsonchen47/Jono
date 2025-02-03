@@ -1,42 +1,42 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { createGroupChannelListFragment } from '@sendbird/uikit-react-native';
 import { ChannelList } from 'stream-chat-react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-
-const GroupChannelListFragment = createGroupChannelListFragment({
-  // Header: (props) => {
-  //   const { HeaderComponent } = useHeaderStyle();
-  //   return (
-  //     <HeaderComponent
-  //       title={'Custom title'}
-  //       titleAlign={'center'}
-  //       left={'Back'}
-  //       onPressLeft={props.onPressHeaderLeft}
-  //       right={'Info'}
-  //       onPressRight={props.onPressHeaderRight}
-  //     />
-  //   );
-  // },
-});
-
-const GroupChannelListScreen = () => {
+const ChannelListScreen = () => {
   const navigation = useNavigation<any>();
-  // return (
-  //   <GroupChannelListFragment
-  //   channelListQueryParams={{
-  //     includeEmpty: true, // Include empty channels
-  //   }}
-  //     onPressCreateChannel={(channelType) => {
-  //       navigation.navigate('GroupChannelCreate', { channelType });
-  //     }}
-  //     onPressChannel={(channel) => {
-  //       navigation.navigate('GroupChannel', { channelUrl: channel.url });
-  //     }}
-      
-  //   />
-  // );
-  return <ChannelList />;
+
+  // Set up header with the pen icon
+  useEffect(() => {
+    navigation.setOptions({
+      title: 'Messages',
+      headerStyle: { backgroundColor: 'white' },
+      headerTintColor: 'black',
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('GroupChannelCreate')} style={styles.iconContainer}>
+          <Icon name="create-outline" size={24} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
+  return (
+    <View style={styles.container}>
+      <ChannelList
+        onSelect={(channel) => navigation.navigate('GroupChannel', { channelId: channel.id })}
+      />
+    </View>
+  );
 };
 
-export default GroupChannelListScreen;
+const styles = StyleSheet.create({
+  container: { 
+    flex: 1 
+  },
+  iconContainer: { 
+    marginRight: 15 
+  },
+});
+
+export default ChannelListScreen;
