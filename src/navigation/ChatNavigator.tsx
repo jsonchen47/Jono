@@ -10,9 +10,11 @@ import GroupChannelInviteScreen from '../screens/GroupChannelInviteScreen';
 import OperatorsScreen from '../screens/GroupChannelOperatorsScreen';
 import MutedMembersScreen from '../screens/GroupChannelMutedMembersScreen';
 import BannedUsersScreen from '../screens/GroupChannelBannedMembersScreen';
-import { ChatNavigatorParamList } from './ChatNavigatorParamList';
+// import { ChatNavigatorParamList } from './ChatNavigatorParamList';
 
-const Stack = createStackNavigator<ChatNavigatorParamList>();
+// const Stack = createStackNavigator<ChatNavigatorParamList>();
+const Stack = createStackNavigator();
+
 
 const ChatNavigator = () => {
   return (

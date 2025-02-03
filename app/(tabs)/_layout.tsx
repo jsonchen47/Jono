@@ -13,51 +13,23 @@ import Purchases from 'react-native-purchases';
 import RevenueCatUI from 'react-native-purchases-ui';
 import { enableScreens } from 'react-native-screens';
 import { StatusBar } from 'expo-status-bar';
-<StatusBar style="auto" translucent={true} />
 
-enableScreens();
+import { StreamChat } from 'stream-chat';
+import { Chat, OverlayProvider } from 'stream-chat-react-native';
+
+const chatClient = StreamChat.getInstance('6ara8tryfyf7');
+
 
 const client = generateClient();
 
 export default function TabLayout() {
   const { hasNotifications } = useNotifications();
   const router = useRouter();
-  const { connect } = useConnection(); // Use the hook at the top level
 
-  const handleCenterTabPress = async () => {
-    try {
-
-      const customerInfo = await Purchases.getCustomerInfo();
-      const isPremium = !!customerInfo.entitlements.active['premium'];
-  
-      if (isPremium) {
-        router.push('/newProject/newProject1');
-        console.log('Navigated to /newProject/newProject1');
-      } else {
-        const offerings = await Purchases.getOfferings();
-        
-        if (offerings.current) {
-          const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
-            offering: offerings.current,
-            requiredEntitlementIdentifier: "premium"
-          });
-  
-          if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
-            console.log('Purchase successful! Unlocking premium features.');
-            router.push('/newProject/newProject1');
-          } else {
-            console.log('Paywall dismissed without purchase');
-          }
-        } else {
-          console.error('No offerings configured in RevenueCat.');
-          alert('No available offerings found.');
-        }
-      }
-    } catch (error: any) {
-      console.error('Error handling paywall or purchase:', error);
-      alert(`An error occurred while processing your request:\n${error.message || error}`);
-    }
+  const handleCenterTabPress = () => {
+    router.push('/newProject/newProject1');
   };
+  
 
   useEffect(() => {
     const REVENUECAT_API_KEY =
@@ -75,106 +47,42 @@ export default function TabLayout() {
   }, []);
   
 
-
-  // // Connect user to Sendbird 
-  // useEffect(() => {
-  //   const connectUser = async () => {
-  //     try {
-  //       // Get Authenticated User ID from Amplify Auth
-  //       const authUser = await getCurrentUser();
-  //       const userID = authUser.userId;
-    
-  //       // Query the database using the user ID from Auth
-  //       const result = await client.graphql({
-  //         query: getUser,
-  //         variables: { id: userID },
-  //       });
-    
-  //       const userData = result.data?.getUser;
-    
-  //       if (userData) {
-  //         const username = userData.name; // Updated name from GraphQL
-  //         const profileImage = userData.image; // Updated profile image from GraphQL
-    
-  //         console.log('User ID:', userID);
-  //         console.log('Username:', username);
-  //         console.log('Profile Image:', profileImage);
-    
-  //         // Step 1: Connect to Sendbird with the user ID and nickname
-  //         await connect(userID, { nickname: username || 'User' });
-    
-  //         // Step 2: Update the user's profile image
-  //         const sb = SendbirdChat.instance; // Use instance to access the SendbirdChat singleton
-  //         await sb.updateCurrentUserInfo({
-  //           nickname: username || 'User',
-  //           profileUrl: profileImage || '', // Set profile image
-  //         });
-    
-  //         console.log('Sendbird profile updated successfully.');
-  //       } else {
-  //         console.warn('No user data found in the database.');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error connecting user to Sendbird:', error);
-  //     }
-  //   };
-
-  //   connectUser();
-    
-  // }, [connect]); // Dependency array includes `connect`
   useEffect(() => {
     const connectUser = async () => {
       try {
-        // Check if the user is premium
-        const customerInfo = await Purchases.getCustomerInfo();
-        const isPremium = !!customerInfo.entitlements.active['premium'];
-  
-        if (!isPremium) {
-          console.warn('User is not premium, skipping Sendbird connection.');
-          return; // Exit if the user is not premium
-        }
-  
-        // Get Authenticated User ID from Amplify Auth
         const authUser = await getCurrentUser();
         const userID = authUser.userId;
   
-        // Query the database using the user ID from Auth
-        const result = await client.graphql({
-          query: getUser,
-          variables: { id: userID },
-        });
+        // Fetch the token from AWS API Gateway
+        const response = await fetch(
+          `https://bkcog8h7gc.execute-api.us-east-1.amazonaws.com/default/generateStreamToken?userId=${userID}`
+        );
+        console.log('response', response)
+        const { token } = await response.json();
   
-        const userData = result.data?.getUser;
+        console.log('token', token)
+
+        // Connect user to Stream Chat
+        await chatClient.connectUser(
+          {
+            id: userID,
+            name: authUser.username,
+          },
+          token // ✅ Use the secure token
+        );
   
-        if (userData) {
-          const username = userData.name || 'User'; // Fallback to default name
-          const profileImage = userData.image || ''; // Fallback to empty string
-  
-          console.log('User ID:', userID);
-          console.log('Username:', username);
-          console.log('Profile Image:', profileImage);
-  
-          // Step 1: Connect to Sendbird with the user ID and nickname
-          await connect(userID, { nickname: username });
-  
-          // Step 2: Update the user's profile image
-          const sb = SendbirdChat.instance;
-          await sb.updateCurrentUserInfo({
-            nickname: username || 'User',
-            profileUrl: profileImage || '', // Set profile image
-          });
-  
-          console.log('Sendbird profile updated successfully.');
-        } else {
-          console.warn('No user data found in the database.');
-        }
+        console.log("User connected:", chatClient.user);
       } catch (error) {
-        console.error('Error connecting user to Sendbird:', error);
+        console.error("Stream Chat connection error:", error);
       }
     };
   
     connectUser();
-  }, [connect]);
+  }, []);
+
+  
+  
+  
   
 
   return (

@@ -11,79 +11,79 @@ const windowWidth = Dimensions.get('window').width;
 
 
 const ChatScreen = () => {
-  const { sdk } = useSendbirdChat();
-  const router = useRouter();
-  const [isPremium, setIsPremium] = useState(false);
+  // const { sdk } = useSendbirdChat();
+  // const router = useRouter();
+  // const [isPremium, setIsPremium] = useState(false);
 
-  useEffect(() => {
-    const checkPremiumStatusAndShowPaywall = async () => {
-      try {
-        const customerInfo = await Purchases.getCustomerInfo();
-        const premium = !!customerInfo.entitlements.active['premium'];
-        setIsPremium(premium);
+  // useEffect(() => {
+  //   const checkPremiumStatusAndShowPaywall = async () => {
+  //     try {
+  //       const customerInfo = await Purchases.getCustomerInfo();
+  //       const premium = !!customerInfo.entitlements.active['premium'];
+  //       setIsPremium(premium);
 
-        if (!premium) {
-          await showPaywall(); // Trigger the paywall immediately
-        }
-      } catch (error) {
-        console.error('Error checking premium status:', error);
-        Alert.alert('Error', 'An error occurred while checking your subscription status.');
-      }
-    };
+  //       if (!premium) {
+  //         await showPaywall(); // Trigger the paywall immediately
+  //       }
+  //     } catch (error) {
+  //       console.error('Error checking premium status:', error);
+  //       Alert.alert('Error', 'An error occurred while checking your subscription status.');
+  //     }
+  //   };
 
-    checkPremiumStatusAndShowPaywall();
-  }, []);
+  //   checkPremiumStatusAndShowPaywall();
+  // }, []);
 
-  const showPaywall = async () => {
-    try {
-      const offerings = await Purchases.getOfferings();
+  // const showPaywall = async () => {
+  //   try {
+  //     const offerings = await Purchases.getOfferings();
 
-      if (offerings.current) {
-        const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
-          offering: offerings.current,
-          requiredEntitlementIdentifier: 'premium',
-        });
+  //     if (offerings.current) {
+  //       const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
+  //         offering: offerings.current,
+  //         requiredEntitlementIdentifier: 'premium',
+  //       });
 
-        if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
-          console.log('Purchase successful! Unlocking premium features.');
-          setIsPremium(true); // Update the premium state
-        } else {
-          console.log('Paywall dismissed without purchase');
-          router.replace('/'); // Redirect the user if they dismiss the paywall
-        }
-      } else {
-        console.error('No offerings configured in RevenueCat.');
-        Alert.alert('Error', 'No available offerings found.');
-      }
-    } catch (error) {
-      console.error('Error presenting paywall:', error);
-      Alert.alert('Error', 'An error occurred while processing the paywall.');
-    }
-  };
+  //       if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
+  //         console.log('Purchase successful! Unlocking premium features.');
+  //         setIsPremium(true); // Update the premium state
+  //       } else {
+  //         console.log('Paywall dismissed without purchase');
+  //         router.replace('/'); // Redirect the user if they dismiss the paywall
+  //       }
+  //     } else {
+  //       console.error('No offerings configured in RevenueCat.');
+  //       Alert.alert('Error', 'No available offerings found.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error presenting paywall:', error);
+  //     Alert.alert('Error', 'An error occurred while processing the paywall.');
+  //   }
+  // };
 
-  if (!isPremium) {
-    return (
-      <SafeAreaView style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Chat</Text>
-        </View>
+  // if (!isPremium) {
+  //   return (
+  //     <SafeAreaView style={styles.container}>
+  //       {/* Header */}
+  //       <View style={styles.header}>
+  //         <Text style={styles.headerText}>Chat</Text>
+  //       </View>
 
-        {/* Non-Premium Content */}
-        <View style={styles.content}>
-          <Text style={styles.message}>Upgrade to Premium to use Chat!</Text>
-          <Image
-            source={require('../../assets/images/alien.png')} // Correct way to include a local image
-            style={styles.image}
-            resizeMode="contain"
-          />
-          <TouchableOpacity style={styles.upgradeButton} onPress={showPaywall}>
-            <Text style={styles.buttonText}>Upgrade Now</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  //       {/* Non-Premium Content */}
+  //       <View style={styles.content}>
+  //         <Text style={styles.message}>Upgrade to Premium to use Chat!</Text>
+  //         <Image
+  //           source={require('../../assets/images/alien.png')} // Correct way to include a local image
+  //           style={styles.image}
+  //           resizeMode="contain"
+  //         />
+  //         <TouchableOpacity style={styles.upgradeButton} onPress={showPaywall}>
+  //           <Text style={styles.buttonText}>Upgrade Now</Text>
+  //         </TouchableOpacity>
+  //       </View>
+  //     </SafeAreaView>
+  //   );
+  // }
 
   return <ChatNavigator />;
 };

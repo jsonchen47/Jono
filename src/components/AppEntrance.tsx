@@ -20,6 +20,9 @@ import {
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
 import Purchases from 'react-native-purchases';
+import { StreamChat } from 'stream-chat';
+import { Chat, OverlayProvider } from 'stream-chat-react-native';
+import { chatClient } from '../backend/streamChat';
 
 // OTHER PROVIDER IMPORTS
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -28,29 +31,7 @@ import { FilterProvider } from '@/src/contexts/FilterContext';
 import { NotificationProvider } from '@/src/contexts/NotificationContext';
 import { UserProvider } from '@/src/contexts/UserContext';
 
-// SENDBIRD IMPORTS
-import {
-  createExpoClipboardService,
-  createExpoFileService,
-  createExpoMediaService,
-  createExpoNotificationService,
-  createExpoPlayerService,
-  createExpoRecorderService,
-  SendbirdUIKitContainerProps
-} from "@sendbird/uikit-react-native";
 
-import * as ExpoClipboard from 'expo-clipboard';
-import * as ExpoDocumentPicker from 'expo-document-picker';
-import * as ExpoFS from 'expo-file-system';
-import * as ExpoImagePicker from 'expo-image-picker';
-import * as ExpoMediaLibrary from 'expo-media-library';
-import * as ExpoNotifications from 'expo-notifications';
-import * as ExpoAV from 'expo-av';
-import * as ExpoVideoThumbnail from 'expo-video-thumbnails';
-import * as ExpoImageManipulator from 'expo-image-manipulator';
-
-import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
-import { MMKV } from 'react-native-mmkv';
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -60,31 +41,6 @@ configureReanimatedLogger({
 
 const client = generateClient();
 
-// SENDBIRD PLATFORM SERVICES
-const platformServices: SendbirdUIKitContainerProps['platformServices'] = {
-  clipboard: createExpoClipboardService(ExpoClipboard),
-  notification: createExpoNotificationService(ExpoNotifications),
-  file: createExpoFileService({
-    fsModule: ExpoFS,
-    imagePickerModule: ExpoImagePicker,
-    mediaLibraryModule: ExpoMediaLibrary,
-    documentPickerModule: ExpoDocumentPicker,
-  }),
-  media: createExpoMediaService({
-    avModule: ExpoAV,
-    thumbnailModule: ExpoVideoThumbnail,
-    imageManipulator: ExpoImageManipulator,
-    fsModule: ExpoFS,
-  }),
-  player: createExpoPlayerService({
-    avModule: ExpoAV,
-  }),
-  recorder: createExpoRecorderService({
-    avModule: ExpoAV,
-  }),
-};
-
-const mmkv = new MMKV();
 
 // Connect the user to RevenueCat
 const configurePurchases = async () => {
@@ -263,11 +219,8 @@ const AppEntrance = () => {
 
 
   return (
-    <SendbirdUIKitContainer
-      appId={'01E73A75-F4D1-4564-957C-FA30C79A0FCE'}
-      chatOptions={{ localCacheStorage: mmkv }}
-      platformServices={platformServices}
-    >
+    <OverlayProvider>
+      <Chat client={chatClient}>
       <GestureHandlerRootView>
         <ProgressProvider>
           <NotificationProvider>
@@ -400,7 +353,8 @@ const AppEntrance = () => {
           </NotificationProvider>
         </ProgressProvider>
       </GestureHandlerRootView>
-    </SendbirdUIKitContainer>
+      </Chat>
+    </OverlayProvider>
   );
 };
 

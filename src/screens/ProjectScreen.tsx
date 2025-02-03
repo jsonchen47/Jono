@@ -376,13 +376,42 @@ const ProjectScreen = ({ project }: any) => {
                           style={styles.headerButtonRight}
                           onPress={async () => {
                             try {
-                              console.log('Pressed chat');
-                              // Check user's premium status
-                              const customerInfo = await Purchases.getCustomerInfo();
-                              const isPremium = !!customerInfo.entitlements.active['premium'];
+                              // console.log('Pressed chat');
+                              // // Check user's premium status
+                              // const customerInfo = await Purchases.getCustomerInfo();
+                              // const isPremium = !!customerInfo.entitlements.active['premium'];
 
-                              if (isPremium) {
-                                console.log('User is premium');
+                              // if (isPremium) {
+                              //   console.log('User is premium');
+                              //   if (isValidChat && project?.groupChatID) {
+                              //     // Navigate to the existing group chat
+                              //     router.push(`/groupChat?channelUrl=${project.groupChatID}`);
+                              //   } else {
+                              //     // Create a new group chat if invalid
+                              //     await createGroupChat();
+                              //   }
+                              // } else {
+                              //   console.log('User is not premium, showing paywall...');
+                              //   const offerings = await Purchases.getOfferings();
+
+                              //   if (offerings.current) {
+                              //     const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
+                              //       offering: offerings.current,
+                              //       requiredEntitlementIdentifier: 'premium',
+                              //     });
+
+                              //     if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
+                              //       console.log('User purchased premium, unlocking chat feature...');
+                              //       Alert.alert('Success', 'You are now a premium member! Please try again.');
+                              //     } else {
+                              //       console.log('Paywall dismissed without purchase.');
+                              //     }
+                              //   } else {
+                              //     console.error('No offerings configured in RevenueCat.');
+                              //     Alert.alert('Error', 'No available offerings found.');
+                              //   }
+                              // }
+                              console.log('User is premium');
                                 if (isValidChat && project?.groupChatID) {
                                   // Navigate to the existing group chat
                                   router.push(`/groupChat?channelUrl=${project.groupChatID}`);
@@ -390,35 +419,16 @@ const ProjectScreen = ({ project }: any) => {
                                   // Create a new group chat if invalid
                                   await createGroupChat();
                                 }
-                              } else {
-                                console.log('User is not premium, showing paywall...');
-                                const offerings = await Purchases.getOfferings();
-
-                                if (offerings.current) {
-                                  const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
-                                    offering: offerings.current,
-                                    requiredEntitlementIdentifier: 'premium',
-                                  });
-
-                                  if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
-                                    console.log('User purchased premium, unlocking chat feature...');
-                                    Alert.alert('Success', 'You are now a premium member! Please try again.');
-                                  } else {
-                                    console.log('Paywall dismissed without purchase.');
-                                  }
-                                } else {
-                                  console.error('No offerings configured in RevenueCat.');
-                                  Alert.alert('Error', 'No available offerings found.');
-                                }
-                              }
                             } catch (error) {
                               console.error('Error checking premium status or showing paywall:', error);
-                              Alert.alert('Error', 'An error occurred while processing your request.');
+                              // Alert.alert('Error', 'An error occurred while processing your request.');
                             }
                           }}
                         >
                           <Icon name="chatbubbles" style={styles.icon} />
                         </TouchableOpacity>
+
+                        
 
                         )}
 
