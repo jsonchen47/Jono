@@ -60,67 +60,57 @@ const GroupChannelCreateScreen: React.FC = () => {
     setLoading(true);
     try {
       const authUser = await getCurrentUser();
-
-      // const result = await amplifyClient.graphql({
-      //   query: searchConnectionsWithUsers,
-      //   variables: {
-      //     filter: {
-      //       status: { eq: "approved" } // Only approved connections
-      //     },
-      //     filterUser: {
-      //       or: [
-      //         { name: { matchPhrasePrefix: term } },
-      //         { username: { matchPhrasePrefix: term } }
-      //       ]
-      //     },
-      //     filterConnectedUser: {
-      //       or: [
-      //         { name: { matchPhrasePrefix: term } },
-      //         { username: { matchPhrasePrefix: term } }
-      //       ]
-      //     },
-      //     limit: 10
-      //   }
-      // }) as GraphQLResult<any>;
-       // Step 1: Find users whose name matches
-    const userSearchResult = await amplifyClient.graphql({
-      query: searchUsers,
-      variables: {
-        filter: {
-          or: [
-            { name: { matchPhrasePrefix: searchTerm } },
-            { username: { matchPhrasePrefix: searchTerm } }
-          ]
-        },
-        limit: 10
+      const authUserId = authUser.userId;
+    
+      // Step 1: Search users based on the term
+      const userSearchResult = await amplifyClient.graphql({
+        query: searchUsers,
+        variables: {
+          filter: {
+            or: [
+              { name: { wildcard: `${searchTerm}*` } },  // Wildcard for partial matches
+              { username: { wildcard: `${searchTerm}*` } }
+            ]
+          },
+          limit: 10
+        }
+      }) as GraphQLResult<any>;
+    
+      const matchingUserIDs = userSearchResult.data?.searchUsers?.items.map((user: any) => user.id);
+    
+      if (!matchingUserIDs.length) {
+        console.log('No users found');
+        return [];
       }
-    }) as GraphQLResult<any>;
-
-    const matchingUserIDs = userSearchResult.data?.searchUsers.items.map((user: any) => user.id);
-
-    if (!matchingUserIDs.length) {
-      console.log('No users found');
-      return [];
-    }
-
-    // Step 2: Search connections where userID or connectedUserID is in the matched users
-    const result = await amplifyClient.graphql({
-      query: searchConnectionsWithUsers,
-      variables: {
-        filter: {
-          or: matchingUserIDs.map((id: string) => ({
-            or: [{ userID: { eq: id } }, { connectedUserID: { eq: id } }]
-          }))
-        },
-        limit: 10
-      }
-    }) as GraphQLResult<any>;
-
-      // Transform connections to users
-      const users: ConnectedUser[] = (result.data?.searchConnections?.items || [])
+    
+      // Step 2: Fetch only approved connections involving the current user
+      const connectionsResult = await amplifyClient.graphql({
+        query: searchConnectionsWithUsers,
+        variables: {
+          filter: {
+            and: [
+              { status: { eq: "approved" } }, // Only approved connections
+              {
+                or: [
+                  { userID: { eq: authUserId } }, // The current user must be part of the connection
+                  { connectedUserID: { eq: authUserId } }
+                ]
+              },
+              {
+                or: matchingUserIDs.map((id: string) => ({
+                  or: [{ userID: { eq: id } }, { connectedUserID: { eq: id } }]
+                }))
+              }
+            ]
+          },
+          limit: 10
+        }
+      }) as GraphQLResult<any>;
+    
+      // Extract only relevant users from approved connections
+      const users: ConnectedUser[] = (connectionsResult.data?.searchConnections?.items || [])
         .map((connection: any) => {
-          // Determine which user to use based on current user's ID
-          const relevantUser = connection.userID === authUser.userId 
+          const relevantUser = connection.userID === authUserId 
             ? connection.connectedUser 
             : connection.user;
           
@@ -131,13 +121,13 @@ const GroupChannelCreateScreen: React.FC = () => {
             username: relevantUser?.username
           };
         })
-        // Remove duplicates and current user
+        // Remove duplicates and exclude current user
         .filter((user: any, index: any, self: any) => 
           user.id && 
-          user.id !== authUser.userId && 
+          user.id !== authUserId && 
           self.findIndex((u: any) => u.id === user.id) === index
         );
-
+    
       setConnectedUsers(users);
     } catch (error) {
       console.error('Error searching connections:', error);

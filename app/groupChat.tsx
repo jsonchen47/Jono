@@ -8,17 +8,20 @@ import GroupChannelInviteScreen from '@/src/screens/GroupChannelInviteScreen';
 import OperatorsScreen from '@/src/screens/GroupChannelOperatorsScreen';
 import MutedMembersScreen from '@/src/screens/GroupChannelMutedMembersScreen';
 import BannedUsersScreen from '@/src/screens/GroupChannelBannedMembersScreen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+// import { SafeAreaView } from 'react-native';
 const Stack = createStackNavigator();
 
 const GroupChatNavigator = () => {
   return (
+    <SafeAreaView edges={['bottom']} style={{flex: 1, backgroundColor: 'white'}}>
     <Stack.Navigator>
       <Stack.Screen
         name="GroupChannel"
         component={GroupChannelScreen}
         options={{
           title: 'Chat',
-          headerShown: false, // Show the header for navigation
+          // headerShown: false, // Show the header for navigation
         }}
       />
       <Stack.Screen
@@ -78,6 +81,7 @@ const GroupChatNavigator = () => {
         }}
       />
     </Stack.Navigator>
+    </SafeAreaView>
   );
 };
 

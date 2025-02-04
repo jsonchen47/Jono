@@ -30,8 +30,14 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       // Fetch connection requests
       const connectionsResult = await client.graphql({
         query: listConnections,
-        variables: { filter: { connectedUserID: { eq: authUserID } } },
+        variables: {
+          filter: {
+            connectedUserID: { eq: authUserID },
+            status: { eq: "requested" } // Filter for status "requested"
+          }
+        }
       });
+      
       const connections = connectionsResult.data?.listConnections?.items || [];
   
       // Fetch projects owned by the user

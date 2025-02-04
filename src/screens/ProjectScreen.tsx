@@ -21,11 +21,14 @@ import { listUserProjects } from '../graphql/queries';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 // import { ChatNavigatorParamList } from '../navigation/ChatNavigatorParamList';
-import { useSendbirdChat } from '@sendbird/uikit-react-native';
+// import { useSendbirdChat } from '@sendbird/uikit-react-native';
 import { Alert } from 'react-native';
 import Purchases from 'react-native-purchases';
 import RevenueCatUI from 'react-native-purchases-ui';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { v4 as uuidv4 } from 'uuid';
+import { StreamChat } from 'stream-chat';
+import { chatClient } from '../backend/streamChat';
 
 // type NavigationProps = NativeStackNavigationProp<ChatNavigatorParamList, 'GroupChannel'>;
 const client = generateClient();
@@ -34,7 +37,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const ProjectScreen = ({ project }: any) => {
-    const { sdk } = useSendbirdChat();
+    // const { sdk } = useSendbirdChat();
     const router = useRouter(); 
     const [user, setUser] = useState<any>(null);
     const [members, setMembers] = useState<any>([]);
@@ -92,43 +95,87 @@ const ProjectScreen = ({ project }: any) => {
         }
       };
     
+    // const createGroupChat = async () => {
+    //     try {
+    //       // Create a new group channel
+    //       const newChannel = await sdk.groupChannel.createChannel({
+    //         invitedUserIds: project.Users.items.map((user: any) => user.userId),
+    //         name: project.title, // Use project title as the chat name
+    //         isDistinct: false,
+    //         coverUrl: project.image, // Use the project's image as the group chat's cover image
+    //       });
+      
+    //       // Update the project's groupChatID
+    //       const updatedProject = await client.graphql({
+    //         query: updateProject,
+    //         variables: {
+    //           input: {
+    //             id: project.id,
+    //             groupChatID: newChannel.url, // Set the new group chat ID
+    //           },
+    //         },
+    //       });
+      
+    //       console.log('Project updated with new group chat ID:', updatedProject);
+      
+    //       // Navigate to the newly created group chat
+    //       router.push(`/groupChat?channelUrl=${newChannel.url}`);
+    //     } catch (error) {
+    //       console.error('Error creating group chat:', error);
+    //       Alert.alert('Error', 'Failed to create a group chat. Please try again later.');
+    //     }
+    // };
+
     const createGroupChat = async () => {
-        try {
-          // Create a new group channel
-          const newChannel = await sdk.groupChannel.createChannel({
-            invitedUserIds: project.Users.items.map((user: any) => user.userId),
-            name: project.title, // Use project title as the chat name
-            isDistinct: false,
-            coverUrl: project.image, // Use the project's image as the group chat's cover image
-          });
-      
-          // Update the project's groupChatID
-          const updatedProject = await client.graphql({
-            query: updateProject,
-            variables: {
-              input: {
-                id: project.id,
-                groupChatID: newChannel.url, // Set the new group chat ID
-              },
+      try {
+        // Generate a unique group chat ID
+        const groupChatID = uuidv4();
+    
+        console.log('Creating group chat...');
+    
+        // Extract user IDs from the project
+        const invitedUserIds = project.Users.items.map((user: any) => user.userId);
+    
+        // Create the channel in Stream Chat
+        const channel = chatClient.channel('messaging', groupChatID, {
+          name: project.title, // Use project title as the chat name
+          image: project.image || '', // Use the project's image as the group chat cover image
+          members: invitedUserIds, // Add the creator + members
+        });
+    
+        console.log('Channel instance created');
+    
+        // Create the channel in Stream
+        await channel.create();
+        console.log('Group chat created successfully');
+    
+        // Update the project with the new group chat ID
+        const updatedProject = await client.graphql({
+          query: updateProject,
+          variables: {
+            input: {
+              id: project.id,
+              groupChatID: channel.id, // Store the new group chat ID
             },
-          });
-      
-          console.log('Project updated with new group chat ID:', updatedProject);
-      
-          // Navigate to the newly created group chat
-          router.push(`/groupChat?channelUrl=${newChannel.url}`);
-        } catch (error) {
-          console.error('Error creating group chat:', error);
-          Alert.alert('Error', 'Failed to create a group chat. Please try again later.');
-        }
-      };
+          },
+        });
+    
+        console.log('Project updated with new group chat ID:', updatedProject);
+    
+        // Navigate to the newly created group chat
+        router.push(`/groupChat?channelUrl=${channel.id}`);
+      } catch (error) {
+        console.error('Error creating group chat:', error);
+        Alert.alert('Error', 'Failed to create a group chat. Please try again later.');
+      }
+    };
       
     useEffect(() => {
         const checkChatValidity = async () => {
           if (project?.groupChatID) {
             try {
               // Check if the group chat exists
-              const channel = await sdk.groupChannel.getChannel(project.groupChatID);
+              const channel = chatClient.channel('messaging', project.groupChatID);
               if (channel) {
                 setIsValidChat(true); // Valid group chat ID
               } else {
@@ -141,7 +188,7 @@ const ProjectScreen = ({ project }: any) => {
         };
     
         checkChatValidity();
-    }, [project?.groupChatID, sdk]);
+    }, [project?.groupChatID, chatClient]);
 
     const fetchUser = async (ownerID: any) => {
         try {
