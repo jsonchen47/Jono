@@ -6,15 +6,16 @@ import { useNotifications } from '@/src/contexts/NotificationContext';
 import { generateClient } from 'aws-amplify/api';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { updateConnection, deleteConnection, deleteJoinRequest, createUserProject } from '@/src/graphql/mutations';
-import { useSendbirdChat } from '@sendbird/uikit-react-native';
+// import { useSendbirdChat } from '@sendbird/uikit-react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // For the chevron icon
 import { useNavigation } from '@react-navigation/native';
+import { chatClient } from '@/src/backend/streamChat';
 
 const client = generateClient();
 
 const NotificationsPage = () => {
   const { notifications, markNotificationsAsRead, fetchNotifications } = useNotifications();
-  const { sdk } = useSendbirdChat();
+  // const { sdk } = useSendbirdChat();
   const navigation = useNavigation();
 
 
@@ -69,12 +70,24 @@ const NotificationsPage = () => {
           },
         });
         
+        // ADD THE STREAM CHAT METHOD HERE TO ADD USER TO GROUP CHAT
         // Add user to group chat 
         if (notification.project.groupChatID) {
-          const channel = await sdk.groupChannel.getChannel(notification.project.groupChatID);
-          console.log('got the channel at least')
-          await channel.inviteWithUserIds([notification.userID]);
-          console.log(`User ${notification.userID} added to group chat ${notification.project.groupChatID}.`);
+          // const channel = await sdk.groupChannel.getChannel(notification.project.groupChatID);
+          // console.log('got the channel at least')
+          // await channel.inviteWithUserIds([notification.userID]);
+          // console.log(`User ${notification.userID} added to group chat ${notification.project.groupChatID}.`);
+
+          // Fetch the channel
+          const channel = chatClient.channel('messaging', notification.project.groupChatID);
+
+          // Ensure the channel exists
+          await channel.watch();
+
+          console.log('Fetched the channel successfully.');
+
+          // Add the user to the group chat
+          await channel.addMembers([notification.userID]);
         }
         
       }

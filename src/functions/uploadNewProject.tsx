@@ -7,6 +7,7 @@ import config from '../../src/aws-exports';
 import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
 import Geolocation from '@react-native-community/geolocation';
 import { useSendbirdChat } from '@sendbird/uikit-react-native';
+import { chatClient } from '../backend/streamChat';
 
 const client = generateClient();
 
@@ -39,7 +40,7 @@ export async function uploadNewProject(
   updateProgress: (progress: number) => void,
   isVisible: boolean,
   setProjectId: any,
-  sdk: any
+  // sdk: any
 ) {
 
   try {
@@ -127,18 +128,40 @@ export async function uploadNewProject(
     const channelName = `${formData.title}`;
     const channelCoverImageUrl = imageUrl; // Use the project image as the channel cover
 
-    const channelParams = {
-      name: channelName,
-      coverUrl: channelCoverImageUrl,
-      isDistinct: false, // Ensures new chat will be created even when it has the same users
-      invitedUserIds: [userId], // Invites the user who created the project
-      operatorUserIds: [userId], // Sets the project creator as the channel operator
-    };
+    // const channelParams = {
+    //   name: channelName,
+    //   coverUrl: channelCoverImageUrl,
+    //   isDistinct: false, // Ensures new chat will be created even when it has the same users
+    //   invitedUserIds: [userId], // Invites the user who created the project
+    //   operatorUserIds: [userId], // Sets the project creator as the channel operator
+    // };
 
-    const channel = await sdk.groupChannel.createChannel(channelParams);
-    console.log('Sendbird channel created:', channel);
-    const groupChatID = channel.url; // Get the unique ID of the group chat
-    console.log('group chat id: ', groupChatID)
+    // const channel = await sdk.groupChannel.createChannel(channelParams);
+    // console.log('Sendbird channel created:', channel);
+    // const groupChatID = channel.url; // Get the unique ID of the group chat
+    // console.log('group chat id: ', groupChatID)
+
+    const groupChatID = uuidv4();
+
+
+    console.log('no channel yet')
+    const channel = chatClient.channel('messaging', groupChatID, {
+      name: channelName,
+      image: channelCoverImageUrl || '', // Optional default image
+      members: [userId], // Add the creator as the first member
+      // created_by_id: userId
+    });
+
+    console.log('got channel')
+
+    // Create and watch the channel
+    await channel.create();
+
+    console.log('created channel')
+    // await channel.addMembers([userId])
+
+
+    // const groupChatID = channel.id;
 
     // Create project data
     const projectData = {

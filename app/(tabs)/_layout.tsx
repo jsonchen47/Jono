@@ -88,6 +88,14 @@ export default function TabLayout() {
             const authUser = await getCurrentUser();
             const userID = authUser.userId;
 
+            // Query the database using the user ID from Auth
+            const result = await client.graphql({
+              query: getUser,
+              variables: { id: userID },
+            });
+        
+            const userData = result.data?.getUser;
+
             // Fetch the token from AWS API Gateway
             const response = await fetch(
                 `https://bkcog8h7gc.execute-api.us-east-1.amazonaws.com/default/generateStreamToken?userId=${userID}`
@@ -98,7 +106,9 @@ export default function TabLayout() {
             await chatClient.connectUser(
                 {
                     id: userID,
-                    name: authUser.username,
+                    name: userData?.name,
+                    image: userData?.image || "", // Provide default image fallback
+
                 },
                 token // ✅ Use the secure token
             );
