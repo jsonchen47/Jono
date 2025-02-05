@@ -5,7 +5,8 @@ import { getCurrentUser } from 'aws-amplify/auth';
 import { uploadData, remove } from 'aws-amplify/storage';
 import { v4 as uuidv4 } from 'uuid';
 import config from "../../src/aws-exports";
-import { useSendbirdChat } from '@sendbird/uikit-react-native';
+// import { useSendbirdChat } from '@sendbird/uikit-react-native';
+import { chatClient } from '../backend/streamChat';
 
 const client = generateClient();
 
@@ -27,7 +28,7 @@ export async function updateProjectImage(
   formData: any,
   setFormData: any,
   oldProjectImage: string,
-  sdk: any, 
+  // sdk: any, 
   groupChatID: any
 ) {
   try {
@@ -84,13 +85,24 @@ export async function updateProjectImage(
       variables: { input: updatedProjectData }
     });
 
-    // Update the chat's image 
+    // // Update the chat's image 
+    // if (groupChatID) {
+    //   const channel = await sdk.groupChannel.getChannel(groupChatID);
+    //   await channel.updateChannel({
+    //     coverUrl: imageUrl || channel.coverUrl, // Update the title if provided
+    //     });
+    // }
     if (groupChatID) {
-      const channel = await sdk.groupChannel.getChannel(groupChatID);
-      await channel.updateChannel({
-        coverUrl: imageUrl || channel.coverUrl, // Update the title if provided
-        });
-  }
+      // Fetch the channel using its ID
+      const channel = chatClient.channel('messaging', groupChatID);
+
+      // Update the channel image (cover image)
+      await channel.update({
+        image: imageUrl || channel.data?.image, // Keep the existing image if none provided
+      });
+
+      console.log("Channel image updated successfully.");
+    }
 
     
     console.log('Project updated successfully:', updateResult.data?.updateProject);

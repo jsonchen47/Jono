@@ -26,7 +26,8 @@ import { Alert } from 'react-native';
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { deleteJoinRequest } from '../graphql/mutations';
-import { useSendbirdChat } from '@sendbird/uikit-react-native';
+// import { useSendbirdChat } from '@sendbird/uikit-react-native';
+import { chatClient } from '../backend/streamChat';
 
 const client = generateClient();
 
@@ -41,7 +42,7 @@ const ManageProjectScreen = ({project}: any) => {
     const router = useRouter(); 
     const navigation = useNavigation();
     const [loading, setLoading] = React.useState(false)
-    const { sdk } = useSendbirdChat();
+    // const { sdk } = useSendbirdChat();
 
     // Header with image, title, and project 
     const Header = () => {
@@ -136,17 +137,27 @@ const ManageProjectScreen = ({project}: any) => {
                 variables: { input },
             }) as GraphQLResult<any>;
 
-            // Update the chat's title 
+            // // Update the chat's title 
+            // if (project?.groupChatID) {
+            //     const channel = await sdk.groupChannel.getChannel(project.groupChatID);
+            //     await channel.updateChannel({
+            //         name: formData.title || channel.name, // Update the title if provided
+            //       });
+            // }
             if (project?.groupChatID) {
-                const channel = await sdk.groupChannel.getChannel(project.groupChatID);
-                await channel.updateChannel({
-                    name: formData.title || channel.name, // Update the title if provided
-                  });
-            }
+                // Fetch the channel using its ID
+                const channel = chatClient.channel('messaging', project.groupChatID);
+          
+                // Update the channel name
+                await channel.update({
+                  name: formData.title || channel.data?.name, // Keep the existing name if none provided
+                });
+                console.log("Channel name updated successfully.");
+              }
 
             // Update the project image and the chat image 
             if (formData?.image !== project?.image) {
-                await updateProjectImage(project?.id, formData, setFormData, project?.image, sdk, project?.groupChatID);
+                await updateProjectImage(project?.id, formData, setFormData, project?.image, project?.groupChatID);
             }
 
 
@@ -232,12 +243,23 @@ const handleAddUsers = async () => {
             });
             console.log(`User ${userId} added to the project.`);
 
-            // Add users to the group chat 
+            // // Add users to the group chat 
+            // if (project?.groupChatID) {
+            //     const channel = await sdk.groupChannel.getChannel(project.groupChatID);
+            //     console.log('got the channel at least')
+            //     await channel.inviteWithUserIds([userId]);
+            //     console.log(`User ${userId} added to group chat ${project?.groupChatID}.`);
+            // }
+            // Step 2: Add users to the Stream Chat group
             if (project?.groupChatID) {
-                const channel = await sdk.groupChannel.getChannel(project.groupChatID);
-                console.log('got the channel at least')
-                await channel.inviteWithUserIds([userId]);
-                console.log(`User ${userId} added to group chat ${project?.groupChatID}.`);
+                try {
+                    const channel = chatClient.channel('messaging', project.groupChatID);
+                    console.log('Got the channel at least');
+                    await channel.addMembers([userId]); // Add user to the chat
+                    console.log(`User ${userId} added to group chat ${project?.groupChatID}.`);
+                } catch (error) {
+                    console.error(`Error adding user ${userId} to group chat:`, error);
+                }
             }
         });
 
