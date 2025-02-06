@@ -32,6 +32,10 @@ const ChannelListScreen = () => {
           <Icon name="create-outline" size={24} color="black" />
         </TouchableOpacity>
       ),
+      headerLeft: () => (
+        <View>
+        </View>
+      ),
     });
   }, [navigation]);
 

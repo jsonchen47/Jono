@@ -33,15 +33,19 @@ const ProjectsScreenFYP = ({ category }: any) => {
   );
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (shouldRefresh) {
-        // fetchData();
         const fetchData = async () => {
           setLoading(true);
-          fetchProjects(null, true);
+  
+          // Add a 1-second delay
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+  
+          await fetchProjects(null, true); // Ensure this is awaited if it's async
           setLoading(false);
         };
-        fetchData()
+  
+        fetchData();
         setShouldRefresh(false); // Reset the flag after refreshing
       }
     }, [shouldRefresh])

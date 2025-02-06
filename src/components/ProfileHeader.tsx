@@ -22,6 +22,7 @@ const client = generateClient();
 
 const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any) => {
   const [isRequested, setIsRequested] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
   const [connectionID, setConnectionID] = useState<string | null>(null);
   const [counts, setCounts] = useState({ numConnections: 0, numProjects: 0, numTeams: 0 });
   // const [loading, setLoading] = useState(true);
@@ -50,7 +51,53 @@ const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any)
     fetchUserID();
   }, [loggedInUser]); // Depend on loggedInUser to re-fetch if it changes
 
+  // Check if theres already a connection
+  useEffect(() => {
+    if (stateAuthUserID && user?.id) {
+      checkExistingConnection();
+    }
+  }, [stateAuthUserID, user?.id]);
+
+  const checkExistingConnection = async () => {
+    try {
+      if (!stateAuthUserID || !user?.id) return;
   
+      const result = await client.graphql({
+        query: searchConnections,
+        variables: {
+          filter: {
+            or: [
+              { userID: { eq: stateAuthUserID }, connectedUserID: { eq: user.id } },
+              { userID: { eq: user.id }, connectedUserID: { eq: stateAuthUserID } },
+            ],
+          },
+        },
+      }) as GraphQLResult<any>;
+  
+      const connection = result?.data?.searchConnections?.items[0];
+  
+      if (connection) {
+        setConnectionID(connection.id);
+        if (connection.status === 'approved') {
+          setIsConnected(true);
+          setIsRequested(false);
+        } else if (connection.status === 'requested') {
+          setIsRequested(true);
+          setIsConnected(false);
+        }
+      } else {
+        setIsRequested(false);
+        setIsConnected(false);
+        setConnectionID(null);
+      }
+    } catch (error) {
+      console.error('Error checking existing connection:', error);
+    }
+  };
+  
+  
+
+
   const fetchCounts = async (userID: string) => {
     try {
       // Fetch connections using searchable with a filter for accepted status
@@ -214,17 +261,19 @@ const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any)
         <TouchableOpacity
           style={
             otherProfile
-              ? isRequested
-                ? styles.removeRequestButton
-                : styles.editProfileButton
+              ? isConnected
+                ? styles.connectedButton // Green for "Following"
+                : isRequested
+                ? styles.requestedButton // Grey for "Requested"
+                : styles.connectButton // Blue for "Request to Connect"
               : styles.editProfileButton
           }
           onPress={() => {
             if (otherProfile) {
-              if (isRequested) {
-                handleRemoveConnection();
+              if (isConnected || isRequested) {
+                handleRemoveConnection(); // Remove connection or cancel request
               } else {
-                handleRequestConnection();
+                handleRequestConnection(); // Send connection request
               }
             } else {
               router.push('/editProfile');
@@ -234,19 +283,24 @@ const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any)
           <Text
             style={
               otherProfile
-                ? isRequested
-                  ? styles.editProfileText
-                  : styles.editProfileText
+                ? isConnected
+                  ? styles.connectedText // Green text
+                  : isRequested
+                  ? styles.requestedText // Grey text
+                  : styles.connectText // Blue text
                 : styles.editProfileText
             }
           >
             {otherProfile
-              ? isRequested
+              ? isConnected
+                ? 'Following'
+                : isRequested
                 ? 'Requested'
                 : 'Request to Connect'
               : 'Edit Profile'}
           </Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -341,6 +395,45 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
   },
+  connectButton: {
+    backgroundColor: '#004068', // Blue
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  
+  requestedButton: {
+    backgroundColor: 'lightgray', // Grey
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  
+  connectedButton: {
+    backgroundColor: 'lightgray', // Green for "Following"
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  
+  connectText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  
+  requestedText: {
+    color: 'gray',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  
+  connectedText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  
 });
 
 export default ProfileHeader;

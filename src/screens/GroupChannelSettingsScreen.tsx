@@ -7,7 +7,7 @@ import { TextInput, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const GroupChannelSettingsScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const { client } = useChatContext();
   const { params } = useRoute<any>();
 
@@ -58,7 +58,7 @@ const GroupChannelSettingsScreen = () => {
     try {
       await channel.removeMembers([client.userID]);
       Alert.alert('Left Channel', 'You have left the group chat.');
-      navigation.goBack();
+      navigation.replace('GroupChannelList');
     } catch (error) {
       console.error('Error leaving channel:', error);
     }
@@ -77,7 +77,7 @@ const GroupChannelSettingsScreen = () => {
             try {
               await channel.delete();
               Alert.alert('Deleted', 'Group chat has been deleted.');
-              navigation.goBack();
+              navigation.replace('GroupChannelList');
             } catch (error) {
               console.error('Error deleting channel:', error);
             }
