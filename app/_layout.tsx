@@ -69,6 +69,12 @@ function RootLayout() {
                     type: 'default', // Type of input
                     placeholder: 'Enter your full name', // Placeholder text
                   },
+                  {
+                    name: 'preferred_username', // Custom field name
+                    label: 'Username', // Label for the custom field
+                    type: 'default', // Type of input
+                    placeholder: 'Enter a username', // Placeholder text
+                  },
                 ]}
               />
             ),
