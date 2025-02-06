@@ -209,13 +209,13 @@ const EditProfileScreen = () => {
             placeholder="Enter your name"
           />
 
-          {/* <Text style={styles.label}>Username</Text>
+          <Text style={styles.label}>Username</Text>
           <TextInput
             style={styles.input}
             value={username}
             onChangeText={setUsername}
             placeholder="Enter your username"
-          /> */}
+          />
 
           <Text style={styles.label}>Bio</Text>
           <TextInput
@@ -302,9 +302,9 @@ const styles = StyleSheet.create({
   },
   headerButton: {
     // color: '#007bff',
-    fontWeight: 'bold',
+    fontWeight: '500',
     paddingHorizontal: 16,
-    fontSize: 17,
+    fontSize: 16,
   },
   spacerVertical: {
 

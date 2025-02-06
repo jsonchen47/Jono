@@ -1,3 +1,4 @@
+import React, { useCallback } from 'react';
 import { Link } from 'expo-router';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Chip } from 'react-native-paper';
@@ -21,6 +22,9 @@ import { router, useRouter } from 'expo-router';
 import { useNotifications } from '@/src/contexts/NotificationContext';
 import { generateClient } from 'aws-amplify/api';
 import { User } from '@sendbird/chat';
+import { useRefresh } from '@/src/contexts/RefreshContext';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -31,6 +35,7 @@ export default function ProfileIndex() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
   const navigation = useNavigation();
+  const { shouldRefresh, setShouldRefresh } = useRefresh();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,6 +46,32 @@ export default function ProfileIndex() {
     fetchData();
     
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        if (shouldRefresh) {
+          try {
+            setLoading(true);
+            await fetchUser(); // Your async fetch function
+            setLoading(false);
+          } catch (error) {
+            console.error('Error fetching user:', error);
+            setLoading(false); // Ensure loading is reset even on error
+          } finally {
+            setShouldRefresh(false); // Reset the refresh flag after fetching
+          }
+        }
+      };
+  
+      fetchData(); // Call the async function
+  
+      // Optional cleanup (if needed)
+      return () => {
+        setLoading(false); // Cleanup in case the screen loses focus mid-fetch
+      };
+    }, [shouldRefresh, user, hasNotifications])
+  );
 
   useEffect(() => {
     navigation.setOptions({ 

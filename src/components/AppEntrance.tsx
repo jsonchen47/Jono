@@ -191,7 +191,7 @@ const AppEntrance = () => {
         }
     
         // Use the username to generate the file name
-        const username = userAttributes.preferred_username || 'default_user';
+        const username = userAttributes.preferred_username || authUser.username;
         const defaultImage = await uploadDefaultProfilePicture(username);
     
         const newUser = {
