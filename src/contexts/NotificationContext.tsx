@@ -66,7 +66,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       
       const joinRequests = ownedProjects.flatMap((project: any) =>
         (project?.joinRequests?.items || [])
-          .filter((request: any) => request.status !='approved') // Filter for 'requested' status
+          .filter((request: any) => request.status === 'requested') // Filter for 'requested' status
           .map((request: any) => ({
             ...request,
             projectTitle: project.title, // Include project title for context
@@ -97,7 +97,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       const allNotifications = [
         ...connections.map((c) => ({ ...c, type: 'connectionRequest' })), // Add type identifier
         ...joinRequests,
-        ...approvedJoinRequests
+        ...approvedJoinRequests.map((c) => ({ ...c, type: 'joinRequest' }))
       ].sort((a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       );

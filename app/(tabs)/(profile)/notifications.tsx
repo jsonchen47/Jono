@@ -50,6 +50,7 @@ const NotificationsPage = () => {
             input: {
               id: notification.id,
               status: 'approved',
+              viewed: false
             },
           },
         });
@@ -158,7 +159,7 @@ const NotificationsPage = () => {
     } else if (item.type === 'joinRequest') {
       if (item.status === 'approved') {
         // For a join request you sent that got approved 
-        title = `Your request to join ${item.projectTitle} has been approved.`;
+        title = `Your request to join "${item.project.title}" has been approved.`;
       } else {
         // For pending join requests for one of your projects
         title = `${item.user.name} requested to join ${item.projectTitle}.`;
