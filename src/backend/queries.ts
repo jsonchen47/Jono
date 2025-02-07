@@ -178,6 +178,7 @@ export const listProjectsWithJoinRequests = /* GraphQL */ `
             projectID
             createdAt
             updatedAt
+            status
             viewed
             project {
               id

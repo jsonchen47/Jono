@@ -74,4 +74,6 @@ type JoinRequest @model @auth(rules: [{ allow: public }]) {
   project: Project @belongsTo(fields: ["projectID"]) # Optional relationship
   createdAt: AWSDateTime # Optional: Can be null
   viewed: Boolean @default(value: "false") # Optional with default value
+  status: String
 }
+

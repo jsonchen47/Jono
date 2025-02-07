@@ -80,7 +80,7 @@ const SmallProjectCard = ({ project }: any) => {
           <HeartButton projectID={project.id}/>
         </View>
         <View style={styles.browseProjectsTextContainer}>
-          <Text style={styles.browseProjectsTitle}>{currentProject?.title}</Text>
+          <Text style={styles.browseProjectsTitle} numberOfLines={3}>{currentProject?.title}</Text>
           <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
         </View>
       </LinearGradient>

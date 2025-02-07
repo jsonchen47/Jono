@@ -17,7 +17,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // Import vec
 import DropdownWithChipDisplay from '../components/DropdownWithChipDisplay';
 import Geolocation from '@react-native-community/geolocation';
 import { listUserProjects } from '../graphql/queries';
-import { deleteUserProject, createUserProject } from '../graphql/mutations';
+import { deleteUserProject, createUserProject, updateJoinRequest } from '../graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { updateProject } from '../graphql/mutations';
 import { useProjectUpdateContext } from '../contexts/ProjectUpdateContext';
@@ -28,6 +28,7 @@ import { getCurrentUser } from 'aws-amplify/auth';
 import { deleteJoinRequest } from '../graphql/mutations';
 // import { useSendbirdChat } from '@sendbird/uikit-react-native';
 import { chatClient } from '../backend/streamChat';
+import { listJoinRequests } from '../graphql/queries';
 
 const client = generateClient();
 
@@ -114,7 +115,7 @@ const ManageProjectScreen = ({project}: any) => {
             setLoading(true);
     
             // Step 1: Remove canceled joinRequests
-            await removeCanceledJoinRequests();
+            await setJoinRequestsToApproved();
     
             // Step 2: Update project details
             const input = {
@@ -152,6 +153,7 @@ const ManageProjectScreen = ({project}: any) => {
                 await channel.update({
                   name: formData.title || channel.data?.name, // Keep the existing name if none provided
                 });
+                await channel.update({image: project?.image})
                 console.log("Channel name updated successfully.");
               }
 
@@ -198,8 +200,8 @@ const ManageProjectScreen = ({project}: any) => {
     }, [navigation, router, handleSaveConfirmation, project]);
     
 
-    // Function to remove canceled joinRequests
-const removeCanceledJoinRequests = async () => {
+    // Function to set joinRequests to approved
+const setJoinRequestsToApproved = async () => {
     try {
         // Get the list of joinRequests to be removed
         const canceledRequests = project.joinRequests.items.filter(
@@ -220,6 +222,9 @@ const removeCanceledJoinRequests = async () => {
         console.error("Error removing canceled joinRequests:", error);
     }
 };
+
+
+
 
 const handleAddUsers = async () => {
     try {
@@ -256,6 +261,7 @@ const handleAddUsers = async () => {
                     const channel = chatClient.channel('messaging', project.groupChatID);
                     console.log('Got the channel at least');
                     await channel.addMembers([userId]); // Add user to the chat
+                    await channel.update({image: project?.image})
                     console.log(`User ${userId} added to group chat ${project?.groupChatID}.`);
                 } catch (error) {
                     console.error(`Error adding user ${userId} to group chat:`, error);
@@ -265,27 +271,57 @@ const handleAddUsers = async () => {
 
         await Promise.all(addUserPromises);
 
-        // Step 2: Remove corresponding joinRequests
-        const joinRequestsToDelete = joinRequests.filter((request) =>
-            addUserIDs.includes(request.userID)
+        // // Step 2: Remove corresponding joinRequests
+        // const joinRequestsToDelete = joinRequests.filter((request) =>
+        //     addUserIDs.includes(request.userID)
+        // );
+
+        // const deletePromises = joinRequestsToDelete.map(async (request) =>
+        //     client.graphql({
+        //         query: deleteJoinRequest, // Replace with your actual mutation
+        //         variables: { input: { id: request.id } },
+        //     })
+        // );
+
+        // await Promise.all(deletePromises);
+
+        // // Update formData locally
+        // const updatedJoinRequests = joinRequests.filter(
+        //     (request) => !addUserIDs.includes(request.userID)
+        // );
+        // setFormData({ ...formData, joinRequests: updatedJoinRequests });
+
+        // console.log('Users successfully added and join requests updated.');
+        // Step 2: Approve corresponding joinRequests
+        const joinRequestsToApprove = joinRequests.filter((request) =>
+        addUserIDs.includes(request.userID)
         );
 
-        const deletePromises = joinRequestsToDelete.map(async (request) =>
-            client.graphql({
-                query: deleteJoinRequest, // Replace with your actual mutation
-                variables: { input: { id: request.id } },
-            })
+        const approvePromises = joinRequestsToApprove.map(async (request) =>
+        client.graphql({
+            query: updateJoinRequest, // Use the update mutation instead of delete
+            variables: { 
+                input: { 
+                    id: request.id, 
+                    status: 'approved' // Set the status to 'approved'
+                } 
+            },
+        })
         );
 
-        await Promise.all(deletePromises);
+        await Promise.all(approvePromises);
 
         // Update formData locally
-        const updatedJoinRequests = joinRequests.filter(
-            (request) => !addUserIDs.includes(request.userID)
+        const updatedJoinRequests = joinRequests.map((request) =>
+        addUserIDs.includes(request.userID)
+            ? { ...request, status: 'approved' } // Update status locally as well
+            : request
         );
+
         setFormData({ ...formData, joinRequests: updatedJoinRequests });
 
-        console.log('Users successfully added and join requests updated.');
+        console.log('Users successfully added and join requests updated to "approved".');
+
     } catch (error) {
         console.error('Error adding users:', error);
         alert('An error occurred while adding users.');
@@ -321,15 +357,43 @@ const handleAddUsers = async () => {
                 console.log('No users found to remove.');
                 return;
             }
+            const channel = chatClient.channel('messaging', project.groupChatID);
+
     
-            const deletionPromises = userProjectIds.map(async (userProjectId: any) => {
+            const deletionPromises = userProjectIds.map(async (userProjectId: any, index: number) => {
                 
 
-                // Return the deletion query 
-                return client.graphql({
+                const userId = userIds[index];
+
+                // Remove user from the channel
+                await channel.removeMembers([userId]);
+                await channel.update({ image: project?.image });
+
+                // Remove user project association
+                await client.graphql({
                     query: deleteUserProject,
                     variables: { input: { id: userProjectId } }
                 });
+
+                // Remove associated join request
+                const joinRequestResult = await client.graphql({
+                    query: listJoinRequests,
+                    variables: { 
+                        filter: { 
+                            userID: { eq: userId }, 
+                            projectID: { eq: projectId } 
+                        }
+                    }
+                }) as GraphQLResult<any>;
+
+                const joinRequestId = joinRequestResult.data?.listJoinRequests?.items?.[0]?.id;
+
+                if (joinRequestId) {
+                    await client.graphql({
+                        query: deleteJoinRequest,
+                        variables: { input: { id: joinRequestId } }
+                    });
+                }
             });
     
             await Promise.all(deletionPromises);

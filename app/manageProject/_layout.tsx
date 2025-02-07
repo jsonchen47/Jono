@@ -20,6 +20,7 @@ interface JoinRequest {
   projectID: string;
   createdAt?: string;
   user?: User; // Relationship to User
+  status: string; 
 }
 
 

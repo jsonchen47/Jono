@@ -40,6 +40,7 @@ export const getProject = /* GraphQL */ `query GetProject($id: ID!) {
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -553,6 +554,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -1155,6 +1157,7 @@ export const getJoinRequest = /* GraphQL */ `query GetJoinRequest($id: ID!) {
     }
     createdAt
     viewed
+    status
     updatedAt
     __typename
   }
@@ -1211,6 +1214,7 @@ export const listJoinRequests = /* GraphQL */ `query ListJoinRequests(
       }
       createdAt
       viewed
+      status
       updatedAt
       __typename
     }
@@ -1280,6 +1284,7 @@ export const joinRequestsByUserIDAndCreatedAt = /* GraphQL */ `query JoinRequest
       }
       createdAt
       viewed
+      status
       updatedAt
       __typename
     }
@@ -1349,6 +1354,7 @@ export const joinRequestsByProjectIDAndCreatedAt = /* GraphQL */ `query JoinRequ
       }
       createdAt
       viewed
+      status
       updatedAt
       __typename
     }

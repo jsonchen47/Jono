@@ -296,6 +296,7 @@ const ProjectScreen = ({ project }: any) => {
             userID: authUserID,
             projectID: project.id,
             createdAt: new Date().toISOString(),
+            status: 'requested'
           };
       
           const result = await client.graphql({
@@ -472,13 +473,32 @@ const ProjectScreen = ({ project }: any) => {
                               //   }
                               // }
                               console.log('User is premium');
-                                if (isValidChat && project?.groupChatID) {
-                                  // Navigate to the existing group chat
-                                  router.push(`/groupChat?channelUrl=${project.groupChatID}`);
+                              if (isValidChat && project?.groupChatID) {
+                                const authUser = await getCurrentUser();
+                                const userId = authUser.userId;
+                        
+                                // Get the channel
+                                const channel = chatClient.channel('messaging', project?.groupChatID);
+                        
+                                const isMember = channel.state.members[userId];
+                        
+                                if (!isMember) {
+                                  console.log(`User ${userId} is not in the group chat. Adding...`);
+                        
+                                  // Add the user to the channel
+                                  await channel.addMembers([userId]);
+                                  await channel.update({image: project?.image, name: project?.title})
+                                  console.log(`User ${userId} added to the group chat.`);
                                 } else {
-                                  // Create a new group chat if invalid
-                                  await createGroupChat();
+                                  console.log(`User ${userId} is already a member of the group chat.`);
                                 }
+                        
+                                // Navigate to the group chat
+                                router.push(`/groupChat?channelUrl=${project.groupChatID}`);
+                              } else {
+                                // Create a new group chat if invalid
+                                await createGroupChat();
+                              }
                             } catch (error) {
                               console.error('Error checking premium status or showing paywall:', error);
                               // Alert.alert('Error', 'An error occurred while processing your request.');
@@ -631,7 +651,7 @@ const ProjectScreen = ({ project }: any) => {
                 {/* Divider */}
                 <View style={styles.bottomDivider}></View>
                 {/* Bottom content */}
-                <SafeAreaView>
+                <SafeAreaView edges={['bottom']}>
                     <View style={styles.contentBottom}>
                         <View style={styles.membersCountTextContainer}>
                             <Text style={styles.membersCountText}>{users.length}</Text>

@@ -40,6 +40,7 @@ export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filt
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -88,6 +89,7 @@ export const onUpdateProject = /* GraphQL */ `subscription OnUpdateProject($filt
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -136,6 +138,7 @@ export const onDeleteProject = /* GraphQL */ `subscription OnDeleteProject($filt
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -428,6 +431,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -518,6 +522,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -608,6 +613,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -984,6 +990,7 @@ export const onCreateJoinRequest = /* GraphQL */ `subscription OnCreateJoinReque
     }
     createdAt
     viewed
+    status
     updatedAt
     __typename
   }
@@ -1065,6 +1072,7 @@ export const onUpdateJoinRequest = /* GraphQL */ `subscription OnUpdateJoinReque
     }
     createdAt
     viewed
+    status
     updatedAt
     __typename
   }
@@ -1146,6 +1154,7 @@ export const onDeleteJoinRequest = /* GraphQL */ `subscription OnDeleteJoinReque
     }
     createdAt
     viewed
+    status
     updatedAt
     __typename
   }

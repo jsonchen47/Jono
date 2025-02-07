@@ -75,24 +75,48 @@ const newProject1 = () => {
               placeholder="Give a name to your dream"
               multiline={true}
               value={formData.title}
-              onChangeText={(text) => setFormData((prevData) => ({
-                ...prevData,
-                title: text, // Update title while typing
-              }))}
+              maxLength={100} // Limit to `100` characters
+              // onChangeText={(text) => setFormData((prevData) => ({
+              //   ...prevData,
+              //   title: text, // Update title while typing
+              // }))}
+              onChangeText={(text) => {
+                if (text.length <= 100) {  // Explicitly limit input to 70 characters
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    title: text,
+                  }));
+                }
+              }}
             >
             </TextInput>
+            {/* Character Count */}
+            <Text style={styles.charCount}>{`${formData.title.length}/100`}</Text>
+
             {/* Add description */}
             <Text style={styles.projectTitleHeader}>Description</Text>
             <TextInput
               style={styles.projectDescriptionTextInput}
               placeholder="What does your product do, what are you looking for, etc"
               multiline={true}
-              onChangeText={(text) => setFormData((prevData) => ({
-                ...prevData,
-                description: text, // Update title while typing
-              }))}
+              // onChangeText={(text) => setFormData((prevData) => ({
+              //   ...prevData,
+              //   description: text, // Update title while typing
+              // }))}
+              value={formData.description}
+              maxLength={550} // Limit to 550 characters
+              onChangeText={(text) => {
+                if (text.length <= 550) {  // Explicitly limit input to 70 characters
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    description: text,
+                  }));
+                }
+              }}
             >
             </TextInput>
+            {/* Character Count */}
+            <Text style={styles.charCount}>{`${formData.description.length}/550`}</Text>
           </ScrollView>
           {/* Divider */}
           <View style={styles.divider}></View>
@@ -231,5 +255,12 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     fontSize: 18, 
+  }, 
+  charCount: {
+    alignSelf: 'flex-end',
+    fontSize: 12,
+    color: 'gray',
+    marginTop: 5,
   }
+  
 });

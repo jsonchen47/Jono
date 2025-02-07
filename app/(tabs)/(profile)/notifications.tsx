@@ -5,11 +5,12 @@ import moment from 'moment';
 import { useNotifications } from '@/src/contexts/NotificationContext';
 import { generateClient } from 'aws-amplify/api';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { updateConnection, deleteConnection, deleteJoinRequest, createUserProject } from '@/src/graphql/mutations';
+import { updateConnection, deleteConnection, deleteJoinRequest, createUserProject, updateJoinRequest } from '@/src/graphql/mutations';
 // import { useSendbirdChat } from '@sendbird/uikit-react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'; // For the chevron icon
 import { useNavigation } from '@react-navigation/native';
 import { chatClient } from '@/src/backend/streamChat';
+import { useRouter } from 'expo-router';
 
 const client = generateClient();
 
@@ -17,7 +18,7 @@ const NotificationsPage = () => {
   const { notifications, markNotificationsAsRead, fetchNotifications } = useNotifications();
   // const { sdk } = useSendbirdChat();
   const navigation = useNavigation();
-
+  const router = useRouter(); 
 
   useEffect(() => {
 
@@ -63,12 +64,23 @@ const NotificationsPage = () => {
           },
         });
 
+        // await client.graphql({
+        //   query: deleteJoinRequest,
+        //   variables: {
+        //     input: { id: notification.id },
+        //   },
+        // });
         await client.graphql({
-          query: deleteJoinRequest,
+          query: updateJoinRequest, // Use the update mutation instead of delete
           variables: {
-            input: { id: notification.id },
+            input: {
+              id: notification.id, // The ID of the join request
+              status: 'approved',  // Set the status to 'approved'
+              viewed: false
+            },
           },
         });
+        
         
         // ADD THE STREAM CHAT METHOD HERE TO ADD USER TO GROUP CHAT
         // Add user to group chat 
@@ -126,25 +138,58 @@ const NotificationsPage = () => {
     const isApproved = item.status === 'approved';
     const daysAgo = moment(item.updatedAt).fromNow();
 
+    // let title = '';
+    // if (item.type === 'connectionRequest') {
+    //   title = isApproved
+    //     ? `@${item.connectedUser.name} connected with you.`
+    //     : `@${item.user.name} requested to connect with you.`;
+    // } else if (item.type === 'joinRequest') {
+    //   title = `@${item.user.name} requested to join ${item.projectTitle}.`;
+    // }
     let title = '';
+
     if (item.type === 'connectionRequest') {
-      title = isApproved
-        ? `@${item.user.username} connected with you.`
-        : `@${item.user.username} requested to connect with you.`;
+      title = item.status === 'approved'
+      // Your request to connect has been approved by someone else
+        ? `${item.connectedUser.name} connected with you.`
+        // Someone else has requested to connect 
+        : `${item.user.name} requested to connect with you.`;
+
     } else if (item.type === 'joinRequest') {
-      title = `@${item.user.username} requested to join ${item.projectTitle}.`;
+      if (item.status === 'approved') {
+        // For a join request you sent that got approved 
+        title = `Your request to join ${item.projectTitle} has been approved.`;
+      } else {
+        // For pending join requests for one of your projects
+        title = `${item.user.name} requested to join ${item.projectTitle}.`;
+      }
     }
+
 
     return (
       <List.Item
         style={{ paddingRight: 0 }}
-        title={title}
+        // title={title}
+        title={() => (
+          <TouchableOpacity
+            onPress={() => router.push({ pathname: '/otherProfile', params: { id: item.user.id } })}
+          >
+            <Text style={styles.listItemTitle}>{title}</Text>
+          </TouchableOpacity>
+        )}
         titleStyle={styles.listItemTitle}
         titleNumberOfLines={2}
         description={daysAgo}
         descriptionStyle={styles.listItemDescription}
+        // left={() => (
+        //   <Image source={{ uri: item.user.image }} style={styles.profileImage} />
+        // )}
         left={() => (
-          <Image source={{ uri: item.user.image }} style={styles.profileImage} />
+          <TouchableOpacity
+            onPress={() => router.push({ pathname: '/otherProfile', params: { id: item.user.id } })}
+          >
+            <Image source={{ uri: item.user.image }} style={styles.profileImage} />
+          </TouchableOpacity>
         )}
         right={() => (
           <View style={styles.buttonContainer}>

@@ -7,6 +7,7 @@ import { deleteProject, deleteUserProject } from '@/src/graphql/mutations';
 import { useProgress } from '@/src/contexts/ProgressContext';
 import { remove } from 'aws-amplify/storage';
 import { useRefresh } from '@/src/contexts/RefreshContext';
+import { chatClient } from '@/src/backend/streamChat';
 
 const client = generateClient();
 
@@ -48,9 +49,11 @@ const fetchProject = async (projectId: string) => {
 
 // Delete the project after deleting the user projects
 const deleteProjectById = async (projectId: string) => {
+
   try {
     // Delete the image
     const project = await fetchProject(projectId);
+    const channelId = project?.groupChatID; // Assuming the channel ID is stored in the project
     const imageKey = project?.image?.split('jonoa48aa29b26b146de8c05923d59de88cec85f4-dev.s3.us-west-1.amazonaws.com/public/')[1];
 
     console.log(`Attempting to delete image with key: ${imageKey}`);
@@ -64,10 +67,18 @@ const deleteProjectById = async (projectId: string) => {
 
     const links = await fetchProjectLinks(projectId);
     await deleteProjectLinks(links);
+
     await client.graphql({
       query: deleteProject,
       variables: { input: { id: projectId } }
     });
+
+    // Delete the associated Stream Chat channel
+    if (channelId) {
+      const channel = chatClient.channel('messaging', channelId);
+      await channel.delete();
+      console.log(`Stream Chat channel (${channelId}) deleted successfully`);
+    }
     
     console.log('Project deleted successfully');
 

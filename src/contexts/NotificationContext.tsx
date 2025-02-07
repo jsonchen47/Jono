@@ -3,10 +3,11 @@ import { getCurrentUser } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/api';
 import { listConnections } from '@/src/graphql/queries';
 import { updateConnection } from '@/src/graphql/mutations';
-import { listProjects } from '@/src/graphql/queries';
+import { listProjects, listJoinRequests } from '@/src/graphql/queries';
 import { updateJoinRequest } from '@/src/graphql/mutations';
 import { listProjectsWithJoinRequests } from '../backend/queries';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+
 
 interface NotificationContextType {
   hasNotifications: boolean;
@@ -32,8 +33,10 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
         query: listConnections,
         variables: {
           filter: {
-            connectedUserID: { eq: authUserID },
-            status: { eq: "requested" } // Filter for status "requested"
+            or: [
+              { connectedUserID: { eq: authUserID }, status: { eq: "requested" } }, // For pending requests TO the user
+              { userID: { eq: authUserID }, status: { eq: "approved" }, viewed: { eq: false }}, // For APPROVED requests sent BY the user that haven't been seen
+            ],
           }
         }
       });
@@ -51,20 +54,50 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       console.log('ownedprojects', ownedProjects)
       
   
-      // Extract join requests from the owned projects
+      // // Extract join requests from the owned projects
+      // const joinRequests = ownedProjects.flatMap((project: any) =>
+      //   (project?.joinRequests?.items || []).map((request: any) => ({
+      //     ...request,
+      //     projectTitle: project.title, // Include project title for context
+      //     type: 'joinRequest', // Add a type identifier
+      //   }))
+      // );
+      // Extract join requests with status 'requested' from the owned projects
+      
       const joinRequests = ownedProjects.flatMap((project: any) =>
-        (project?.joinRequests?.items || []).map((request: any) => ({
-          ...request,
-          projectTitle: project.title, // Include project title for context
-          type: 'joinRequest', // Add a type identifier
-        }))
+        (project?.joinRequests?.items || [])
+          .filter((request: any) => request.status !='approved') // Filter for 'requested' status
+          .map((request: any) => ({
+            ...request,
+            projectTitle: project.title, // Include project title for context
+            type: 'joinRequest',         // Add a type identifier
+          }))
       );
+      
+      console.log('joinRequests: ', ownedProjects[0]?.joinRequests?.items)
+        
 
-  
+
+      // Also extract the join requests that have been approved but not seen
+      // Fetch connection requests
+      const approvedJoinRequestsResult = await client.graphql({
+        query: listJoinRequests,
+        variables: {
+          filter: {
+            or: [
+              { userID: { eq: authUserID }, status: { eq: "approved" }, viewed: { eq: false }}, // For APPROVED join requests sent BY the user that haven't been seen
+            ],
+          }
+        }
+      });
+
+      const approvedJoinRequests = approvedJoinRequestsResult.data?.listJoinRequests?.items || []
+
       // Merge and sort notifications by date
       const allNotifications = [
         ...connections.map((c) => ({ ...c, type: 'connectionRequest' })), // Add type identifier
         ...joinRequests,
+        ...approvedJoinRequests
       ].sort((a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       );

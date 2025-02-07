@@ -12,6 +12,7 @@ import { deleteUser as deleteUserMutation } from '@/src/graphql/mutations';
 import { listProjects } from '@/src/graphql/queries';
 import { deleteProject } from '@/src/graphql/mutations';
 import { getCurrentUser } from 'aws-amplify/auth';
+import { chatClient } from '@/src/backend/streamChat';
 
 const client = generateClient();
 
@@ -73,6 +74,29 @@ export default function DeleteAccountScreen() {
                   //     },
                   //   }
                   // );
+                  
+                  const deleteStreamUser = async (userID: any) => {
+                    try {
+                      const response = await fetch('https://2b68q5wmd9.execute-api.us-west-1.amazonaws.com/default/deleteStreamChatUser', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'x-api-key': '6ara8tryfyf7',  // Add the API key here
+                        },
+                        body: JSON.stringify({ userId: userID }),
+                      });
+                  
+                      if (response.ok) {
+                        console.log(`Stream Chat account for ${userID} deleted.`);
+                      } else {
+                        console.error('Failed to delete Stream Chat user');
+                      }
+                    } catch (error) {
+                      console.error('Error deleting Stream Chat user:', error);
+                    }
+                  };
+                  
+                  deleteStreamUser(userID)
       
                   // 4. Delete the user's Cognito account
                   await deleteUser();

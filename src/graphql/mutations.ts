@@ -43,6 +43,7 @@ export const createProject = /* GraphQL */ `mutation CreateProject(
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -94,6 +95,7 @@ export const updateProject = /* GraphQL */ `mutation UpdateProject(
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -145,6 +147,7 @@ export const deleteProject = /* GraphQL */ `mutation DeleteProject(
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -458,6 +461,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -551,6 +555,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -644,6 +649,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
         projectID
         createdAt
         viewed
+        status
         updatedAt
         __typename
       }
@@ -1024,6 +1030,7 @@ export const createJoinRequest = /* GraphQL */ `mutation CreateJoinRequest(
     }
     createdAt
     viewed
+    status
     updatedAt
     __typename
   }
@@ -1106,6 +1113,7 @@ export const updateJoinRequest = /* GraphQL */ `mutation UpdateJoinRequest(
     }
     createdAt
     viewed
+    status
     updatedAt
     __typename
   }
@@ -1188,6 +1196,7 @@ export const deleteJoinRequest = /* GraphQL */ `mutation DeleteJoinRequest(
     }
     createdAt
     viewed
+    status
     updatedAt
     __typename
   }

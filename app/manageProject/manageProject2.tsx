@@ -54,6 +54,52 @@ const manageProject2 = () => {
             return { usersList: [], joinedDates: [] }; // Return empty arrays if no user IDs
         };  
 
+        // const loadRequestMembers = async () => {
+        //     console.log('formdata join requests');
+        //     console.log(formData?.joinRequests);
+        //     console.log('length');
+        //     console.log(formData?.joinRequests?.length);
+        
+        //     if (formData?.joinRequests?.length > 0) {
+        //         console.log('if statement true');
+        
+        //         // Filter joinRequests with status 'requested'
+        //         const requestedJoinRequests = formData.joinRequests.filter(
+        //             (request: any) => request.status === 'requested' || undefined
+        //         );
+        
+        //         console.log('requested joinRequests');
+        //         console.log(requestedJoinRequests);
+        
+        //         if (requestedJoinRequests.length > 0) {
+        //             // Extract user IDs from the filtered joinRequests
+        //             const userIds = requestedJoinRequests.map((request: any) => request.userID);
+        
+        //             console.log('filtered user IDs');
+        //             console.log(userIds);
+        
+        //             // Fetch user details based on the filtered user IDs
+        //             const usersList = await fetchUsers(userIds);
+        
+        //             // Map join request creation dates to the corresponding user
+        //             const joinedDates = requestedJoinRequests.map((request: any) => request.createdAt);
+        
+        //             // Update state with fetched users and their join dates
+        //             setRequestMembers(usersList);
+        //             setRequestDates(joinedDates);
+        //         } else {
+        //             // Clear the state if no requests are 'requested'
+        //             setRequestMembers([]);
+        //             setRequestDates([]);
+        //             console.log('No join requests with status "requested"');
+        //         }
+        //     } else {
+        //         // Clear the state if there are no join requests
+        //         setRequestMembers([]);
+        //         setRequestDates([]);
+        //         console.log('if statement false');
+        //     }
+        // };
         // Function for getting the request members
         const loadRequestMembers = async () => {
             console.log('formdata join requestss')
@@ -62,9 +108,16 @@ const manageProject2 = () => {
             console.log(formData?.joinRequests?.length)
             if (formData?.joinRequests?.length > 0) {
                 console.log('if statement true')
+
+                const requestedJoinRequests = formData.joinRequests.filter(
+                                (request: any) => request.status != 'approved'
+                            );
+
+                const userIds = requestedJoinRequests.map((request: any) => request.userID);
+
                 
                 // Extract user IDs from the joinRequests
-                const userIds = formData.joinRequests.map((request: any) => request.userID);
+                // const userIds = formData.joinRequests.map((request: any) => request.userID);
 
                 console.log('formdata.joinRequests')
                 console.log(formData.joinRequests)
@@ -84,6 +137,7 @@ const manageProject2 = () => {
                 console.log('if statement false')
             }
         };
+        
 
 
         // Function for getting the admins

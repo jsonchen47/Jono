@@ -21,6 +21,7 @@ import { uploadData, remove } from 'aws-amplify/storage'; // For uploading and r
 import config from "../src/aws-exports"; // AWS Amplify configuration
 import { useRefresh } from '@/src/contexts/RefreshContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { chatClient } from '@/src/backend/streamChat';
 
 const client = generateClient();
 
@@ -131,6 +132,13 @@ const EditProfileScreen = () => {
         query: updateUser,
         variables: { input: updatedUser },
       }) as GraphQLResult<any>;
+
+      // 2. Update the user in Stream Chat
+    await chatClient.upsertUser({
+      id: userID,
+      name: name,
+      image: image,
+    });
   
       console.log('User profile updated successfully:', result.data?.updateUser);
       setShouldRefresh(true); // Notify that ProfileScreen should refresh
