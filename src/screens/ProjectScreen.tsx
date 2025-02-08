@@ -339,38 +339,67 @@ const ProjectScreen = ({ project }: any) => {
   
       const removeUserFromProject = async () => {
         try {
-          // Step 1: Query to find the user's project relationship
-          const result = await client.graphql({
-            query: listUserProjects,
-            variables: {
-              filter: {
-                projectId: { eq: project.id },
-                userId: { eq: authUserID },
-              },
-            },
-          }) as GraphQLResult<any>;
-      
-          const userProject = result.data?.listUserProjects?.items?.[0];
-      
-          if (!userProject) {
-            console.log('User is not part of the project.');
-            return;
-          }
-      
-          // Step 2: Use deleteUserProject mutation to remove the user
-          await client.graphql({
-            query: deleteUserProject,
-            variables: { input: { id: userProject.id } },
-          });
-      
-          console.log('User successfully removed from the project.');
-      
-          // Optional: Navigate back or refresh the UI
-        //   router.back();
+            // Step 1: Query to find the user's project relationship
+            const result = await client.graphql({
+                query: listUserProjects,
+                variables: {
+                    filter: {
+                        projectId: { eq: project.id },
+                        userId: { eq: authUserID },
+                    },
+                },
+            }) as GraphQLResult<any>;
+    
+            const userProject = result.data?.listUserProjects?.items?.[0];
+    
+            if (!userProject) {
+                console.log('User is not part of the project.');
+                return;
+            }
+    
+            // Step 2: Remove the user from the chat channel
+            const channel = chatClient.channel('messaging', project.groupChatID);
+            await channel.removeMembers([authUserID]);
+    
+            console.log(`User ${authUserID} removed from the chat.`);
+    
+            // Step 3: Delete any join requests associated with the user for the project
+            const joinRequestResult = await client.graphql({
+                query: listJoinRequests,
+                variables: {
+                    filter: {
+                        userID: { eq: authUserID },
+                        projectID: { eq: project.id },
+                    },
+                },
+            }) as GraphQLResult<any>;
+    
+            const joinRequestId = joinRequestResult.data?.listJoinRequests?.items?.[0]?.id;
+    
+            if (joinRequestId) {
+                await client.graphql({
+                    query: deleteJoinRequest,
+                    variables: { input: { id: joinRequestId } },
+                });
+    
+                console.log(`Join request with ID ${joinRequestId} deleted.`);
+            }
+    
+            // Step 4: Use deleteUserProject mutation to remove the user from the project
+            await client.graphql({
+                query: deleteUserProject,
+                variables: { input: { id: userProject.id } },
+            });
+    
+            console.log('User successfully removed from the project and associated join request deleted.');
+    
+            // Optional: Navigate back or refresh the UI
+            // router.back();
         } catch (error) {
-          console.error('Error removing user from project:', error);
+            console.error('Error removing user from project:', error);
         }
-      };
+    };
+    
       
 
     return (
@@ -411,7 +440,7 @@ const ProjectScreen = ({ project }: any) => {
                                 console.log('pressed ellipsis')
                                 router.push({
                                     pathname: '/optionsScreen',
-                                    params: { projectId: project.id },
+                                    params: { projectId: project.id, owner: project?.ownerIDs?.includes(authUserID) },
                                 })
                             }}
                             >
@@ -472,6 +501,7 @@ const ProjectScreen = ({ project }: any) => {
                               //     Alert.alert('Error', 'No available offerings found.');
                               //   }
                               // }
+                              
                               console.log('User is premium');
                               if (isValidChat && project?.groupChatID) {
                                 const authUser = await getCurrentUser();
@@ -494,6 +524,13 @@ const ProjectScreen = ({ project }: any) => {
                                 }
                         
                                 // Navigate to the group chat
+                                const channelName = project?.title
+                                const channelImage = project?.image
+
+                                await channel.update({
+                                  name: channelName, 
+                                  image: channelImage, 
+                                });
                                 router.push(`/groupChat?channelUrl=${project.groupChatID}`);
                               } else {
                                 // Create a new group chat if invalid

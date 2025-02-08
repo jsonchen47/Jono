@@ -263,8 +263,7 @@ const Search = () => {
               <ProjectsGridNew
                 projects={projectsResults}
                 loadMoreProjects={loadMoreProjects}
-                isFetchingMore={isFetchingMoreProjects}
-              />
+                isFetchingMore={isFetchingMoreProjects} loading={undefined} noProjectsComponent={undefined}              />
             </View>
           )}
         />

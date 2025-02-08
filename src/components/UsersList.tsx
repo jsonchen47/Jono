@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, ActivityIndicator, View, StyleSheet, Dimensions } from 'react-native';
+import { FlatList, ActivityIndicator, View, StyleSheet, Dimensions, Text } from 'react-native';
 import { List } from 'react-native-paper'; // Import List from react-native-paper
 import { useNavigation } from '@react-navigation/native'; // For navigating to user profile
 import { useRouter } from 'expo-router';
@@ -21,7 +21,15 @@ const UsersList = ({ users, loadMoreUsers, isFetchingMore }: UsersListProps) => 
     return (
       <List.Item
         style={styles.listItem}
-        title={item.name}
+        // title={
+        //   item.name
+        // }
+        title={() => (
+          <View>
+            <Text style={styles.userName}>{item.name}</Text>
+            <Text>@{item.username}</Text>
+          </View>
+        )}
         titleStyle={styles.userName}
         description={item.bio}
         left={
@@ -78,8 +86,11 @@ const styles = StyleSheet.create({
     // marginBottom: windowWidth * 0.05,
   },
   userName: {
-    fontWeight: '500'
-  }
+    fontWeight: '500', 
+    fontSize: 15, 
+    paddingBottom: 5, 
+  }, 
+
 });
 
 export default UsersList;

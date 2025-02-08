@@ -93,14 +93,18 @@ const NotificationsPage = () => {
 
           // Fetch the channel
           const channel = chatClient.channel('messaging', notification.project.groupChatID);
+          const channelName = channel.data?.name
+          const channelImage = channel.data?.image
 
-          // Ensure the channel exists
-          await channel.watch();
-
+          await channel.update({
+            name: channelName, 
+            image: channelImage, 
+          });
           console.log('Fetched the channel successfully.');
 
           // Add the user to the group chat
           await channel.addMembers([notification.userID]);
+
         }
         
       }

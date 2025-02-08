@@ -8,28 +8,35 @@ const windowHeight = Dimensions.get('window').height;
 
 const optionsScreen = () => {
   const router = useRouter(); 
-  const { projectId } = useLocalSearchParams();
+  const { projectId, owner } = useLocalSearchParams();
+  const isOwner = owner === 'true'; // Ensure this matches how you pass the 'owner' param
 
   return (
     <View style={styles.container}>
       <View style={styles.content}> 
+      
+      {isOwner && (
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => {
+              router.back();
+              setTimeout(() => {
+                router.push({
+                  pathname: '/deleteProjectConfirmationScreen',
+                  params: { projectId: projectId },
+                });
+              }, 10);
+            }}
+          >
+            <View style={styles.deleteButtonContent}>
+              <Icon name="trash-outline" style={styles.deleteButtonIcon} />
+              <Text style={styles.deleteButtonText}>Delete Project</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      
        
-        <TouchableOpacity style={styles.deleteButton}
-          onPress={() => {
-            router.back(); // First go back to the previous screen
-            setTimeout(() => {
-              router.push({
-                pathname: '/deleteProjectConfirmationScreen',
-                params: { projectId: projectId },
-              }); // Then push to the new screen after a short delay
-            }, 10); // A short delay to ensure `back()` completes first
-          }}
-        >
-          <View style={styles.deleteButtonContent}>
-            <Icon name="trash-outline" style={styles.deleteButtonIcon}></Icon>
-            <Text style={styles.deleteButtonText}>Delete Project</Text>
-          </View>
-        </TouchableOpacity>
+       
       </View>
     </View>
   )
