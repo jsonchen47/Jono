@@ -407,7 +407,7 @@ const ProjectScreen = ({ project }: any) => {
             {/* HEADER */}
             {/* Header background that changes opacity */}
             <View style={[styles.headerBackground, { opacity: headerOpacity }]}>
-                <SafeAreaView style={styles.headerBackgroundSafeAreaView}>
+                <SafeAreaView style={styles.headerBackgroundSafeAreaView} edges={['top']}>
                     {/* Back button icon */}
                     <TouchableOpacity 
                         style={styles.headerButton}

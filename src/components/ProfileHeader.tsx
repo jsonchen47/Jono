@@ -4,8 +4,10 @@ import {
   Text,
   StyleSheet,
   Image,
+  Dimensions,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Emoji from 'react-native-emoji';
 import { generateClient } from 'aws-amplify/api';
@@ -17,6 +19,14 @@ import { router } from 'expo-router';
 import { createConnection, deleteConnection } from '../graphql/mutations';
 import { getCurrentUser } from 'aws-amplify/auth';
 import ProfileHeaderSkeleton from './ProfileHeaderSkeleton';
+import { listConnections } from '@/src/graphql/queries';
+import { chatClient } from '../backend/streamChat';
+import Purchases from 'react-native-purchases';
+import RevenueCatUI from 'react-native-purchases-ui';
+
+
+const windowWidth = Dimensions.get('window').width;
+
 
 const client = generateClient();
 
@@ -159,6 +169,78 @@ const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any)
   //   );
   // }
 
+  const handlePress = async () => {
+    try {
+      const authUser = await getCurrentUser();
+      const authUserId = authUser.userId;
+
+      // Check for existing connection
+      const connectionResult = await client.graphql({
+        query: listConnections,
+        variables: {
+          filter: {
+            or: [
+              { userID: { eq: authUserId }, connectedUserID: { eq: user?.id } },
+              { userID: { eq: user?.id }, connectedUserID: { eq: authUserId } },
+            ],
+            status: { eq: 'approved' },
+          },
+        },
+      });
+
+      const connectionExists = connectionResult.data?.listConnections?.items.length > 0;
+
+      if (connectionExists) {
+        // Check if the channel exists or create a new one
+        const channel = chatClient.channel('messaging', {
+          members: [authUserId, user?.id],
+        });
+
+        await channel.create();
+        router.push(`/groupChat?channelUrl=${channel.id}`);
+      } else {
+        // Check for premium status
+        const customerInfo = await Purchases.getCustomerInfo();
+        const isPremium = !!customerInfo.entitlements.active['premium'];
+
+        if (isPremium) {
+          const channel = chatClient.channel('messaging', {
+            members: [authUserId, user?.id],
+          });
+
+          await channel.create();
+          router.push(`/groupChat?channelUrl=${channel.id}`);
+        } else {
+          const offerings = await Purchases.getOfferings();
+
+          if (offerings.current) {
+            const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
+              offering: offerings.current,
+              requiredEntitlementIdentifier: 'premium',
+            });
+
+            if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
+              const channel = chatClient.channel('messaging', {
+                members: [authUserId, user?.id],
+              });
+
+              await channel.create();
+              router.push(`/groupChat?channelUrl=${channel.id}`);
+            } else {
+              console.log('Paywall dismissed without purchase');
+            }
+          } else {
+            console.error('No offerings configured in RevenueCat.');
+            Alert.alert('No available offerings found.');
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error handling message button:', error);
+      Alert.alert('An error occurred while processing your request.');
+    }
+  };
+
   const handleRequestConnection = async () => {
     try {
       const authUserID = stateAuthUserID;
@@ -258,6 +340,7 @@ const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any)
           </View>
         </View>
         {/* Button */}
+        <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={
             otherProfile
@@ -296,11 +379,18 @@ const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any)
                 ? 'Following'
                 : isRequested
                 ? 'Requested'
-                : 'Request to Connect'
+                : 'Connect'
               : 'Edit Profile'}
           </Text>
         </TouchableOpacity>
-
+        {/* Message Button */}
+        {otherProfile && (
+        <TouchableOpacity
+          style={styles.messageButton} onPress={handlePress}>
+          <Text style={styles.messageText}>Message</Text>
+        </TouchableOpacity>
+        )}
+    </View>
       </View>
     </View>
   );
@@ -400,6 +490,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: 'center',
+    width: '47%', 
   },
   
   requestedButton: {
@@ -407,6 +498,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: 'center',
+    width: '47%', 
   },
   
   connectedButton: {
@@ -414,6 +506,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: 'center',
+    width: '47%', 
   },
   
   connectText: {
@@ -432,6 +525,28 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 15,
+  },
+  messageButton: {
+    backgroundColor: '#1ABFFB', // Light blue color
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginLeft: 10, // Space between buttons
+    alignItems: 'center',
+    width: '47%', 
+  },
+  
+  messageText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
   },
   
 });
