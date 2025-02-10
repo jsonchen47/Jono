@@ -29,6 +29,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { v4 as uuidv4 } from 'uuid';
 import { StreamChat } from 'stream-chat';
 import { chatClient } from '../backend/streamChat';
+import * as Location from 'expo-location';
 
 // type NavigationProps = NativeStackNavigationProp<ChatNavigatorParamList, 'GroupChannel'>;
 const client = generateClient();
@@ -50,6 +51,19 @@ const ProjectScreen = ({ project }: any) => {
     const [isProcessing, setIsProcessing] = useState(false);
     const navigation = useNavigation();
     const [isValidChat, setIsValidChat] = useState(false);
+
+    const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+      const toRad = (value: number) => (value * Math.PI) / 180;
+      const R = 3958.8; // Radius of the Earth in miles
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    };
 
     // const handleRequestToJoin = async () => {
     //     try {
@@ -94,6 +108,53 @@ const ProjectScreen = ({ project }: any) => {
     //       setIsProcessing(false);
     //     }
     //   };
+
+    const handlePress = async () => {
+        try {
+          const location = await Location.getCurrentPositionAsync({});
+          const distance = haversineDistance(
+            location.coords.latitude,
+            location.coords.longitude,
+            project.latitude,
+            project.longitude
+          );
+    
+          const currentUser = await getCurrentUser();
+          // const isInProject = project.users?.some((user: any) => user.id === currentUser.userId);
+          const userItems = project.Users?.items || [];
+          const isInProject = userItems.some((item: any) => item.user?.id === currentUser.userId);
+    
+          const customerInfo = await Purchases.getCustomerInfo();
+          const isPremium = !!customerInfo.entitlements.active['premium'];
+    
+          console.log('project:', project);
+          console.log('projectusers:', project.users);
+          console.log('isInProject:', isInProject);
+    
+          if (isInProject || distance <= 10000 || isPremium) {
+            router.push({ pathname: '/project/[id]', params: { id: project.id, projectID: project.id } });
+          } else {
+            const offerings = await Purchases.getOfferings();
+            if (offerings.current) {
+              const paywallResult = await RevenueCatUI.presentPaywallIfNeeded({
+                offering: offerings.current,
+                requiredEntitlementIdentifier: 'premium',
+              });
+    
+              if (paywallResult === RevenueCatUI.PAYWALL_RESULT.PURCHASED) {
+                router.push({ pathname: '/project/[id]', params: { id: project.id, projectID: project.id } });
+              } else {
+                console.log('Paywall dismissed without purchase');
+              }
+            } else {
+              console.error('No offerings configured in RevenueCat.');
+              Alert.alert('No available offerings found.');
+            }
+          }
+        } catch (error) {
+          console.error('Error handling project card press:', error);
+        }
+      };
 
     const handleRequestToJoin = async () => {
       try {

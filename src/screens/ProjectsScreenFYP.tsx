@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, StyleSheet, Dimensions, Image, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, Text, ActivityIndicator, Alert } from 'react-native';
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { searchProjects } from '@/src/graphql/queries';
@@ -7,6 +7,7 @@ import { useFilter } from '@/src/contexts/FilterContext';
 import LargeProjectCardsFlatList from '../components/LargeProjectCardsFlatList';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRefresh } from '../contexts/RefreshContext';
+import * as Location from 'expo-location';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -20,6 +21,7 @@ const ProjectsScreenFYP = ({ category }: any) => {
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const { shouldRefresh, setShouldRefresh } = useRefresh();
+  const [userLocation, setUserLocation] = useState<any>(null);
 
   const EmptyState = () => (
     <View style={styles.emptyStateContainer}>
@@ -31,6 +33,24 @@ const ProjectsScreenFYP = ({ category }: any) => {
       <Text style={styles.emptySubText}>Post a project to populate the space.</Text>
     </View>
   );
+
+  const getUserLocation = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Denied', 'Location permission is required to filter projects by distance.');
+        return;
+      }
+      const location = await Location.getCurrentPositionAsync({});
+      setUserLocation({ latitude: location.coords.latitude, longitude: location.coords.longitude });
+    } catch (error) {
+      console.error('Error getting location:', error);
+    }
+  };
+
+  useEffect(() => {
+    getUserLocation();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -79,8 +99,10 @@ const ProjectsScreenFYP = ({ category }: any) => {
           throw new Error('Invalid distance value');
         }
 
-        const centerLatitude = 33.158092;
-        const centerLongitude = -117.350594;
+        // const centerLatitude = 33.158092;
+        // const centerLongitude = -117.350594;
+        const { latitude: centerLatitude, longitude: centerLongitude } = userLocation;
+
 
         const latAdjustment = parsedDistance / 69;
         const lonAdjustment =

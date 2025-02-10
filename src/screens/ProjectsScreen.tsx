@@ -135,7 +135,7 @@ const ProjectsScreen = ({ category }: any) => {
   useFocusEffect(
     useCallback(() => {
       fetchProjects(null, true);
-    }, [category])
+    }, [filter, category])
   );
 
   return (
