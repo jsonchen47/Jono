@@ -13,9 +13,12 @@ import Purchases from 'react-native-purchases';
 import RevenueCatUI from 'react-native-purchases-ui';
 import { enableScreens } from 'react-native-screens';
 import { StatusBar } from 'expo-status-bar';
-
+import { updateProject } from '@/src/graphql/mutations'; // Import your GraphQL operations
+import { listProjects } from '@/src/backend/queries';
 import { StreamChat } from 'stream-chat';
 import { Chat, OverlayProvider } from 'stream-chat-react-native';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+
 
 const chatClient = StreamChat.getInstance('6ara8tryfyf7');
 
@@ -32,6 +35,7 @@ export default function TabLayout() {
   
 
   useEffect(() => {
+    
     const REVENUECAT_API_KEY =
     Platform.OS === 'ios'
       ? 'appl_UqBRgTSPvhuYXQgHiSORJTTAxVL'
@@ -83,6 +87,45 @@ export default function TabLayout() {
   useEffect(() => {
     let isMounted = true;
 
+    const updateProjectsForPremiumUser = async (userId: string, isPremium: boolean) => {
+      try {
+        // Fetch the user's projects
+        const result = (await client.graphql({
+          query: listProjects,
+          variables: {
+            filter: {
+              ownerIDs: { contains: userId },
+            },
+          },
+        })) as GraphQLResult<any>;
+        
+  
+        const userProjects = result?.data?.listProjects.items;
+  
+        // Update each project with the isFeatured status
+        await Promise.all(
+          userProjects.map(async (project: any) => {
+            if (project.isFeatured !== isPremium) { // Avoid unnecessary updates
+              await client.graphql({
+                query: updateProject,
+                variables: {
+                  input: {
+                    id: project.id,
+                    isFeatured: isPremium,
+                  },
+                },
+              });
+            }
+          })
+        );
+  
+        console.log('Projects updated successfully.');
+      } catch (error) {
+        console.error('Error updating projects:', error);
+      }
+    };
+  
+
     const connectUser = async () => {
         try {
             const authUser = await getCurrentUser();
@@ -95,6 +138,13 @@ export default function TabLayout() {
             });
         
             const userData = result.data?.getUser;
+
+            // Check RevenueCat for premium status
+            const customerInfo = await Purchases.getCustomerInfo();
+            const isPremium = customerInfo.entitlements.active['premium'] !== undefined;
+
+            // Update user's projects if premium status has changed
+            await updateProjectsForPremiumUser(userID, isPremium);
 
             // Fetch the token from AWS API Gateway
             const response = await fetch(

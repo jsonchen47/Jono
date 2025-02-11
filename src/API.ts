@@ -15,6 +15,7 @@ export type CreateProjectInput = {
   latitude?: number | null,
   city?: string | null,
   groupChatID?: string | null,
+  isFeatured?: boolean | null,
 };
 
 export type ModelProjectConditionInput = {
@@ -29,6 +30,7 @@ export type ModelProjectConditionInput = {
   latitude?: ModelFloatInput | null,
   city?: ModelStringInput | null,
   groupChatID?: ModelStringInput | null,
+  isFeatured?: ModelBooleanInput | null,
   and?: Array< ModelProjectConditionInput | null > | null,
   or?: Array< ModelProjectConditionInput | null > | null,
   not?: ModelProjectConditionInput | null,
@@ -88,6 +90,13 @@ export type ModelFloatInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
 export type Project = {
   __typename: "Project",
   id: string,
@@ -104,6 +113,7 @@ export type Project = {
   city?: string | null,
   joinRequests?: ModelJoinRequestConnection | null,
   groupChatID?: string | null,
+  isFeatured?: boolean | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -143,7 +153,6 @@ export type User = {
   skills?: Array< string | null > | null,
   resources?: Array< string | null > | null,
   links?: Array< string | null > | null,
-  premium?: boolean | null,
   connections?: ModelConnectionConnection | null,
   joinRequests?: ModelJoinRequestConnection | null,
   createdAt: string,
@@ -248,6 +257,7 @@ export type UpdateProjectInput = {
   latitude?: number | null,
   city?: string | null,
   groupChatID?: string | null,
+  isFeatured?: boolean | null,
 };
 
 export type DeleteProjectInput = {
@@ -347,7 +357,6 @@ export type CreateUserInput = {
   skills?: Array< string | null > | null,
   resources?: Array< string | null > | null,
   links?: Array< string | null > | null,
-  premium?: boolean | null,
 };
 
 export type ModelUserConditionInput = {
@@ -363,7 +372,6 @@ export type ModelUserConditionInput = {
   skills?: ModelStringInput | null,
   resources?: ModelStringInput | null,
   links?: ModelStringInput | null,
-  premium?: ModelBooleanInput | null,
   and?: Array< ModelUserConditionInput | null > | null,
   or?: Array< ModelUserConditionInput | null > | null,
   not?: ModelUserConditionInput | null,
@@ -383,13 +391,6 @@ export type ModelIntInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type UpdateUserInput = {
   id: string,
   name?: string | null,
@@ -404,7 +405,6 @@ export type UpdateUserInput = {
   skills?: Array< string | null > | null,
   resources?: Array< string | null > | null,
   links?: Array< string | null > | null,
-  premium?: boolean | null,
 };
 
 export type DeleteUserInput = {
@@ -544,6 +544,7 @@ export type ModelProjectFilterInput = {
   latitude?: ModelFloatInput | null,
   city?: ModelStringInput | null,
   groupChatID?: ModelStringInput | null,
+  isFeatured?: ModelBooleanInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   and?: Array< ModelProjectFilterInput | null > | null,
@@ -570,6 +571,7 @@ export type SearchableProjectFilterInput = {
   latitude?: SearchableFloatFilterInput | null,
   city?: SearchableStringFilterInput | null,
   groupChatID?: SearchableStringFilterInput | null,
+  isFeatured?: SearchableBooleanFilterInput | null,
   createdAt?: SearchableStringFilterInput | null,
   updatedAt?: SearchableStringFilterInput | null,
   and?: Array< SearchableProjectFilterInput | null > | null,
@@ -621,6 +623,11 @@ export type SearchableFloatFilterInput = {
   range?: Array< number | null > | null,
 };
 
+export type SearchableBooleanFilterInput = {
+  eq?: boolean | null,
+  ne?: boolean | null,
+};
+
 export type SearchableProjectSortInput = {
   field?: SearchableProjectSortableFields | null,
   direction?: SearchableSortDirection | null,
@@ -639,6 +646,7 @@ export enum SearchableProjectSortableFields {
   latitude = "latitude",
   city = "city",
   groupChatID = "groupChatID",
+  isFeatured = "isFeatured",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
 }
@@ -679,6 +687,7 @@ export enum SearchableProjectAggregateField {
   latitude = "latitude",
   city = "city",
   groupChatID = "groupChatID",
+  isFeatured = "isFeatured",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
 }
@@ -883,7 +892,6 @@ export type ModelUserFilterInput = {
   skills?: ModelStringInput | null,
   resources?: ModelStringInput | null,
   links?: ModelStringInput | null,
-  premium?: ModelBooleanInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
@@ -911,7 +919,6 @@ export type SearchableUserFilterInput = {
   skills?: SearchableStringFilterInput | null,
   resources?: SearchableStringFilterInput | null,
   links?: SearchableStringFilterInput | null,
-  premium?: SearchableBooleanFilterInput | null,
   createdAt?: SearchableStringFilterInput | null,
   updatedAt?: SearchableStringFilterInput | null,
   and?: Array< SearchableUserFilterInput | null > | null,
@@ -927,11 +934,6 @@ export type SearchableIntFilterInput = {
   lte?: number | null,
   eq?: number | null,
   range?: Array< number | null > | null,
-};
-
-export type SearchableBooleanFilterInput = {
-  eq?: boolean | null,
-  ne?: boolean | null,
 };
 
 export type SearchableUserSortInput = {
@@ -953,7 +955,6 @@ export enum SearchableUserSortableFields {
   skills = "skills",
   resources = "resources",
   links = "links",
-  premium = "premium",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
 }
@@ -979,7 +980,6 @@ export enum SearchableUserAggregateField {
   skills = "skills",
   resources = "resources",
   links = "links",
-  premium = "premium",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
 }
@@ -1108,6 +1108,7 @@ export type ModelSubscriptionProjectFilterInput = {
   latitude?: ModelSubscriptionFloatInput | null,
   city?: ModelSubscriptionStringInput | null,
   groupChatID?: ModelSubscriptionStringInput | null,
+  isFeatured?: ModelSubscriptionBooleanInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionProjectFilterInput | null > | null,
@@ -1156,6 +1157,11 @@ export type ModelSubscriptionFloatInput = {
   notIn?: Array< number | null > | null,
 };
 
+export type ModelSubscriptionBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+};
+
 export type ModelSubscriptionChatRoomFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
@@ -1193,7 +1199,6 @@ export type ModelSubscriptionUserFilterInput = {
   skills?: ModelSubscriptionStringInput | null,
   resources?: ModelSubscriptionStringInput | null,
   links?: ModelSubscriptionStringInput | null,
-  premium?: ModelSubscriptionBooleanInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserFilterInput | null > | null,
@@ -1210,11 +1215,6 @@ export type ModelSubscriptionIntInput = {
   between?: Array< number | null > | null,
   in?: Array< number | null > | null,
   notIn?: Array< number | null > | null,
-};
-
-export type ModelSubscriptionBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
 };
 
 export type ModelSubscriptionConnectionFilterInput = {
@@ -1307,6 +1307,7 @@ export type CreateProjectMutation = {
       nextToken?: string | null,
     } | null,
     groupChatID?: string | null,
+    isFeatured?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1358,6 +1359,7 @@ export type UpdateProjectMutation = {
       nextToken?: string | null,
     } | null,
     groupChatID?: string | null,
+    isFeatured?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1409,6 +1411,7 @@ export type DeleteProjectMutation = {
       nextToken?: string | null,
     } | null,
     groupChatID?: string | null,
+    isFeatured?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1686,7 +1689,6 @@ export type CreateUserMutation = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
-    premium?: boolean | null,
     connections?:  {
       __typename: "ModelConnectionConnection",
       items:  Array< {
@@ -1779,7 +1781,6 @@ export type UpdateUserMutation = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
-    premium?: boolean | null,
     connections?:  {
       __typename: "ModelConnectionConnection",
       items:  Array< {
@@ -1872,7 +1873,6 @@ export type DeleteUserMutation = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
-    premium?: boolean | null,
     connections?:  {
       __typename: "ModelConnectionConnection",
       items:  Array< {
@@ -1944,7 +1944,6 @@ export type CreateConnectionMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -1983,7 +1982,6 @@ export type CreateConnectionMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2040,7 +2038,6 @@ export type UpdateConnectionMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2079,7 +2076,6 @@ export type UpdateConnectionMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2136,7 +2132,6 @@ export type DeleteConnectionMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2175,7 +2170,6 @@ export type DeleteConnectionMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2232,7 +2226,6 @@ export type CreateJoinRequestMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2266,6 +2259,7 @@ export type CreateJoinRequestMutation = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2314,7 +2308,6 @@ export type UpdateJoinRequestMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2348,6 +2341,7 @@ export type UpdateJoinRequestMutation = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2396,7 +2390,6 @@ export type DeleteJoinRequestMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2430,6 +2423,7 @@ export type DeleteJoinRequestMutation = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2473,6 +2467,7 @@ export type CreateUserProjectMutation = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2503,7 +2498,6 @@ export type CreateUserProjectMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2553,6 +2547,7 @@ export type UpdateUserProjectMutation = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2583,7 +2578,6 @@ export type UpdateUserProjectMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2633,6 +2627,7 @@ export type DeleteUserProjectMutation = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -2663,7 +2658,6 @@ export type DeleteUserProjectMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2745,7 +2739,6 @@ export type CreateUserChatRoomMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2827,7 +2820,6 @@ export type UpdateUserChatRoomMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2909,7 +2901,6 @@ export type DeleteUserChatRoomMutation = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -2971,6 +2962,7 @@ export type GetProjectQuery = {
       nextToken?: string | null,
     } | null,
     groupChatID?: string | null,
+    isFeatured?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3007,6 +2999,7 @@ export type ListProjectsQuery = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -3048,6 +3041,7 @@ export type SearchProjectsQuery = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -3416,7 +3410,6 @@ export type GetUserQuery = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
-    premium?: boolean | null,
     connections?:  {
       __typename: "ModelConnectionConnection",
       items:  Array< {
@@ -3486,7 +3479,6 @@ export type ListUsersQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -3541,7 +3533,6 @@ export type SearchUsersQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -3611,7 +3602,6 @@ export type GetConnectionQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -3650,7 +3640,6 @@ export type GetConnectionQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -3698,7 +3687,6 @@ export type ListConnectionsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3717,7 +3705,6 @@ export type ListConnectionsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3762,7 +3749,6 @@ export type ConnectionsByUserIDAndCreatedAtQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3781,7 +3767,6 @@ export type ConnectionsByUserIDAndCreatedAtQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3826,7 +3811,6 @@ export type ConnectionsByConnectedUserIDAndCreatedAtQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3845,7 +3829,6 @@ export type ConnectionsByConnectedUserIDAndCreatedAtQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3890,7 +3873,6 @@ export type SearchConnectionsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3909,7 +3891,6 @@ export type SearchConnectionsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -3976,7 +3957,6 @@ export type GetJoinRequestQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -4010,6 +3990,7 @@ export type GetJoinRequestQuery = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4049,7 +4030,6 @@ export type ListJoinRequestsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4067,6 +4047,7 @@ export type ListJoinRequestsQuery = {
         latitude?: number | null,
         city?: string | null,
         groupChatID?: string | null,
+        isFeatured?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4111,7 +4092,6 @@ export type JoinRequestsByUserIDAndCreatedAtQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4129,6 +4109,7 @@ export type JoinRequestsByUserIDAndCreatedAtQuery = {
         latitude?: number | null,
         city?: string | null,
         groupChatID?: string | null,
+        isFeatured?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4173,7 +4154,6 @@ export type JoinRequestsByProjectIDAndCreatedAtQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4191,6 +4171,7 @@ export type JoinRequestsByProjectIDAndCreatedAtQuery = {
         latitude?: number | null,
         city?: string | null,
         groupChatID?: string | null,
+        isFeatured?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -4235,6 +4216,7 @@ export type GetUserProjectQuery = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -4265,7 +4247,6 @@ export type GetUserProjectQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -4310,6 +4291,7 @@ export type ListUserProjectsQuery = {
         latitude?: number | null,
         city?: string | null,
         groupChatID?: string | null,
+        isFeatured?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4328,7 +4310,6 @@ export type ListUserProjectsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4369,6 +4350,7 @@ export type UserProjectsByProjectIdQuery = {
         latitude?: number | null,
         city?: string | null,
         groupChatID?: string | null,
+        isFeatured?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4387,7 +4369,6 @@ export type UserProjectsByProjectIdQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4428,6 +4409,7 @@ export type UserProjectsByUserIdQuery = {
         latitude?: number | null,
         city?: string | null,
         groupChatID?: string | null,
+        isFeatured?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4446,7 +4428,6 @@ export type UserProjectsByUserIdQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4521,7 +4502,6 @@ export type GetUserChatRoomQuery = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -4576,7 +4556,6 @@ export type ListUserChatRoomsQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4627,7 +4606,6 @@ export type UserChatRoomsByChatRoomIdQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4678,7 +4656,6 @@ export type UserChatRoomsByUserIdQuery = {
         skills?: Array< string | null > | null,
         resources?: Array< string | null > | null,
         links?: Array< string | null > | null,
-        premium?: boolean | null,
         createdAt: string,
         updatedAt: string,
       },
@@ -4734,6 +4711,7 @@ export type OnCreateProjectSubscription = {
       nextToken?: string | null,
     } | null,
     groupChatID?: string | null,
+    isFeatured?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4784,6 +4762,7 @@ export type OnUpdateProjectSubscription = {
       nextToken?: string | null,
     } | null,
     groupChatID?: string | null,
+    isFeatured?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4834,6 +4813,7 @@ export type OnDeleteProjectSubscription = {
       nextToken?: string | null,
     } | null,
     groupChatID?: string | null,
+    isFeatured?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5104,7 +5084,6 @@ export type OnCreateUserSubscription = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
-    premium?: boolean | null,
     connections?:  {
       __typename: "ModelConnectionConnection",
       items:  Array< {
@@ -5196,7 +5175,6 @@ export type OnUpdateUserSubscription = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
-    premium?: boolean | null,
     connections?:  {
       __typename: "ModelConnectionConnection",
       items:  Array< {
@@ -5288,7 +5266,6 @@ export type OnDeleteUserSubscription = {
     skills?: Array< string | null > | null,
     resources?: Array< string | null > | null,
     links?: Array< string | null > | null,
-    premium?: boolean | null,
     connections?:  {
       __typename: "ModelConnectionConnection",
       items:  Array< {
@@ -5359,7 +5336,6 @@ export type OnCreateConnectionSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5398,7 +5374,6 @@ export type OnCreateConnectionSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5454,7 +5429,6 @@ export type OnUpdateConnectionSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5493,7 +5467,6 @@ export type OnUpdateConnectionSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5549,7 +5522,6 @@ export type OnDeleteConnectionSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5588,7 +5560,6 @@ export type OnDeleteConnectionSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5644,7 +5615,6 @@ export type OnCreateJoinRequestSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5678,6 +5648,7 @@ export type OnCreateJoinRequestSubscription = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5725,7 +5696,6 @@ export type OnUpdateJoinRequestSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5759,6 +5729,7 @@ export type OnUpdateJoinRequestSubscription = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5806,7 +5777,6 @@ export type OnDeleteJoinRequestSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5840,6 +5810,7 @@ export type OnDeleteJoinRequestSubscription = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -5882,6 +5853,7 @@ export type OnCreateUserProjectSubscription = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -5912,7 +5884,6 @@ export type OnCreateUserProjectSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -5961,6 +5932,7 @@ export type OnUpdateUserProjectSubscription = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -5991,7 +5963,6 @@ export type OnUpdateUserProjectSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -6040,6 +6011,7 @@ export type OnDeleteUserProjectSubscription = {
         nextToken?: string | null,
       } | null,
       groupChatID?: string | null,
+      isFeatured?: boolean | null,
       createdAt: string,
       updatedAt: string,
     },
@@ -6070,7 +6042,6 @@ export type OnDeleteUserProjectSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -6151,7 +6122,6 @@ export type OnCreateUserChatRoomSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -6232,7 +6202,6 @@ export type OnUpdateUserChatRoomSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,
@@ -6313,7 +6282,6 @@ export type OnDeleteUserChatRoomSubscription = {
       skills?: Array< string | null > | null,
       resources?: Array< string | null > | null,
       links?: Array< string | null > | null,
-      premium?: boolean | null,
       connections?:  {
         __typename: "ModelConnectionConnection",
         nextToken?: string | null,

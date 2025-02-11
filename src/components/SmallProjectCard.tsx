@@ -13,6 +13,7 @@ import * as Location from 'expo-location';
 import Purchases from 'react-native-purchases';
 import RevenueCatUI from 'react-native-purchases-ui';
 import { getCurrentUser } from 'aws-amplify/auth';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const client = generateClient();
 
@@ -37,6 +38,22 @@ const SmallProjectCard = ({ project }: any) => {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [currentProject, setCurrentProject] = useState(project);
+  const [distance, setDistance] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchDistance = async () => {
+      const location = await Location.getCurrentPositionAsync({});
+      const dist = haversineDistance(
+        location.coords.latitude,
+        location.coords.longitude,
+        currentProject.latitude,
+        currentProject.longitude
+      );
+      setDistance(dist);
+    };
+    fetchDistance();
+  }, [currentProject]);
+
 
   const handlePress = async () => {
       try {
@@ -44,13 +61,13 @@ const SmallProjectCard = ({ project }: any) => {
         await fetchProject(project?.id);
         console.log('fetched');
     
-        const location = await Location.getCurrentPositionAsync({});
-        const distance = haversineDistance(
-          location?.coords?.latitude,
-          location?.coords?.longitude,
-          currentProject?.latitude,
-          currentProject?.longitude
-        );
+        // const location = await Location.getCurrentPositionAsync({});
+        // const distance = haversineDistance(
+        //   location?.coords?.latitude,
+        //   location?.coords?.longitude,
+        //   currentProject?.latitude,
+        //   currentProject?.longitude
+        // );
     
         const currentUser = await getCurrentUser();
         const userItems = currentProject?.Users?.items || [];
@@ -151,6 +168,11 @@ const SmallProjectCard = ({ project }: any) => {
         <View style={styles.browseProjectsHeartContainer}>
           <HeartButton projectID={project.id}/>
         </View>
+        {distance > 100 && (
+          <View style={styles.premiumTag}>
+            <MaterialIcons name="star" size={20} color="transparent" style={styles.starIcon} />
+          </View>
+        )}
         <View style={styles.browseProjectsTextContainer}>
           <Text style={styles.browseProjectsTitle} numberOfLines={3}>{currentProject?.title}</Text>
           <Text style={styles.browseProjectAuthor}>{user?.name}</Text>
@@ -193,6 +215,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: 'lightgray',
     paddingTop: 5,
+  },
+  premiumTag: {
+    backgroundColor: '#4CDFFF',
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  starIcon: {
+    color: 'black',
+    // textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    // textShadowOffset: { width: 0, height: 0 },
+    // textShadowRadius: 5,
   },
 });
 

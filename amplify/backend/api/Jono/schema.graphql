@@ -13,6 +13,7 @@ type Project @model @searchable @auth(rules: [{allow: public}]) {
   city: String
   joinRequests: [JoinRequest] @hasMany(indexName: "byProject", fields: ["id"])
   groupChatID: String
+  isFeatured: Boolean @default(value: "false")
 }
 
 type ChatRoom @model @searchable @auth(rules: [{allow: public}]) {
@@ -50,7 +51,6 @@ type User @model @searchable @auth(rules: [{allow: public}]) {
   skills: [String]
   resources: [String]
   links: [String]
-  premium: Boolean
   connections: [Connection] @hasMany(indexName: "byUser", fields: ["id"])
   joinRequests: [JoinRequest] @hasMany(indexName: "byUser", fields: ["id"]) # Connection to JoinRequest
 }

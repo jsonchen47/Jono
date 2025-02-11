@@ -48,6 +48,7 @@ export const onCreateProject = /* GraphQL */ `subscription OnCreateProject($filt
       __typename
     }
     groupChatID
+    isFeatured
     createdAt
     updatedAt
     __typename
@@ -97,6 +98,7 @@ export const onUpdateProject = /* GraphQL */ `subscription OnUpdateProject($filt
       __typename
     }
     groupChatID
+    isFeatured
     createdAt
     updatedAt
     __typename
@@ -146,6 +148,7 @@ export const onDeleteProject = /* GraphQL */ `subscription OnDeleteProject($filt
       __typename
     }
     groupChatID
+    isFeatured
     createdAt
     updatedAt
     __typename
@@ -409,7 +412,6 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
     skills
     resources
     links
-    premium
     connections {
       items {
         id
@@ -500,7 +502,6 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
     skills
     resources
     links
-    premium
     connections {
       items {
         id
@@ -591,7 +592,6 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
     skills
     resources
     links
-    premium
     connections {
       items {
         id
@@ -662,7 +662,6 @@ export const onCreateConnection = /* GraphQL */ `subscription OnCreateConnection
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -701,7 +700,6 @@ export const onCreateConnection = /* GraphQL */ `subscription OnCreateConnection
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -758,7 +756,6 @@ export const onUpdateConnection = /* GraphQL */ `subscription OnUpdateConnection
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -797,7 +794,6 @@ export const onUpdateConnection = /* GraphQL */ `subscription OnUpdateConnection
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -854,7 +850,6 @@ export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -893,7 +888,6 @@ export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -950,7 +944,6 @@ export const onCreateJoinRequest = /* GraphQL */ `subscription OnCreateJoinReque
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -984,6 +977,7 @@ export const onCreateJoinRequest = /* GraphQL */ `subscription OnCreateJoinReque
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1032,7 +1026,6 @@ export const onUpdateJoinRequest = /* GraphQL */ `subscription OnUpdateJoinReque
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1066,6 +1059,7 @@ export const onUpdateJoinRequest = /* GraphQL */ `subscription OnUpdateJoinReque
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1114,7 +1108,6 @@ export const onDeleteJoinRequest = /* GraphQL */ `subscription OnDeleteJoinReque
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1148,6 +1141,7 @@ export const onDeleteJoinRequest = /* GraphQL */ `subscription OnDeleteJoinReque
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1191,6 +1185,7 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1221,7 +1216,6 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1271,6 +1265,7 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1301,7 +1296,6 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1351,6 +1345,7 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1381,7 +1376,6 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1463,7 +1457,6 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1545,7 +1538,6 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1627,7 +1619,6 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename

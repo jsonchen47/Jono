@@ -20,6 +20,7 @@ import * as Location from 'expo-location';
 import Purchases from 'react-native-purchases';
 import RevenueCatUI from 'react-native-purchases-ui';
 import { getCurrentUser } from 'aws-amplify/auth';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
 const client = generateClient();
@@ -43,6 +44,7 @@ const LargeProjectCard = ({ project }: any) => {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [currentProject, setCurrentProject] = useState(project);
+  const [distance, setDistance] = useState<any>(null);
 
   const { updatedProjectID, updated } = useProjectUpdateContext();
 
@@ -77,14 +79,15 @@ const LargeProjectCard = ({ project }: any) => {
       await fetchProject(project?.id);
       console.log('fetched');
   
-      const location = await Location.getCurrentPositionAsync({});
-      const distance = haversineDistance(
-        location?.coords?.latitude,
-        location?.coords?.longitude,
-        currentProject?.latitude,
-        currentProject?.longitude
-      );
-  
+      // const location = await Location.getCurrentPositionAsync({});
+      // const distance = haversineDistance(
+      //   location?.coords?.latitude,
+      //   location?.coords?.longitude,
+      //   currentProject?.latitude,
+      //   currentProject?.longitude
+      // );
+      // setDistance(distance);
+
       const currentUser = await getCurrentUser();
       const userItems = currentProject?.Users?.items || [];
       const isInProject = userItems.some((item: any) => item?.userId === currentUser?.userId);
@@ -138,6 +141,20 @@ const LargeProjectCard = ({ project }: any) => {
     }
   }, [updated, updatedProjectID, currentProject.id]);
 
+  useEffect(() => {
+    const fetchDistance = async () => {
+      const location = await Location.getCurrentPositionAsync({});
+      const dist = haversineDistance(
+        location.coords.latitude,
+        location.coords.longitude,
+        currentProject.latitude,
+        currentProject.longitude
+      );
+      setDistance(dist);
+    };
+    fetchDistance();
+  }, [currentProject]);
+
   return (
     <Pressable
       onPress={() =>
@@ -173,6 +190,11 @@ const LargeProjectCard = ({ project }: any) => {
           <View style={styles.heartButtonContainer}>
             <HeartButton projectID={currentProject.id} />
           </View>
+          {distance > 100 && (
+            <View style={styles.premiumTag}>
+              <MaterialIcons name="star" size={24} color="transparent" style={styles.starIcon} />
+            </View>
+          )}
         </ImageBackground>
 
         <View style={styles.detailsContainer}>
@@ -209,8 +231,8 @@ const styles = StyleSheet.create({
   },
   heartButtonContainer: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: 15,
+    right: 15,
   },
   detailsContainer: {
     paddingVertical: 15,
@@ -244,5 +266,20 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: '#555',
+  },
+  premiumTag: {
+    backgroundColor: '#4CDFFF',
+    width: 35,
+    height: 35,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 15,
+  },
+  starIcon: {
+    color: 'black',
+    // textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    // textShadowOffset: { width: 0, height: 0 },
+    // textShadowRadius: 5,
   },
 });

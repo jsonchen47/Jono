@@ -51,6 +51,7 @@ export const createProject = /* GraphQL */ `mutation CreateProject(
       __typename
     }
     groupChatID
+    isFeatured
     createdAt
     updatedAt
     __typename
@@ -103,6 +104,7 @@ export const updateProject = /* GraphQL */ `mutation UpdateProject(
       __typename
     }
     groupChatID
+    isFeatured
     createdAt
     updatedAt
     __typename
@@ -155,6 +157,7 @@ export const deleteProject = /* GraphQL */ `mutation DeleteProject(
       __typename
     }
     groupChatID
+    isFeatured
     createdAt
     updatedAt
     __typename
@@ -439,7 +442,6 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     skills
     resources
     links
-    premium
     connections {
       items {
         id
@@ -533,7 +535,6 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     skills
     resources
     links
-    premium
     connections {
       items {
         id
@@ -627,7 +628,6 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     skills
     resources
     links
-    premium
     connections {
       items {
         id
@@ -699,7 +699,6 @@ export const createConnection = /* GraphQL */ `mutation CreateConnection(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -738,7 +737,6 @@ export const createConnection = /* GraphQL */ `mutation CreateConnection(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -796,7 +794,6 @@ export const updateConnection = /* GraphQL */ `mutation UpdateConnection(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -835,7 +832,6 @@ export const updateConnection = /* GraphQL */ `mutation UpdateConnection(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -893,7 +889,6 @@ export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -932,7 +927,6 @@ export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -990,7 +984,6 @@ export const createJoinRequest = /* GraphQL */ `mutation CreateJoinRequest(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1024,6 +1017,7 @@ export const createJoinRequest = /* GraphQL */ `mutation CreateJoinRequest(
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1073,7 +1067,6 @@ export const updateJoinRequest = /* GraphQL */ `mutation UpdateJoinRequest(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1107,6 +1100,7 @@ export const updateJoinRequest = /* GraphQL */ `mutation UpdateJoinRequest(
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1156,7 +1150,6 @@ export const deleteJoinRequest = /* GraphQL */ `mutation DeleteJoinRequest(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1190,6 +1183,7 @@ export const deleteJoinRequest = /* GraphQL */ `mutation DeleteJoinRequest(
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1234,6 +1228,7 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1264,7 +1259,6 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1315,6 +1309,7 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1345,7 +1340,6 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1396,6 +1390,7 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
         __typename
       }
       groupChatID
+      isFeatured
       createdAt
       updatedAt
       __typename
@@ -1426,7 +1421,6 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1509,7 +1503,6 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1592,7 +1585,6 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename
@@ -1675,7 +1667,6 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
       skills
       resources
       links
-      premium
       connections {
         nextToken
         __typename

@@ -144,7 +144,7 @@ export const getUserWithoutConnections = /* GraphQL */ `
       skills
       resources
       links
-      premium
+      
     }
   }
 `;
