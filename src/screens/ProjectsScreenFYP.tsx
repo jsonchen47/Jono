@@ -42,7 +42,7 @@ const ProjectsScreenFYP = ({ category }: any) => {
         return;
       }
       const location = await Location.getCurrentPositionAsync({});
-      setUserLocation({ latitude: location.coords.latitude, longitude: location.coords.longitude });
+      setUserLocation({ latitude: location?.coords?.latitude, longitude: location?.coords?.longitude });
     } catch (error) {
       console.error('Error getting location:', error);
     }
@@ -76,80 +76,95 @@ const ProjectsScreenFYP = ({ category }: any) => {
       setProjects([]);
       setNextToken(null);
     }
-
+  
     setLoading(true);
     try {
       const authUser = await getCurrentUser();
-      const authUserID = authUser.userId;
 
-      let filterConditions: any = {};
-
-      if (category) {
-        filterConditions = {
-          ...filterConditions,
-          categories: { eq: category },
-        };
+      // ✅ Exit early if the user is not authenticated
+      if (!authUser) {
+        console.warn('User is not authenticated.');
+        setLoading(false);
+        return;
       }
 
-      const { distance } = filter;
+      const { distance, sortBy } = filter;
+      
+  
+      let filterConditions: any = {};
+      if (category) {
+        filterConditions.categories = { eq: category };
+      }
+  
       if (distance !== '100+') {
-        const parsedDistance = parseFloat(distance as string);
-
-        if (isNaN(parsedDistance)) {
-          throw new Error('Invalid distance value');
+        if (!userLocation) {
+          console.warn('User location is not available yet.');
+          return; // Exit early until location is available
         }
 
-        // const centerLatitude = 33.158092;
-        // const centerLongitude = -117.350594;
         const { latitude: centerLatitude, longitude: centerLongitude } = userLocation;
 
 
+        const parsedDistance = parseFloat(distance as string);
         const latAdjustment = parsedDistance / 69;
-        const lonAdjustment =
-          parsedDistance / (69 * Math.cos((centerLatitude * Math.PI) / 180));
-
-        filterConditions = {
-          ...filterConditions,
-          and: [
-            {
-              latitude: {
-                gte: centerLatitude - latAdjustment,
-                lte: centerLatitude + latAdjustment,
-              },
-            },
-            {
-              longitude: {
-                gte: centerLongitude - lonAdjustment,
-                lte: centerLongitude + lonAdjustment,
-              },
-            },
-          ],
-        };
+        const lonAdjustment = parsedDistance / (69 * Math.cos((centerLatitude * Math.PI) / 180));
+        filterConditions.and = [
+          { latitude: { gte: centerLatitude - latAdjustment, lte: centerLatitude + latAdjustment } },
+          { longitude: { gte: centerLongitude - lonAdjustment, lte: centerLongitude + lonAdjustment } },
+        ];
       }
-
+  
+      // ✅ Use sortCriteria as 'any' to bypass TypeScript's strict checks
       const sortCriteria: any = [
         {
           field: 'createdAt',
-          direction: filter.sortBy === 'newest' ? 'desc' : 'asc',
+          direction: sortBy === 'newest' ? 'desc' : 'asc',
         },
       ];
-
-      const result = await client.graphql({
-        query: searchProjects,
-        variables: {
-          filter: filterConditions,
-          limit: 8,
-          nextToken,
-          sort: sortCriteria,
+  
+      // Dual Fetch: Premium and Non-Premium projects
+      const [premiumResult, nonPremiumResult] = await Promise.all([
+        client.graphql({
+          query: searchProjects,
+          variables: {
+            filter: { ...filterConditions, isFeatured: { eq: true } },
+            limit: 8,
+            nextToken,
+            sort: sortCriteria, // ✅ Apply sortCriteria here
+          },
+        }),
+        client.graphql({
+          query: searchProjects,
+          variables: {
+            filter: { ...filterConditions, isFeatured: { eq: false } },
+            limit: 8,
+            nextToken,
+            sort: sortCriteria, // ✅ Apply sortCriteria here
+          },
+        }),
+      ]);
+  
+      const premiumProjects = premiumResult.data?.searchProjects?.items || [];
+      console.log('premiumProjects:', premiumProjects);
+      const nonPremiumProjects = nonPremiumResult.data?.searchProjects?.items || [];
+      console.log('nonPremiumProjects:', nonPremiumProjects);
+  
+      // Interleave 2 premium projects with 1 non-premium project
+      const mixedProjects: any[] = [];
+      let pIndex = 0,
+        npIndex = 0;
+  
+      while (pIndex < premiumProjects.length || npIndex < nonPremiumProjects.length) {
+        for (let i = 0; i < 2 && pIndex < premiumProjects.length; i++) {
+          mixedProjects.push(premiumProjects[pIndex++]);
         }
-      });
-
-      const fetchedProjects = result.data?.searchProjects?.items || [];
-      setProjects((prevProjects) =>
-        reset ? fetchedProjects : [...prevProjects, ...fetchedProjects]
-      );
-
-      setNextToken(result.data?.searchProjects?.nextToken);
+        if (npIndex < nonPremiumProjects.length) {
+          mixedProjects.push(nonPremiumProjects[npIndex++]);
+        }
+      }
+  
+      setProjects((prev) => (reset ? mixedProjects : [...prev, ...mixedProjects]));
+      setNextToken(premiumResult.data?.searchProjects?.nextToken || nonPremiumResult.data?.searchProjects?.nextToken);
     } catch (error) {
       console.error('Error fetching projects:', error);
     } finally {
@@ -157,6 +172,7 @@ const ProjectsScreenFYP = ({ category }: any) => {
       setIsFetchingMore(false);
     }
   };
+  
 
   const loadMoreProjects = () => {
     if (nextToken && !isFetchingMore) {
@@ -172,6 +188,9 @@ const ProjectsScreenFYP = ({ category }: any) => {
   useEffect(() => {
     fetchProjects(null, true);
   }, [filter, category]);
+// }, [filter, category, userLocation]);
+
+  
 
   // Reload the view each time it comes into view
   useFocusEffect(

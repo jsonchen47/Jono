@@ -59,6 +59,8 @@ const configurePurchases = async () => {
       appUserID: userId,
     });
 
+    const logInResult = await Purchases.logIn(userId);
+
     console.log(`RevenueCat configured with user ID: ${userId}`);
   } catch (e) {
     console.error('Error configuring RevenueCat:', e);

@@ -14,7 +14,8 @@ import RevenueCatUI from 'react-native-purchases-ui';
 import { enableScreens } from 'react-native-screens';
 import { StatusBar } from 'expo-status-bar';
 import { updateProject } from '@/src/graphql/mutations'; // Import your GraphQL operations
-import { listProjects } from '@/src/backend/queries';
+// import { listProjects } from '@/src/backend/queries';
+import { listProjects } from '@/src/graphql/queries';
 import { StreamChat } from 'stream-chat';
 import { Chat, OverlayProvider } from 'stream-chat-react-native';
 import { GraphQLResult } from '@aws-amplify/api-graphql';
@@ -118,6 +119,8 @@ export default function TabLayout() {
             }
           })
         );
+
+        console.log('userprojects', userProjects)
   
         console.log('Projects updated successfully.');
       } catch (error) {

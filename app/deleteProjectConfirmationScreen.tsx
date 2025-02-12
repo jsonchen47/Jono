@@ -32,7 +32,7 @@ const deleteProjectLinks = async (links: any[]) => {
         variables: { input: { id: link.id } }
       });
     }
-    console.log('All associated UserProject links deleted successfully');
+    // console.log('All associated UserProject links deleted successfully');
   } catch (error) {
     console.error('Error deleting UserProject links:', error);
   }
@@ -56,13 +56,13 @@ const deleteProjectById = async (projectId: string) => {
     const channelId = project?.groupChatID; // Assuming the channel ID is stored in the project
     const imageKey = project?.image?.split('jonoa48aa29b26b146de8c05923d59de88cec85f4-dev.s3.us-west-1.amazonaws.com/public/')[1];
 
-    console.log(`Attempting to delete image with key: ${imageKey}`);
+    // console.log(`Attempting to delete image with key: ${imageKey}`);
 
     if (imageKey) {
       const deleteResult = await remove({ key: imageKey, options: { accessLevel: 'guest' } });
 
-      console.log('Image deletion result:', deleteResult);
-      console.log('Image deleted from S3 successfully');
+      // console.log('Image deletion result:', deleteResult);
+      // console.log('Image deleted from S3 successfully');
     }
 
     const links = await fetchProjectLinks(projectId);
