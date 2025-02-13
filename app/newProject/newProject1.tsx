@@ -116,13 +116,15 @@ const newProject1 = () => {
             >
             </TextInput>
             {/* Character Count */}
-            <Text style={styles.charCount}>{`${formData.description.length}/550`}</Text>
+            <View style={styles.viewWithBottomPadding}>
+              <Text style={styles.charCount}>{`${formData.description.length}/550`}</Text>
+            </View>
           </ScrollView>
           {/* Divider */}
           <View style={styles.divider}></View>
           {/* Bottom content */}
           <View style={styles.contentBottom}>
-            <Button 
+            {/* <Button 
               style={styles.nextButton} 
               labelStyle={styles.nextButtonText}
               mode="contained"  
@@ -133,7 +135,22 @@ const newProject1 = () => {
               
               >
               Next
+            </Button> */}
+            <Button 
+              style={[styles.nextButton, (!formData.localImageUri || !formData.title.trim() || !formData.description.trim()) && { backgroundColor: 'lightgray' }]} 
+              labelStyle={styles.nextButtonText}
+              mode="contained"  
+              onPress={() => {
+                if (formData.localImageUri && formData.title.trim() && formData.description.trim()) {
+                  router.push('/newProject/newProject2');
+                  console.log(formData);
+                }
+              }}
+              disabled={!formData.localImageUri || !formData.title.trim() || !formData.description.trim()} // Disable button if any field is missing
+            >
+              Next
             </Button>
+
           </View>
         </View>
       </View>
@@ -261,6 +278,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'gray',
     marginTop: 5,
+  },
+  viewWithBottomPadding: {
+    paddingBottom: 50
   }
   
 });
