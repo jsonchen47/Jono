@@ -23,6 +23,7 @@ import Purchases from 'react-native-purchases';
 import { StreamChat } from 'stream-chat';
 import { Chat, OverlayProvider } from 'stream-chat-react-native';
 import { chatClient } from '../backend/streamChat';
+import { updateUser } from '../graphql/mutations';
 
 // OTHER PROVIDER IMPORTS
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -177,6 +178,7 @@ const AppEntrance = () => {
   useEffect(() => {
     const syncUser = async () => {
       try {
+        console.log('synced user')
         const authUser = await getCurrentUser();
         const userAttributes = await fetchUserAttributes();
     
@@ -184,9 +186,38 @@ const AppEntrance = () => {
           query: getUser,
           variables: { id: authUser.userId },
         });
+
+        console.log('userResult', userResult)
     
-        const userData = userResult.data?.getUser;
+        const userData: any = userResult.data?.getUser;
+
+        // Fetch RevenueCat subscription status and update the user's premium status
+        const customerInfo = await Purchases.getCustomerInfo();
+        // const isPremium = customerInfo.activeSubscriptions.length > 0; // Check if user has any active subscription
+        const isPremium = customerInfo.entitlements.active['premium'] !== undefined;
+
+        if (userData) {
+          console.log('checked if user exists:', userData);
+
+
+          // Update the user's premium status if necessary
+          if (userData.premium !== isPremium) {
+            await client.graphql({
+              query: updateUser, // Ensure you have an updateUser mutation instead
+              variables: {
+                input: {
+                  id: authUser.userId,
+                  premium: isPremium,
+                },
+              },
+            });
+
+            console.log(`User's premium status updated to: ${isPremium}`);
+          }
+          return;
+        }
     
+        // Stop and exit if the user already exists
         if (userData) {
           console.log('User exists:', userData);
           return;

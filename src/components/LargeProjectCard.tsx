@@ -21,6 +21,7 @@ import Purchases from 'react-native-purchases';
 import RevenueCatUI from 'react-native-purchases-ui';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { MaterialIcons } from '@expo/vector-icons';
+import { set } from 'lodash';
 
 const windowWidth = Dimensions.get('window').width;
 const client = generateClient();
@@ -45,6 +46,8 @@ const LargeProjectCard = ({ project }: any) => {
   const [user, setUser] = useState<any>(null);
   const [currentProject, setCurrentProject] = useState(project);
   const [distance, setDistance] = useState<any>(null);
+  const [isPremium, setIsPremium] = useState(false);
+
 
   const { updatedProjectID, updated } = useProjectUpdateContext();
 
@@ -94,6 +97,7 @@ const LargeProjectCard = ({ project }: any) => {
   
       const customerInfo = await Purchases.getCustomerInfo();
       const isPremium = !!customerInfo?.entitlements?.active?.['premium'];
+      setIsPremium(isPremium);
   
       console.log('currentuserid:', currentUser?.userId);
       console.log('currentproject:', currentProject);
@@ -176,7 +180,20 @@ const LargeProjectCard = ({ project }: any) => {
             })
           }
         >
-          <Image source={{ uri: user?.image }} style={styles.authorImage} />
+          {/* <Image source={{ uri: user?.image }} style={styles.authorImage} />
+          {isPremium && (
+            <View style={styles.premiumIcon}>
+              <MaterialIcons name="star" size={14} color="black" />
+            </View>
+          )} */}
+          <View style={styles.imageWrapper}>
+            <Image source={{ uri: user?.image }} style={styles.authorImage} />
+            {user?.premium && (
+              <View style={styles.premiumIcon}>
+                <MaterialIcons name="star" size={12} color="black" />
+              </View>
+            )}
+          </View>
           <View>
             <Text style={styles.authorName}>{user?.name}</Text>
             <Text style={styles.location}>{currentProject.city}</Text>
@@ -281,5 +298,19 @@ const styles = StyleSheet.create({
     // textShadowColor: 'rgba(0, 0, 0, 0.2)',
     // textShadowOffset: { width: 0, height: 0 },
     // textShadowRadius: 5,
+  },
+  premiumIcon: {
+    position: 'absolute',
+    bottom: 0,
+    right: 7,
+    width: 15,
+    height: 15,
+    borderRadius: 8,
+    backgroundColor: '#4CDFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageWrapper: {
+    position: 'relative',
   },
 });

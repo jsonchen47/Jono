@@ -53,6 +53,8 @@ type User @model @searchable @auth(rules: [{allow: public}]) {
   links: [String]
   connections: [Connection] @hasMany(indexName: "byUser", fields: ["id"])
   joinRequests: [JoinRequest] @hasMany(indexName: "byUser", fields: ["id"]) # Connection to JoinRequest
+  premium: Boolean @default(value: "false")
+
 }
 
 type Connection @model @searchable @auth(rules: [{ allow: public }]) {

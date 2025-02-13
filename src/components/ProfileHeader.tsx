@@ -311,6 +311,11 @@ const ProfileHeader = ({ user, otherProfile = false, loading, setLoading }: any)
                     : require('../../assets/images/profile1.png') // Path to your default image
                 }
               />
+              {user?.premium && ( // Check if user is premium
+                <View style={styles.premiumIcon}>
+                  <Text style={styles.star}>★</Text>
+                </View>
+              )}
             </View>
           </View>
 
@@ -548,6 +553,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
+  premiumIcon: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 20,
+    height: 20,
+    borderRadius: 20,
+    backgroundColor: '#4CDFFF', // Light blue
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  star: {
+    color: 'black',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  
   
 });
 

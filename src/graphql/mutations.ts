@@ -470,6 +470,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       nextToken
       __typename
     }
+    premium
     createdAt
     updatedAt
     __typename
@@ -563,6 +564,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
       nextToken
       __typename
     }
+    premium
     createdAt
     updatedAt
     __typename
@@ -656,6 +658,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
       nextToken
       __typename
     }
+    premium
     createdAt
     updatedAt
     __typename
@@ -707,6 +710,7 @@ export const createConnection = /* GraphQL */ `mutation CreateConnection(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -745,6 +749,7 @@ export const createConnection = /* GraphQL */ `mutation CreateConnection(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -802,6 +807,7 @@ export const updateConnection = /* GraphQL */ `mutation UpdateConnection(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -840,6 +846,7 @@ export const updateConnection = /* GraphQL */ `mutation UpdateConnection(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -897,6 +904,7 @@ export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -935,6 +943,7 @@ export const deleteConnection = /* GraphQL */ `mutation DeleteConnection(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -992,6 +1001,7 @@ export const createJoinRequest = /* GraphQL */ `mutation CreateJoinRequest(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1075,6 +1085,7 @@ export const updateJoinRequest = /* GraphQL */ `mutation UpdateJoinRequest(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1158,6 +1169,7 @@ export const deleteJoinRequest = /* GraphQL */ `mutation DeleteJoinRequest(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1267,6 +1279,7 @@ export const createUserProject = /* GraphQL */ `mutation CreateUserProject(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1348,6 +1361,7 @@ export const updateUserProject = /* GraphQL */ `mutation UpdateUserProject(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1429,6 +1443,7 @@ export const deleteUserProject = /* GraphQL */ `mutation DeleteUserProject(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1511,6 +1526,7 @@ export const createUserChatRoom = /* GraphQL */ `mutation CreateUserChatRoom(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1593,6 +1609,7 @@ export const updateUserChatRoom = /* GraphQL */ `mutation UpdateUserChatRoom(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1675,6 +1692,7 @@ export const deleteUserChatRoom = /* GraphQL */ `mutation DeleteUserChatRoom(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename

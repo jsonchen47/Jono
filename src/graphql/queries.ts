@@ -563,6 +563,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
       nextToken
       __typename
     }
+    premium
     createdAt
     updatedAt
     __typename
@@ -609,6 +610,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -668,6 +670,7 @@ export const searchUsers = /* GraphQL */ `query SearchUsers(
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -736,6 +739,7 @@ export const getConnection = /* GraphQL */ `query GetConnection($id: ID!) {
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -774,6 +778,7 @@ export const getConnection = /* GraphQL */ `query GetConnection($id: ID!) {
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -813,6 +818,7 @@ export const listConnections = /* GraphQL */ `query ListConnections(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -831,6 +837,7 @@ export const listConnections = /* GraphQL */ `query ListConnections(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -883,6 +890,7 @@ export const connectionsByUserIDAndCreatedAt = /* GraphQL */ `query ConnectionsB
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -901,6 +909,7 @@ export const connectionsByUserIDAndCreatedAt = /* GraphQL */ `query ConnectionsB
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -953,6 +962,7 @@ export const connectionsByConnectedUserIDAndCreatedAt = /* GraphQL */ `query Con
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -971,6 +981,7 @@ export const connectionsByConnectedUserIDAndCreatedAt = /* GraphQL */ `query Con
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1023,6 +1034,7 @@ export const searchConnections = /* GraphQL */ `query SearchConnections(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1041,6 +1053,7 @@ export const searchConnections = /* GraphQL */ `query SearchConnections(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1115,6 +1128,7 @@ export const getJoinRequest = /* GraphQL */ `query GetJoinRequest($id: ID!) {
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1180,6 +1194,7 @@ export const listJoinRequests = /* GraphQL */ `query ListJoinRequests(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1250,6 +1265,7 @@ export const joinRequestsByUserIDAndCreatedAt = /* GraphQL */ `query JoinRequest
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1320,6 +1336,7 @@ export const joinRequestsByProjectIDAndCreatedAt = /* GraphQL */ `query JoinRequ
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1421,6 +1438,7 @@ export const getUserProject = /* GraphQL */ `query GetUserProject($id: ID!) {
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1476,6 +1494,7 @@ export const listUserProjects = /* GraphQL */ `query ListUserProjects(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1542,6 +1561,7 @@ export const userProjectsByProjectId = /* GraphQL */ `query UserProjectsByProjec
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1608,6 +1628,7 @@ export const userProjectsByUserId = /* GraphQL */ `query UserProjectsByUserId(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1690,6 +1711,7 @@ export const getUserChatRoom = /* GraphQL */ `query GetUserChatRoom($id: ID!) {
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1736,6 +1758,7 @@ export const listUserChatRooms = /* GraphQL */ `query ListUserChatRooms(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1793,6 +1816,7 @@ export const userChatRoomsByChatRoomId = /* GraphQL */ `query UserChatRoomsByCha
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename
@@ -1850,6 +1874,7 @@ export const userChatRoomsByUserId = /* GraphQL */ `query UserChatRoomsByUserId(
         skills
         resources
         links
+        premium
         createdAt
         updatedAt
         __typename

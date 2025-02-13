@@ -41,6 +41,8 @@ const LargeProjectCardsFlatList = ({
           </View>
         )}
         keyExtractor={(_, index) => `skeleton-${index}`}
+        // keyExtractor={(item: any, index) => item.id ?? `fallback-key-${index}`}
+
         ListHeaderComponent={listHeaderComponent || null}
       />
     );
@@ -66,7 +68,9 @@ const LargeProjectCardsFlatList = ({
             <LargeProjectCard project={item} />
         </View>
         }
-      keyExtractor={(item, index) => item.id || index.toString()}
+      // keyExtractor={(item, index) => item.id || index.toString()}
+      keyExtractor={(item, index) => `${item.id}-${index}`}
+
       // numColumns={1} // Use 2 columns for a grid-like layout
       // columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
       onEndReached={loadMoreProjects}

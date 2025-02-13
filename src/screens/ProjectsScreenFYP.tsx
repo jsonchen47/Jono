@@ -163,7 +163,16 @@ const ProjectsScreenFYP = ({ category }: any) => {
         }
       }
   
-      setProjects((prev) => (reset ? mixedProjects : [...prev, ...mixedProjects]));
+      // setProjects((prev) => (reset ? mixedProjects : [...prev, ...mixedProjects]));
+      setProjects((prev) => {
+        const newProjects = reset ? mixedProjects : [...prev, ...mixedProjects];
+      
+        // Ensure unique projects based on id
+        const uniqueProjects = Array.from(new Map(newProjects.map(p => [p.id, p])).values());
+      
+        return uniqueProjects;
+      });
+      
       setNextToken(premiumResult.data?.searchProjects?.nextToken || nonPremiumResult.data?.searchProjects?.nextToken);
     } catch (error) {
       console.error('Error fetching projects:', error);

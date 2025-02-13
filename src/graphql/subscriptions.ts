@@ -440,6 +440,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
       nextToken
       __typename
     }
+    premium
     createdAt
     updatedAt
     __typename
@@ -530,6 +531,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
       nextToken
       __typename
     }
+    premium
     createdAt
     updatedAt
     __typename
@@ -620,6 +622,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
       nextToken
       __typename
     }
+    premium
     createdAt
     updatedAt
     __typename
@@ -670,6 +673,7 @@ export const onCreateConnection = /* GraphQL */ `subscription OnCreateConnection
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -708,6 +712,7 @@ export const onCreateConnection = /* GraphQL */ `subscription OnCreateConnection
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -764,6 +769,7 @@ export const onUpdateConnection = /* GraphQL */ `subscription OnUpdateConnection
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -802,6 +808,7 @@ export const onUpdateConnection = /* GraphQL */ `subscription OnUpdateConnection
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -858,6 +865,7 @@ export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -896,6 +904,7 @@ export const onDeleteConnection = /* GraphQL */ `subscription OnDeleteConnection
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -952,6 +961,7 @@ export const onCreateJoinRequest = /* GraphQL */ `subscription OnCreateJoinReque
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1034,6 +1044,7 @@ export const onUpdateJoinRequest = /* GraphQL */ `subscription OnUpdateJoinReque
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1116,6 +1127,7 @@ export const onDeleteJoinRequest = /* GraphQL */ `subscription OnDeleteJoinReque
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1224,6 +1236,7 @@ export const onCreateUserProject = /* GraphQL */ `subscription OnCreateUserProje
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1304,6 +1317,7 @@ export const onUpdateUserProject = /* GraphQL */ `subscription OnUpdateUserProje
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1384,6 +1398,7 @@ export const onDeleteUserProject = /* GraphQL */ `subscription OnDeleteUserProje
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1465,6 +1480,7 @@ export const onCreateUserChatRoom = /* GraphQL */ `subscription OnCreateUserChat
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1546,6 +1562,7 @@ export const onUpdateUserChatRoom = /* GraphQL */ `subscription OnUpdateUserChat
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
@@ -1627,6 +1644,7 @@ export const onDeleteUserChatRoom = /* GraphQL */ `subscription OnDeleteUserChat
         nextToken
         __typename
       }
+      premium
       createdAt
       updatedAt
       __typename
