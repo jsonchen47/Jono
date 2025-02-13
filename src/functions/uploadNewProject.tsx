@@ -163,6 +163,27 @@ export async function uploadNewProject(
 
     // const groupChatID = channel.id;
 
+    // Randomize the project location
+    function getRandomizedLocation(lat: number, lon: number) {
+      const earthRadiusMiles = 3959; // Earth's radius in miles
+      const maxDistance = 10; // Maximum randomization distance in miles
+      const randomDistance = Math.random() * maxDistance; // Random distance within 10 miles
+      const randomAngle = Math.random() * 2 * Math.PI; // Random direction
+    
+      // Convert miles to degrees
+      const deltaLat = randomDistance / 69; // 1 degree latitude ≈ 69 miles
+      const deltaLon = randomDistance / (69 * Math.cos((lat * Math.PI) / 180));
+    
+      // Apply randomization
+      const newLat = lat + deltaLat * Math.sin(randomAngle);
+      const newLon = lon + deltaLon * Math.cos(randomAngle);
+    
+      return { newLat, newLon };
+    }
+
+    // Randomize the location before storing
+    const { newLat, newLon } = getRandomizedLocation(latitude, longitude);
+
     // Create project data
     const projectData = {
       title: formData.title,
@@ -172,8 +193,8 @@ export async function uploadNewProject(
       skills: formData.skills,
       resources: formData.resources,
       ownerIDs: [userId],
-      longitude,
-      latitude,
+      longitude: newLon,
+      latitude: newLat,
       city,
       groupChatID: groupChatID
     };
