@@ -1,11 +1,13 @@
 import { useRouter } from 'expo-router';
-import { ScrollView, Image, View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput, TouchableOpacity } from 'react-native';
+import { ScrollView, Image, View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import {selectPhoto} from '../../src/functions/selectPhoto'
 import React, { useState, useContext } from 'react';
 import { FormContext } from './_layout';
 import 'react-native-get-random-values';
+import { Filter } from 'bad-words'
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -14,11 +16,66 @@ const newProject1 = () => {
   const { formData, setFormData } = useContext(FormContext);
   // const [photoUri, setPhotoUri] = useState(null);
   const router = useRouter();
+  const filter = new Filter();
 
-  const handlePhotoSelection = async (uri: any) => {
-    // setPhotoUri(uri);
-    setFormData({ ...formData, localImageUri: uri })
+  const containsProfanity = (text: string): boolean => {
+    return filter.isProfane(text); // Returns true if profanity is detected
   };
+  
+
+  // const handlePhotoSelection = async (uri: any) => {
+  //   // setPhotoUri(uri);
+  //   setFormData({ ...formData, localImageUri: uri })
+  // };
+  const API_URL = "https://fhktodpsyj.execute-api.us-west-1.amazonaws.com/default/imageModerationFunction";
+
+  const handlePhotoSelection = async (uri: string) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const reader = new FileReader();
+  
+      reader.readAsDataURL(blob);
+      reader.onloadend = async () => {
+        const result = reader.result; // Ensure this is a string
+  
+        if (typeof result === "string") {
+          // Extract base64 data and ensure it has the correct format
+          const base64Image = result.replace(/^data:image\/(jpeg|png);base64,/, "");
+  
+          // Ensure file format is correct
+          if (!result.startsWith("data:image/jpeg") && !result.startsWith("data:image/png")) {
+            Alert.alert("Invalid Image Format", "Please select a JPEG or PNG image.");
+            return;
+          }
+  
+          // Send image to AWS Rekognition via API Gateway
+          const moderationResponse = await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({ image: base64Image }),
+            headers: { "Content-Type": "application/json" },
+          });
+  
+          const resultData = await moderationResponse.json();
+  
+          if (moderationResponse.status === 403) {
+            Alert.alert("Inappropriate Image", "Please select a different image.");
+            setFormData({ ...formData, localImageUri: "" });
+          } else {
+            setFormData({ ...formData, localImageUri: uri });
+          }
+        } else {
+          throw new Error("Failed to read image as a string.");
+        }
+      };
+    } catch (error) {
+      console.error("Image moderation error:", error);
+      Alert.alert("Error", "Failed to analyze the image.");
+    }
+  };
+  
+  
+
 
   const handleSubmitTitle = () => {
   }
@@ -124,32 +181,32 @@ const newProject1 = () => {
           <View style={styles.divider}></View>
           {/* Bottom content */}
           <View style={styles.contentBottom}>
-            {/* <Button 
-              style={styles.nextButton} 
-              labelStyle={styles.nextButtonText}
-              mode="contained"  
-              onPress={() => {
-                router.push('/newProject/newProject2')
-                console.log(formData)
-              }}
-              
-              >
-              Next
-            </Button> */}
-            <Button 
-              style={[styles.nextButton, (!formData.localImageUri || !formData.title.trim() || !formData.description.trim()) && { backgroundColor: 'lightgray' }]} 
-              labelStyle={styles.nextButtonText}
-              mode="contained"  
-              onPress={() => {
-                if (formData.localImageUri && formData.title.trim() && formData.description.trim()) {
-                  router.push('/newProject/newProject2');
-                  console.log(formData);
-                }
-              }}
-              disabled={!formData.localImageUri || !formData.title.trim() || !formData.description.trim()} // Disable button if any field is missing
-            >
-              Next
-            </Button>
+          <Button 
+            style={[
+              styles.nextButton, 
+              (!formData.localImageUri || !formData.title.trim() || !formData.description.trim()) && { backgroundColor: 'lightgray' }
+            ]} 
+            labelStyle={styles.nextButtonText}
+            mode="contained"  
+            onPress={() => {
+              if (!formData.localImageUri || !formData.title.trim() || !formData.description.trim()) {
+                Alert.alert("Incomplete Form", "Please add a photo, title, and description before proceeding.");
+                return;
+              }
+
+              if (containsProfanity(formData.title) || containsProfanity(formData.description)) {
+                Alert.alert("Inappropriate Content", "Your title or description contains inappropriate language. Please revise.");
+                return;
+              }
+
+              router.push('/newProject/newProject2');
+              console.log(formData);
+            }}
+            disabled={!formData.localImageUri || !formData.title.trim() || !formData.description.trim()} 
+          >
+            Next
+          </Button>
+
 
           </View>
         </View>
