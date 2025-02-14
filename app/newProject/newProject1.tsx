@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { ScrollView, Image, View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, Image, View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import {selectPhoto} from '../../src/functions/selectPhoto'
@@ -152,26 +152,30 @@ const newProject1 = () => {
 
             {/* Add description */}
             <Text style={styles.projectTitleHeader}>Description</Text>
-            <TextInput
-              style={styles.projectDescriptionTextInput}
-              placeholder="What does your product do, what are you looking for, etc"
-              multiline={true}
-              // onChangeText={(text) => setFormData((prevData) => ({
-              //   ...prevData,
-              //   description: text, // Update title while typing
-              // }))}
-              value={formData.description}
-              maxLength={550} // Limit to 550 characters
-              onChangeText={(text) => {
-                if (text.length <= 550) {  // Explicitly limit input to 70 characters
-                  setFormData((prevData) => ({
-                    ...prevData,
-                    description: text,
-                  }));
-                }
-              }}
-            >
-            </TextInput>
+            <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+              <TextInput
+                style={styles.projectDescriptionTextInput}
+                placeholder="What does your product do, what are you looking for, etc"
+                multiline={true}
+                // onChangeText={(text) => setFormData((prevData) => ({
+                //   ...prevData,
+                //   description: text, // Update title while typing
+                // }))}
+                returnKeyType='done'
+                submitBehavior="blurAndSubmit"
+                value={formData.description}
+                maxLength={550} // Limit to 550 characters
+                onChangeText={(text) => {
+                  if (text.length <= 550) {  // Explicitly limit input to 70 characters
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      description: text,
+                    }));
+                  }
+                }}
+              >
+              </TextInput>
+            </KeyboardAvoidingView>
             {/* Character Count */}
             <View style={styles.viewWithBottomPadding}>
               <Text style={styles.charCount}>{`${formData.description.length}/550`}</Text>
