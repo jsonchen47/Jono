@@ -10,6 +10,7 @@ import Emoji from 'react-native-emoji';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { fetchAuthSession, getCurrentUser } from '@aws-amplify/auth'; // Updated imports
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRefresh } from '@/src/contexts/SavedRefreshContext';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -21,6 +22,8 @@ export default function SavedScreen() {
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
   const navigation = useNavigation();
+  const { shouldRefresh, setShouldRefresh } = useRefresh();
+  
 
   const client = generateClient(); // Create a GraphQL client instance
 
@@ -84,11 +87,37 @@ export default function SavedScreen() {
     }
   };
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchProjects(null, true); // Refresh the list when the screen is focused
+  //   }, [])
+  // );
+
+  // Fetch projects initially
+  useEffect(() => {
+      fetchProjects(null, true);
+    }, []);
+
+
+  // Refresh the list when the shouldRefresh flag is set
   useFocusEffect(
-    useCallback(() => {
-      fetchProjects(null, true); // Refresh the list when the screen is focused
-    }, [])
-  );
+      useCallback(() => {
+        if (shouldRefresh) {
+          const fetchData = async () => {
+            setLoading(true);
+    
+            // Add a 1-second delay
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+            await fetchProjects(null, true); // Ensure this is awaited if it's async
+            setLoading(false);
+          };
+    
+          fetchData();
+          setShouldRefresh(false); // Reset the flag after refreshing
+        }
+      }, [shouldRefresh])
+    );
 
   const loadMoreProjects = () => {
     if (nextToken && !isFetchingMore) {

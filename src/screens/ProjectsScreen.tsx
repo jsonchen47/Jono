@@ -6,6 +6,7 @@ import { useFilter } from '@/src/contexts/FilterContext';
 import ProjectsGridNew from '../components/ProjectsGridNew';
 import { searchProjects } from '@/src/graphql/queries';
 import { useFocusEffect } from '@react-navigation/native';
+import { useRefresh } from '../contexts/RefreshContext';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -17,6 +18,8 @@ const ProjectsScreen = ({ category }: any) => {
   const [loading, setLoading] = useState(false);
   const [nextToken, setNextToken] = useState<any>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+    const { shouldRefresh, setShouldRefresh } = useRefresh();
+  
 
   const EmptyState = () => (
     <View style={styles.emptyStateContainer}>
@@ -131,12 +134,32 @@ const ProjectsScreen = ({ category }: any) => {
     fetchProjects(null, true);
   }, [filter, category]);
 
-  // Whenever the page comes back into view, refresh the data
+  // // Whenever the page comes back into view, refresh the data
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchProjects(null, true);
+  //   }, [filter, category])
+  // );
+
+  // Whenever there is an update, refresh the data
   useFocusEffect(
-    useCallback(() => {
-      fetchProjects(null, true);
-    }, [filter, category])
-  );
+      useCallback(() => {
+        if (shouldRefresh) {
+          const fetchData = async () => {
+            setLoading(true);
+    
+            // Add a 1-second delay
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+            await fetchProjects(null, true); // Ensure this is awaited if it's async
+            setLoading(false);
+          };
+    
+          fetchData();
+          setShouldRefresh(false); // Reset the flag after refreshing
+        }
+      }, [shouldRefresh])
+    );
 
   return (
     <View style={styles.projectsScreenContainer}>

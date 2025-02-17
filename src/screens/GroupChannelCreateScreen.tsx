@@ -129,7 +129,6 @@ const GroupChannelCreateScreen: React.FC = () => {
         }
       }) as GraphQLResult<any>;
     
-
       const users = result.data?.searchUsers?.items || [];
       setConnectedUsers(users);
     } catch (error) {

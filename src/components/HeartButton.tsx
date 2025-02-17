@@ -5,6 +5,7 @@ import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from 'aws-amplify/auth';
 import {  updateUser } from '../graphql/mutations';
 import { getUser } from '../graphql/queries';
+import { useRefresh } from '@/src/contexts/SavedRefreshContext';
 
 interface HeartButtonProps {
   projectID: string;
@@ -15,6 +16,7 @@ const client = generateClient();
 const HeartButton: React.FC<HeartButtonProps> = ({ projectID }) => {
   const [user, setUser] = useState<any>(null);
   const [isSaved, setIsSaved] = useState(false);
+  const { setShouldRefresh } = useRefresh();
 
   useEffect(() => {
     const fetchAuthenticatedUser = async () => {
@@ -60,6 +62,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({ projectID }) => {
 
       if (result) {
         setIsSaved(!isSaved);
+        setShouldRefresh(true); // Notify that Saved Screen should refresh
       } else {
         Alert.alert('Error', 'Failed to update saved projects.');
       }

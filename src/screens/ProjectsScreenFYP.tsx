@@ -201,12 +201,12 @@ const ProjectsScreenFYP = ({ category }: any) => {
 
   
 
-  // Reload the view each time it comes into view
-  useFocusEffect(
-    useCallback(() => {
-      fetchProjects(null, true);
-    }, [filter, category])
-  );
+  // // Reload the view each time it comes into view
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchProjects(null, true);
+  //   }, [filter, category])
+  // );
 
   return (
     <View style={styles.projectsScreenContainer}>
