@@ -33,12 +33,12 @@ import { searchConnections } from '@/src/graphql/queries';
 // };
 
 // Define a type for connected user based on your query result
-interface ConnectedUser {
-  id: string;
-  name?: string;
-  image?: string;
-  username?: string;
-}
+// interface ConnectedUser {
+//   id: string;
+//   name?: string;
+//   image?: string;
+//   username?: string;
+// }
 
 const GroupChannelCreateScreen: React.FC = () => {
   const { client: chatClient } = useChatContext();
@@ -49,57 +49,79 @@ const GroupChannelCreateScreen: React.FC = () => {
   const [connectedUsers, setConnectedUsers] = useState<any[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [connectedUserIDs, setConnectedUserIDs] = useState<string[]>([]);
 
-  // Search for connections
+
+  /**
+   * Step 1: Fetch all approved connections of the current user
+   */
+  const fetchConnectedUserIDs = useCallback(async () => {
+    try {
+      const authUser = await getCurrentUser();
+      const authUserId = authUser.userId;
+
+      const result = await amplifyClient.graphql({
+        query: searchConnections,
+        variables: {
+          filter: {
+            and: [
+              { status: { eq: "approved" } },
+              {
+                or: [
+                  { userID: { eq: authUserId } },
+                  { connectedUserID: { eq: authUserId } }
+                ]
+              }
+            ]
+          },
+          limit: 100
+        }
+      }) as GraphQLResult<any>;
+
+      const connections = result.data?.searchConnections?.items || [];
+      const userIDs = connections.map((conn: any) => 
+        conn.userID === authUserId ? conn.connectedUserID : conn.userID
+      );
+
+      setConnectedUserIDs(userIDs);
+    } catch (error) {
+      console.error("Error fetching connections:", error);
+      setConnectedUserIDs([]);
+    }
+  }, []);
+
+  /**
+   * Load connections on mount
+   */
+  useEffect(() => {
+    fetchConnectedUserIDs();
+  }, []);
+
+
+  /**
+   * Step 2: Search for users only within the connectedUserIDs list
+   */
   const searchForConnections = useCallback(async (term: string) => {
-    if (term.length < 2) {
+    if (term.length < 2 || connectedUserIDs.length === 0) {
       setConnectedUsers([]);
       return;
     }
 
     setLoading(true);
     try {
-      const authUser = await getCurrentUser();
-      const authUserId = authUser.userId;
-    
-      // Step 1: Search users based on the term
-      const userSearchResult = await amplifyClient.graphql({
+      const result = await amplifyClient.graphql({
         query: searchUsers,
         variables: {
           filter: {
-            or: [
-              { name: { wildcard: `${searchTerm}*` } },  // Wildcard for partial matches
-              { username: { wildcard: `${searchTerm}*` } }
-            ]
-          },
-          limit: 10
-        }
-      }) as GraphQLResult<any>;
-    
-      const matchingUserIDs = userSearchResult.data?.searchUsers?.items.map((user: any) => user.id);
-    
-      if (!matchingUserIDs.length) {
-        console.log('No users found');
-        return [];
-      }
-    
-      // Step 2: Fetch only approved connections involving the current user
-      const connectionsResult = await amplifyClient.graphql({
-        query: searchConnectionsWithUsers,
-        variables: {
-          filter: {
             and: [
-              { status: { eq: "approved" } }, // Only approved connections
               {
-                or: [
-                  { userID: { eq: authUserId } }, // The current user must be part of the connection
-                  { connectedUserID: { eq: authUserId } }
-                ]
+                or: connectedUserIDs.map((id) => ({ id: { eq: id } })) // Fix: Replace "in" with multiple OR conditions
               },
               {
-                or: matchingUserIDs.map((id: string) => ({
-                  or: [{ userID: { eq: id } }, { connectedUserID: { eq: id } }]
-                }))
+                or: [
+                  { name: { wildcard: `${term}*` } },
+                  { username: { wildcard: `${term}*` } }
+                ]
               }
             ]
           },
@@ -107,35 +129,16 @@ const GroupChannelCreateScreen: React.FC = () => {
         }
       }) as GraphQLResult<any>;
     
-      // Extract only relevant users from approved connections
-      const users: ConnectedUser[] = (connectionsResult.data?.searchConnections?.items || [])
-        .map((connection: any) => {
-          const relevantUser = connection.userID === authUserId 
-            ? connection.connectedUser 
-            : connection.user;
-          
-          return {
-            id: relevantUser?.id || '',
-            name: relevantUser?.name,
-            image: relevantUser?.image,
-            username: relevantUser?.username
-          };
-        })
-        // Remove duplicates and exclude current user
-        .filter((user: any, index: any, self: any) => 
-          user.id && 
-          user.id !== authUserId && 
-          self.findIndex((u: any) => u.id === user.id) === index
-        );
-    
+
+      const users = result.data?.searchUsers?.items || [];
       setConnectedUsers(users);
     } catch (error) {
-      console.error('Error searching connections:', error);
+      console.error("Error searching connected users:", error);
       setConnectedUsers([]);
     } finally {
       setLoading(false);
     }
-  }, [amplifyClient]);
+  }, [connectedUserIDs]);
 
   // Handle search input
   const handleSearchChange = useCallback((text: string) => {
@@ -144,7 +147,7 @@ const GroupChannelCreateScreen: React.FC = () => {
   }, [searchForConnections]);
 
   // Toggle user selection
-const toggleUserSelection = (user: ConnectedUser) => {
+const toggleUserSelection = (user: any) => {
   setSelectedUsers(current => {
     // Check if user is already selected
     const isAlreadySelected = current.some(selectedUser => selectedUser.id === user.id);
@@ -209,7 +212,7 @@ const createChannel = async () => {
 
   // Render user search results
   // Render user search results
-const renderUserItem = ({ item }: { item: ConnectedUser }) => (
+const renderUserItem = ({ item }: { item: any }) => (
   <TouchableOpacity 
     style={styles.userItem}
     onPress={() => toggleUserSelection(item)}

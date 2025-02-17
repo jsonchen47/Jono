@@ -18,6 +18,7 @@ import { useProgress } from '@/src/contexts/ProgressContext';
 import { Snackbar } from 'react-native-paper';
 import { useRefresh } from '@/src/contexts/RefreshContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -72,13 +73,25 @@ const TabBarLabel = ({ label, IconComponent, icon, focused }: tabBarLabelProps) 
 );
 
 function MyTabs() {
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const insets = useSafeAreaInsets(); // Get safe area insets
+
 
   return (
 
     <SafeAreaView style={styles.safeAreaView} edges={['top']}>
-      <Header/>
+     <View
+        onLayout={(event) => {
+          const { height } = event.nativeEvent.layout;
+          setHeaderHeight(height);
+        }}
+        style={[styles.headerContainer, { paddingTop: insets.top }]}
+      >
+        <Header />
+    </View>
     
     <Tab.Navigator
+      style={{paddingTop: headerHeight/2}}
       initialRouteName="For You"
       screenOptions={{
         tabBarActiveTintColor: '#e91e63',
@@ -184,6 +197,8 @@ export default function App() {
   const { progress, setProgress, deleted, setDeleted } = useProgress();
   const [snackbarVisible, setSnackbarVisible] = useState<any>(false); // Snackbar visibility state
 
+
+
   // Check if a project just was uploaded 
   useEffect(() => {
     if (progress >= 1) { 
@@ -224,6 +239,17 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    position: 'absolute', // Ensures it floats above the tabs
+    top: 0,
+    width: '100%',
+    zIndex: 100, // Ensures it appears above everything
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 }, // Shadow falls below the search bar
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 10, // For Android shadow
+  },
   safeAreaView: {
     flex: 1, 
     // alignItems: 'center',
@@ -239,30 +265,77 @@ const styles = StyleSheet.create({
     marginTop: 3, 
     fontSize: 12,
   },
+  
    // Search Bar
-   searchBarContainer: {
-    marginHorizontal: windowWidth*0.05, 
-    marginTop: 10, 
-    marginBottom: 2, 
+  //  searchBarContainer: {
+  //   marginHorizontal: windowWidth*0.05, 
+  //   marginTop: 10, 
+  //   marginBottom: 2, 
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
+  // searchButton: {
+  //   backgroundColor: '#E8E8E8',
+  //   paddingVertical: 15,
+  //   paddingHorizontal: 20,
+  //   marginHorizontal: 10, 
+  //   borderRadius: 30, // This gives the rounded corners
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   width: '100%',
+  // },
+  searchBarContainer: {
+    position: 'relative', // Ensures the button stays visible
+    marginHorizontal: windowWidth * 0.05,
+    marginTop: 10,
+    marginBottom: 2,
     justifyContent: 'center',
     alignItems: 'center',
-  },
+    //     zIndex: 99, // Ensures it's above the tabs (iOS)
+
+},
+
+// searchButton: {
+//     backgroundColor: 'white',
+//     paddingVertical: 15,
+//     paddingHorizontal: 20,
+//     borderRadius: 30,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     width: '100%',
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 4 }, // Stronger shadow
+//     shadowOpacity: 0.15,
+//     shadowRadius: 6,
+//     elevation: 10, // High elevation ensures it appears above other elements (Android)
+//     zIndex: 99, // Ensures it's above the tabs (iOS)
+//     position: 'absolute', // Allows overlapping
+//     top: -50, // Adjust to lift it above the tabs
+// },
+
   searchButton: {
-    backgroundColor: '#E8E8E8',
+    backgroundColor: 'white', // Changed to pure white for a clean look
     paddingVertical: 15,
     paddingHorizontal: 20,
     marginHorizontal: 10, 
-    borderRadius: 30, // This gives the rounded corners
+    borderRadius: 30, // Keeps the rounded look
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-  },
+    shadowColor: '#000', // Adds a soft shadow
+    shadowOffset: { width: 0, height: 0 }, // Creates depth
+    shadowOpacity: 0.1, // Subtle shadow opacity
+    shadowRadius: 7, // Softens the edges
+    elevation: 3, // Android shadow effect
+    // borderColor: 'black',
+    // borderWidth: 2,
+},
   searchButtonIcon: {
     fontSize: 20,
     paddingRight: 10,
   }, 
   searchButtonText: {
-    color: '#4C4C4C',
+    color: 'black',
     fontSize: 16,
     fontWeight: '500',
     textAlign: 'center',
@@ -274,7 +347,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', 
     justifyContent: 'center', 
     alignItems: 'center',
-     
+    borderColor: 'lightgray',
+    borderWidth: 1,
     // fontWeight: '300'
   },
   filterButtonContainer: {

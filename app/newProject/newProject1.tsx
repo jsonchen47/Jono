@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { ScrollView, Image, View, Text, StyleSheet, SafeAreaView, Dimensions, Pressable, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
+import { ScrollView, Image, View, Text, StyleSheet, ActivityIndicator, SafeAreaView, Dimensions, Pressable, Platform, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import {selectPhoto} from '../../src/functions/selectPhoto'
@@ -7,6 +7,7 @@ import React, { useState, useContext } from 'react';
 import { FormContext } from './_layout';
 import 'react-native-get-random-values';
 import { Filter } from 'bad-words'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -17,6 +18,8 @@ const newProject1 = () => {
   // const [photoUri, setPhotoUri] = useState(null);
   const router = useRouter();
   const filter = new Filter();
+  const [loading, setLoading] = useState(false);
+
 
   const containsProfanity = (text: string): boolean => {
     return filter.isProfane(text); // Returns true if profanity is detected
@@ -29,50 +32,68 @@ const newProject1 = () => {
   // };
   const API_URL = "https://fhktodpsyj.execute-api.us-west-1.amazonaws.com/default/imageModerationFunction";
 
+ 
+
   const handlePhotoSelection = async (uri: string) => {
     try {
+      setLoading(true); // Start loading
+  
       const response = await fetch(uri);
       const blob = await response.blob();
       const reader = new FileReader();
   
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
-        const result = reader.result; // Ensure this is a string
+        try {
+          const result = reader.result;
   
-        if (typeof result === "string") {
-          // Extract base64 data and ensure it has the correct format
-          const base64Image = result.replace(/^data:image\/(jpeg|png);base64,/, "");
+          if (typeof result === "string") {
+            const base64Image = result.replace(/^data:image\/(jpeg|png);base64,/, "");
   
-          // Ensure file format is correct
-          if (!result.startsWith("data:image/jpeg") && !result.startsWith("data:image/png")) {
-            Alert.alert("Invalid Image Format", "Please select a JPEG or PNG image.");
-            return;
-          }
+            if (!result.startsWith("data:image/jpeg") && !result.startsWith("data:image/png")) {
+              Alert.alert("Invalid Image Format", "Please select a JPEG or PNG image.");
+              setLoading(false);
+              return;
+            }
   
-          // Send image to AWS Rekognition via API Gateway
-          const moderationResponse = await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ image: base64Image }),
-            headers: { "Content-Type": "application/json" },
-          });
+            // Send image to AWS Rekognition
+            const moderationResponse = await fetch(API_URL, {
+              method: "POST",
+              body: JSON.stringify({ image: base64Image }),
+              headers: { "Content-Type": "application/json" },
+            });
   
-          const resultData = await moderationResponse.json();
+            const resultData = await moderationResponse.json();
   
-          if (moderationResponse.status === 403) {
-            Alert.alert("Inappropriate Image", "Please select a different image.");
-            setFormData({ ...formData, localImageUri: "" });
+            if (moderationResponse.status === 403) {
+              Alert.alert("Inappropriate Image", "Please select a different image.");
+              setFormData((prevData) => ({
+                ...prevData,
+                localImageUri: "",
+              }));
+            } else {
+              setFormData((prevData) => ({
+                ...prevData,  // Preserve existing form fields
+                localImageUri: uri,
+              }));
+            }
           } else {
-            setFormData({ ...formData, localImageUri: uri });
+            throw new Error("Failed to read image as a string.");
           }
-        } else {
-          throw new Error("Failed to read image as a string.");
+        } catch (error) {
+          console.error("Image moderation error:", error);
+          Alert.alert("Error", "Failed to analyze the image.");
+        } finally {
+          setLoading(false); // Stop loading after everything is completed
         }
       };
     } catch (error) {
-      console.error("Image moderation error:", error);
-      Alert.alert("Error", "Failed to analyze the image.");
+      console.error("Image processing error:", error);
+      Alert.alert("Error", "Failed to process the image.");
+      setLoading(false);
     }
   };
+  
   
   
 
@@ -82,7 +103,7 @@ const newProject1 = () => {
 
   return (
     <SafeAreaView style={styles.container}> 
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container}>
         {/* Custom Header */}
         <View style={styles.header}>
           <Pressable onPress={() => router.back()}>
@@ -94,7 +115,8 @@ const newProject1 = () => {
         {/* Screen Content */}
         <View style={styles.contentContainer}>
           {/* Top Content */}
-          <ScrollView 
+          <KeyboardAwareScrollView 
+            extraScrollHeight={80}
             style={styles.contentTop}
             showsVerticalScrollIndicator={false}
             >
@@ -110,19 +132,22 @@ const newProject1 = () => {
                 <Text style={styles.addPhotoButtonText}>Add photo</Text>
               </View>
             </TouchableOpacity>
-            <View style={styles.imageContainer}>
-              {/* {photoUri && ( */}
-              {formData.localImageUri && (
+            <View style={{ paddingTop: 20, alignItems: 'center' }}>
+              {loading ? (
                 <>
-                {/* <Text>Selected Photo URI: {formData.localImageUri}</Text> */}
-                <Image 
-                    // source={{ uri: photoUri }} 
-                    source={{ uri: formData.localImageUri }} 
-                    style={styles.image} 
-                />
+                  <ActivityIndicator size="large" color="black" />
+                  <Text style={{ marginTop: 10, fontSize: 16, color: 'gray', textAlign: 'center' }}>
+                    Performing AI-powered content moderation for a safer experience...
+                  </Text>
                 </>
-              )}
+              ) : formData.localImageUri ? (
+                <Image 
+                  source={{ uri: formData.localImageUri }} 
+                  style={styles.image} 
+                />
+              ) : null}
             </View>
+
             
             
             {/* Add project title */}
@@ -132,6 +157,8 @@ const newProject1 = () => {
               placeholder="Give a name to your dream"
               multiline={true}
               value={formData.title}
+              returnKeyType='done'
+              submitBehavior="blurAndSubmit"
               maxLength={100} // Limit to `100` characters
               // onChangeText={(text) => setFormData((prevData) => ({
               //   ...prevData,
@@ -152,7 +179,7 @@ const newProject1 = () => {
 
             {/* Add description */}
             <Text style={styles.projectTitleHeader}>Description</Text>
-            <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+          
               <TextInput
                 style={styles.projectDescriptionTextInput}
                 placeholder="What does your product do, what are you looking for, etc"
@@ -175,12 +202,11 @@ const newProject1 = () => {
                 }}
               >
               </TextInput>
-            </KeyboardAvoidingView>
             {/* Character Count */}
             <View style={styles.viewWithBottomPadding}>
               <Text style={styles.charCount}>{`${formData.description.length}/550`}</Text>
             </View>
-          </ScrollView>
+          </KeyboardAwareScrollView>
           {/* Divider */}
           <View style={styles.divider}></View>
           {/* Bottom content */}
@@ -214,7 +240,7 @@ const newProject1 = () => {
 
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
@@ -341,7 +367,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   viewWithBottomPadding: {
-    paddingBottom: 50
+    paddingBottom: 100
   }
   
 });
