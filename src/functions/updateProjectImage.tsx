@@ -99,6 +99,7 @@ export async function updateProjectImage(
       // Update the channel image (cover image)
       await channel.update({
         image: imageUrl || channel.data?.image, // Keep the existing image if none provided
+        name: channel.data?.name, // Keep the existing name
       });
 
       console.log("Channel image updated successfully.");

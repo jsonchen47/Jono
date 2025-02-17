@@ -149,11 +149,17 @@ const ManageProjectScreen = ({project}: any) => {
                 // Fetch the channel using its ID
                 const channel = chatClient.channel('messaging', project.groupChatID);
           
+                const channelName = formData?.title || project?.title;
+
                 // Update the channel name
                 await channel.update({
-                  name: formData.title || channel.data?.name, // Keep the existing name if none provided
+                //   name: formData.title || channel.data?.name, // Keep the existing name if none provided
+                  name: channelName,
+                  image: project?.image
+
                 });
-                await channel.update({image: project?.image})
+                console.log('channel name after update', channelName)
+                // await channel.update({image: project?.image})
                 console.log("Channel name updated successfully.");
               }
 
