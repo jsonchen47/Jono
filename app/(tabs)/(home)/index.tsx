@@ -104,7 +104,7 @@ function MyTabs() {
           height: 2, // Optional: set the indicator height
           width: 0.5, 
         },
-        swipeEnabled: false, 
+        // swipeEnabled: false, 
         lazy: true, // Enables lazy loading
         lazyPreloadDistance: 0, // Preload the next tab when swiping close to it (set 0 for no preloading)
       }}
