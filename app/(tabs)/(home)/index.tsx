@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator, MaterialTopTabBar} from '@react-navigation/material-top-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -19,6 +19,8 @@ import { Snackbar } from 'react-native-paper';
 import { useRefresh } from '@/src/contexts/RefreshContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import HapticFeedback from "react-native-haptic-feedback"
+import { useNavigation, useNavigationState } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -75,7 +77,21 @@ const TabBarLabel = ({ label, IconComponent, icon, focused }: tabBarLabelProps) 
 function MyTabs() {
   const [headerHeight, setHeaderHeight] = useState(0);
   const insets = useSafeAreaInsets(); // Get safe area insets
+  const options = {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false,
+  };
+  const navigation = useNavigation();
+  const navigationState = useNavigationState((state) => state);
 
+  // Uncomment to add haptic feedback on swipe
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("state", () => {
+  //     HapticFeedback.trigger("impactMedium", options);
+  //   });
+
+  //   return unsubscribe;
+  // }, [navigation, navigationState]);
 
   return (
 
@@ -106,7 +122,8 @@ function MyTabs() {
         },
         // swipeEnabled: false, 
         lazy: true, // Enables lazy loading
-        lazyPreloadDistance: 0, // Preload the next tab when swiping close to it (set 0 for no preloading)
+        // lazyPreloadDistance: 0, // Preload the next tab when swiping close to it (set 0 for no preloading)
+        
       }}
     >
       <Tab.Screen
@@ -115,13 +132,23 @@ function MyTabs() {
         options={{
             tabBarLabel: ({ focused }: any) => <TabBarLabel label="For You" IconComponent={FontAwesome5} icon="home" focused={focused} />
         }} 
+        listeners={{
+          tabPress: () => {
+            HapticFeedback.trigger("impactMedium", options);
+          },
+        }}
       />
       <Tab.Screen
         name="All"
         children={() => <ProjectsScreen category="" />}
         options={{
           tabBarLabel: ({ focused }: any) => <TabBarLabel label="All" IconComponent={FontAwesome6} icon="star" focused={focused} />
-      }} 
+        }} 
+        listeners={{
+          tabPress: () => {
+            HapticFeedback.trigger("impactMedium", options);
+        },
+        }}
       />
       <Tab.Screen
         name="Health"
@@ -129,6 +156,11 @@ function MyTabs() {
         options={{
           tabBarLabel: ({ focused }: any) => <TabBarLabel label="Health" IconComponent={Fontisto} icon="heartbeat" focused={focused} />
       }} 
+      listeners={{
+        tabPress: () => {
+          HapticFeedback.trigger("impactMedium", options);
+        },
+      }}
       />
       <Tab.Screen
         name="Finance"
@@ -136,6 +168,11 @@ function MyTabs() {
         options={{
           tabBarLabel: ({ focused }: any) => <TabBarLabel label="Finance" IconComponent={FontAwesome6} icon="sack-dollar" focused={focused} />
       }} 
+      listeners={{
+        tabPress: () => {
+          HapticFeedback.trigger("impactMedium", options);
+        },
+      }}
       />
       <Tab.Screen
         name="Tech"
@@ -143,6 +180,11 @@ function MyTabs() {
         options={{
           tabBarLabel: ({ focused }: any) => <TabBarLabel label="Tech" IconComponent={MaterialCommunityIcons} icon="robot-industrial" focused={focused} />
       }} 
+      listeners={{
+        tabPress: () => {
+          HapticFeedback.trigger("impactMedium", options);
+        },
+      }}
       />
       <Tab.Screen
         name="Politics"
@@ -150,6 +192,11 @@ function MyTabs() {
         options={{
           tabBarLabel: ({ focused }: any) => <TabBarLabel label="Politics" IconComponent={Entypo} icon="globe" focused={focused} />
       }} 
+      listeners={{
+        tabPress: () => {
+          HapticFeedback.trigger("impactMedium", options);
+        },
+      }}
       />
        <Tab.Screen
         name="Education"
@@ -157,6 +204,11 @@ function MyTabs() {
         options={{
           tabBarLabel: ({ focused }: any) => <TabBarLabel label="Education" IconComponent={FontAwesome6} icon="book" focused={focused} />
         }} 
+        listeners={{
+          tabPress: () => {
+            HapticFeedback.trigger("impactMedium", options);
+          },
+        }}
       />
        <Tab.Screen
         name="Environment"
@@ -164,6 +216,11 @@ function MyTabs() {
         options={{
           tabBarLabel: ({ focused }: any) => <TabBarLabel label="Environment" IconComponent={FontAwesome6} icon="leaf" focused={focused} />
         }} 
+        listeners={{
+          tabPress: () => {
+            HapticFeedback.trigger("impactMedium", options);
+          },
+        }}
       />
        <Tab.Screen
         name="Social Justice"
@@ -171,6 +228,11 @@ function MyTabs() {
         options={{
           tabBarLabel: ({ focused }: any) => <TabBarLabel label="Home" IconComponent={FontAwesome6} icon="scale-balanced" focused={focused} />
       }} 
+      listeners={{
+        tabPress: () => {
+          HapticFeedback.trigger("impactMedium", options);
+        },
+      }}
       />
     </Tab.Navigator>
     {/* <View>  */}
