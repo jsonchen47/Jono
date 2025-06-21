@@ -22,6 +22,7 @@ import config from "../src/aws-exports"; // AWS Amplify configuration
 import { useRefresh } from '@/src/contexts/RefreshContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { chatClient } from '@/src/backend/streamChat';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const client = generateClient();
 
@@ -68,7 +69,7 @@ const EditProfileScreen = () => {
     try {
       await selectPhoto(async (uri: any) => {
         if (!uri) return;
-  
+
         // Remove the old profile image if it exists
         if (image) {
           const oldImageKey = image.split(`${config.aws_user_files_s3_bucket}.s3.${config.aws_user_files_s3_bucket_region}.amazonaws.com/public/`)[1];
@@ -81,16 +82,16 @@ const EditProfileScreen = () => {
             }
           }
         }
-  
+
         // Generate a new filename for the uploaded image
         const unfilteredUsername = username || 'default_user';
         const sanitizedUsername = unfilteredUsername.replace(/[^a-zA-Z0-9]/g, '_');
         const newImageKey = `${sanitizedUsername}_profile_${Date.now()}.jpg`;
-  
+
         // Upload the new image to S3
         const response = await fetch(uri);
         const blob = await response.blob();
-  
+
         const uploadResult = await uploadData({
           key: newImageKey,
           data: blob,
@@ -99,10 +100,10 @@ const EditProfileScreen = () => {
             accessLevel: 'guest',
           },
         }).result;
-  
+
         const newImageUrl = `https://${config.aws_user_files_s3_bucket}.s3.${config.aws_user_files_s3_bucket_region}.amazonaws.com/public/${newImageKey}`;
         console.log('New profile image uploaded successfully:', newImageUrl);
-  
+
         // Update the state with the new image URL
         setImage(newImageUrl);
       });
@@ -110,13 +111,13 @@ const EditProfileScreen = () => {
       console.error('Error updating profile image:', error);
     }
   };
-  
+
   const handleSave = async () => {
     try {
-      
+
       const authUser = await getCurrentUser();
       const userID = authUser.userId;
-  
+
       const updatedUser = {
         id: userID,
         image, // Updated profile image URL
@@ -127,7 +128,7 @@ const EditProfileScreen = () => {
         skills,
         links,
       };
-  
+
       const result = await client.graphql({
         query: updateUser,
         variables: { input: updatedUser },
@@ -139,7 +140,7 @@ const EditProfileScreen = () => {
       name: name,
       image: image,
     });
-  
+
       console.log('User profile updated successfully:', result.data?.updateUser);
       setShouldRefresh(true); // Notify that ProfileScreen should refresh
 
@@ -148,7 +149,7 @@ const EditProfileScreen = () => {
       console.error('Error updating user profile:', error);
     }
   };
-  
+
 
   // Set navigation options for the header
   React.useEffect(() => {
@@ -157,14 +158,14 @@ const EditProfileScreen = () => {
       const user = await getCurrentUser();
       console.log(user)
     }
-    
+
     navigation.setOptions({
       title: 'Edit Profile',
       headerTitleAlign: 'center', // Center the title
       headerStyle: { backgroundColor: '#f8f8f8' },
       headerTitleStyle: { fontWeight: 'bold' },
       headerLeft: () => (
-        <TouchableOpacity onPress={() => 
+        <TouchableOpacity onPress={() =>
         {
           getUser()
           navigation.goBack()
@@ -182,7 +183,7 @@ const EditProfileScreen = () => {
     });
   }, [navigation, image, name, username, bio, resources, skills, links]);
 
-  
+
 
   return (
     <ScrollView style={styles.container}>
@@ -207,8 +208,11 @@ const EditProfileScreen = () => {
             </View>
           </TouchableOpacity>
         </View>
-
-        <View style={styles.inputContainer}>
+        <KeyboardAwareScrollView
+          extraScrollHeight={80}
+          style={styles.inputContainer}
+          showsVerticalScrollIndicator={false}
+        >
           <Text style={styles.label}>Name</Text>
           <TextInput
             style={styles.input}
@@ -260,7 +264,7 @@ const EditProfileScreen = () => {
               onChangeChips={setLinks}
             />
           </View>
-        </View>
+      </KeyboardAwareScrollView>
       </SafeAreaView>
     </ScrollView>
   );
@@ -316,15 +320,15 @@ const styles = StyleSheet.create({
   },
   spacerVertical: {
 
-  }, 
+  },
   chipInputContainer: {
-    marginBottom: 20, 
-  }, 
+    marginBottom: 20,
+  },
   editButtonContainer: {
     position: 'relative',
   },
   editIcon: {
-    
+
     width: 30,
     height: 30,
     borderRadius: 15,
